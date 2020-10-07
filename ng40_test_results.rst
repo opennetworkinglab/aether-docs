@@ -10,7 +10,7 @@ OMEC
 Functionality
 ^^^^^^^^^^^^^
 
-This nightly-run job deploys the OMEC control plane and OMEC data plane on the dev cluster using images from `aether-helm-charts <https://gerrit.opencord.org/plugins/gitiles/aether-helm-charts>`_, then runs the following NG40 test cases:
+This nightly-run job deploys the OMEC control plane and OMEC user plane on the dev cluster using images from `aether-helm-charts <https://gerrit.opencord.org/plugins/gitiles/aether-helm-charts>`_, then runs the following NG40 test cases:
 
 - 4G_M2AS_PING_FIX
 - 4G_M2AS_UDP
@@ -37,7 +37,7 @@ Resources:
 Scaling
 ^^^^^^^
 
-This nightly-run job deploys the OMEC control plane and OMEC data plane on the dev cluster using images from `aether-helm-charts <https://gerrit.opencord.org/plugins/gitiles/aether-helm-charts>`_, then performs the NG40 UE Scaling test.
+This nightly-run job deploys the OMEC control plane and OMEC user plane on the dev cluster using images from `aether-helm-charts <https://gerrit.opencord.org/plugins/gitiles/aether-helm-charts>`_, then performs the NG40 UE Scaling test.
 
 Resources:
 
