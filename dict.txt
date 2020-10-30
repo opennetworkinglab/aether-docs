@@ -15,3 +15,14 @@ tAC
 TOST
 virtualenv
 Wireshark
+runtime
+configs
+subnet
+tfvars
+vpn
+Terraform
+omec
+upf
+pfcp
+controlplane
+etcd

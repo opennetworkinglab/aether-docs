@@ -239,6 +239,7 @@ todo_include_todos = True
 # The link checker strips off .md from links and then complains
 linkcheck_ignore = [
     r'https://www.sphinx-doc.org',
+    r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*'
 ]
 
 def setup(app):
