@@ -350,4 +350,3 @@ Once the patch is accepted and merged, CD pipeline will install ACE runtime base
    $ git add .
    $ git commit -m "Add new ACE"
    $ git review
-

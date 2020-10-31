@@ -26,7 +26,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    pronto_deployment_guide/overview.rst
    pronto_deployment_guide/hw_installation.rst
    pronto_deployment_guide/bootstrapping.rst
-   pronto_deployment_guide/fabric_switch_tost.rst
    pronto_deployment_guide/run_time_deployment.rst
+   pronto_deployment_guide/tost_deployment.rst
    pronto_deployment_guide/enb_installation.rst
    pronto_deployment_guide/acceptance_test_specification.rst
