@@ -158,6 +158,7 @@ So we will create a remote Terraform state definition for the new ACE, too.
    $ cd $WORKDIR/aether-pod-configs/production
    $ mkdir ace-new && cd ace-new
    $ ln -s ../../common/ace-custom/* .
+   $ ln -s ../../common/alerts/alerts.tf .
 
    $ export CLUSTER_NAME=ace-new
    $ export CLUSTER_DOMAIN=prd.new.aetherproject.net
@@ -167,10 +168,10 @@ So we will create a remote Terraform state definition for the new ACE, too.
    # SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
 
    terraform {
-   backend "gcs" {
-      bucket  = "aether-terraform-bucket"
-      prefix  = "product/${CLUSTER_NAME}"
-   }
+     backend "gcs" {
+       bucket  = "aether-terraform-bucket"
+       prefix  = "product/${CLUSTER_NAME}"
+     }
    }
    EOF
 
@@ -204,44 +205,44 @@ please take a closer look at `variables.tf` file and override the default values
    cluster_name  = "ace-new"
    cluster_admin = "new_admin"
    cluster_nodes = {
-   new-prd-leaf1 = {
-      user        = "root"
-      private_key = "~/.ssh/id_rsa_terraform"
-      host        = "10.94.1.3"
-      roles       = ["worker"]
-      labels      = ["node-role.aetherproject.org=switch"]
-      taints      = ["node-role.aetherproject.org=switch:NoSchedule"]
-   },
-   new-server-1 = {
-      user        = "terraform"
-      private_key = "~/.ssh/id_rsa_terraform"
-      host        = "10.94.1.3"
-      roles       = ["etcd", "controlplane", "worker"]
-      labels      = []
-      taints      = []
-   },
-   new-server-2 = {
-      user        = "terraform"
-      private_key = "~/.ssh/id_rsa_terraform"
-      host        = "10.94.1.4"
-      roles       = ["etcd", "controlplane", "worker"]
-      labels      = []
-      taints      = []
-   },
-   new-server-3 = {
-      user        = "terraform"
-      private_key = "~/.ssh/id_rsa_terraform"
-      host        = "10.94.1.5"
-      roles       = ["etcd", "controlplane", "worker"]
-      labels      = []
-      taints      = []
-   }
+     new-prd-leaf1 = {
+       user        = "root"
+       private_key = "~/.ssh/id_rsa_terraform"
+       host        = "10.94.1.3"
+       roles       = ["worker"]
+       labels      = ["node-role.aetherproject.org=switch"]
+       taints      = ["node-role.aetherproject.org=switch:NoSchedule"]
+     },
+     new-server-1 = {
+       user        = "terraform"
+       private_key = "~/.ssh/id_rsa_terraform"
+       host        = "10.94.1.3"
+       roles       = ["etcd", "controlplane", "worker"]
+       labels      = []
+       taints      = []
+     },
+     new-server-2 = {
+       user        = "terraform"
+       private_key = "~/.ssh/id_rsa_terraform"
+       host        = "10.94.1.4"
+       roles       = ["etcd", "controlplane", "worker"]
+       labels      = []
+       taints      = []
+     },
+     new-server-3 = {
+       user        = "terraform"
+       private_key = "~/.ssh/id_rsa_terraform"
+       host        = "10.94.1.5"
+       roles       = ["etcd", "controlplane", "worker"]
+       labels      = []
+       taints      = []
+     }
    }
 
    projects = [
-   "system_apps",
-   "connectivity_edge_up4",
-   "edge_apps"
+     "system_apps",
+     "connectivity_edge_up4",
+     "edge_apps"
    ]
 
 Lastly, we will create a couple of overriding values files for the managed applications,
@@ -263,35 +264,35 @@ one for DNS server for UEs and the other for the connectivity edge application, 
 
    serviceType: ClusterIP
    service:
-   clusterIP: ${UE_DNS}
+     clusterIP: ${UE_DNS}
    servers:
    - zones:
-   - zone: .
-   port: 53
-   plugins:
-   - name: errors
-   - name: health
-      configBlock: |-
+     - zone: .
+     port: 53
+     plugins:
+     - name: errors
+     - name: health
+       configBlock: |-
          lameduck 5s
-   - name: ready
-   - name: prometheus
-      parameters: 0.0.0.0:9153
-   - name: forward
-      parameters: . /etc/resolv.conf
-   - name: cache
-      parameters: 30
-   - name: loop
-   - name: reload
-   - name: loadbalance
+     - name: ready
+     - name: prometheus
+       parameters: 0.0.0.0:9153
+     - name: forward
+       parameters: . /etc/resolv.conf
+     - name: cache
+       parameters: 30
+     - name: loop
+     - name: reload
+     - name: loadbalance
    - zones:
-   - zone: apps.svc.${CLUSTER_DOMAIN}
-   port: 53
-   plugins:
-   - name: errors
-   - name: forward
-      parameters: . ${K8S_DNS}
-   - name: cache
-      parameters: 30
+     - zone: apps.svc.${CLUSTER_DOMAIN}
+     port: 53
+     plugins:
+     - name: errors
+     - name: forward
+       parameters: . ${K8S_DNS}
+     - name: cache
+       parameters: 30
    EOF
 
    # Create PFCP agent overriding values file
@@ -299,11 +300,11 @@ one for DNS server for UEs and the other for the connectivity edge application, 
    # SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
 
    config:
-   pfcp:
-      cfgFiles:
+     pfcp:
+       cfgFiles:
          upf.json:
-         p4rtciface:
-            p4rtc_server: "onos-tost-onos-classic-hs.tost.svc.${CLUSTER_DOMAIN}"
+           p4rtciface:
+             p4rtc_server: "onos-tost-onos-classic-hs.tost.svc.${CLUSTER_DOMAIN}"
    EOF
 
 Make sure the ace-new directory has all necessary files and before a review request.

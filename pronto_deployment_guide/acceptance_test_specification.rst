@@ -38,7 +38,7 @@ In order to test the fabric test, please see the following steps:
 |1. Access to the eNB* (through SSH or Web GUI)|Able to get ICMP reply(PING reply)  |
 |                                              |from the GCP node.                  |
 |                                              |                                    |
-|2. Ping to "10.168.0.204" eNB S1-MME/S1-C     |( )YES  ( )NO                       |
+|2. Ping to "10.168.0.6" eNB S1-MME/S1-C       |( )YES  ( )NO                       |
 |   interface IP address*                      |                                    |
 |                                              |Comments:                           |
 +----------------------------------------------+------------------------------------+
@@ -60,7 +60,7 @@ In order to test the fabric test, please see the following steps:
 |1. Access to the eNB* (through SSH or Web GUI)|Able to get ICMP reply(PING reply)  |
 |                                              |from the GCP node.                  |
 |                                              |                                    |
-|2. Ping to "10.168.0.204"                     |( )YES   ( )NO                      |
+|2. Ping to "10.168.0.6"                       |( )YES   ( )NO                      |
 |                                              |                                    |
 |                                              |Comments:                           |
 +----------------------------------------------+------------------------------------+

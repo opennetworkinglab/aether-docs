@@ -62,37 +62,22 @@ Root folder
 Terraform reads **app_map.tfvars** to know which application will be installed on Rancher
 and which version and customized values need to apply to.
 
-Here is the example of **app_map.tfvars** which is used to install the **hostpath** storage.
-We specify the Helm Chart version to **0.2.9** and use the file **hostpath.yaml** as the custom values
+Here is the example of **app_map.tfvars** which defines prerequisite apps for TOST
+as well as project and namespace in which TOST apps will be provisioned.
+Note that currently we don't have any prerequisite so we left this blank intentionally.
+It can be used to specify prerequisites in the future.
 
 .. code-block::
 
    project_name     = "tost"
    namespace_name   = "tost"
 
-   app_map = {
-      hostpath-provisioner = {
-         app_name         = "hostpath-provisioner"
-         target_namespace = "tost"
-         catalog_name     = "rimusz"
-         template_name    = "hostpath-provisioner"
-         template_version = "0.2.9"
-         values_yaml      = ["hostpath.yaml"]
-      }
-   }
-
-The content of **hostpath.yaml** looks like below.
-It follows the standard yaml format and we use this file to customize the **hostpath** Helm Chart.
-
-.. code-block::
-
-   storageClass:
-      name: fast-disks
+   app_map = {}
 
 ONOS folder
 ^^^^^^^^^^^
 All files under **onos** directory are related to ONOS application.
-As we mentioned above, the **app_map.tfvars** describe the information about ONOS helm chart.
+The **app_map.tfvars** in this folder describes the information about ONOS helm chart.
 
 In this example, we specify the **onos-tost** helm chart version to **0.1.18** and load **onos.yaml**
 as custom value files.
