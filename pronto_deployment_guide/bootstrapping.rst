@@ -6,6 +6,8 @@
 Bootstrapping
 =============
 
+.. _switch-install:
+
 OS Installation - Switches
 ==========================
 

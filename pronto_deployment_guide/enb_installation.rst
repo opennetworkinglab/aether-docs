@@ -2,7 +2,8 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-================
+.. _enb-installation:
+
 eNB Installation
 ================
 
@@ -59,8 +60,8 @@ We can open the Web browser (e.g., Chrome, Firefox, etc.), and go to `https://11
 
 With the below credentials, we can log in the UI:
 
-* ID: `sc_femto`
-* Password: `scHt3pp` (or `sc_femto`)
+* ID: ``sc_femto``
+* Password: ``scHt3pp`` (or ``sc_femto``)
 
 After log-in, we can see the state page.
 
@@ -156,8 +157,13 @@ whereas the 10G port is connected to 10G-40G breakout cable linked to the fabric
 Then, power on the Sercomm eNB device and get rid of the LAN port cable.
 
 .. note::
-   Without the LAN port cable, we can access the Sercomm eNB admin UI through `https://192.168.251.5` URL, if the laptop/PC is connected with the same network via the fabric switch.
-   For our convenience, we can add some forwarding rules into the `iptable` in the management node to get the Sercomm eNB admin UI outside. It is optional.
+   Without the LAN port cable, we can access the Sercomm eNB admin UI through
+   `https://192.168.251.5` URL, if the laptop/PC is connected to the same
+   network via the fabric switch.
+
+   For our convenience, we can optionally add forwarding rules into the
+   firewall configuration on the management node to access the Sercomm eNB
+   admin UI from outside the network.
 
 Troubleshooting
 ===============

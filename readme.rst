@@ -4,14 +4,24 @@ Documentation Guide
 Writing Documentation
 ---------------------
 
-Docs are generated using `Sphinx <https://www.sphinx-doc.org/en/master/>`_.
+Docs are generated using :doc:`Sphinx <sphinx:usage/index>`.
 
-Documentation is written in `reStructuredText
-<https://www.sphinx-doc.org/en/master/usage/restructuredtext/>`_.
+Documentation is written in :doc:`reStructuredText
+<sphinx:usage/restructuredtext/basics>`.
 
 In reStructuredText documents, to create the section hierarchy (mapped in HTML
 to ``<h1>`` through ``<h5>``) use these characters to underline headings in the
 order given: ``=``, ``-`` ``"``, ``'``, ``^``.
+
+Referencing other Documentation
+-------------------------------
+
+Other Sphinx-built documentation, both ONF and non-ONF can be linked to using
+:doc:`Intersphinx <sphinx:usage/extensions/intersphinx>`.
+
+You can see all link targets available on a remote Sphinx's docs by running::
+
+  python -msphinx.ext.intersphinx http://otherdocs/objects.inv
 
 Building the Docs
 ------------------
@@ -50,9 +60,8 @@ Multiple tools are available to render inline text-based graphs definitions and
 diagrams within the documentation. This is preferred over images as it's easier
 to change and see changes over time as a diff.
 
-`Graphviz
-<https://www.sphinx-doc.org/en/master/usage/extensions/graphviz.html>`_
-supports many standard graph types.
+:doc:`Graphviz <sphinx:usage/extensions/graphviz>` supports many standard graph
+types.
 
 The `blockdiag <http://blockdiag.com/en/blockdiag/sphinxcontrib.html>`_,
 `nwdiag, and rackdiag <http://blockdiag.com/en/nwdiag/sphinxcontrib.html>`_,

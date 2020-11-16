@@ -50,6 +50,7 @@ extensions = [
     'sphinx.ext.coverage',
     'sphinx.ext.graphviz',
     'sphinx.ext.ifconfig',
+    'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
     'sphinxcontrib.spelling',
@@ -238,9 +239,15 @@ todo_include_todos = True
 # -- Options for linkcheck ---------------------------------------------------
 # The link checker strips off .md from links and then complains
 linkcheck_ignore = [
-    r'https://www.sphinx-doc.org',
     r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*'
 ]
+
+# -- options for Intersphinx extension ---------------------------------------
+
+intersphinx_mapping = {
+    'sphinx': ('https://www.sphinx-doc.org/en/master', None),
+    'trellis': ('https://docs.trellisfabric.org/master', None),
+    }
 
 def setup(app):
 
