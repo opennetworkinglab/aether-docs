@@ -11,11 +11,11 @@ so we just need to create a patch to **aether-pod-configs** repository.
 
 Before you begin
 ================
-Make sure :doc:`Bootstrapping <bootstrapping>` **Update global resource maps** section is completed.
+Make sure :ref:`Update Global Resources Map <update_global_resource>` section is completed.
 
 Download aether-pod-configs repository
 ======================================
-Download aether-pod-configs repository if you don't have it in your develop machine.
+Download aether-pod-configs repository if you don't have it already in your develop machine.
 
 .. code-block:: shell
 
@@ -30,10 +30,11 @@ Run the following commands to auto-generate necessary files under the target ACE
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs/tools
-   $ vi ace_env
+   $ cp ace_env /tmp/ace_env
+   $ vi /tmp/ace_env
    # Set environment variables
 
-   $ source ace_env
+   $ source /tmp/ace_env
    $ make runtime
    Created ../production/ace-test/main.tf
    Created ../production/ace-test/variables.tf
