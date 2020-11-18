@@ -53,6 +53,8 @@ Download aether-pod-configs repository
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
+.. _update_global_resource:
+
 Update global resource maps
 ---------------------------
 Add a new ACE information at the end of the following global resource maps.
@@ -154,10 +156,11 @@ Run the following commands to auto-generate necessary files under the target ACE
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs/tools
-   $ vi ace_env
+   $ cp ace_env /tmp/ace_env
+   $ vi /tmp/ace_env
    # Set environment variables
 
-   $ source ace_env
+   $ source /tmp/ace_env
    $ make vpn
    Created ../production/ace-test
    Created ../production/ace-test/main.tf
