@@ -32,8 +32,8 @@ First, download the aether-pod-configs repository to your development machine.
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
-Create a patch to update omec-control-plane
-===========================================
+Update OMEC control plane configs
+=================================
 Once you successfully download the `aether-pod-configs` repository to your local development machine
 then move the directory to `aether-pod-configs/production/acc-gcp/app_values`
 and edit `omec-control-plane.yml` file to add new user profile and subscribers for the new ACE.
@@ -116,3 +116,30 @@ and `UE_DNS` address as `dns_primary` value.
    $ git commit -m “Update OMEC control plane for the new ACE”
    $ git review
 
+
+Add subscribers to HSSDB
+========================
+Attach to one of the **cassandra-0** pod and run `hss-add-user.sh` script to add the subscribers.
+
+.. code-block:: shell
+
+   $ kubectl exec -it cassandra-0 /bin/bash -n omec
+   # hss-add-user.sh arguments
+   # count=${1}
+   # imsi=${2}
+   # msisdn=${3}
+   # apn=${4}
+   # key=${5:-'000102030405060708090a0b0c0d0e0f'}
+   # opc=${6:-'69d5c2eb2e2e624750541d3bbc692ba5'}
+   # sqn=${7:-'135'}
+   # cassandra_ip=${8:-'localhost'}
+   # mmeidentity=${9:-'mme.omec.svc.prd.acc.gcp.aetherproject.net'}
+   # mmerealm=${10:-'omec.svc.prd.acc.gcp.aetherproject.net'}
+
+   $ root@cassandra-0:/# ./hss-add-user.sh \
+      30 \
+      315010102000001 \
+      9999234455 \
+      internet \
+      ACB9E480B30DC12C6BDD26BE882D2940 \
+      F5929B14A34AD906BC44D205242CD182
