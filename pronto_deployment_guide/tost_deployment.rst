@@ -23,37 +23,37 @@ Here is an example folder structure:
    staging/ace-menlo/tost
    ├── app_map.tfvars
    ├── backend.tf
-   ├── common
-   │   ├── main.tf
-   │   └── variables.tf
-   ├── hostpath.yaml
-   ├── main.tf
+   ├── deepinsight
+   │   ├── README.md
+   │   ├── deepinsight-topo.json
+   │   └── deepinsight-topo.json.license
+   ├── main.tf -> ../../../common/tost/main.tf
    ├── onos
-   │   ├── app_map.tfvars
-   │   ├── backend.tf
-   │   ├── main.tf -> ../common/main.tf
-   │   ├── onos-netcfg.json
-   │   ├── onos-netcfg.json.license
-   │   ├── onos.yaml
-   │   └── variables.tf -> ../common/variables.tf
+   │   ├── app_map.tfvars
+   │   ├── backend.tf
+   │   ├── main.tf -> ../../../../common/tost/apps/onos/main.tf
+   │   ├── onos-netcfg.json
+   │   ├── onos-netcfg.json.license
+   │   ├── onos.yaml
+   │   └── variables.tf -> ../../../../common/tost/apps/onos/variables.tf
    ├── stratum
-   │   ├── app_map.tfvars
-   │   ├── backend.tf
-   │   ├── main.tf -> ../common/main.tf
-   │   ├── menlo-staging-leaf-1-chassis-config.pb.txt
-   │   ├── menlo-staging-leaf-2-chassis-config.pb.txt
-   │   ├── menlo-staging-spine-1-chassis-config.pb.txt
-   │   ├── menlo-staging-spine-2-chassis-config.pb.txt
-   │   ├── stratum.yaml
-   │   ├── tost-dev-chassis-config.pb.txt
-   │   └── variables.tf -> ../common/variables.tf
+   │   ├── app_map.tfvars
+   │   ├── backend.tf
+   │   ├── main.tf -> ../../../../common/tost/apps/stratum/main.tf
+   │   ├── menlo-staging-leaf-1-chassis-config.pb.txt
+   │   ├── menlo-staging-leaf-2-chassis-config.pb.txt
+   │   ├── menlo-staging-spine-1-chassis-config.pb.txt
+   │   ├── menlo-staging-spine-2-chassis-config.pb.txt
+   │   ├── stratum.yaml
+   │   ├── tost-dev-chassis-config.pb.txt
+   │   └── variables.tf -> ../../../../common/tost/apps/stratum/variables.tf
    ├── telegraf
-   │   ├── app_map.tfvars
-   │   ├── backend.tf
-   │   ├── main.tf -> ../common/main.tf
-   │   ├── telegraf.yaml
-   │   └── variables.tf -> ../common/variables.tf
-   └── variables.tf
+   │   ├── app_map.tfvars
+   │   ├── backend.tf
+   │   ├── main.tf -> ../../../../common/tost/apps/telegraf/main.tf
+   │   ├── telegraf.yaml
+   │   └── variables.tf -> ../../../../common/tost/apps/telegraf/variables.tf
+   └── variables.tf -> ../../../common/tost/variables.tf
 
 There are four Terraform scripts inside **tost** directory and are responsible for managing each service.
 
@@ -274,6 +274,35 @@ Taking Menlo staging pod as example, there are four switches so we fill out 4 IP
          sample_interval: 5000ns
          subscription_mode: sample
 
+
+Create Your Own Configs
+^^^^^^^^^^^^^^^^^^^^^^^
+
+The easiest way to create your own configs is running the template script.
+
+Assumed we would like to set up the **ace-example** pod in the production environment.
+
+1. open the **tools/ace_env**
+2. fill out all required variables
+3. import the environment variables from **tools/ace_env**
+4. perform the makefile command to generate configuration and directory for TOST
+5. update **onos-netcfg.json** for ONOS
+6. update **${hostname}-chassis-config.pb.txt** for Stratum
+7. update all switch IPs in **telegraf.yaml**
+8. commit your change and open the Gerrit patch
+
+.. code-block:: console
+
+  vim tools/ace_env
+  source tools/ace_env
+  make -C tools/  tost
+  vim production/ace-example/tost/onos/onos-netcfg.json
+  vim production/ace-example/tost/stratum/*${hostname}-chassis-config.pb.txt**
+  vim production/ace-example/tost/telegraf/telegraf.yam
+  git add commit
+  git review
+
+
 Quick recap
 ^^^^^^^^^^^
 
@@ -298,9 +327,31 @@ Create TOST deployment job in Jenkins
 =====================================
 There are three major components in the Jenkins system, the Jenkins pipeline and Jenkins Job Builder and Jenkins Job.
 
-.. note::
+We follow the Infrastructure as Code principle to place three major components in a Git repo, **aether-ci-management**
+Download **aether-ci-management** repository .
 
-   All Jenkins related files are placed in a `temporary repository <https://github.com/hwchiu/stratum-example/tree/master/pipelines>`_ and will move to another repo once the Aether Jenkins is ready.
+.. code-block:: shell
+
+   $ cd $WORKDIR
+   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-ci-management"
+
+
+Here is the example of folder structure, we put everything related to three major components under the jjb folder.
+
+.. code-block:: console
+
+   $ tree -d jjb
+   jjb
+   ├── ci-management
+   ├── global
+   │   ├── jenkins-admin -> ../../global-jjb/jenkins-admin
+   │   ├── jenkins-init-scripts -> ../../global-jjb/jenkins-init-scripts
+   │   ├── jjb -> ../../global-jjb/jjb
+   │   └── shell -> ../../global-jjb/shell
+   ├── pipeline
+   ├── repos
+   ├── shell
+   └── templates
 
 
 Jenkins pipeline
@@ -317,6 +368,41 @@ We will explain more in the next section.
    Currently, we don’t perform the incremental upgrade for TOST application.
    Instead, we perform the clean installation.
    In the pipeline script, Terraform will destroy all existing resources and then create them again.
+
+
+We put all pipeline scripts under the pipeline directory, the language of the pipeline script is groovy.
+
+.. code-block:: console
+
+   $ tree pipeline
+   pipeline
+   ├── aether-in-a-box.groovy
+   ├── artifact-release.groovy
+   ├── cd-pipeline-charts-postrelease.groovy
+   ├── cd-pipeline-dockerhub-postrelease.groovy
+   ├── cd-pipeline-postrelease.groovy
+   ├── cd-pipeline-terraform.groovy
+   ├── docker-publish.groovy
+   ├── ng40-func.groovy
+   ├── ng40-scale.groovy
+   ├── reuse-scan-gerrit.groovy
+   ├── reuse-scan-github.groovy
+   ├── tost-onos.groovy
+   ├── tost-stratum.groovy
+   ├── tost-telegraf.groovy
+   └── tost.groovy
+
+Currently, we had four pipeline scripts for TOST deployment.
+
+1. tost-onos.groovy
+2. tost-stratum.groovy
+3. tost-telegraf.groovy
+4. tost.groovy
+
+tost-[onos/stratum/telegraf].groovy are used to deploy the individual application respectively,
+and tost.groovy is a high level script, used to deploy the TOST application, it will execute
+the above three scripts in its pipeline script.
+
 
 Jenkins jobs
 ^^^^^^^^^^^^
@@ -340,13 +426,12 @@ Here is an example of supported parameters.
 Application level
 """""""""""""""""
 
-- **config_review/config_patchset** tell the pipeline script to read the config for ONOS from a specified
-   gerrit review, instead of the HEAD branch. It’s good for developer to test its change before merge.
-- **onos_user/onos_password**: used to login ONOS controller
-   **onos_password** is a key which will load the real password from Jenkins Credential system.
-- **onos_ns**: the namespace we installed the secret file for ONOS, (will refactor in the future).
+- **GERRIT_CHANGE_NUMBER/GERRIT_PATCHSET_NUMBER**: tell the pipeline script to read
+  the config for aether-pod-configs repo from a specified gerrit review, instead of the
+  HEAD branch. It’s good for developer to test its change before merge.
+- **onos_user**: used to login ONOS controller
 - **git_repo/git_server/git_user/git_password_env**: information of git repository, **git_password_env** is a key for
-   Jenkins Credential system.
+  Jenkins Credential system.
 
 Cluster level
 """""""""""""
@@ -354,32 +439,180 @@ Cluster level
 - **terraform_dir**: The root directory of the TOST directory.
 - **rancher_cluster**: target Rancher cluster name.
 - **rancher_api_env**: Rancher credential to access Rancher, used by Terraform.
-- **k8s_conifg**: Kubernetes config to access remote Kubernetes cluster.
 
 .. note::
 
-   Typically, developer only focus on **config_review** and **config_patchset**. The rest of them are managed by OPs.
+   Typically, developer only focus on **GERRIT_CHANGE_NUMBER** and **GERRIT_PATCHSET_NUMBER**. The rest of them are managed by OPs.
 
 Jenkins Job Builder (JJB)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
-We prefer to apply the IaaC (Infrastructure as a Code) for everything.
+
+We prefer to apply the IaC (Infrastructure as Code) for everything.
 We use the JJB (Jenkins Job Builder) to create new Jenkins Job, including the Jenkins pipeline.
 We need to clone a set of Jenkins jobs when a new edge is deployed.
 
-..
-   TODO: Automate Jenkins job creation with JJB once the Aether Jenkins is set updated
+In order to provide the flexibility and avoid re-inventing the wheel, we used the job template to declare your job.
+Thanks to the JJB, we can use the parameters in the job template to render different kinds of jobs easily.
+
+All the template files are placed under templates directory.
+
+.. code-block:: console
+
+   ╰─$ tree templates
+   templates
+   ├── aether-in-a-box.yaml
+   ├── archive-artifacts.yaml
+   ├── artifact-release.yml
+   ├── cd-pipeline-terraform.yaml
+   ├── docker-publish-github.yaml
+   ├── docker-publish.yaml
+   ├── helm-lint.yaml
+   ├── make-test.yaml
+   ├── ng40-nightly.yaml
+   ├── ng40-test.yaml
+   ├── private-docker-publish.yaml
+   ├── private-make-test.yaml
+   ├── publish-helm-repo.yaml
+   ├── reuse-gerrit.yaml
+   ├── reuse-github.yaml
+   ├── sync-dir.yaml
+   ├── tost.yaml
+   ├── verify-licensed.yaml
+   └── versioning.yaml
+
+
+we defined all TOST required job templates in tost.yaml and here is its partial content.
+
+.. code-block:: yaml
+
+   - job-template:
+      name: "{name}-onos"
+      id: "deploy-onos"
+      project-type: pipeline
+      dsl: !include-raw-escape: jjb/pipeline/tost-onos.groovy
+      triggers:
+        - onf-infra-tost-gerrit-trigger:
+           gerrit-server-name: '{gerrit-server-name}'
+           trigger_command: "apply"
+           pattern: "{terraform_dir}/tost/onos/.*"
+      logrotate:
+          daysToKeep: 7
+          numToKeep: 10
+          artifactDaysToKeep: 7
+          artifactNumToKeep: 10
+      parameters:
+          - string:
+                name: gcp_credential
+                default: "{google_bucket_access}"
+          - string:
+                name: rancher_cluster
+                default: "{rancher_cluster}"
+          - string:
+                name: rancher_api_env
+                default: "{rancher_api}"
+          - string:
+                name: git_repo
+                default: "aether-pod-configs"
+          - string:
+                name: git_server
+                default: "gerrit.opencord.org"
+          - string:
+                name: git_ssh_user
+                default: "jenkins"
+
+
+
+
+Once we have the job template, we need to tell the JJB, we want to use the job template to create our own jobs.
+Here comes the concept of project, you need to define job templates you want to use and the values of all parameters.
+
+
+We put all project yaml files under the repo directory and here is the example
+
+.. code-block:: console
+
+   ╰─$ tree repos                                                                                                                                   130 ↵
+   repos
+   ├── aether-helm-charts.yaml
+   ├── aether-in-a-box.yaml
+   ├── cd-pipeline-terraform.yaml
+   ├── ng40-test.yaml
+   ├── spgw.yaml
+   └── tost.yaml
+
+
+Following is the example of tost projects, we defined three projects here, and each project has different
+parameters and Jenkins jobs it wants to use.
+
+.. code-block:: yaml
+
+   - project:
+         name: deploy-menlo-tost-dev
+         rancher_cluster: "menlo-tost-dev"
+         terraform_dir: "testing/menlo-tost"
+         rancher_api: "{rancher_testing_access}"
+         jobs:
+            - "deploy"
+            - "deploy-onos"
+            - "deploy-stratum"
+            - "deploy-telegraf"
+   - project:
+         name: deploy-menlo-tost-staging
+         rancher_cluster: "ace-menlo"
+         terraform_dir: "staging/ace-menlo"
+         rancher_api: "{rancher_staging_access}"
+         jobs:
+            - "deploy"
+            - "deploy-onos"
+            - "deploy-stratum"
+            - "deploy-telegraf"
+   - project:
+         name: deploy-menlo-production
+         rancher_cluster: "ace-menlo"
+         terraform_dir: "production/ace-menlo"
+         rancher_api: "{rancher_production_access}"
+         jobs:
+            - "deploy"
+            - "deploy-onos"
+            - "deploy-stratum"
+            - "deploy-telegraf"
+
+
+Create Your Own Jenkins Job
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Basically, if you don't need to customize the Jenkins pipeline script and the job configuration, the only thing
+you need to do is modify the repos/tost.yaml to add your project.
+
+For example, we would like to deploy the TOST to our production pod, let's assume it named "tost-example".
+Add the following content into repos/tost.yaml
+
+.. code-block:: yaml
+
+   - project:
+         name: deploy-tost-example-production
+         rancher_cluster: "ace-test-example"
+         terraform_dir: "production/tost-example"
+         rancher_api: "{rancher_production_access}"
+         jobs:
+            - "deploy"
+            - "deploy-onos"
+            - "deploy-stratum"
+            - "deploy-telegraf"
+
+
+.. note::
+
+   The **terraform_dir** indicates the directory location in aether-pod-configs repo, please ensure your Terraform scripts
+   already there before running the Jenkins job.
+
 
 Trigger TOST deployment in Jenkins
 ==================================
-Ideally, whenever a change is merged into **aether-pod-config**,
+Whenever a change is merged into **aether-pod-config**,
 the Jenkins job should be triggered automatically to (re)deploy TOST.
-This is still being set up at this moment.
-Therefore, we need to manually trigger the deployment by clicking the **Build** button
-of each Jenkins job and provide parameters accordingly.
 
-..
-   TODO: Update this once the gerrit trigger is implemented
-
+You can also type the comment **apply** in the Gerrit patch, it will trigger Jenkins jobs to deploy TOST for you.
 
 Troubleshooting
 ===============
