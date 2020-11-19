@@ -59,8 +59,8 @@ We can open the Web browser (e.g., Chrome, Firefox, etc.), and go to `https://11
 
 With the below credentials, we can log in the UI:
 
-* ID: sc_femto
-* Password: scHt3pp (or sc_femto)
+* ID: `sc_femto`
+* Password: `scHt3pp` (or `sc_femto`)
 
 After log-in, we can see the state page.
 
@@ -99,20 +99,20 @@ Click the `Manage` button on the top menu bar and then go to the `LTE Basic Sett
 
 In this page, we should change below parameters:
 
-* Carrier Number: 2
-* Carrier Aggregation: unchecked
-* BandWidth: 20
-* FrequencyBand: 48,48
-* EARFCN: 55440,55640
-* CellIdentity: assigned Cell ID
-* PCI: 100,101
-* TxPower: 20
-* Tunnel Type: IPv4
-* MME IP Address: 10.168.0.6
-* TAC: assigned TAC
-* PLMNID: 315010
-* Sync Source: FREE_RUNNING
-* Enable CWMP: unchecked
+* Carrier Number: `2`
+* Carrier Aggregation: `unchecked`
+* BandWidth: `20`
+* FrequencyBand: `48,48`
+* EARFCN: `55440,55640`
+* CellIdentity: `assigned Cell ID`
+* PCI: `100,101`
+* TxPower: `20`
+* Tunnel Type: `IPv4`
+* MME IP Address: `10.168.0.6`
+* TAC: `assigned TAC`
+* PLMNID: `315010`
+* Sync Source: `FREE_RUNNING`
+* Enable CWMP: `unchecked`
 
 Among those parameters, we should carefully set values to CellIdentity and TAC.
 Those parameters are the preliminaries which ONF OPs team will assign to each site.
@@ -125,11 +125,11 @@ Then, click `SAS Configuration` tab in the same page.
 
 In this page, we should change five values in the `Location Configuration` section as follows:
 
-* Location: Indoor
-* Location Source: Manual
-* Latitude: 0
-* Longitude: 0
-* Elevation: -18000
+* Location: `Indoor`
+* Location Source: `Manual`
+* Latitude: `0`
+* Longitude: `0`
+* Elevation: `-18000`
 
 Do not forget to click the save button at the bottom after pushing values.
 
@@ -157,7 +157,7 @@ Then, power on the Sercomm eNB device and get rid of the LAN port cable.
 
 .. note::
    Without the LAN port cable, we can access the Sercomm eNB admin UI through `https://192.168.251.5` URL, if the laptop/PC is connected with the same network via the fabric switch.
-   For our convenience, we can add some forwarding rules into the iptable in the management node to get the Sercomm eNB admin UI outside. It is optional.
+   For our convenience, we can add some forwarding rules into the `iptable` in the management node to get the Sercomm eNB admin UI outside. It is optional.
 
 Troubleshooting
 ===============
