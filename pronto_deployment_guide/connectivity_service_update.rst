@@ -58,7 +58,7 @@ and `UE_DNS` address as `dns_primary` value.
                   - access-all
                selected-apn-profile: "apn-internet-menlo"
                selected-qos-profile: "qos-profile1"
-   +          - selected-user-plane-profile: "new"
+   +          - selected-user-plane-profile: "test"
    +            keys:
    +              serving-plmn:
    +                mcc: 315
@@ -67,7 +67,7 @@ and `UE_DNS` address as `dns_primary` value.
    +            priority: 5
    +            selected-access-profile:
    +              - access-all
-   +            selected-apn-profile: "apn-internet-new"
+   +            selected-apn-profile: "apn-internet-test"
    +            selected-qos-profile: "qos-profile1"
             user-plane-profiles:
             onf-tucson:
@@ -76,7 +76,7 @@ and `UE_DNS` address as `dns_primary` value.
                user-plane: "upf.omec.svc.prd.intel.aetherproject.net"
             menlo:
                user-plane: "pfcp-agent.omec.svc.prd.menlo.aetherproject.net"
-   +          new:
+   +          test:
    +            user-plane: "pfcp-agent.omec.svc.prd.new.aetherproject.net"
             apn-profiles:
             apn-internet-default:
@@ -85,7 +85,7 @@ and `UE_DNS` address as `dns_primary` value.
                dns_primary: "10.59.128.11"
                dns_secondary: "1.1.1.1"
                mtu: 1460
-   +          apn-internet-new:
+   +          apn-internet-test:
    +            apn-name: "internet"
    +            usage: 1
    +            network: "lbo"
@@ -100,7 +100,7 @@ and `UE_DNS` address as `dns_primary` value.
             key: "ACB9E480B30DC12C6BDD26BE882D2940"
             opc: "F5929B14A34AD906BC44D205242CD182"
             sqn: 135
-   +        # new
+   +        # test
    +        - imsiStart: "315010102000001"
    +          msisdnStart: "9999234455"
    +          count: 30
@@ -136,10 +136,4 @@ Attach to one of the **cassandra-0** pod and run `hss-add-user.sh` script to add
    # mmeidentity=${9:-'mme.omec.svc.prd.acc.gcp.aetherproject.net'}
    # mmerealm=${10:-'omec.svc.prd.acc.gcp.aetherproject.net'}
 
-   $ root@cassandra-0:/# ./hss-add-user.sh \
-      30 \
-      315010102000001 \
-      9999234455 \
-      internet \
-      ACB9E480B30DC12C6BDD26BE882D2940 \
-      F5929B14A34AD906BC44D205242CD182
+   $ root@cassandra-0:/# ./hss-add-user.sh 30 315010102000001 9999234455 internet
