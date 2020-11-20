@@ -14,6 +14,11 @@ so we just need to create a patch to **aether-pod-configs** repository.
 Note that some of the steps described here are not directly related to setting up a VPN,
 but rather are a prerequisite for adding a new ACE.
 
+.. attention::
+
+   If you are adding another ACE to an existing VPN connection, go to
+   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`
+
 Before you begin
 ----------------
 * Make sure firewall in front of ACE allows UDP port 500, UDP port 4500, and ESP packets
@@ -44,7 +49,6 @@ Make sure to replace the sample values when you actually create a review request
 |                             +----------------------------------+
 |                             | Cluster IP: 10.66.128.0/17       |
 +-----------------------------+----------------------------------+
-
 
 Download aether-pod-configs repository
 --------------------------------------
@@ -211,6 +215,7 @@ and three additional routing entries via one of the tunnel interfaces.
 
 .. code-block:: shell
 
+   # Verify routings
    $ netstat -rn
    Kernel IP routing table
    Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
@@ -224,15 +229,15 @@ and three additional routing entries via one of the tunnel interfaces.
    169.254.0.8     0.0.0.0         255.255.255.252 U         0 0          0 gcp_tunnel1
    169.254.1.8     0.0.0.0         255.255.255.252 U         0 0          0 gcp_tunnel2
 
-   $ ping 10.168.0.6 -c 3
-   PING 10.168.0.6 (10.168.0.6) 56(84) bytes of data.
-   64 bytes from 35.235.67.169: icmp_seq=1 ttl=56 time=67.9 ms
-   64 bytes from 35.235.67.169: icmp_seq=2 ttl=56 time=67.4 ms
-   64 bytes from 35.235.67.169: icmp_seq=3 ttl=56 time=67.1 ms
+   # Verify ACC VM access
+   $ ping 10.168.0.6
 
-   --- 10.168.0.6 ping statistics ---
-   3 packets transmitted, 3 received, 0% packet loss, time 2002ms
-   rtt min/avg/max/mdev = 67.107/67.502/67.989/0.422 ms
+   # Verify ACC K8S cluster access
+   $ nslookup kube-dns.kube-system.svc.prd.acc.gcp.aetherproject.net 10.52.128.10
+
+You can further verify whether the ACE routes are propagated well to GCP
+by checking GCP dashboard **VPC Network > Routes > Dynamic**.
+
 
 Post VPN setup
 --------------
@@ -248,6 +253,43 @@ Note that it is no harm to re-run the ansible playbook but not recommended.
    $ git commit -m "Mark ansible done for test ACE"
    $ git review
 
+.. _add_ace_to_vpn:
+
+Add another ACE to an existing VPN connection
+---------------------------------------------
+VPN connections can be shared when there are multiple ACE clusters in a site.
+In order to add ACE to an existing VPN connection,
+you'll have to SSH into the management node and manually update BIRD configuration.
+
+.. note::
+
+   This step needs improvements in the future.
+
+.. code-block:: shell
+
+   $ sudo vi /etc/bird/bird.conf
+   protocol static {
+      ...
+      route 10.66.128.0/17 via 10.91.0.10;
+
+      # Add routings for the new ACE's K8S cluster IP range via cluster nodes
+      # TODO: Configure iBGP peering with Calico nodes and dynamically learn these routings
+      route <NEW-ACE-CLUSTER-IP> via <SERVER1>
+      route <NEW-ACE-CLUSTER-IP> via <SERVER2>
+      route <NEW-ACE-CLUSTER-IP> via <SERVER3>
+   }
+
+   filter gcp_tunnel_out {
+      # Add the new ACE's K8S cluster IP range and the management subnet if required to the list
+      if (net ~ [ 10.91.0.0/24, 10.66.128.0/17, <NEW-ACE-CLUSTER-IP-RANGE> ]) then accept;
+      else reject;
+   }
+   # Save and exit
+
+   $ sudo birdc configure
+
+   # Confirm the static routes are added
+   $ sudo birdc show route
 
 OS Installation - Switches
 ==========================
