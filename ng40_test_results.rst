@@ -24,9 +24,6 @@ Resources:
 
 - *Detailed test plan page coming soon*
 - Jenkins Job: `omec_func_dev <https://jenkins.opencord.org/job/omec_func_dev/>`_
-- Latest build:
-    - `OMEC Functionality NG40 logs <https://jenkins.opencord.org/job/omec_func_dev/lastBuild/artifact/ng40/log/>`_
-    - `OMEC Functionality Artifacts <https://jenkins.opencord.org/job/omec_func_dev/lastBuild/artifact/>`_
 
 .. image:: https://jenkins.opencord.org/view/OMEC/job/aether-archive-artifacts/lastSuccessfulBuild/artifact/omec_func_dev/plot.png
   :width: 840
@@ -43,9 +40,6 @@ Resources:
 
 - *Detailed test plan page coming soon*
 - Jenkins Job: `omec_scaling_dev <https://jenkins.opencord.org/job/omec_scaling_dev/>`_
-- Latest build:
-    - `OMEC Scaling NG40 logs <https://jenkins.opencord.org/job/omec_scaling_dev/lastBuild/artifact/ng40/log/>`_
-    - `OMEC Scaling Artifacts <https://jenkins.opencord.org/job/omec_scaling_dev/lastBuild/artifact/>`_
 
 .. image:: https://jenkins.opencord.org/view/OMEC/job/aether-archive-artifacts/lastSuccessfulBuild/artifact/omec_scaling_dev/attach.png
   :width: 840
@@ -82,9 +76,6 @@ Resources *(sign-in required)*:
 
 - *Detailed test plan page coming soon*
 - Jenkins Job: `aether_func_production <https://jenkins.opencord.org/job/aether-member-only-jobs/job/aether_func_production/>`_
-- Latest build:
-    - `Aether Functionality NG40 logs <https://jenkins.opencord.org/job/aether-member-only-jobs/job/aether_func_production/lastBuild/artifact/ng40/log/>`_
-    - `Aether Functionality Artifacts <https://jenkins.opencord.org/job/aether-member-only-jobs/job/aether_func_production/lastBuild/artifact/>`_
 
 .. image:: https://jenkins.opencord.org/view/OMEC/job/aether-archive-artifacts/lastSuccessfulBuild/artifact/aether_func_production/plot.png
   :width: 840
@@ -100,9 +91,6 @@ Resources *(sign-in required)*:
 
 - *Detailed test plan page coming soon*
 - Jenkins Job: `aether_scaling_production <https://jenkins.opencord.org/job/aether-member-only-jobs/job/aether_scaling_production/>`_
-- Latest build:
-    - `Aether Scaling NG40 logs <https://jenkins.opencord.org/job/aether-member-only-jobs/job/aether_scaling_production/lastBuild/artifact/ng40/log/>`_
-    - `Aether Scaling Artifacts <https://jenkins.opencord.org/job/aether-member-only-jobs/job/aether_scaling_production/lastBuild/artifact/>`_
 
 .. image:: https://jenkins.opencord.org/view/OMEC/job/aether-archive-artifacts/lastSuccessfulBuild/artifact/aether_scaling_production/attach.png
   :width: 840
