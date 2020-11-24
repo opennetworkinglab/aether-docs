@@ -82,6 +82,21 @@ single file to avoid configuration conflicts are maintained in this way.
       }
    }
 
+You'll have to get this change merged before proceeding.
+
+.. code-block:: shell
+
+   $ git status
+   On branch tools
+   Changes not staged for commit:
+
+      modified:   cluster_map.tfvars
+      modified:   user_map.tfvars
+
+   $ git add .
+   $ git commit -m "Add test ACE"
+   $ git review
+
 Create runtime configurations
 =============================
 In this step, we will add several Terraform configurations and overriding values for the managed applications.
