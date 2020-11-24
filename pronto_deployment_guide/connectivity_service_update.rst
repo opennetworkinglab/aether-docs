@@ -101,12 +101,12 @@ and `UE_DNS` address as `dns_primary` value.
             opc: "F5929B14A34AD906BC44D205242CD182"
             sqn: 135
    +        # test
-   +        - imsiStart: "315010102000001"
+   +        - imsiStart: "315010777712301"
    +          msisdnStart: "9999234455"
    +          count: 30
    +          apn: "internet"
-   +          key: "ACB9E480B30DC12C6BDD26BE882D2940"
-   +          opc: "F5929B14A34AD906BC44D205242CD182"
+   +          key: "000102030405060708090a0b0c0d0e0f"
+   +          opc: "69d5c2eb2e2e624750541d3bbc692ba5"
    +          sqn: 135
          mmes:
             - id: 1
@@ -136,4 +136,4 @@ Attach to one of the **cassandra-0** pod and run `hss-add-user.sh` script to add
    # mmeidentity=${9:-'mme.omec.svc.prd.acc.gcp.aetherproject.net'}
    # mmerealm=${10:-'omec.svc.prd.acc.gcp.aetherproject.net'}
 
-   $ root@cassandra-0:/# ./hss-add-user.sh 30 315010102000001 9999234455 internet
+   $ root@cassandra-0:/# ./hss-add-user.sh 10 315010777712301 9999234455 internet
