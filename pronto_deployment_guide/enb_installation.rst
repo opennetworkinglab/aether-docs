@@ -2,13 +2,13 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-.. _enb-installation:
-
+================
 eNB Installation
 ================
-
 This section describes how to install and configure the Sercomm eNB
 which is the default eNB device for Aether/Pronto project.
+
+.. _enb-installation:
 
 Preliminaries
 =============
