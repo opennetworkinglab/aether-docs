@@ -48,6 +48,7 @@ pfcp
 preseed
 provisioner
 pxeboot
+qsfp
 rackmount
 reStructuredText
 repo
@@ -56,6 +57,7 @@ repository
 runtime
 subnet
 tAC
+tftp
 tfvars
 tost
 upf

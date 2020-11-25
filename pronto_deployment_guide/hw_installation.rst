@@ -98,31 +98,47 @@ The following items need to be added to `NetBox
    combining the first ``<devname>`` component of the Device names with this
    suffix.
 
-   An examples using the ``10.0.0.0/22`` block. There are 5 edge
+   An examples using the ``10.0.0.0/22`` block. There are 4 edge
    prefixes, with the following purposes:
 
      * ``10.0.0.0/25``
+
         * Has the Server BMC/LOM and Management Switch
         * Assign the ADMIN 1 VLAN
         * Set the description to ``admin.<deployment>.<site>.aetherproject.net`` (or
           ``prontoproject.net``).
 
      * ``10.0.0.128/25``
+
         * Has the Server Management plane, Fabric Switch Management/BMC
         * Assign MGMT 800 VLAN
         * Set the description to ``<deployment>.<site>.aetherproject.net`` (or
           ``prontoproject.net``).
 
-     * ``10.0.1.0/24``
-        * Has Compute Node Fabric Connections, devices connected to the Fabric like the eNB
+     * ``10.0.1.0/25``
+
+        * IP addresses of the qsfp0 port of the Compute Nodes to Fabric switches, devices
+          connected to the Fabric like the eNB
         * Assign FAB 801 VLAN
-        * Set the description to ``fabric.<deployment>.<site>.aetherproject.net`` (or
+        * Set the description to ``fab1.<deployment>.<site>.aetherproject.net`` (or
           ``prontoproject.net``).
 
+     * ``10.0.1.128/25``
+
+        * IP addresses of the qsfp1 port of the Compute Nodes to fabric switches
+        * Assign FAB 801 VLAN
+        * Set the description to ``fab2.<deployment>.<site>.aetherproject.net`` (or
+          ``prontoproject.net``).
+
+   Additionally, these edge prefixes are used for Kubernetes but don't need to
+   be created in NetBox:
+
      * ``10.0.2.0/24``
+
         * Kubernetes Pod IP's
 
      * ``10.0.3.0/24``
+
         * Kubernetes Cluster IP's
 
 8. Add Devices to the site, for each piece of equipment. These are named with a
@@ -149,13 +165,26 @@ The following items need to be added to `NetBox
    If a specific Device Type doesn't exist for the device, it must be created,
    which is detailed in the NetBox documentation, or ask the OPs team for help.
 
-9. Set the MAC address for the physical interfaces on the device.
+9. Add Services to the management server:
+
+    * name: ``dns``
+      protocol: UDP
+      port: 53
+
+    * name: ``tftp``
+      protocol: UDP
+      port: 69
+
+   These are used by the DHCP and DNS config to know which servers offer a
+   dns service and tftp.
+
+10. Set the MAC address for the physical interfaces on the device.
 
    You may also need to add physical network interfaces if  aren't already
    created by the Device Type.  An example would be if additional add-in
    network cards were installed.
 
-10. Add any virtual interfaces to the Devices. When creating a virtual
+11. Add any virtual interfaces to the Devices. When creating a virtual
     interface, it should have it's ``label`` field set to the physical network
     interface that it is assigned
 
@@ -170,9 +199,10 @@ The following items need to be added to `NetBox
 
      2. On the Fabric switches, the ``eth0`` port is shared between the OpenBMC
         interface and the ONIE/ONL installation.  Add a ``bmc`` virtual
-        interface with a label of ``eth0`` on each fabric switch.
+        interface with a label of ``eth0`` on each fabric switch, and check the
+        ``OOB Management`` checkbox.
 
-11. Create IP addresses for the physical and virtual interfaces.  These should
+12. Create IP addresses for the physical and virtual interfaces.  These should
     have the Tenant and VRF set.
 
     The Management Server should always have the first IP address in each
@@ -181,29 +211,44 @@ The following items need to be added to `NetBox
     would increment the later IP addresses.
 
       * Management Server
+
           * ``eno1`` - site provided public IP address, or blank if DHCP
+            provided
+
           * ``eno2`` - 10.0.0.1/25 (first of ADMIN) - set as primary IP
           * ``bmc`` - 10.0.0.2/25 (next of ADMIN)
           * ``mgmt800`` - 10.0.0.129/25 (first of MGMT)
-          * ``fab801`` - 10.0.1.1/24 (first of FAB)
+          * ``fab801`` - 10.0.1.1/25 (first of FAB)
 
       * Management Switch
+
           * ``gbe1`` - 10.0.0.3/25 (next of ADMIN) - set as primary IP
 
       * Fabric Switch
+
           * ``eth0`` - 10.0.0.130/25 (next of MGMT), set as primary IP
           * ``bmc`` - 10.0.0.131/25
 
       * Compute Server
+
           * ``eth0`` - 10.0.0.132/25 (next of MGMT), set as primary IP
           * ``bmc`` - 10.0.0.4/25 (next of ADMIN)
           * ``qsfp0`` - 10.0.1.2/25 (next of FAB)
           * ``qsfp1`` - 10.0.1.3/25
 
       * Other Fabric devices (eNB, etc.)
+
           * ``eth0`` or other primary interface - 10.0.1.4/25 (next of FAB)
 
-10. Add Cables between physical interfaces on the devices
+13. Add DHCP ranges to the IP Prefixes for IP's that aren't reserved. These are
+    done like any other IP Address, but with the ``Status`` field is set to
+    ``DHCP``, and they'll consume the entire range of IP addresses given in the
+    CIDR mask.
+
+    For example ``10.0.0.32/27`` as a DHCP block would take up 1/4 of the ADMIN
+    prefix.
+
+14. Add Cables between physical interfaces on the devices
 
     TODO: Explain the cabling topology
 
@@ -394,6 +439,9 @@ To checkout the ONF ansible repo and enter the virtualenv with the tooling::
   make galaxy
   source venv_onfansible/bin/activate
 
+Obtain the ``undionly.kpxe`` iPXE artifact for bootstrapping the compute
+servers, and put it in the ``files`` directory.
+
 Next, create an inventory file to access the NetBox API.  An example is given
 in ``inventory/example-netbox.yml`` - duplicate this file and modify it. Fill
 in the ``api_endpoint`` address and ``token`` with an API key you get out of
@@ -406,7 +454,32 @@ named ``mgmtserver1.stage1.menlo``, you'd run::
 
   python scripts/netbox_edgeconfig.py inventory/my-netbox.yml > inventory/host_vars/mgmtserver1.stage1.menlo.yml
 
-And create an inventory file for the management server in
+One manual change needs to be made to this output - edit the
+``inventory/host_vars/mgmtserver1.stage1.menlo.yml`` file and add the following
+to the bottom of the file, replacing the IP addresses with the ones that the
+management server is configured with on each VLAN. This configures the `netplan
+<https://netplan.io>`_ on the management server, and will be automated away
+soon::
+
+  # added manually
+  netprep_netplan:
+    ethernets:
+      eno2:
+        addresses:
+          - 10.0.0.1/25
+    vlans:
+      mgmt800:
+        id: 800
+        link: eno2
+        addresses:
+          - 10.0.0.129/25
+      fabr801:
+        id: 801
+        link: eno2
+        addresses:
+          - 10.0.1.1/25
+
+Create an inventory file for the management server in
 ``inventory/menlo-staging.ini`` which contains::
 
   [mgmt]
@@ -414,7 +487,7 @@ And create an inventory file for the management server in
 
 Then, to configure a management server, run::
 
-  ansible-playbook -i inventory/menlo-staging.ini playbooks/prontomgmt-playbook.yml
+  ansible-playbook -i inventory/menlo-staging.ini playbooks/aethermgmt-playbook.yml
 
 This installs software with the following functionality:
 
@@ -422,7 +495,7 @@ This installs software with the following functionality:
 - Firewall with NAT for routing traffic
 - DHCP and TFTP for bootstrapping servers and switches
 - DNS for host naming and identification
-- HTTP server for serving files used for bootstrapping other equipment
+- HTTP server for serving files used for bootstrapping switches
 
 Compute Server Bootstrap
 """"""""""""""""""""""""
@@ -432,3 +505,19 @@ the same iPXE bootstrap file to the computer.
 
 Each node will be booted, and when iPXE loads select the ``Ubuntu 18.04
 Installer (fully automatic)`` option.
+
+The nodes can be controlled remotely via their BMC management interfaces - if
+the BMC is at ``10.0.0.3`` a remote user can SSH into them with::
+
+  ssh -L 2443:10.0.0.3:443 onfadmin@<mgmt server ip>
+
+And then use their web browser to access the BMC at::
+
+  https://localhost:2443
+
+The default BMC credentials for the Pronto nodes are::
+
+  login: ADMIN
+  password: Admin123
+
+Once these nodes are brought up, the installation can continue.
