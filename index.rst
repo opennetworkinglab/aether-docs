@@ -16,6 +16,13 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    readme
    ng40_test_results
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Operations
+   :hidden:
+   :glob:
+
+   operations
 
 .. toctree::
    :maxdepth: 3
@@ -31,5 +38,6 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    pronto_deployment_guide/connectivity_service_update.rst
    pronto_deployment_guide/enb_installation.rst
    pronto_deployment_guide/acceptance_test_specification.rst
+   pronto_deployment_guide/troubleshooting.rst
 
 

@@ -5,15 +5,9 @@
 Hardware Installation
 =====================
 
-Hardware installation breaks down into a few steps:
-
-1. `Planning`_
-2. `Inventory`_
-3. `Rackmount of Equipment`_
-4. `Cabling and Network Topology`_
-5. `Management Switch Bootstrap`_
-6. `Management Server Bootstrap`_
-7. `Server Software Bootstrap`_
+Once the hardware has been ordered, the installation can be planned and
+implemented. This document describes the installation of the servers and
+software.
 
 Installation of the fabric switch hardware is covered in :ref:`OS Installation
 - Switches <switch-install>`.
@@ -21,38 +15,8 @@ Installation of the fabric switch hardware is covered in :ref:`OS Installation
 Installation of the radio hardware is covered in :ref:`eNB Installation
 <enb-installation>`.
 
-Planning
---------
-The planning of the network topology and devices, and required cabling
-
-Once planning is complete, equipment is ordered to match the plan.
-
-Network Cable Plan
-""""""""""""""""""
-
-If a 2x2 TOST fabric is used it should be configured as a :doc:`Single-Stage
-Leaf-Spine <trellis:supported-topology>`.
-
-- The links between each leaf and spine switch must be made up of two separate
-  cables.
-
-- Each compute server is dual-homed via a separate cable to two different leaf
-  switches (as in the "paired switches" diagrams).
-
-If only a single P4 switch is used, the :doc:`Simple
-<trellis:supported-topology>` topology is used, with two connections from each
-compute server to the single switch
-
-Additionally a non-fabric switch is required to provide a set of management
-networks.  This management switch is configured with multiple VLANs to separate
-the management plane, fabric, and the out-of-band and lights out management
-connections on the equipment.
-
-Device Naming
-"""""""""""""
-
-Site Design and Bookkeeping
-"""""""""""""""""""""""""""
+Site Bookkeeping
+----------------
 
 The following items need to be added to `NetBox
 <https://netbox.readthedocs.io/en/stable>`_ to describe each edge site:
@@ -60,15 +24,18 @@ The following items need to be added to `NetBox
 1. Add a Site for the edge (if one doesn't already exist), which has the
    physical location and contact information for the edge.
 
-2. Add Racks to the Site (if they don't already exist)
+2. Add equipment Racks to the Site (if they don't already exist).
 
 3. Add a Tenant for the edge (who owns/manages it), assigned to the ``Pronto``
    or ``Aether`` Tenant Group.
 
-4. Add a VRF (Routing Table) for the edge site.
+4. Add a VRF (Routing Table) for the edge site. This is usually just the name
+   of the site.  Make sure that ``Enforce unique space`` is checked, so that IP
+   addresses within the VRF are forced to be unique, and that the Tenant Group
+   and Tenant are set.
 
 5. Add a VLAN Group to the edge site, which groups the site's VLANs and
-   prevents duplication.
+   requires that they have a unique VLAN number.
 
 6. Add VLANs for the edge site.  These should be assigned a VLAN Group, the
    Site, and Tenant.
@@ -165,6 +132,9 @@ The following items need to be added to `NetBox
    If a specific Device Type doesn't exist for the device, it must be created,
    which is detailed in the NetBox documentation, or ask the OPs team for help.
 
+   See `Rackmount of Equipment`_ below for guidance on how equipment should be
+   mounted in the Rack.
+
 9. Add Services to the management server:
 
     * name: ``dns``
@@ -175,8 +145,8 @@ The following items need to be added to `NetBox
       protocol: UDP
       port: 69
 
-   These are used by the DHCP and DNS config to know which servers offer a
-   dns service and tftp.
+   These are used by the DHCP and DNS config to know which servers offer
+   DNS or TFTP service.
 
 10. Set the MAC address for the physical interfaces on the device.
 
@@ -252,90 +222,30 @@ The following items need to be added to `NetBox
 
     TODO: Explain the cabling topology
 
-Hardware
-""""""""
+Rackmount of Equipment
+----------------------
 
-Fabric Switches
-'''''''''''''''
+Most of the Pronto equipment has a 19" rackmount form factor.
 
-Pronto currently uses fabric switches based on the Intel (was Barefoot) Tofino
-chipset.  There are multiple variants of this switching chipset, with different
-speeds and capabilities.
+Guidelines for mounting this equipment:
 
-The specific hardware models in use in Pronto:
+- The EdgeCore Wedge Switches have a front-to-back (aka "port-to-power") fan
+  configuration, so hot air exhaust is out the back of the switch near the
+  power inlets, away from the 32 QSFP network ports on the front of the switch.
 
-* `EdgeCore Wedge100BF-32X
-  <https://www.edge-core.com/productsInfo.php?cls=1&cls2=180&cls3=181&id=335>`_
-  - a "Dual Pipe" chipset variant, used for the Spine switches
+- The full-depth 1U and 2U Supermicro servers also have front-to-back airflow
+  but have most of their ports on the rear of the device.
 
-* `EdgeCore Wedge100BF-32QS
-  <https://www.edge-core.com/productsInfo.php?cls=1&cls2=180&cls3=181&id=770>`_
-  - a "Quad Pipe" chipset variant, used for the Leaf switches
+- Airflow through the rack should be in one direction to avoid heat being
+  pulled from one device into another.  This means that to connect the QSFP
+  network ports from the servers to the switches, cabling should be routed
+  through the rack from front (switch) to back (server).  Empty rack spaces
+  should be reserved for this purpose.
 
-Compute Servers
-
-These servers run Kubernetes and edge applications.
-
-The requirements for these servers:
-
-* AMD64 (aka x86-64) architecture
-* Sufficient resources to run Kubernetes
-* Two 40GbE or 100GbE Ethernet connections to the fabric switches
-* One management 1GbE port
-
-The specific hardware models in use in Pronto:
-
-* `Supermicro 6019U-TRTP2
-  <https://www.supermicro.com/en/products/system/1U/6019/SYS-6019U-TRTP2.cfm>`_
-  1U server
-
-* `Supermicro 6029U-TR4
-  <https://www.supermicro.com/en/products/system/2U/6029/SYS-6029U-TR4.cfm>`_
-  2U server
-
-These servers are configured with:
-
-* 2x `Intel Xeon 5220R CPUs
-  <https://ark.intel.com/content/www/us/en/ark/products/199354/intel-xeon-gold-5220r-processor-35-75m-cache-2-20-ghz.html>`_,
-  each with 24 cores, 48 threads
-* 384GB of DDR4 Memory, made up with 12x 16GB ECC DIMMs
-* 2TB of nVME Flash Storage
-* 2x 6TB SATA Disk storage
-* 2x 40GbE ports using an XL710QDA2 NIC
-
-The 1U servers additionally have:
-
-- 2x 1GbE copper network ports
-- 2x 10GbE SFP+ network ports
-
-The 2U servers have:
-
-- 4x 1GbE copper network ports
-
-Management Server
-'''''''''''''''''
-
-One management server is required, which must have at least two 1GbE network
-ports, and runs a variety of network services to support the edge.
-
-The model used in Pronto is a `Supermicro 5019D-FTN4
-<https://www.supermicro.com/en/Aplus/system/Embedded/AS-5019D-FTN4.cfm>`_
-
-Which is configured with:
-
-* AMD Epyc 3251 CPU with 8 cores, 16 threads
-* 32GB of DDR4 memory, in 2x 16GB ECC DIMMs
-* 1TB of nVME Flash storage
-* 4x 1GbE copper network ports
-
-Management Switch
-'''''''''''''''''
-
-This switch connects the configuration interfaces and management networks on
-all the servers and switches together.
-
-In the Pronto deployment this hardware is a `HP/Aruba 2540 Series JL356A
-<https://www.arubanetworks.com/products/switches/access/2540-series/>`_.
+- The short-depth management HP Switch and 1U Supermicro servers should be
+  mounted on the rear of the rack.  They both don't generate an appreciable
+  amount of heat, so the airflow direction isn't a significant factor in
+  racking them.
 
 Inventory
 ---------
@@ -361,30 +271,6 @@ Once inventory has been completed, let the Infra team know, and the pxeboot
 configuration will be generated to have the OS preseed files corresponding to the
 new servers based on their serial numbers.
 
-Rackmount of Equipment
-----------------------
-
-Most of the Pronto equipment is in a 19" rackmount form factor.
-
-Guidelines for mounting this equipment:
-
-- The EdgeCore Wedge Switches have a front-to-back (aka "port-to-power") fan
-  configuration, so hot air exhaust is out the back of the switch near the
-  power inlets, away from the 32 QSFP network ports on the front of the switch.
-
-- The full-depth 1U and 2U Supermicro servers also have front-to-back airflow
-  but have most of their ports on the rear of the device.
-
-- Airflow through the rack should be in one direction to avoid heat being
-  pulled from one device into another.  This means that to connect the QSFP
-  network ports from the servers to the switches, cabling should be routed
-  through the rack from front (switch) to back (server).
-
-- The short-depth management HP Switch and 1U Supermicro servers should be
-  mounted to the rear of the rack.  They both don't generate an appreciable
-  amount of heat, so the airflow direction isn't a significant factor in
-  racking them.
-
 Cabling and Network Topology
 ----------------------------
 
@@ -396,8 +282,8 @@ Management Switch Bootstrap
 TODO: Add instructions for bootstrapping management switch, from document that
 has the linked config file.
 
-Server Software Bootstrap
--------------------------
+Software Bootstrap
+------------------
 
 Management Server Bootstrap
 """""""""""""""""""""""""""
@@ -440,7 +326,7 @@ To checkout the ONF ansible repo and enter the virtualenv with the tooling::
   source venv_onfansible/bin/activate
 
 Obtain the ``undionly.kpxe`` iPXE artifact for bootstrapping the compute
-servers, and put it in the ``files`` directory.
+servers, and put it in the ``playbook/files`` directory.
 
 Next, create an inventory file to access the NetBox API.  An example is given
 in ``inventory/example-netbox.yml`` - duplicate this file and modify it. Fill
@@ -456,10 +342,11 @@ named ``mgmtserver1.stage1.menlo``, you'd run::
 
 One manual change needs to be made to this output - edit the
 ``inventory/host_vars/mgmtserver1.stage1.menlo.yml`` file and add the following
-to the bottom of the file, replacing the IP addresses with the ones that the
-management server is configured with on each VLAN. This configures the `netplan
-<https://netplan.io>`_ on the management server, and will be automated away
-soon::
+to the bottom of the file, replacing the IP addresses with *only the lowest
+numbered IP address* the management server has on each VLAN (if >1 IP address
+is assigned to a VLAN or Interface, the DHCP server will fail to run). This
+configures the `netplan <https://netplan.io>`_ on the management server, and
+will be automated away soon::
 
   # added manually
   netprep_netplan:
@@ -479,15 +366,15 @@ soon::
         addresses:
           - 10.0.1.1/25
 
-Create an inventory file for the management server in
-``inventory/menlo-staging.ini`` which contains::
-
-  [mgmt]
-  mgmtserver1.stage1.menlo ansible_host=<public ip address> ansible_user="onfadmin" ansible_become_password=<password>
+Using the ``inventory/example-aether.ini`` as a template, create an
+:doc:`ansible inventory <ansible:user_guide/intro_inventory>` file for the
+site. Change the device names, IP addresses, and ``onfadmin`` password to match
+the ones for this site.  The management server's configuration is in the
+``[aethermgmt]`` and corresponding ``[aethermgmt:vars]`` section.
 
 Then, to configure a management server, run::
 
-  ansible-playbook -i inventory/menlo-staging.ini playbooks/aethermgmt-playbook.yml
+  ansible-playbook -i inventory/sitename.ini playbooks/aethermgmt-playbook.yml
 
 This installs software with the following functionality:
 
@@ -496,6 +383,8 @@ This installs software with the following functionality:
 - DHCP and TFTP for bootstrapping servers and switches
 - DNS for host naming and identification
 - HTTP server for serving files used for bootstrapping switches
+- Downloads the Tofino switch image
+- Creates user accounts for administrative access
 
 Compute Server Bootstrap
 """"""""""""""""""""""""
@@ -520,4 +409,68 @@ The default BMC credentials for the Pronto nodes are::
   login: ADMIN
   password: Admin123
 
-Once these nodes are brought up, the installation can continue.
+The BMC will also list all of the MAC addresses for the network interfaces
+(including BMC) that are built into the logic board of the system. Add-in
+network cards like the 40GbE ones used in compute servers aren't listed.
+
+To prepare the compute nodes, software must be installed on them.  As they
+can't be accessed directly from your local system, a :ref:`jump host
+<ansible:use_ssh_jump_hosts>` configuration is added, so the SSH connection
+goes through the management server to the compute systems behind it. Doing this
+requires a few steps:
+
+First, configure SSH to use Agent forwarding - create or edit your
+``~/.ssh/config`` file and add the following lines::
+
+  Host <management server IP>
+    ForwardAgent yes
+
+Then try to login to the management server, then the compute node::
+
+  $ ssh onfadmin@<management server IP>
+  Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 5.4.0-54-generic x86_64)
+  ...
+  onfadmin@mgmtserver1:~$ ssh onfadmin@10.0.0.138
+  Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 5.4.0-54-generic x86_64)
+  ...
+  onfadmin@node2:~$
+
+Being able to login to the compute nodes from the management node means that
+SSH Agent forwarding is working correctly.
+
+Verify that your inventory (Created earlier from the
+``inventory/example-aether.ini`` file) includes an ``[aethercompute]`` section
+that has all the names and IP addresses of the compute nodes in it.
+
+Then run a ping test::
+
+  ansible -i inventory/sitename.ini -m ping aethercompute
+
+It may ask you about authorized keys - answer ``yes`` for each host to trust the keys::
+
+  The authenticity of host '10.0.0.138 (<no hostip for proxy command>)' can't be established.
+  ECDSA key fingerprint is SHA256:...
+  Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+
+You should then see a success message for each host::
+
+  node1.stage1.menlo | SUCCESS => {
+      "changed": false,
+      "ping": "pong"
+  }
+  node2.stage1.menlo | SUCCESS => {
+      "changed": false,
+      "ping": "pong"
+  }
+  ...
+
+Once you've seen this, run the playbook to install the prerequisites (Terraform
+user, Docker)::
+
+  ansible-playbook -i inventory/sitename.ini playbooks/aethercompute-playbook.yml
+
+Note that Docker is quite large and may take a few minutes for installation
+depending on internet connectivity.
+
+Now that these compute nodes have been brought up, the rest of the installation
+can continue.

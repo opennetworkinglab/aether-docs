@@ -245,6 +245,7 @@ linkcheck_ignore = [
 # -- options for Intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
+    'ansible': ('https://docs.ansible.com/ansible/latest', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None),
     'trellis': ('https://docs.trellisfabric.org/master', None),
     }

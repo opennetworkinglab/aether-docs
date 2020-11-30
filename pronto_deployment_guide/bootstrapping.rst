@@ -2,107 +2,179 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-=============
 Bootstrapping
 =============
 
 .. _switch-install:
 
 OS Installation - Switches
-==========================
+--------------------------
+
+The installation of the ONL OS image on the fabric switches uses the DHCP and
+HTTP server set up on the management server.
+
+The default image is downloaded during that installation process by the
+``onieboot`` role. Make changes to that roll and rerun the management playbook
+to download a newer switch image.
+
+Preparation
+"""""""""""
+
+The switches have a single ethernet port that is shared between OpenBMC and
+ONL. Find out the MAC addresses for both of these ports and enter it into
+NetBox.
+
+Change boot mode to ONIE Rescue mode
+""""""""""""""""""""""""""""""""""""
+
+In order to reinstall an ONL image, you must change the ONIE bootloader to
+"Rescue Mode".
+
+Once the switch is powered on, it should retrieve an IP address on the OpenBMC
+interface with DHCP. OpenBMC uses these default credentials::
+
+  username: root
+  password: 0penBmc
+
+Login to OpenBMC with SSH::
+
+  $ ssh root@10.0.0.131
+  The authenticity of host '10.0.0.131 (10.0.0.131)' can't be established.
+  ECDSA key fingerprint is SHA256:...
+  Are you sure you want to continue connecting (yes/no)? yes
+  Warning: Permanently added '10.0.0.131' (ECDSA) to the list of known hosts.
+  root@10.0.0.131's password:
+  root@bmc:~#
+
+Using the Serial-over-LAN Console, enter ONL::
+
+  root@bmc:~# /usr/local/bin/sol.sh
+  You are in SOL session.
+  Use ctrl-x to quit.
+  -----------------------
+
+  root@onl:~#
 
 .. note::
+  If `sol.sh` is unresponsive, please try to restart the mainboard with::
 
-   This part will be done automatically once we have a DHCP and HTTP server set up in the infrastructure.
-   For now, we need to download and install the ONL image manually.
+    root@onl:~# wedge_power.sh restart
 
-Install ONL with Docker
------------------------
-First, enter **ONIE rescue mode**.
 
-Set up IP and route
-^^^^^^^^^^^^^^^^^^^
-.. code-block:: console
+Change the boot mode to rescue mode with the command ``onl-onie-boot-mode
+rescue``, and reboot::
 
-   # ip addr add 10.92.1.81/24 dev eth0
-   # ip route add default via 10.92.1.1
+  root@onl:~# onl-onie-boot-mode rescue
+  [1053033.768512] EXT4-fs (sda2): mounted filesystem with ordered data mode. Opts: (null)
+  [1053033.936893] EXT4-fs (sda3): re-mounted. Opts: (null)
+  [1053033.996727] EXT4-fs (sda3): re-mounted. Opts: (null)
+  The system will boot into ONIE rescue mode at the next restart.
+  root@onl:~# reboot
 
-- `10.92.1.81/24` should be replaced by the actual IP and subnet of the ONL.
-- `10.92.1.1` should be replaced by the actual default gateway.
+At this point, ONL will go through it's shutdown sequence and ONIE will start.
+If it does not start right away, press the Enter/Return key a few times - it
+may show you a boot selection screen. Pick ``ONIE`` and ``Rescue`` if given a
+choice.
 
-Download and install ONL
-^^^^^^^^^^^^^^^^^^^^^^^^
+Installing an ONL image over HTTP
+"""""""""""""""""""""""""""""""""
 
-.. code-block:: console
+Now that the switch is in Rescue mode
 
-   # wget https://github.com/opennetworkinglab/OpenNetworkLinux/releases/download/v1.3.2/ONL-onf-ONLPv2_ONL-OS_2020-10-09.1741-f7428f2_AMD64_INSTALLED_INSTALLER
-   # sh ONL-onf-ONLPv2_ONL-OS_2020-10-09.1741-f7428f2_AMD64_INSTALLED_INSTALLER
+First, activate the Console by pressing Enter::
 
-The switch will reboot automatically once the installer is done.
+  discover: Rescue mode detected.  Installer disabled.
 
-.. note::
+  Please press Enter to activate this console.
+  To check the install status inspect /var/log/onie.log.
+  Try this:  tail -f /var/log/onie.log
 
-   Alternatively, we can `scp` the ONL installer into ONIE manually.
+  ** Rescue Mode Enabled **
+  ONIE:/ #
 
-Setup BMC for remote console access
------------------------------------
-Log in to the BMC from ONL by
+Then run the ``onie-nos-install`` command, with the URL of the management
+server on the management network segment::
 
-.. code-block:: console
+  ONIE:/ # onie-nos-install http://10.0.0.129/onie-installer
+  discover: Rescue mode detected. No discover stopped.
+  ONIE: Unable to find 'Serial Number' TLV in EEPROM data.
+  Info: Fetching http://10.0.0.129/onie-installer ...
+  Connecting to 10.0.0.129 (10.0.0.129:80)
+  installer            100% |*******************************|   322M  0:00:00 ETA
+  ONIE: Executing installer: http://10.0.0.129/onie-installer
+  installer: computing checksum of original archive
+  installer: checksum is OK
+  ...
 
-   # ssh root@192.168.0.1 # pass: 0penBmc
+The installation will now start, and then ONL will boot culminating in::
 
-on `usb0` interface.
+  Open Network Linux OS ONL-wedge100bf-32qs, 2020-11-04.19:44-64100e9
 
-Once you are in the BMC, run the following commands to setup IP and route (or offer a fixed IP with DHCP)
+  localhost login:
 
-.. code-block:: console
+The default ONL login is::
 
-   # ip addr add 10.92.1.85/24 dev eth0
-   # ip route add default via 10.92.1.1
+  username: root
+  password: onl
 
-- `10.92.1.85/24` should be replaced by the actual IP and subnet of the BMC.
-  Note that it should be different from the ONL IP.
-- `10.92.1.1` should be replaced by the actual default gateway.
+If you login, you can verify that the switch is getting it's IP address via
+DHCP::
 
-BMC uses the same ethernet port as ONL management so you should give it an IP address in the same subnet.
-BMC address will preserve during ONL reboot, but won’t be preserved during power outage.
+  root@localhost:~# ip addr
+  ...
+  3: ma1: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc mq state UP group default qlen 1000
+      link/ether 00:90:fb:5c:e1:97 brd ff:ff:ff:ff:ff:ff
+      inet 10.0.0.130/25 brd 10.0.0.255 scope global ma1
+  ...
 
-To log in to ONL console from BMC, run
 
-.. code-block:: console
+Post-ONL Configuration
+""""""""""""""""""""""
 
-   # /usr/local/bin/sol.sh
+A ``terraform`` user must be created on the switches to allow them to be
+configured.
 
-If `sol.sh` is unresponsive, please try to restart the mainboard with
+This is done using Ansible.  Verify that your inventory (Created earlier from the
+``inventory/example-aether.ini`` file) includes an ``[aetherfabric]`` section
+that has all the names and IP addresses of the compute nodes in it.
 
-.. code-block:: console
+Then run a ping test::
 
-   # wedge_power.sh restart
+  ansible -i inventory/sitename.ini -m ping aetherfabric
 
-Setup network and host name for ONL
------------------------------------
+This may fail with the error::
 
-.. code-block:: console
+  "msg": "Using a SSH password instead of a key is not possible because Host Key checking is enabled and sshpass does not support this.  Please add this host's fingerprint to your known_hosts file to manage this host."
 
-   # hostnamectl set-hostname <host-name>
+Comment out the ``ansible_ssh_pass="onl"`` line, then rerun the ping test.  It
+may ask you about authorized keys - answer ``yes`` for each host to trust the
+keys::
 
-   # vim.tiny /etc/hosts # update accordingly
-   # cat /etc/hosts # example
-   127.0.0.1 localhost
-   10.92.1.81 menlo-staging-spine-1
+  The authenticity of host '10.0.0.138 (<no hostip for proxy command>)' can't be established.
+  ECDSA key fingerprint is SHA256:...
+  Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 
-   # vim.tiny /etc/network/interfaces.d/ma1 # update accordingly
-   # cat /etc/network/interfaces.d/ma1 # example
-   auto ma1
-   iface ma1 inet static
-   address 10.92.1.81
-   netmask 255.255.255.0
-   gateway 10.92.1.1
-   dns-nameservers 8.8.8.8
+Once you've trusted the host keys, the ping test should succeed::
+
+  spine1.role1.site | SUCCESS => {
+      "changed": false,
+      "ping": "pong"
+  }
+  leaf1.role1.site | SUCCESS => {
+      "changed": false,
+      "ping": "pong"
+  }
+  ...
+
+Then run the playbook to create the ``terraform`` user::
+
+  ansible-playbook -i inventory/sitename.ini playbooks/aetherfabric-playbook.yml
+
+Once completed, the switch should now be ready for TOST runtime install.
 
 VPN
-===
+---
+
 This section walks you through how to set up a VPN between ACE and Aether Central in GCP.
 We will be using GitOps based Aether CD pipeline for this,
 so we just need to create a patch to **aether-pod-configs** repository.
@@ -115,7 +187,8 @@ but rather are a prerequisite for adding a new ACE.
    :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`
 
 Before you begin
-----------------
+""""""""""""""""
+
 * Make sure firewall in front of ACE allows UDP port 500, UDP port 4500, and ESP packets
   from **gcpvpn1.infra.aetherproject.net(35.242.47.15)** and **gcpvpn2.infra.aetherproject.net(34.104.68.78)**
 * Make sure that the external IP on ACE side is owned by or routed to the management node
@@ -146,7 +219,8 @@ Make sure to replace the sample values when you actually create a review request
 +-----------------------------+----------------------------------+
 
 Download aether-pod-configs repository
---------------------------------------
+""""""""""""""""""""""""""""""""""""""
+
 .. code-block:: shell
 
    $ cd $WORKDIR
@@ -155,7 +229,8 @@ Download aether-pod-configs repository
 .. _update_global_resource:
 
 Update global resource maps
----------------------------
+"""""""""""""""""""""""""""
+
 Add a new ACE information at the end of the following global resource maps.
 
 * user_map.tfvars
@@ -245,7 +320,8 @@ single file to avoid configuration conflicts are maintained in this way.
 
 
 Create ACE specific configurations
-----------------------------------
+""""""""""""""""""""""""""""""""""
+
 In this step, we will create a directory under `production` with the same name as ACE,
 and add several Terraform configurations and Ansible inventory needed to configure a VPN connection.
 Throughout the deployment procedure, this directory will contain all ACE specific configurations.
@@ -277,7 +353,8 @@ Run the following commands to auto-generate necessary files under the target ACE
    when using a different BOM.
 
 Create a review request
------------------------
+"""""""""""""""""""""""
+
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs/production
@@ -302,7 +379,8 @@ Once the review request is accepted and merged,
 CD pipeline will create VPN tunnels on both GCP and the management node.
 
 Verify VPN connection
----------------------
+"""""""""""""""""""""
+
 You can verify the VPN connections after successful post-merge job
 by checking the routing table on the management node and trying to ping to one of the central cluster VMs.
 Make sure two tunnel interfaces, `gcp_tunnel1` and `gcp_tunnel2`, exist
@@ -335,7 +413,8 @@ by checking GCP dashboard **VPC Network > Routes > Dynamic**.
 
 
 Post VPN setup
---------------
+""""""""""""""
+
 Once you verify the VPN connections, please update `ansible` directory name to `_ansible` to prevent
 the ansible playbook from running again.
 Note that it is no harm to re-run the ansible playbook but not recommended.
@@ -351,7 +430,8 @@ Note that it is no harm to re-run the ansible playbook but not recommended.
 .. _add_ace_to_vpn:
 
 Add another ACE to an existing VPN connection
----------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""
+
 VPN connections can be shared when there are multiple ACE clusters in a site.
 In order to add ACE to an existing VPN connection,
 you'll have to SSH into the management node and manually update BIRD configuration.
