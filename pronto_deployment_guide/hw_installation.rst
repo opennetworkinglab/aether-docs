@@ -218,7 +218,19 @@ The following items need to be added to `NetBox
     For example ``10.0.0.32/27`` as a DHCP block would take up 1/4 of the ADMIN
     prefix.
 
-14. Add Cables between physical interfaces on the devices
+14. Add router IP reservations to the IP Prefix for both Fabric prefixes. These
+    are IP addresses that:
+
+    - Have  the last usable address in range (in a ``/25``, this would be
+      ``.126`` or ``.254``)
+
+    - Have a ``Status`` of ``Reserved``, and the VRF, Tenant Group, and Tenant
+      set.
+
+    - The Description must start with the word ``router``, such as: ``router
+      for for leaf1 Fabric``
+
+15. Add Cables between physical interfaces on the devices
 
     TODO: Explain the cabling topology
 
@@ -342,11 +354,16 @@ named ``mgmtserver1.stage1.menlo``, you'd run::
 
 One manual change needs to be made to this output - edit the
 ``inventory/host_vars/mgmtserver1.stage1.menlo.yml`` file and add the following
-to the bottom of the file, replacing the IP addresses with *only the lowest
-numbered IP address* the management server has on each VLAN (if >1 IP address
-is assigned to a VLAN or Interface, the DHCP server will fail to run). This
-configures the `netplan <https://netplan.io>`_ on the management server, and
-will be automated away soon::
+to the bottom of the file, replacing the IP addresses with the management
+server IP address for each segment.
+
+In the case of the Fabric that has two leaves and IP ranges, add the Management
+server IP address used for the leaf that it is connected to, and then add a
+route for the other IP address range for the non-Management-connected leaf that
+is via the Fabric router address in that range.
+
+This configures the `netplan <https://netplan.io>`_ on the management server,
+and will be automated away soon::
 
   # added manually
   netprep_netplan:
@@ -364,7 +381,11 @@ will be automated away soon::
         id: 801
         link: eno2
         addresses:
-          - 10.0.1.1/25
+          - 10.0.1.129/25
+        routes:
+          - to: 10.0.1.0/25
+            via: 10.0.1.254
+            weight: 100
 
 Using the ``inventory/example-aether.ini`` as a template, create an
 :doc:`ansible inventory <ansible:user_guide/intro_inventory>` file for the
