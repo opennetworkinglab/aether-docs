@@ -5,6 +5,42 @@
 Troubleshooting
 ===============
 
+Unable to access a system
+-------------------------
+
+If it's a system behind another system (ex: the compute nodes behind a
+management server) and you're trying to interactively login to it, make sure
+that you've enabled SSH Agent Forwarding in your ``~/.ssh/config`` file::
+
+  Host mgmtserver1.prod.site.aetherproject.net
+    ForwardAgent yes
+
+If you still have problems after verifying that this is set up, run ssh with
+the ``-v`` option, which will print out all the connection details and
+whether an agent is used on the second ssh::
+
+  onfadmin@mgmtserver1:~$ ssh onfadmin@node2.mgmt.prod.site.aetherproject.net
+  debug1: client_input_channel_open: ctype auth-agent@openssh.com rchan 2 win 65536 max 16384
+  debug1: channel 1: new [authentication agent connection]
+  debug1: confirm auth-agent@openssh.com
+  Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 5.4.0-56-generic x86_64)
+  ...
+  onfadmin@node2:~$
+
+Problems with OS installation
+-----------------------------
+
+OS installs, but doesn't boot
+"""""""""""""""""""""""""""""
+
+If you've completed the installation but the system won't start the OS, check
+these BIOS settings:
+
+- If the startup disk is nVME, under ``Advanced -> PCIe/PCI/PnP Configuration``
+  the option ``NVMe Firmware Source`` should be set to ``AMI Native Support``,
+  per `this Supermicro FAQ entry
+  <https://supermicro.com/support/faqs/faq.cfm?faq=28248>`_.
+
 Unknown MAC addresses
 ---------------------
 
@@ -23,7 +59,9 @@ cards. These can be found in a variety of ways:
 4. If you don't have a login to the server, but can get to the management
    server, ``ip neighbor`` will show the arp table of MAC addresses known to
    that system.  It's output is unsorted  - ``ip neigh | sort`` is easier to
-   read.
+   read.  This can be useful for determining if there's a cabling problem -
+   a device plugged into the wrong port of the management switch could show up
+   in the DHCP pool range for a different segment.
 
 Cabling issues
 --------------

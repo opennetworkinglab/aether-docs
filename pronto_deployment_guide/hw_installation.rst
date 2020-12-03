@@ -97,6 +97,15 @@ The following items need to be added to `NetBox
         * Set the description to ``fab2.<deployment>.<site>.aetherproject.net`` (or
           ``prontoproject.net``).
 
+   There also needs to be a parent range of the two fabric ranges added:
+
+     * ``10.0.1.0/24``
+
+        * This is used to configure the correct routes, DNS, and TFTP servers
+          provided by DHCP to the equipment that is connected to the fabric
+          leaf switch that the management server (which provides those
+          services) is not connected to.
+
    Additionally, these edge prefixes are used for Kubernetes but don't need to
    be created in NetBox:
 
@@ -221,14 +230,14 @@ The following items need to be added to `NetBox
 14. Add router IP reservations to the IP Prefix for both Fabric prefixes. These
     are IP addresses that:
 
-    - Have  the last usable address in range (in a ``/25``, this would be
-      ``.126`` or ``.254``)
+    - Have the last usable address in range (in the ``/25`` fabric examples
+      above, these would be ``10.0.1.126/25`` and ``10.0.1.254/25``)
 
     - Have a ``Status`` of ``Reserved``, and the VRF, Tenant Group, and Tenant
       set.
 
     - The Description must start with the word ``router``, such as: ``router
-      for for leaf1 Fabric``
+      for leaf1 Fabric``
 
 15. Add Cables between physical interfaces on the devices
 
@@ -360,10 +369,11 @@ server IP address for each segment.
 In the case of the Fabric that has two leaves and IP ranges, add the Management
 server IP address used for the leaf that it is connected to, and then add a
 route for the other IP address range for the non-Management-connected leaf that
-is via the Fabric router address in that range.
+is via the Fabric router address in the connected leaf range.
 
 This configures the `netplan <https://netplan.io>`_ on the management server,
-and will be automated away soon::
+and creates a SNAT rule for the UE range route, and will be automated away
+soon::
 
   # added manually
   netprep_netplan:
@@ -385,7 +395,11 @@ and will be automated away soon::
         routes:
           - to: 10.0.1.0/25
             via: 10.0.1.254
-            weight: 100
+            metric: 100
+
+  netprep_nftables_nat_postrouting: >
+    ip saddr 10.0.1.0/25 ip daddr 10.168.0.0/20 counter snat to 10.0.1.129;
+
 
 Using the ``inventory/example-aether.ini`` as a template, create an
 :doc:`ansible inventory <ansible:user_guide/intro_inventory>` file for the
