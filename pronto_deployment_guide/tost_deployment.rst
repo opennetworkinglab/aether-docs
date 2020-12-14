@@ -614,6 +614,16 @@ the Jenkins job should be triggered automatically to (re)deploy TOST.
 
 You can also type the comment **apply** in the Gerrit patch, it will trigger Jenkins jobs to deploy TOST for you.
 
+
+Verification
+============
+Fabric connectivity should be fully ready at this point.
+We should verify that **all servers**, including compute nodes and the management server,
+have an IP address and are **able to reach each other via fabric interface** before continuing the next step.
+
+This can be simply done by running a **ping** command from one server to another server's fabric IP.
+
+
 Troubleshooting
 ===============
 
