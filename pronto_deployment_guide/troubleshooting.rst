@@ -5,8 +5,12 @@
 Troubleshooting
 ===============
 
+
+Firewalls and other host network issues
+---------------------------------------
+
 Unable to access a system
--------------------------
+"""""""""""""""""""""""""
 
 If it's a system behind another system (ex: the compute nodes behind a
 management server) and you're trying to interactively login to it, make sure
@@ -26,6 +30,25 @@ whether an agent is used on the second ssh::
   Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 5.4.0-56-generic x86_64)
   ...
   onfadmin@node2:~$
+
+Root/Public DNS port is blocked
+"""""""""""""""""""""""""""""""
+
+In some cases access to the public DNS root and other servers is blocked, which
+prevents DNS lookups from working within the pod.
+
+To resolve this, forwarding addresses on the local network can be provided in
+the Ansible YAML ``host_vars`` file, using the ``unbound_forward_zones`` list
+to configure the Unbound recursive nameserver. An example::
+
+  unbound_forward_zones:
+  - name: "."
+    servers:
+      - "8.8.8.8"
+      - "8.8.4.4"
+
+
+The items in the ``servers`` list would be the locally accessible nameservers.
 
 Problems with OS installation
 -----------------------------

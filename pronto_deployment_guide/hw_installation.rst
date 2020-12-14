@@ -228,7 +228,8 @@ The following items need to be added to `NetBox
     prefix.
 
 14. Add router IP reservations to the IP Prefix for both Fabric prefixes. These
-    are IP addresses that:
+    are IP addresses used by ONOS to route traffic to the other leaf, and have
+    the following attributes:
 
     - Have the last usable address in range (in the ``/25`` fabric examples
       above, these would be ``10.0.1.126/25`` and ``10.0.1.254/25``)
@@ -238,6 +239,14 @@ The following items need to be added to `NetBox
 
     - The Description must start with the word ``router``, such as: ``router
       for leaf1 Fabric``
+
+    - A custom field named ``RFC3442 Routes`` is set to the CIDR IP address of
+      the opposite leaf - if the leaf's prefix is ``10.0.1.0/25`` and the
+      router IP is ``10.0.1.126/25`` then ``RFC3442 Routes`` should be set to
+      ``10.0.1.128\25`` (and the reverse - on ``10.0.1.254/25`` the ``RFC3442
+      Routes`` would be set to be ``10.0.1.0/25``).  This creates an `RFC3442
+      Classless Static Route Option <https://tools.ietf.org/html/rfc3442>`_
+      for the subnet in DHCP.
 
 15. Add Cables between physical interfaces on the devices
 
