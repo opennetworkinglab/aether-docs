@@ -98,7 +98,7 @@ exclude_patterns = [
         '.DS_Store',
         'Thumbs.db',
         '_build',
-        'venv_docs',
+        'venv-docs',
         'requirements.txt',
 ]
 

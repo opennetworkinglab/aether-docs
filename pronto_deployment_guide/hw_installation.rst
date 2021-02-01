@@ -250,7 +250,11 @@ The following items need to be added to `NetBox
 
 15. Add Cables between physical interfaces on the devices
 
-    TODO: Explain the cabling topology
+    The topology needs to match the logical diagram presented in the
+    :ref:`network_cable_plan`.  Note that many of the management interfaces
+    need to be located either on the MGMT or ADMIN VLANs, and the management
+    switch is
+    used to provide that separation.
 
 Rackmount of Equipment
 ----------------------
@@ -301,16 +305,63 @@ Once inventory has been completed, let the Infra team know, and the pxeboot
 configuration will be generated to have the OS preseed files corresponding to the
 new servers based on their serial numbers.
 
-Cabling and Network Topology
-----------------------------
-
-TODO: Add diagrams of network here, and cabling plan
-
 Management Switch Bootstrap
 ---------------------------
 
-TODO: Add instructions for bootstrapping management switch, from document that
-has the linked config file.
+The current Pronto deployment uses an HP/Aruba 2540 24G PoE+ 4SFP+ JL356A
+switch to run the management network and other VLAN's that are used internally.
+
+By default the switch will pull an IP address via DHCP and ``http://<switch IP>``
+will display a management webpage for the switch. You need to be able to access
+this webpage before you can update the configuration.
+
+Loading the Management Switch Configuration
+"""""""""""""""""""""""""""""""""""""""""""
+
+1. Obtain a copy of the Management switch configuration file (this ends in ``.pcc``).
+
+2.  Open the switch web interface at ``http://<switch IP>``. You may be
+    prompted to login - the default credentials are both ``admin``:
+
+    .. image:: images/pswi-000.png
+       :alt: User Login for switch
+       :scale: 50%
+
+3. Go to the "Management" section at bottom left:
+
+   .. image:: images/pswi-001.png
+       :alt: Update upload
+       :scale: 50%
+
+   In the "Update" section at left, drag the configuration file into the upload
+   area, or click Browse and select it.
+
+4. In the "Select switch configuration file to update" section, select
+   "config1", so it overwrites the default configuration.
+
+5. In the "Select switch configuration file to update" section, select
+   "config1", so it overwrites the default configuration. Click "Update".
+   You'll be prompted to reboot the switch, which you can do with the power
+   symbol at top right. You may be prompted to select an image used to reboot -
+   the "Previously Selected" is the correct one to use:
+
+   .. image:: images/pswi-003.png
+       :alt: Switch Image Select
+       :scale: 30%
+
+6. Wait for the switch to reboot:
+
+   .. image:: images/pswi-004.png
+       :alt: Switch Reboot
+       :scale: 50%
+
+   The switch is now configured with the correct VLANs for Pronto Use.  If you
+   go to Interfaces > VLANs should see a list of VLANs configured on the
+   switch:
+
+   .. image:: images/pswi-005.png
+       :alt: Mgmt VLANs
+       :scale: 50%
 
 Software Bootstrap
 ------------------
@@ -340,7 +391,90 @@ The preseed files contain configuration steps to install the OS from the
 upstream Ubuntu repos, as well as customization of packages and creating the
 ``onfadmin`` user.
 
-TODO: convert instructions for bootstrapping the management server with iPXE here.
+Creating a bootable USB drive
+'''''''''''''''''''''''''''''
+
+1. Get a USB key. Can be tiny as the uncompressed image is floppy sized
+   (1.4MB).  Download the USB image file (``<date>_onf_ipxe.usb.zip``) on the
+   system you're using to write the USB key, and unzip it.
+
+2. Put a USB key in the system you're using to create the USB key, then
+   determine which USB device file it's at in ``/dev``.  You might look at the
+   end of the ``dmesg`` output on Linux/Unix or the output of ``diskutil
+   list`` on macOS.
+
+   Be very careful about this, as if you accidentally overwrite some other disk in
+   your system that would be highly problematic.
+
+3. Write the image to the device::
+
+      $ dd if=/path/to/20201116_onf_ipxe.usb of=/dev/sdg
+      2752+0 records in
+      2752+0 records out
+      1409024 bytes (1.4 MB, 1.3 MiB) copied, 2.0272 s, 695 kB/s
+
+  You may need to use `sudo` for this.
+
+Boot and Image Management Server
+''''''''''''''''''''''''''''''''
+
+1. Connect a USB keyboard and VGA monitor to the management node.  Put the USB
+   Key in one of the management node's USB ports (port 2 or 3):
+
+   .. image:: images/mgmtsrv-000.png
+       :alt: Management Server Ports
+       :scale: 50%
+
+2. Turn on the management node, and press the F11 key as it starts to get into
+   the Boot Menu:
+
+   .. image:: images/mgmtsrv-001.png
+       :alt: Management Server Boot Menu
+       :scale: 50%
+
+3. Select the USB key (in this case "PNY USB 2.0", your options may vary) and press return. You should see iPXE load:
+
+   .. image:: images/mgmtsrv-002.png
+       :alt: iPXE load
+       :scale: 50%
+
+4. A menu will appear which displays the system information and DHCP discovered
+   network settings (your network must provide the IP address to the management
+   server via DHCP):
+
+   Use the arrow keys to select "Ubuntu 18.04 Installer (fully automatic)":
+
+   .. image:: images/mgmtsrv-003.png
+       :alt: iPXE Menu
+       :scale: 50%
+
+   There is a 10 second default timeout if left untouched (it will continue the
+   system boot process) so restart the system if you miss the 10 second window.
+
+5. The Ubuntu 18.04 installer will be downloaded and booted:
+
+   .. image:: images/mgmtsrv-004.png
+       :alt: Ubuntu Boot
+       :scale: 50%
+
+6. Then the installer starts and takes around 10 minutes to install (depends on
+   your connection speed):
+
+   .. image:: images/mgmtsrv-005.png
+       :alt: Ubuntu Install
+       :scale: 50%
+
+
+7. At the end of the install, the system will restart and present you with a
+   login prompt:
+
+   .. image:: images/mgmtsrv-006.png
+       :alt: Ubuntu Install Complete
+       :scale: 50%
+
+
+Management Server Configuration
+'''''''''''''''''''''''''''''''
 
 Once the OS is installed on the management server, Ansible is used to remotely
 install software on the management server.

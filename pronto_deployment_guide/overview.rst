@@ -11,6 +11,8 @@ devices, and required cabling before being put assembled.
 Once planning is complete, equipment should be ordered to match the plan. The
 VAR we've used for most Pronto equipment is ASA (aka "RackLive").
 
+.. _network_cable_plan:
+
 Network Cable Plan
 ------------------
 
@@ -31,6 +33,12 @@ Additionally a non-fabric switch is required to provide a set of management
 networks.  This management switch is configured with multiple VLANs to separate
 the management plane, fabric, and the out-of-band and lights out management
 connections on the equipment.
+
+
+This diagram shows all the equipment used in a Pronto deployment.
+
+.. image:: images/pronto_logical_diagram.svg
+   :alt: Logical Network Diagram
 
 
 Required Hardware

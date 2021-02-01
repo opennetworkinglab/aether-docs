@@ -39,7 +39,7 @@ This nightly-run job deploys the OMEC control plane and OMEC user plane on the d
 Resources:
 
 - *Detailed test plan page coming soon*
-- Jenkins Job: `omec_scaling_dev <https://jenkins.opencord.org/job/omec_scaling_dev/>`_
+- Jenkins Job: `omec_scale_dev <https://jenkins.opencord.org/job/omec_scale_dev/>`_
 
 .. image:: https://jenkins.opencord.org/view/OMEC/job/aether-archive-artifacts/lastSuccessfulBuild/artifact/omec_scaling_dev/attach.png
   :width: 840

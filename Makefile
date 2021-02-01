@@ -10,7 +10,7 @@ SOURCEDIR    ?= .
 BUILDDIR     ?= _build
 
 # name of python virtualenv that is used to run commands
-VENV_NAME      := venv_docs
+VENV_NAME      := venv-docs
 
 .PHONY: help test lint doc8 reload Makefile prep
 
@@ -21,7 +21,7 @@ help: $(VENV_NAME)
 
 # Create the virtualenv with all the tools installed
 $(VENV_NAME):
-	virtualenv -p python3 $(VENV_NAME) ;\
+	python3 -m venv $(VENV_NAME) ;\
   source $@/bin/activate ;\
   pip install -r requirements.txt
 

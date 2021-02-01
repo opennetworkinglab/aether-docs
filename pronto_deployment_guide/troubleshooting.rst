@@ -53,6 +53,32 @@ The items in the ``servers`` list would be the locally accessible nameservers.
 Problems with OS installation
 -----------------------------
 
+iPXE doesn't load a Menu when started
+"""""""""""""""""""""""""""""""""""""
+
+The URLs that iPXE provides if there is an error take you into it's
+documentation, which is of high quality and should explain the error in much
+greater detail - for example `https://ipxe.org/3e11623b
+<https://ipxe.org/3e11623b>`_ explains that the DNS server address provided by
+DHCP is not functional.
+
+The most common failures would be in network settings being incorrect, which
+should be shown when the menu loads in step 4. If the menu does not load, and
+you get an `iPXE>` Shell prompt, type::
+
+   config
+
+And you should get the iPXE configuration screen, which lists all of the
+configuration parameters discovered:
+
+   .. image:: images/mgmtsrv-007.png
+       :alt: iPXE config menu
+       :scale: 50%
+
+Most likely there's something wrong with the network configuration provided by
+DHCP - you can scroll this menu with arrow keys to find all the settings
+provided by the DHCP server, and SMBIOS information provided by the hardware.
+
 OS installs, but doesn't boot
 """""""""""""""""""""""""""""
 
@@ -61,8 +87,8 @@ these BIOS settings:
 
 - If the startup disk is nVME, under ``Advanced -> PCIe/PCI/PnP Configuration``
   the option ``NVMe Firmware Source`` should be set to ``AMI Native Support``,
-  per `this Supermicro FAQ entry
-  <https://supermicro.com/support/faqs/faq.cfm?faq=28248>`_.
+  per `Supermicro FAQ entry 28248
+  <https://www.supermicro.com/support/faqs/faq.cfm?faq=28248>`_.
 
 Unknown MAC addresses
 ---------------------
