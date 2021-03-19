@@ -2,23 +2,27 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-=============================
-Acceptance Test Specification
-=============================
+Acceptance Specification
+========================
 
 Objectives
-==========
+----------
 
-The purpose of this document is to create an end-user test object list (TOL) for Aether Connected Edge (ACE).
-This document will focus on the connectivity services end-user testing.
-In the future, this document will extend to other services offered through ACE.
+The purpose of this document is to create an end-user test object list (TOL)
+for Aether Connected Edge (ACE).
+
+This document will focus on the connectivity services end-user testing.  In the
+future, this document will extend to other services offered through ACE.
 
 The Automated continuous testing framework for the platform is out of the scope of this document.
 
 Integration Test (eNB-LTE Core)
-===============================
-Before we start to test End-to-End connectivity, we have to check the connection (called S1-MME/S1-C interface)
-between eNB in an edge and MME in a public cloud.
+-------------------------------
+
+Before we start to test End-to-End connectivity, we have to check the
+connection (called S1-MME/S1-C interface) between eNB in an edge and MME in a
+public cloud.
+
 In order to verify this connectivity, the following test cases should be passed.
 
 Note that all the following test/verification cases have some assumptions:
@@ -29,6 +33,7 @@ Note that all the following test/verification cases have some assumptions:
 
 IT-TOL01 Fabric Test 1: the connectivity test within the edge
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
 In order to test the fabric test, please see the following steps:
 
 
@@ -216,7 +221,7 @@ Example (the eNB ID is 19)
   :alt: Example (the eNB ID is 19)
 
 Connectivity Services
-=====================
+---------------------
 
 Aether provides only data connectivity for end-user devices and systems.
 So the voice service over LTE is not available. However, users can use
@@ -313,14 +318,14 @@ please explain it in the comment section in the outcome column.
 
 
 Monitoring Services
-===================
+-------------------
 
 ACE uses the Grafana dashboard for monitoring services.
 Each ACE will be provided with Read-Only Access to our centralized monitoring platform.
 
 
 Application Services
-====================
+--------------------
 
 Aether uses Rancher to onboard applications to ACE.
 Each ACE host will be provided with access to rancher to onboard applications on their ACE cluster.

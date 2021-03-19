@@ -8,20 +8,13 @@ Information about participating in the Aether community and development process
 can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
 
 .. toctree::
-   :maxdepth: 1
-   :caption: Overview
-   :hidden:
-   :glob:
-
-   readme
-
-.. toctree::
    :maxdepth: 3
    :caption: Operations
    :hidden:
    :glob:
 
-   operations
+   operations/procedures
+   operations/sop
 
 .. toctree::
    :maxdepth: 3
@@ -29,12 +22,30 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    :hidden:
    :glob:
 
-   pronto_deployment_guide/overview.rst
-   pronto_deployment_guide/hw_installation.rst
-   pronto_deployment_guide/bootstrapping.rst
-   pronto_deployment_guide/run_time_deployment.rst
-   pronto_deployment_guide/tost_deployment.rst
-   pronto_deployment_guide/connectivity_service_update.rst
-   pronto_deployment_guide/enb_installation.rst
-   pronto_deployment_guide/acceptance_test_specification.rst
-   pronto_deployment_guide/troubleshooting.rst
+   edge_deployment/overview
+   edge_deployment/site_planning
+   edge_deployment/management_net_bootstrap
+   edge_deployment/server_bootstrap
+   edge_deployment/fabric_switch_bootstrap
+   edge_deployment/vpn_bootstrap
+   edge_deployment/runtime_deployment
+   edge_deployment/tost_deployment
+   edge_deployment/connectivity_service_update
+   edge_deployment/enb_installation
+   edge_deployment/troubleshooting
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Test Automation
+   :hidden:
+   :glob:
+
+   testing/acceptance_specification
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Meta
+   :hidden:
+   :glob:
+
+   readme

@@ -311,24 +311,32 @@ However, there are a few files we need to pay extra attentions to.
 
 - **onos-netcfg.json** in **onos** folder
 - Chassis config in **stratum** folder
-  There should be one chassis config for each switch. The file name needs to be **${hostname}-chassis-config.pb.txt**
-- **telegraf.yaml** in **telegraf** folder need to be updated with all switch IP addresses
+  There should be one chassis config for each switch. The file name needs to be
+  **${hostname}-chassis-config.pb.txt**
+- **telegraf.yaml** in **telegraf** folder need to be updated with all switch
+  IP addresses
 
 Double check these files and make sure they have been updated accordingly.
 
 
 Create a review request
 ^^^^^^^^^^^^^^^^^^^^^^^
-We also need to create a gerrit review request, similar to what we have done in the **Aether Run-Time Deployment**.
-Please refer to :doc:`Aether Run-Time Deployment <run_time_deployment>` to create a review request.
+We also need to create a gerrit review request, similar to what we have done in
+the **Aether Runtime Deployment**.
+
+Please refer to :doc:`Aether Runtime Deployment <runtime_deployment>` to
+create a review request.
 
 
 Create TOST deployment job in Jenkins
 =====================================
-There are three major components in the Jenkins system, the Jenkins pipeline and Jenkins Job Builder and Jenkins Job.
+There are three major components in the Jenkins system, the Jenkins pipeline
+and Jenkins Job Builder and Jenkins Job.
 
-We follow the Infrastructure as Code principle to place three major components in a Git repo, **aether-ci-management**
-Download **aether-ci-management** repository .
+We follow the Infrastructure as Code principle to place three major components
+in a Git repo, ``aether-ci-management``
+
+Download the ``aether-ci-management`` repository.
 
 .. code-block:: shell
 
@@ -336,7 +344,8 @@ Download **aether-ci-management** repository .
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-ci-management"
 
 
-Here is the example of folder structure, we put everything related to three major components under the jjb folder.
+Here is the example of folder structure, we put everything related to three
+major components under the jjb folder.
 
 .. code-block:: console
 
@@ -356,21 +365,27 @@ Here is the example of folder structure, we put everything related to three majo
 
 Jenkins pipeline
 ^^^^^^^^^^^^^^^^
-Jenkins pipeline runs the Terraform scripts to install desired applications into the specified Kubernetes cluster.
+Jenkins pipeline runs the Terraform scripts to install desired applications
+into the specified Kubernetes cluster.
 
-Both ONOS and Stratum will read configuration files (network config, chassis config) from aether-pod-config.
-The default git branch is master.
-For testing purpose, we also provide two parameters to specify the number of reviews and patchset.
+Both ONOS and Stratum will read configuration files (network config, chassis
+config) from aether-pod-config.
+
+The default git branch is master.  For testing purpose, we also provide two
+parameters to specify the number of reviews and patchset.
+
 We will explain more in the next section.
 
 .. note::
 
    Currently, we don’t perform the incremental upgrade for TOST application.
    Instead, we perform the clean installation.
-   In the pipeline script, Terraform will destroy all existing resources and then create them again.
+   In the pipeline script, Terraform will destroy all existing resources and
+   then create them again.
 
 
-We put all pipeline scripts under the pipeline directory, the language of the pipeline script is groovy.
+We put all pipeline scripts under the pipeline directory, the language of the
+pipeline script is groovy.
 
 .. code-block:: console
 
@@ -399,9 +414,10 @@ Currently, we had four pipeline scripts for TOST deployment.
 3. tost-telegraf.groovy
 4. tost.groovy
 
-tost-[onos/stratum/telegraf].groovy are used to deploy the individual application respectively,
-and tost.groovy is a high level script, used to deploy the TOST application, it will execute
-the above three scripts in its pipeline script.
+tost-[onos/stratum/telegraf].groovy are used to deploy the individual
+application respectively, and tost.groovy is a high level script, used to
+deploy the TOST application, it will execute the above three scripts in its
+pipeline script.
 
 
 Jenkins jobs
@@ -415,9 +431,13 @@ Jenkins job is the task unit in the Jenkins system. A Jenkins job contains the f
 - Source code management
 
 We created one Jenkins job for each TOST component, per Aether edge.
-We have four Jenkins jobs (HostPath provisioner, ONOS, Stratum and Telegraf) for each edge as of today.
 
-There are 10+ parameters in Jenkins jobs and they can be divided into two parts, cluster-level and application-level.
+We have four Jenkins jobs (HostPath provisioner, ONOS, Stratum and Telegraf)
+for each edge as of today.
+
+There are 10+ parameters in Jenkins jobs and they can be divided into two
+parts, cluster-level and application-level.
+
 Here is an example of supported parameters.
 
 .. image:: images/jenkins-onos-params.png
@@ -430,12 +450,13 @@ Application level
   the config for aether-pod-configs repo from a specified gerrit review, instead of the
   HEAD branch. It’s good for developer to test its change before merge.
 - **onos_user**: used to login ONOS controller
-- **git_repo/git_server/git_user/git_password_env**: information of git repository, **git_password_env** is a key for
-  Jenkins Credential system.
+- **git_repo/git_server/git_user/git_password_env**: information of git
+  repository, **git_password_env** is a key for Jenkins Credential system.
 
 Cluster level
 """""""""""""
-- **gcp_credential**: Google Cloud Platform credential for remote storage, used by Terraform.
+- **gcp_credential**: Google Cloud Platform credential for remote storage, used
+  by Terraform.
 - **terraform_dir**: The root directory of the TOST directory.
 - **rancher_cluster**: target Rancher cluster name.
 - **rancher_api_env**: Rancher credential to access Rancher, used by Terraform.
@@ -447,12 +468,13 @@ Cluster level
 Jenkins Job Builder (JJB)
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-We prefer to apply the IaC (Infrastructure as Code) for everything.
-We use the JJB (Jenkins Job Builder) to create new Jenkins Job, including the Jenkins pipeline.
-We need to clone a set of Jenkins jobs when a new edge is deployed.
+We prefer to apply the IaC (Infrastructure as Code) for everything.  We use the
+JJB (Jenkins Job Builder) to create new Jenkins Job, including the Jenkins
+pipeline.  We need to clone a set of Jenkins jobs when a new edge is deployed.
 
-In order to provide the flexibility and avoid re-inventing the wheel, we used the job template to declare your job.
-Thanks to the JJB, we can use the parameters in the job template to render different kinds of jobs easily.
+In order to provide the flexibility and avoid re-inventing the wheel, we used
+the job template to declare your job.  Thanks to the JJB, we can use the
+parameters in the job template to render different kinds of jobs easily.
 
 All the template files are placed under templates directory.
 
@@ -480,8 +502,8 @@ All the template files are placed under templates directory.
    ├── verify-licensed.yaml
    └── versioning.yaml
 
-
-we defined all TOST required job templates in tost.yaml and here is its partial content.
+We defined all TOST required job templates in tost.yaml and here is its partial
+content.
 
 .. code-block:: yaml
 

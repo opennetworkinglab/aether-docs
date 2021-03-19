@@ -2,16 +2,20 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-==========================
-Aether Run-Time Deployment
-==========================
-This section describes how to install Aether edge runtime and Aether managed applications.
-We will be using GitOps based Aether CD pipeline for this,
-so we just need to create a patch to **aether-pod-configs** repository.
+Aether Runtime Deployment
+=========================
+
+This section describes how to install Aether edge runtime and Aether managed
+applications.
+
+We will be using GitOps based Aether CD pipeline for this, so we just need to
+create a patch to **aether-pod-configs** repository.
 
 Download aether-pod-configs repository
-======================================
-Download aether-pod-configs repository if you don't have it already in your develop machine.
+--------------------------------------
+
+Download the ``aether-pod-configs`` repository if you don't have it already in
+your development machine.
 
 .. code-block:: shell
 
@@ -19,7 +23,8 @@ Download aether-pod-configs repository if you don't have it already in your deve
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
 Update global resource maps
-===========================
+---------------------------
+
 .. attention::
 
    Skip this section if you have already done the same step in the
@@ -30,9 +35,10 @@ Add a new ACE information at the end of the following global resource maps.
 * user_map.tfvars
 * cluster_map.tfvars
 
-As a note, you can find several other global resource maps under the `production` directory.
-Resource definitions that need to be shared among clusters or are better managed in a
-single file to avoid configuration conflicts are maintained in this way.
+As a note, you can find several other global resource maps under the
+`production` directory.  Resource definitions that need to be shared among
+clusters or are better managed in a single file to avoid configuration
+conflicts are maintained in this way.
 
 .. code-block:: diff
 
@@ -98,9 +104,13 @@ You'll have to get this change merged before proceeding.
    $ git review
 
 Create runtime configurations
-=============================
-In this step, we will add several Terraform configurations and overriding values for the managed applications.
-Run the following commands to auto-generate necessary files under the target ACE directory.
+-----------------------------
+
+In this step, we will add several Terraform configurations and overriding
+values for the managed applications.
+
+Run the following commands to auto-generate necessary files under the target
+ACE directory.
 
 .. code-block:: shell
 
@@ -124,7 +134,8 @@ Run the following commands to auto-generate necessary files under the target ACE
    Created ../production/ace-test/app_values/omec-upf-pfcp-agent.yml
 
 Create a review request
-=======================
+-----------------------
+
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs
