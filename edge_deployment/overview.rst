@@ -127,3 +127,20 @@ all the servers and switches together.
 In the Pronto deployment this hardware is a `HP/Aruba 2540 Series JL356A
 <https://www.arubanetworks.com/products/switches/access/2540-series/>`_.
 
+Monitoring Raspberry Pi and CBRS dongle
+"""""""""""""""""""""""""""""""""""""""
+
+One pair of Raspberry Pi and CBRS band supported LTE dongle is required to monitor
+the connectivity service at the edge.
+
+The Raspberry Pi model used in Pronto is a `Raspberry Pi 4 Model B/2GB
+<https://www.pishop.us/product/raspberry-pi-4-model-b-2gb/>`_
+
+Which is configured with:
+
+* HighPi Raspberry Pi case for P4
+* USB-C Power Supply
+* MicroSD Card with Raspbian - 16GB
+
+The LTE dongle model used in Pronto is a `Sercomm Wingle
+<https://www.sercomm.com/contpage.aspx?langid=1&type=prod3&L1id=2&L2id=2&L3id=110&Prodid=767>`_.
