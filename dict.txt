@@ -43,6 +43,7 @@ ethernet
 gerrit
 iPXE
 jjb
+kubectl
 linecard
 macroENB
 mainboard

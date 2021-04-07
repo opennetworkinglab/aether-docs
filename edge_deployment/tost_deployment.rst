@@ -2,12 +2,11 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-===============
 TOST Deployment
 ===============
 
 Update aether-pod-config
-========================
+------------------------
 
 Aether-pod-configs is a git project hosted on **gerrit.opencord.org** and we placed the following materials in it.
 
@@ -58,7 +57,8 @@ Here is an example folder structure:
 There are four Terraform scripts inside **tost** directory and are responsible for managing each service.
 
 Root folder
-^^^^^^^^^^^
+"""""""""""
+
 Terraform reads **app_map.tfvars** to know which application will be installed on Rancher
 and which version and customized values need to apply to.
 
@@ -75,7 +75,8 @@ It can be used to specify prerequisites in the future.
    app_map = {}
 
 ONOS folder
-^^^^^^^^^^^
+"""""""""""
+
 All files under **onos** directory are related to ONOS application.
 The **app_map.tfvars** in this folder describes the information about ONOS helm chart.
 
@@ -159,7 +160,8 @@ it will read **onos-netcfg.json** file from the **aether-pod-config** and please
    TODO: Add an example based on the recommended topology
 
 Stratum folder
-^^^^^^^^^^^^^^
+""""""""""""""
+
 Stratum uses a similar directory structure as ONOS for Terraform and its configuration files.
 
 The customize value file is named **stratum.yaml**
@@ -224,7 +226,7 @@ The key folder indicates that relative path of configs.
    TODO: Add an example based on the recommended topology
 
 Telegraf folder
-^^^^^^^^^^^^^^^
+"""""""""""""""
 
 The app_map.tfvars specify the Helm Chart version and the filename of the custom Helm value file.
 
@@ -276,7 +278,7 @@ Taking Menlo staging pod as example, there are four switches so we fill out 4 IP
 
 
 Create Your Own Configs
-^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""
 
 The easiest way to create your own configs is running the template script.
 
@@ -304,7 +306,7 @@ Assumed we would like to set up the **ace-example** pod in the production enviro
 
 
 Quick recap
-^^^^^^^^^^^
+"""""""""""
 
 To recap, most of the files in **tost** folder can be copied from existing examples.
 However, there are a few files we need to pay extra attentions to.
@@ -320,7 +322,8 @@ Double check these files and make sure they have been updated accordingly.
 
 
 Create a review request
-^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""
+
 We also need to create a gerrit review request, similar to what we have done in
 the **Aether Runtime Deployment**.
 
@@ -329,7 +332,8 @@ create a review request.
 
 
 Create TOST deployment job in Jenkins
-=====================================
+-------------------------------------
+
 There are three major components in the Jenkins system, the Jenkins pipeline
 and Jenkins Job Builder and Jenkins Job.
 
@@ -364,7 +368,8 @@ major components under the jjb folder.
 
 
 Jenkins pipeline
-^^^^^^^^^^^^^^^^
+""""""""""""""""
+
 Jenkins pipeline runs the Terraform scripts to install desired applications
 into the specified Kubernetes cluster.
 
@@ -421,7 +426,7 @@ pipeline script.
 
 
 Jenkins jobs
-^^^^^^^^^^^^
+""""""""""""
 
 Jenkins job is the task unit in the Jenkins system. A Jenkins job contains the following information:
 
@@ -444,7 +449,7 @@ Here is an example of supported parameters.
    :width: 480px
 
 Application level
-"""""""""""""""""
+'''''''''''''''''
 
 - **GERRIT_CHANGE_NUMBER/GERRIT_PATCHSET_NUMBER**: tell the pipeline script to read
   the config for aether-pod-configs repo from a specified gerrit review, instead of the
@@ -454,7 +459,8 @@ Application level
   repository, **git_password_env** is a key for Jenkins Credential system.
 
 Cluster level
-"""""""""""""
+'''''''''''''
+
 - **gcp_credential**: Google Cloud Platform credential for remote storage, used
   by Terraform.
 - **terraform_dir**: The root directory of the TOST directory.
@@ -466,7 +472,7 @@ Cluster level
    Typically, developer only focus on **GERRIT_CHANGE_NUMBER** and **GERRIT_PATCHSET_NUMBER**. The rest of them are managed by OPs.
 
 Jenkins Job Builder (JJB)
-^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""
 
 We prefer to apply the IaC (Infrastructure as Code) for everything.  We use the
 JJB (Jenkins Job Builder) to create new Jenkins Job, including the Jenkins
@@ -601,7 +607,7 @@ parameters and Jenkins jobs it wants to use.
 
 
 Create Your Own Jenkins Job
-^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"""""""""""""""""""""""""""
 
 Basically, if you don't need to customize the Jenkins pipeline script and the job configuration, the only thing
 you need to do is modify the repos/tost.yaml to add your project.
@@ -630,7 +636,8 @@ Add the following content into repos/tost.yaml
 
 
 Trigger TOST deployment in Jenkins
-==================================
+----------------------------------
+
 Whenever a change is merged into **aether-pod-config**,
 the Jenkins job should be triggered automatically to (re)deploy TOST.
 
@@ -638,7 +645,8 @@ You can also type the comment **apply** in the Gerrit patch, it will trigger Jen
 
 
 Verification
-============
+------------
+
 Fabric connectivity should be fully ready at this point.
 We should verify that **all servers**, including compute nodes and the management server,
 have an IP address and are **able to reach each other via fabric interface** before continuing the next step.
@@ -647,7 +655,7 @@ This can be simply done by running a **ping** command from one server to another
 
 
 Troubleshooting
-===============
+---------------
 
 The deployment process involves the following steps:
 
@@ -666,3 +674,61 @@ You can see the log message of the first 4 steps in Jenkins console.
 If something goes wrong, the status of the Jenkins job will be in red.
 If Jenkins doesn't report any error message, the next step is going to Rancher's portal
 to ensure the Answers is same as the *onos.yaml* in *aether-pod-configs*.
+
+Accessing the Stratum CLI
+"""""""""""""""""""""""""
+
+You can login to the Stratum container running on a switch using this script:
+
+.. code-block:: sh
+
+  #!/bin/bash
+  echo 'Attaching to Stratum container. Ctrl-P Ctrl-Q to exit'
+  echo 'Press Enter to continue...'
+  DOCKER_ID=`docker ps | grep stratum-bf | awk '{print $1}'`
+  docker attach $DOCKER_ID
+
+You should then see the bf_sde prompt:
+
+.. code-block:: sh
+
+  bf_sde> pm
+  bf_sde.pm> show -a
+
+Accessing the ONOS CLI
+""""""""""""""""""""""
+
+After setting up kubectl to access the TOST pods, run:
+
+.. code-block:: sh
+
+  $ kubectl get pods -n tost
+
+Pick a TOST pod, and make a port forward to it, then login to it with the
+``onos`` CLI tool:
+
+.. code-block:: sh
+
+  $ kubectl -n tost port-forward onos-tost-onos-classic-0 8181 8101
+  $ onos karaf@localhost
+
+In some rare cases, you may need to access the ONOS master instance CLI, in
+which case you can run ``roles``:
+
+.. code-block:: sh
+
+  karaf@root > roles
+  device:devswitch1: master=onos-tost-onos-classic-1, standbys=[ onos-tost-onos-classic-0 ]
+
+Above lines show that ``onos-tost-onos-classic-1`` is the master. So switch to
+that by killing the port forward, starting a new one pointing at the master,
+then logging into that one:
+
+.. code-block:: sh
+
+  $ ps ax | grep -i kubectl
+  # returns kubectl commands running, pick the port-forward one and kill it
+  $ kill 0123
+  $ kubectl -n tost port-forward onos-tost-onos-classic-1 8181 8101
+  $ onos karaf@localhost
+
