@@ -1,5 +1,7 @@
 Ansible
 BMC
+BMv2
+CLI
 ENB
 Epyc
 DNS
@@ -13,6 +15,7 @@ Kubernetes
 LTE
 Menlo
 Menlo Park
+Mininet
 ONOS
 PFCP
 Sercomm
@@ -41,6 +44,7 @@ eNBs
 etcd
 ethernet
 gerrit
+gNMI
 iPXE
 jjb
 kubectl
