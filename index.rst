@@ -34,12 +34,14 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    edge_deployment/enb_installation
    edge_deployment/troubleshooting
 
+
 .. toctree::
    :maxdepth: 3
-   :caption: Test Automation
+   :caption: Aether Test Automation
    :hidden:
    :glob:
 
+   testing/about_system_tests
    testing/acceptance_specification
 
 .. toctree::
