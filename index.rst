@@ -43,6 +43,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
 
    testing/about_system_tests
    testing/acceptance_specification
+   testing/pdp_testing
 
 .. toctree::
    :maxdepth: 1
