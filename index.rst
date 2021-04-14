@@ -45,6 +45,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    testing/acceptance_specification
    testing/pdp_testing
    testing/fabric_testing
+   testing/sdcore_testing
 
 .. toctree::
    :maxdepth: 1
