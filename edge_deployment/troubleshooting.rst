@@ -140,3 +140,18 @@ cabling remotely:
       LINK             CHASSIS ID        SYSTEM NAME      CAPS        PORT ID           PORT DESCRIPTION
       eno1             10:4f:58:e7:d5:60 Aruba-2540-24…PP ..b........ 10                10
       eno2             10:4f:58:e7:d5:60 Aruba-2540-24…PP ..b........ 1                 1
+
+
+Problems with ONIE Installation
+-------------------------------
+
+Can't reboot into ONL, loops on ONIE installer mode
+---------------------------------------------------
+
+Sometimes an ONL installation is incomplete or problematic, and reinstalling it
+doesn't result in a working system.
+
+If this is the case, reboot into ONIE Rescue mode and use ``parted`` to delete
+all the ``ONL-`` prefixed partitions, then reinstall with an ``onie-installer``
+image.
+

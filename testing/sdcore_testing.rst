@@ -138,7 +138,7 @@ following downstream jobs:
 1. `omec_deploy_dev`: this job executes the scalability test suite.
 2. `robotframework-test_dev`: this job is similar to `ng40-test_dev` with the
    exception that instead of directly executing NG40 commands it calls robot
-   framework to exectue the test cases and publishes the test results using
+   framework to execute the test cases and publishes the test results using
    `RobotPublisher` Jenkins plugin. The robot results will also be copied to
    the upstream job and published there.
 3. `archive-artifacts_dev`: this job collects and uploads k8s and container logs.

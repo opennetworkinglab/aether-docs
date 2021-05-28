@@ -18,7 +18,7 @@ We use Jenkins to schedule and trigger our tests which run against a set of hard
 Test Scenarios
 -------------------
 
-fabric-tna is a P4 program based on the Tofino Native Architracture(TNA). Currently 4 profiles are supported for
+fabric-tna is a P4 program based on the Tofino Native Architecture(TNA). Currently 4 profiles are supported for
 compiling the fabric-tna P4 program.
 
 1. fabric
