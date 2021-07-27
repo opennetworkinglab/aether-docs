@@ -9,17 +9,14 @@ Test Framework
 --------------
 
 NG40
-~~~~
-
-Overview
-^^^^^^^^
+""""
 
 NG40 tool is used as RAN emulator in SD-Core testing. NG40 runs inside a VM
 which is connected to both Aether control plane and data plane. In testing
-scenarios that involve data plane verifications, NG40 also emulates a few
+scenarios that involve data plane verification, NG40 also emulates a few
 application servers which serve as the destinations of data packets.
 
-A typical NG40 test case involves UE attaching, data plane verifications and
+A typical NG40 test case involves UE attaching, data plane verification and
 UE detaching. During the test NG40 acts as UEs and eNBs and talks to the
 mobile core to complete attach procedures for each UE it emulates. Then NG40
 verifies that data plane works for each attached UE by sending traffic between
@@ -27,7 +24,7 @@ UEs and application servers. Before finishing each test NG40 performs detach
 procedures for each attached UE.
 
 Test cases
-^^^^^^^^^^
+''''''''''
 
 Currently the following NG40 test cases are implemented:
 
@@ -35,7 +32,7 @@ Currently the following NG40 test cases are implemented:
 
 1. ``4G_M2AS_PING_FIX`` (attach, dl ping, detach)
 2. ``4G_M2AS_UDP`` (attach, dl+ul udp traffic, detach)
-3. ``4G_M2AS_TCP`` (attach, relaese, service request, dl+ul tcp traffic, detach)
+3. ``4G_M2AS_TCP`` (attach, release, service request, dl+ul tcp traffic, detach)
 4. ``4G_AS2M_PAGING`` (attach, release, dl udp traffic, detach)
 5. ``4G_M2AS_SRQ_UDP`` (attach, release, service request, dl+ul udp traffic)
 6. ``4G_M2CN_PS`` (combined IMSI/PTMSI attach, detach)
@@ -61,7 +58,7 @@ UE attaches in a patchset pre-merge test, while in the nightly tests it can
 take different arguments to run 10K UE attaches with a high attach rate.
 
 Test suites
-^^^^^^^^^^^
+'''''''''''
 
 The test cases are atomic testing units and can be combined to build test
 suites. The following test suites have been built so far:
@@ -81,7 +78,7 @@ suites. The following test suites have been built so far:
    to understand how the system performs under different loads.
 
 Robot Framework
-~~~~~~~~~~~~~~~
+"""""""""""""""
 
 Robot Framework was chosen to build test cases that involve interacting with
 not only NG40 but also other parts of the system. In these scenarios Robot
@@ -89,7 +86,7 @@ Framework acts as a high level orchestrator which drives various components
 of the system using component specific libraries including NG40.
 
 Currently the ``Integration test suite`` is implemented using Robot
-Framework. In the integration tests Robot Framework calls ng40 library to
+Framework. In the integration tests Robot Framework calls the ng40 library to
 perform normal attach/detach procedures. Meanwhile it injects failures into
 the system (container restarts, link down etc.) by calling functions
 implemented in the k8s library.
@@ -108,10 +105,7 @@ Test Schedules
 --------------
 
 Nightly Tests
-~~~~~~~~~~~~~
-
-Overview
-^^^^^^^^
+"""""""""""""
 
 SD-Core nightly tests are a set of jobs managed by Aether Jenkins.
 All four test suites we mentioned above are scheduled to run nightly.
@@ -132,15 +126,15 @@ the test type and test pod the following Jenkins jobs are generated:
 2. ``staging`` pod: `func_staging`, `scale_staging`, `perf_staging`, `integ_staging`
 3. ``qa`` pod: `func_qa`, `scale_qa`, `perf_qa`, `integ_qa`
 
-Job structure
-^^^^^^^^^^^^^
+Nightly Job structure
+"""""""""""""""""""""
 
 Take `sdcore_scale_ci-4g` job as an example. It runs the following downstream jobs:
 
-1. `omec_deploy_ci-4g`: this job re-deploys the ci-4g pod with latest OMEC images.
+1. `omec_deploy_ci-4g`: this job re-deploys the ``ci-4g`` pod with latest OMEC images.
 
 .. Note::
-  only the ci-4g and ci-5g pod jobs trigger deployment downstream job. No
+  only the ``ci-4g`` and ``ci-5g`` pod jobs trigger deployment downstream job. No
   re-deployment is performed on the staging and qa pod before the tests
 
 2. `ng40-test_ci-4g`: this job executes the scalability test suite.
@@ -165,26 +159,22 @@ following downstream jobs:
    scale tests
 
 Patchset Tests
-~~~~~~~~~~~~~~
+--------------
 
-Overview
-^^^^^^^^
-
-SD-Core pre-merge verifications cover the following public Github repos: ``c3po``,
+SD-Core pre-merge verification covers the following public Github repos: ``c3po``,
 ``Nucleus``, ``upf-epc`` and the following private Github repos: ``spgw``. ``amf``,
 ``smf``, ``ausf``, ``nssf``, ``nrf``, ``pcf``, ``udm``, ``udr``, ``webconsole``.
-SD-Core CI includes the following verifications:
+SD-Core CI verifies the following:
 
 1. ONF CLA verification
-2. License verifications (FOSSA/Reuse)
+2. License verification (FOSSA/Reuse)
 3. NG40 tests
 
-These verifications are automatically triggered by submitted or updated PR to
-the repos above. They can also be triggered manually by commenting ``retest
-this please`` to the PR. At this moment only CLI and NG40 verifications are
-mandatory.
+These jobs are automatically triggered by submitted or updated PR to the repos
+above. They can also be triggered manually by commenting ``retest this please``
+to the PR. At this moment only CLI and NG40 verification are mandatory.
 
-The NG40 verifications are a set of jobs running on both opencord Jenkins and
+The NG40 verification are a set of jobs running on both opencord Jenkins and
 Aether Jenkins (private). The jobs run on opencord Jenkins include
 
 1. `omec_c3po_container_remote <https://jenkins.opencord.org/job/omec_c3po_container_remote/>`_ (public)
@@ -208,35 +198,38 @@ And the jobs run on Aether Jenkins include
 12. `udr_premerge_ci-5g`
 13. `webconsole_premerge_ci-5g`
 
-Job structure
-^^^^^^^^^^^^^
+Patchset Job structure
+""""""""""""""""""""""
 
-Take c3po jobs as an example. c3po PR triggers a public job `omec_c3po_container_remote <https://jenkins.opencord.org/job/omec_c3po_container_remote/>`__
-job running on opencord Jenkins through Github webhooks,
-which then triggers a private job `c3po_premerge_ci-4g` running on Aether Jenkins
-using a Jenkins plugin called `Parameterized Remote Trigger Plugin <https://www.jenkins.io/doc/pipeline/steps/Parameterized-Remote-Trigger/>`__.
+Take ``c3po`` jobs as an example. ``c3po`` PR triggers a public job
+`omec_c3po_container_remote
+<https://jenkins.opencord.org/job/omec_c3po_container_remote/>`_ job running
+on opencord Jenkins through Github webhooks, which then triggers a private job
+`c3po_premerge_ci-4g` running on Aether Jenkins using a Jenkins plugin called
+`Parameterized Remote Trigger Plugin
+<https://www.jenkins.io/doc/pipeline/steps/Parameterized-Remote-Trigger/>`_.
 
-The private c3po job runs the following downstream jobs sequentially:
+The private ``c3po`` job runs the following downstream jobs sequentially:
 
-1. `docker-publish-github_c3po`: this job downloads the c3po PR, runs docker
-   build and publishes the c3po docker images to `Aether registry`.
+1. `docker-publish-github_c3po`: this job downloads the ``c3po`` PR, runs docker
+   build and publishes the ``c3po`` docker images to `Aether registry`.
 2. `omec_deploy_ci-4g`: this job deploys the images built from previous job onto
-   the omec ci-4g pod.
+   the omec ``ci-4g`` pod.
 3. `ng40-test_ci-4g`: this job executes the functionality test suite.
 4. `archive-artifacts_ci-4g`: this job collects and uploads k8s and container logs.
 
 After all the downstream jobs are finished, the upstream job (`c3po_premerge_ci-4g`)
-copies artifacts including k8s/container/NG40 logs and pcap files from
+copies artifacts including k8s/container/ng40 logs and pcap files from
 downstream jobs and saves them as Jenkins job artifacts.
 
 These artifacts are also copied to and published by the public job
-(`omec_c3po_container_remote <https://jenkins.opencord.org/job/omec_c3po_container_remote/>`__)
+(`omec_c3po_container_remote <https://jenkins.opencord.org/job/omec_c3po_container_remote/>`_)
 on opencord Jenkins so that they can be accessed by the OMEC community.
 
 Pre-merge jobs for other SD-Core repos share the same structure.
 
 Post-merge
-^^^^^^^^^^
+""""""""""
 
 The following jobs are triggered as post-merge jobs when PRs are merged to
 SD-Core repos:
@@ -255,12 +248,12 @@ SD-Core repos:
 12. `docker-publish-github-merge_udr`
 13. `docker-publish-github-merge_webconsole`
 
-Again take the c3po job as an example. The post-merge job (`docker-publish-github-merge_c3po`)
+Again take the ``c3po`` job as an example. The post-merge job (`docker-publish-github-merge_c3po`)
 runs the following downstream jobs sequentially:
 
 1. `docker-publish-github_c3po`: this is the same job as the one in pre-merge
-   section. It checks out the latest c3po code, runs docker build and
-   publishes the c3po docker images to `docker hub <https://hub.docker.com/u/omecproject>`__.
+   section. It checks out the latest ``c3po`` code, runs docker build and
+   publishes the ``c3po`` docker images to `docker hub <https://hub.docker.com/u/omecproject>`__.
 
 .. Note::
   the images for private repos are published to Aether registry instead of docker hub

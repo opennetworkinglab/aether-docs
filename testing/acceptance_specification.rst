@@ -205,7 +205,7 @@ In order to test the eNB, please see the following steps:
 |6. Find out the S1SetupRequest message and       |                                    |
 |   open the detailed packet information          |                                    |
 |                                                 |                                    |
-|7. Go to "Item 0: id-Global-ENB-ID" section      |                                    |
+|7. Go to "Item 0: id-Global-eNB-ID" section      |                                    |
 |   and check "eNB-ID: macroENB-ID"               |                                    |
 +-------------------------------------------------+------------------------------------+
 

@@ -4,7 +4,7 @@
 SHELL = bash -e -o pipefail
 
 # You can set these variables from the command line.
-SPHINXOPTS   ?=
+SPHINXOPTS   ?= -W
 SPHINXBUILD  ?= sphinx-build
 SOURCEDIR    ?= .
 BUILDDIR     ?= _build
@@ -31,7 +31,7 @@ reload: $(VENV_NAME)
   sphinx-reload $(SOURCEDIR)
 
 # lint and link verification. linkcheck is part of sphinx
-test: lint linkcheck spelling
+test: lint spelling linkcheck
 
 lint: doc8
 

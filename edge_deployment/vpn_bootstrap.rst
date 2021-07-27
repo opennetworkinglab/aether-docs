@@ -8,7 +8,7 @@ VPN Bootstrap
 This section guides you through setting up a VPN connection between Aether
 Central in GCP and ACE.
 We will be using GitOps based Aether CI/CD system for this and what you need to do is
-create a patch for the new edge in **aether-pod-configs**, where all edge infrastructure
+create a patch for the new edge in ``aether-pod-configs``, where all edge infrastructure
 configuration is stored.
 
 Here is a brief overview of each step. Note that some of the steps described here are not
@@ -26,8 +26,8 @@ it is required to update those global resource maps first.
 
 **3. Generate Ansible and Terraform configs**
 In this step, you'll add Ansible and Terraform configs necessary to install and
-configure VPN softwares at the edge and set up VPN gateway, router,
-and firewall on GCP.
+configure VPN software at the edge and set up VPN gateway, router, and firewall
+on GCP.
 
 **4. Submit your changes**
 Finally, submit your aether-pod-configs changes to run the deployment job added
@@ -57,7 +57,7 @@ Download **aether-ci-management** repository.
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-ci-management"
 
-Add the jobs for the new cluster at the end of the `cd-pipeline-terraform-ace` project job list.
+Add the jobs for the new cluster at the end of the ``cd-pipeline-terraform-ace`` project job list.
 Make sure to add both pre-merge and post-merge jobs.
 Note that the cluster name specified here will be used in the rest of the deployment procedure.
 
@@ -270,7 +270,7 @@ You can verify the VPN connections by checking
 the routing table from the management server and trying to ping to one of the
 central cluster VMs.
 
-Be sure there are two tunnel interfaces, `gcp_tunnel1` and `gcp_tunnel2`,
+Be sure there are two tunnel interfaces, ``gcp_tunnel1`` and ``gcp_tunnel2``,
 and three additional routing entries via one of the tunnel interfaces.
 
 .. code-block:: shell

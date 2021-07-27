@@ -15,20 +15,20 @@ BESS UPF requires three networks, **enb**, **access**, and **core**, and all
 three networks must use different subnets. To help your understanding,
 the following example ACE environment will be used in the rest of the guide.
 
-.. image:: images/bess-upf-example-network.png
+.. image:: images/bess-upf-example-network.svg
 
 +-----------+-----------+------------------------------------+-------------------+---------------+
 | Network   | VLAN      | Subnet                             | Interface         | IP address    |
 +-----------+-----------+------------------------------------+-------------------+---------------+
-| enb       | 2         | 192.168.2.0/24 (gw: 192.168.2.254) | mgmt server vlan2 | 192.168.2.254 |
+| eNB       | 2         | 192.168.2.0/24 (gw: 192.168.2.254) | mgmt server VLAN2 | 192.168.2.254 |
 |           |           |                                    +-------------------+---------------+
-|           |           |                                    | enb               | 192.168.2.10  |
+|           |           |                                    | eNB               | 192.168.2.10  |
 +-----------+-----------+------------------------------------+-------------------+---------------+
-| access    | 3         | 192.168.3.0/24 (gw: 192.168.3.254) | mgmt server vlan3 | 192.168.3.254 |
+| access    | 3         | 192.168.3.0/24 (gw: 192.168.3.254) | mgmt server VLAN3 | 192.168.3.254 |
 |           |           |                                    +-------------------+---------------+
 |           |           |                                    | upf access        | 192.168.3.1   |
 +-----------+-----------+------------------------------------+-------------------+---------------+
-| core      | 4         | 192.168.4.0/24 (gw: 192.168.4.254) | mgmt server vlan4 | 192.168.4.254 |
+| core      | 4         | 192.168.4.0/24 (gw: 192.168.4.254) | mgmt server VLAN4 | 192.168.4.254 |
 |           |           |                                    +-------------------+---------------+
 |           |           |                                    | upf core          | 192.168.4.1   |
 +-----------+-----------+------------------------------------+-------------------+---------------+
@@ -40,9 +40,9 @@ the following example ACE environment will be used in the rest of the guide.
 
 Note that the management server has the only external routable address and acts as a router for
 all networks in the Aether pod.
-So in order for UE to access the Internet, two things need to be done in the managmenet server.
+So in order for UE to access the Internet, two things need to be done in the management server.
 
-* For outgoing traffic, masquerade the internal adddress with the external address of the management server.
+* For outgoing traffic, masquerade the internal address with the external address of the management server.
 * For response traffic to UE, forward them to UPF's **core** interface.
 
 
@@ -52,7 +52,7 @@ Check Cluster Resources
 Before proceeding with the deployment, make sure the cluster has enough resources to run BESS UPF.
 
 * 2 dedicated cores (``"cpu"``)
-* 2 1Gi HugePages (``"hugepages-1Gi"``)
+* 2 1GiB HugePages (``"hugepages-1Gi"``)
 * 2 SRIOV Virtual Functions bound to **vfio-pci** driver (``"intel.com/intel_sriov_vfio"``)
 
 In fact, these requirements are not mandatory to run BESS UPF, but are recommended for best performance.

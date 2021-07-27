@@ -5,10 +5,11 @@
 SDFabric Deployment
 ===================
 
-Update aether-pod-config
-------------------------
+Update aether-pod-configs
+-------------------------
 
-Aether-pod-configs is a git project hosted on **gerrit.opencord.org** and we placed the following materials in it.
+``aether-pod-configs`` is a git project hosted on **gerrit.opencord.org** and
+we placed the following materials in it.
 
 - Terraform scripts to install TOST applications on Rancher, including ONOS, Stratum and Telegraf.
 - Customized configuration for each application (helm values).
@@ -674,7 +675,7 @@ You can login to the Stratum container running on a switch using this script:
   DOCKER_ID=`docker ps | grep stratum-bf | awk '{print $1}'`
   docker attach $DOCKER_ID
 
-You should then see the bf_sde prompt:
+You should then see the ``bf_sde`` prompt:
 
 .. code-block:: sh
 

@@ -1,5 +1,5 @@
-Instructions For Running The ROC Tests
-======================================
+ROC Testing
+===========
 
 The REST API and the GUI of the Aether ROC is tested utilizing the Robot Framework.
 The tests are located inside the aether-system-tests repository and they are run nightly using
@@ -11,23 +11,24 @@ To access the ROC from a local system, it is necessary to deploy the components 
 This can be done with the use of Helm (see instructions on
 `this page <https://docs.onosproject.org/onos-docs/docs/content/developers/deploy_with_helm/>`_).
 
-Additionally, it is necessary to add the sdran chart repo with the following command:
+Additionally, it is necessary to add the SD-RAN chart repo with the following command:
 
 .. code-block:: shell
 
     helm repo add sdran --username USER --password PASSWORD https://sdrancharts.onosproject.org
 
-where USER and PASSWORD can be obtained from the Aether Login Information file, which is
-accessibble to the ``onfstaff`` group.
+where USER and PASSWORD can be obtained from the Aether Login Information file,
+which is accessible to the ``onfstaff`` group.
 
-Finally, the ROC GUI tests are running on the Firefox browser, so it is nesessary to have the Firefox browser and the
-Firefox web driver (geckodriver) installed on the system in order to run these tests.
+Finally, the ROC GUI tests are running on the Firefox browser, so it is
+necessary to have the Firefox browser and the Firefox web driver
+(``geckodriver``) installed on the system in order to run these tests.
 
 Running the ROC API tests
 -------------------------
 Follow the steps below to access the ROC API:
 
-1. Deploy the aether-roc-umbrella chart from the sdran repo with the following command:
+1. Deploy the ``aether-roc-umbrella`` chart from the SD-RAN repo with the following command:
 
 .. code-block:: shell
 
@@ -125,13 +126,17 @@ This will generate test reports and logs in the ``results`` directory.
 
 Running the ROC GUI tests
 -------------------------
-We are testing the ROC GUI by installing the ROC on a local dex server. To install the dex server, please follow
-the steps under the "Helm install" section of the Readme file in `this repository <https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_.
 
-Once that you have installed the ``dex-ldap-umbrella`` chart, follow the steps below to install the ROC
-on a local dex server:
+We test the ROC GUI by installing the ROC on a local Dex server. To install the
+Dex server, please follow the steps under the "Helm install" section of the
+readme file in `this repository
+<https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_.
 
-1. Deploy the aether-roc-umbrella chart from the sdran repo with the following command:
+Once that you have installed the ``dex-ldap-umbrella`` chart, follow the steps
+below to install the ROC on a local Dex server:
+
+1. Deploy the ``aether-roc-umbrella`` chart from the SD-RAN repo with the
+   following command:
 
 .. code-block:: shell
 
@@ -176,7 +181,7 @@ This should print a table like the one below:
 
     kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=api -o name) 8181
 
-3. Finalluy, port-forward the dex service to port 5556:
+3. Finally, port-forward the Dex service to port 5556:
 
 .. code-block:: shell
 
@@ -227,11 +232,11 @@ Now that we have access to the ROC API and GUI, we can proceed with running the 
 
     mkdir results
 
-7. Run any Robot Framework test file from the ``3_0_0`` directory.
-Each test file corresponds to one of the Aether 3.0.0 models.
+7. Run any Robot Framework test file from the ``3_0_0`` directory.  Each test
+   file corresponds to one of the Aether 3.0.0 models.
 
 .. code-block:: shell
 
     robot -d results <model-name>.robot
 
-| This will generate test reports and logs in the ``results`` directory.
+This will generate test reports and logs in the ``results`` directory.

@@ -63,7 +63,7 @@ referenced by many other objects, and allows those objects to be scoped to a par
 for ownership and role-based access control purposes. `Enterprise` contains the following fields:
 
 * `connectivity-service`. A list of connectivity services that realize connectivity for this
-  enterprise. A connectivity service is a reference to the sdcore, and reflects either a 4G or a
+  enterprise. A connectivity service is a reference to the SD-Core, and reflects either a 4G or a
   5G core.
 
 Site
@@ -159,7 +159,7 @@ AP-List
 Connectivity-Service
 ~~~~~~~~~~~~~~~~~~~~
 
-`Connectivity-Service` specifies the URL of an sd-core control plane.
+`Connectivity-Service` specifies the URL of an SD-Core control plane.
 
 * `core-5g-endpoint`. Endpoint of a `config4g` or `config5g` core.
 

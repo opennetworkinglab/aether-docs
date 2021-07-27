@@ -35,6 +35,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    edge_deployment/connectivity_service_update
    edge_deployment/enb_installation
    edge_deployment/troubleshooting
+   edge_deployment/pronto
 
 .. toctree::
    :maxdepth: 3
@@ -67,6 +68,15 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    developer/sdcore
    developer/roc
    developer/roc-api
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Releases
+   :hidden:
+   :glob:
+
+   release/process.rst
+   release/1*
 
 .. toctree::
    :maxdepth: 1

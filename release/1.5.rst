@@ -1,0 +1,49 @@
+Aether 1.5 Release
+==================
+
+Highlights
+----------
+
+The focus of this release is support for...
+
+New Features and Improvements
+-----------------------------
+
+
+Development and Deployment Changes
+----------------------------------
+
+Support for ...
+
+
+Testing Improvements
+--------------------
+
+
+Certification Program
+---------------------
+
+
+Known Issues and Limitations
+----------------------------
+
+
+
+Component Versions in the 1.5 Release
+-------------------------------------
+
+
+Aether ROC
+""""""""""
+
+
+ONOS
+""""
+
+
+SD-Core
+"""""""
+
+
+Helm Chart Versions
+-------------------

@@ -8,14 +8,14 @@ Runtime Deployment
 This section describes how to install and configure Aether Edge Runtime including Kubernetes
 and system level applications listed below.
 
-* sealed-secrets
-* rancher-monitoring
-* fluent-bit
-* opendistro-es
-* hostpath-provisioner
-* edge-maintenance-agent
-* sriov-device-plugin
-* uedns
+* ``sealed-secrets``
+* ``rancher-monitoring``
+* ``fluent-bit``
+* ``opendistro-es``
+* ``hostpath-provisioner``
+* ``edge-maintenance-agent``
+* ``sriov-device-plugin``
+* ``uedns``
 
 For this, we will be using GitOps based CI/CD systems and what you will need to do is
 create patches in Aether GitOps repositories, **aether-pod-configs** and **aether-app-configs**,
@@ -23,7 +23,7 @@ to provide cluster and application configurations to the CI/CD systems.
 
 .. attention::
 
-   If you skipped VPN bootstap step and didn't add the deployment jobs for the new edge,
+   If you skipped VPN bootstrap step and didn't add the deployment jobs for the new edge,
    go to :ref:`Add deployment jobs <add_deployment_jobs>` step and finish it first
    before proceeding.
 
@@ -40,7 +40,7 @@ your development machine.
 
 .. attention::
 
-   If you skipped VPN bootstap step and didn't update global resource maps for the new edge,
+   If you skipped VPN bootstrap step and didn't update global resource maps for the new edge,
    go to :ref:`Update global resource maps <update_global_resource>` step and
    finish ``cluster_map.tfvars`` and ``user_map.tfvars`` update first before proceeding.
 
@@ -118,7 +118,7 @@ First, download ``aether-app-configs`` if you don't have it already in your deve
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
 
 Configure rancher-monitoring
-############################
+""""""""""""""""""""""""""""
 
 Open ``fleet.yaml`` under ``infrastructure/rancher-monitoring``, add a custom target
 with the new cluster name as a selector, and provide cluster specific Helm values and
@@ -148,11 +148,11 @@ kustomize overlay directory path like below.
 
    Above step will not be required in Rancher v2.6 as it supports using cluster labels as helm values in a list.
 
-Configure ue-dns
-################
+Configure ``ue-dns``
+""""""""""""""""""""
 
 For UE-DNS, it is required to create a Helm values file for the new cluster.
-You'll need cluster domain and kube-dns ClusterIP. Both can be found in
+You'll need cluster domain and ``kube-dns`` ClusterIP. Both can be found in
 ``aether-pod-configs/production/cluster_map.tfvars``.
 Be sure to replace ``[ ]`` in the example configuration below to the actual cluster values.
 
@@ -231,15 +231,16 @@ Submit your changes.
 
 
 Assign Fleet workspace
-######################
+""""""""""""""""""""""
 
-By default, all new clusters are assgiend to a default Fleet workspace called **fleet-default**.
+By default, all new clusters are assigned to a default Fleet workspace called **fleet-default**.
 To make a cluster part of Aether and have the applications defined in aether-app-configs deployed,
 you must assign the cluster to either **aether-stable** or **aether-alpha** workspace.
 For clusters expecting minimal downtime, assign to **aether-stable**.
 For clusters for development or previewing upcoming release, assign to **aether-alpha**.
 
 Workspace assignment can be done from Fleet dashboard.
+
 To access Fleet dashboard, log in to `Rancher <https://rancher.aetherproject.org>`_ as
 ``admin`` or ``onfadmin`` user, go to the **Cluster Explorer**,
 and click **Cluster Explorer > Continuous Delivery** in the top left dropdown menu.

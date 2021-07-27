@@ -35,7 +35,7 @@ Root/Public DNS port is blocked
 """""""""""""""""""""""""""""""
 
 In some cases access to the public DNS root and other servers is blocked, which
-prevents DNS lookups from working within the pod.
+prevents DNS queries from working within the pod.
 
 To resolve this, forwarding addresses on the local network can be provided in
 the Ansible YAML ``host_vars`` file, using the ``unbound_forward_zones`` list
@@ -48,7 +48,7 @@ to configure the Unbound recursive nameserver. An example::
       - "8.8.4.4"
 
 
-The items in the ``servers`` list would be the locally accessible nameservers.
+The items in the ``servers`` list should be locally accessible nameservers.
 
 Problems with OS installation
 -----------------------------
@@ -146,7 +146,7 @@ Problems with ONIE Installation
 -------------------------------
 
 Can't reboot into ONL, loops on ONIE installer mode
----------------------------------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""
 
 Sometimes an ONL installation is incomplete or problematic, and reinstalling it
 doesn't result in a working system.
@@ -154,4 +154,126 @@ doesn't result in a working system.
 If this is the case, reboot into ONIE Rescue mode and use ``parted`` to delete
 all the ``ONL-`` prefixed partitions, then reinstall with an ``onie-installer``
 image.
+
+
+Management Network Issues
+-------------------------
+
+
+Cycling PoE port power on a HP/Aruba Management switch
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+You may need to cycle the power on a port if an eNB or monitoring device that
+is powered the PoE switch is not responding or misbehaving.
+
+To do this, login to the switch and check which ports are receiving power::
+
+  Aruba-2540-24G-PoEP-4SFPP# show power-over-ethernet brief
+
+  Status and Configuration Information
+
+   Available: 370 W  Used: 11 W  Remaining: 359 W
+
+  PoE    Pwr  Pwr      Pre-std Alloc Alloc  PSE Pwr PD Pwr  PoE Port     PLC PLC
+  Port   Enab Priority Detect  Cfg   Actual Rsrvd   Draw    Status       Cls Type
+  ------ ---- -------- ------- ----- ------ ------- ------- ------------ --- ----
+  1      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  2      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  3      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  4      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  5      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  6      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  7      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  8      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  9      Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  10     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  11     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  12     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  13     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  14     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  15     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  16     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  17     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  18     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  19     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  20     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  21     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+  22     Yes  low      off     usage usage  4.9 W   4.7 W   Delivering    3   1
+  23     Yes  low      off     usage usage  6.0 W   5.7 W   Delivering    3   1
+  24     Yes  low      off     usage usage  0.0 W   0.0 W   Searching     0   -
+
+For this example, if we want to reset port 23, run these commands to disable
+the PoE power on the port::
+
+  Aruba-2540-24G-PoEP-4SFPP# config
+  Aruba-2540-24G-PoEP-4SFPP(config)# interface 23
+  Aruba-2540-24G-PoEP-4SFPP(eth-23)# no power-over-ethernet
+  Aruba-2540-24G-PoEP-4SFPP(eth-23)# show power-over-ethernet ethernet 23
+
+   Status and Configuration Information for port 23
+
+    Power Enable      : No                    PoE Port Status    : Disabled
+    PLC Class/Type    : 0/-                   Priority Config    : low
+    DLC Class/Type    : 0/-                   Pre-std Detect     : off
+    Alloc By Config   : usage                 Configured Type    :
+    Alloc By Actual   : usage                 PoE Value Config   : n/a
+
+
+    PoE Counter Information
+
+    Over Current Cnt  : 0                     MPS Absent Cnt     : 0
+    Power Denied Cnt  : 0                     Short Cnt          : 0
+
+
+    LLDP Information
+
+    PSE Allocated Power Value : 0.0 W         PSE TLV Configured : dot3, MED
+    PD Requested Power Value  : 0.0 W         PSE TLV Sent Type  : dot3
+    MED LLDP Detect           : Disabled      PD TLV Sent Type   : n/a
+
+
+    Power Information
+
+    PSE Voltage       : 0.0 V                 PSE Reserved Power : 0.0 W
+    PD Amperage Draw  : 0 mA                  PD Power Draw      : 0.0 W
+
+
+At this point, the power has been removed from the device. To reenable it::
+
+  Aruba-2540-24G-PoEP-4SFPP(eth-23)# power-over-ethernet
+  Aruba-2540-24G-PoEP-4SFPP(eth-23)# show power-over-ethernet ethernet 23
+
+   Status and Configuration Information for port 23
+
+    Power Enable      : Yes                   PoE Port Status    : Delivering
+    PLC Class/Type    : 3/1                   Priority Config    : low
+    DLC Class/Type    : 0/-                   Pre-std Detect     : off
+    Alloc By Config   : usage                 Configured Type    :
+    Alloc By Actual   : usage                 PoE Value Config   : n/a
+
+
+    PoE Counter Information
+
+    Over Current Cnt  : 0                     MPS Absent Cnt     : 0
+    Power Denied Cnt  : 0                     Short Cnt          : 0
+
+
+    LLDP Information
+
+    PSE Allocated Power Value : 0.0 W         PSE TLV Configured : dot3, MED
+    PD Requested Power Value  : 0.0 W         PSE TLV Sent Type  : dot3
+    MED LLDP Detect           : Disabled      PD TLV Sent Type   : n/a
+
+
+    Power Information
+
+    PSE Voltage       : 0.0 V                 PSE Reserved Power : 0.1 W
+    PD Amperage Draw  : 18 mA                 PD Power Draw      : 0.0 W
+
+
+
+   Refer to command's help option for field definitions
+
+  Aruba-2540-24G-PoEP-4SFPP(eth-23)# exit
+  Aruba-2540-24G-PoEP-4SFPP(config)# exit
 

@@ -47,6 +47,7 @@ warning_is_error = True
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autosectionlabel',
     'sphinx.ext.coverage',
     'sphinx.ext.graphviz',
     'sphinx.ext.ifconfig',
@@ -56,6 +57,9 @@ extensions = [
     'sphinxcontrib.spelling',
     "sphinx_multiversion",
 ]
+
+# require document prefix on section labels
+autosectionlabel_prefix_document = True
 
 # Text files with lists of words that shouldn't fail the spellchecker:
 spelling_word_list_filename=['dict.txt', ]
@@ -242,19 +246,20 @@ linkcheck_ignore = [
     r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*'
 ]
 
+linkcheck_timeout = 3
+linkcheck_retries = 2
+
 # -- options for Intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
     'ansible': ('https://docs.ansible.com/ansible/latest', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None),
     'trellis': ('https://docs.trellisfabric.org/master', None),
+    'sysapproach5g': ('https://5g.systemsapproach.org/', None),
+    'sysapproachnet': ('https://book.systemsapproach.org/', None),
+    'sysapproachsdn': ('https://sdn.systemsapproach.org/', None),
     }
 
 def setup(app):
 
     app.add_css_file('css/rtd_theme_mods.css')
-
-    app.add_config_value('recommonmark_config', {
-            'url_resolver': lambda url: github_doc_root + url,
-            'auto_toc_tree_section': 'Contents',
-        }, True)

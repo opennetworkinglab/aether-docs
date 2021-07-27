@@ -9,7 +9,7 @@ The goal and objective of Aether test automation is to build a framework that
 provides highly scalable and low maintenance code which will help cover various
 categories of tests.  Framework includes libraries and tools that allows both
 component level and integration level tests. Robot Framework will be used for
-covering integration tests. Component level test coverages have been
+covering integration tests. Component level test coverage have been
 accomplished by leveraging the existing test frameworks that were developed in
 their respective projects. Component level tests include tests for TOST, PDP,
 SD-CORE areas. For detailed information on component tests, please see their

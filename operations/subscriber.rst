@@ -22,9 +22,9 @@ performed by Aether Operations.
 Each UE is assigned a PLMN and a set of security keys. Depending on the deployment scenario, these
 keys might be shared by several UEs, or they might be unique to each UE. The allocation of PLMNs and
 keys is currently performed manually by the Aether Operations team. This subscriber-related
-detail is configured via the SIM Management application, Simapp.
+detail is configured via the SIM Management application, ``Simapp``.
 
-`simapp.yaml` needs to be adjusted to include the new UE IMSIs to the subscriber list. For example::
+``simapp.yaml`` needs to be adjusted to include the new UE IMSIs to the subscriber list. For example::
 
     # simapp.yaml
     # ...
@@ -53,7 +53,7 @@ detail is configured via the SIM Management application, Simapp.
             key: 8baf473f2f8fd09487cccbd7097c6862
             sequenceNumber: 16f3b3f70fc2
 
-TODO: This file will probably be placed under gitops control once the 5G ROC is deployed. Document
+TODO: This file will probably be placed under GitOps control once the 5G ROC is deployed. Document
 the new location of the file.
 
 .. _configure_device_group:
@@ -77,9 +77,9 @@ Device Groups and their association to Sites.
 
     |DEVICEGROUP-LIST|
 
-In the DeviceGroup *New York POS* example above an Imsi Range **store** of **70-73** will mean the set of Imsi
-IDs (when the *format* specifier of the *starbucks-newyork* Site are applied to
-its *MCC*, *MNC* and *Enterprise*) of
+In the DeviceGroup *New York POS* example above an IMSI Range **store** of
+**70-73** will mean the set of IMSI IDs (when the *format* specifier of the
+*starbucks-newyork* Site are applied to its *MCC*, *MNC* and *Enterprise*) of
 
 * 021032002000070 (021-032-002-000070)
 * 021032002000071
@@ -100,11 +100,11 @@ adjust an existing range or create a new range (by clicking on the `+` icon).
 
 The following restrictions apply
 
-#. The Imsi ID specified in "from" or "to" is relative to *MCC*, *MNC* and *Enterprise* of the Site.
-#. The maximum value of an Imsi ID is defined by the number of **S** characters in the `format` specifier of the Site.
-#. Imsi Ranges are contiguous ranges of Imsi IDs. To accommodate non contiguous Imsi IDs, add extra Ranges.
-#. Imsi Ranges can have a maximum span of 100 between "from" and "to" Imsi IDs. Break bigger spans in to many ranges.
-#. Imsi ranges within a DeviceGroup cannot not overlap.
+#. The IMSI ID specified in "from" or "to" is relative to *MCC*, *MNC* and *Enterprise* of the Site.
+#. The maximum value of an IMSI ID is defined by the number of **S** characters in the `format` specifier of the Site.
+#. IMSI Ranges are contiguous ranges of IMSI IDs. To accommodate non contiguous IMSI IDs, add extra Ranges.
+#. IMSI Ranges can have a maximum span of 100 between "from" and "to" IMSI IDs. Break bigger spans in to many ranges.
+#. IMSI ranges within a DeviceGroup cannot not overlap.
 
 When the entries on the DeviceGroup edit page are valid the **Update** will become available
 
@@ -138,10 +138,10 @@ then remove that UE's IMSI from the list. If you are removing a single UE, and t
 DeviceGroup is configured with a range specifier that includes several IMSIs,
 then it might be necessary to split that range into multiple ranges.
 
-* If the UE to be removed has an Imsi ID in the middle of an existing Imsi Range:
-    click the *trash can* icon next to that *Imsi Range* and
-    use the *+* icon to add new Ranges for the remaining Imsi IDs.
-* Alternatively if the UE to be removed has an Imsi ID at the start or end of an existing Imsi Range:
+* If the UE to be removed has an IMSI ID in the middle of an existing IMSI Range:
+    click the *trash can* icon next to that *IMSI Range* and
+    use the *+* icon to add new Ranges for the remaining IMSI IDs.
+* Alternatively if the UE to be removed has an IMSI ID at the start or end of an existing IMSI Range:
     then adjust the *from* or *to* value accordingly.
 
     |DEVICEGROUP-EDIT|
@@ -157,13 +157,13 @@ a default DeviceGroup, but additional DeviceGroups may be created. For example, 
 Cameras in an my-site-ip-cameras DeviceGroup would allow you to group IP Cameras together.
 
 To add a DeviceGroup, navigate to the list of DeviceGroups and click `Add` in the upper right.
-(This may be greyed out if you do not have appropriate permissions).
+(This may be grayed out if you do not have appropriate permissions).
 
 * Specify a unique **id** for the DeviceGroup
     40 characters max and only alphanumeric and `-`, `_` and `.` allowed
 * Choose a *Site* from the list of preconfigured list
-    It will not be possible to add Imsi Ranges until the Site is chosen
-* Imsi Ranges can be added at this stage or later
+    It will not be possible to add IMSI Ranges until the Site is chosen
+* IMSI Ranges can be added at this stage or later
 
 .. image:: images/aether-roc-gui-devicegroup-add.png
     :width: 490
@@ -231,7 +231,7 @@ The *monitor* page itself shows:
 * An information Panel for each *IMSI Range* in the *DeviceGroup*
 
     * Each UE has a |monitor| button that allows further drill down
-    * Each UE is shown with its fully expanded IMSI number (a combination of *Imsi ID* and *Site* parameters)
+    * Each UE is shown with its fully expanded IMSI number (a combination of *IMSI ID* and *Site* parameters)
 * An information panel for the *Site* and *IP Domain* of the *DeviceGroup*
 
     * Clicking on the down arrow expands each panel
@@ -256,11 +256,11 @@ The per UE Monitor panel contains:
 
 .. |DEVICEGROUP-LIST| image:: images/aether-roc-gui-devicegroups-list.png
     :width: 755
-    :alt: Device Groups List View in Aether ROC GUI showing Site association and Imsi Range of all DeviceGroups
+    :alt: Device Groups List View in Aether ROC GUI showing Site association and IMSI Range of all DeviceGroups
 
 .. |DEVICEGROUP-EDIT| image:: images/aether-roc-gui-devicegroup-edit.png
     :width: 755
-    :alt: Device Groups Edit View in Aether ROC GUI showing Imsi Range
+    :alt: Device Groups Edit View in Aether ROC GUI showing IMSI Range
 
 .. |VCS-LIST| image:: images/aether-roc-gui-vcs-list.png
     :width: 920

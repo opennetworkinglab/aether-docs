@@ -8,10 +8,12 @@ Background / Development Environment
 
 This document assumes familiarity with Kubernetes and Helm, and that a Kubernetes/Helm development
 environment has already been deployed in the developer’s work environment.
-This development environment can use any of a number of potential mechanisms -- including KinD, Kubeadm, etc.
+
+This development environment can use any of a number of potential mechanisms -- including KinD, kubeadm, etc.
+
 The Aether-in-a-Box script is one potential way to setup a development environment, but not the only way.
 As an alternative to the developer’s local machine, a remote environment can be set up, for example on
-cloud infrastructure such as cloudlab.
+cloud infrastructure such as Cloudlab.
 
 .. note:: When ROC is deployed it is unsecured by default, with no Authentication or Authorization.
     To secure ROC so that the Authentication and Authorization can be tested, follow the Securing ROC
@@ -61,8 +63,8 @@ You’ll want to override several of the defaults in the ROC helm charts::
        enabled: false
    EOF
 
-Installing the Aether-Roc-Umbrella Helm chart
----------------------------------------------
+Installing the ``aether-roc-umbrella`` Helm chart
+-------------------------------------------------
 
 Add the necessary helm repositories::
 
@@ -71,7 +73,7 @@ Add the necessary helm repositories::
    export repo_password=<password>
    helm repo add sdran --username "$repo_user" --password "$repo_password" https://sdrancharts.onosproject.org
 
-Aether-Roc-Umbrella will bring up the ROC and its services::
+``aether-roc-umbrella`` will bring up the ROC and its services::
 
    helm -n micro-onos install aether-roc-umbrella sdran/aether-roc-umbrella -f values-override.yaml
 
@@ -98,7 +100,10 @@ Execute the following::
 
 
 You may wish to customize the mega patch.
-For example, by default the patch configures the sdcore-adapter to push to sdcore-test-dummy.
+
+For example, by default the patch configures the ``sdcore-adapter`` to push to
+``sdcore-test-dummy``.
+
 You could configure it to push to a live aether-in-a-box core by doing something like this::
 
    sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch.curl
@@ -110,15 +115,17 @@ You could configure it to push to a live aether-in-a-box core by doing something
 
 
 Expected CURL output from a successful mega-patch post will be a UUID.
-You can also verify that the mega-patch was successful by going into the aether-roc-gui in a browser
-(see the section on useful port-forwards below). The GUI may open to a dashboard that is unpopulated -- you
-can use the dropdown menu (upper-right hand corner of the screen) to select an object such as VCS and you
-will see a list of VCS.
+
+You can also verify that the mega-patch was successful by going into the
+``aether-roc-gui`` in a browser (see the section on useful port-forwards
+below). The GUI may open to a dashboard that is unpopulated -- you can use the
+dropdown menu (upper-right hand corner of the screen) to select an object such
+as VCS and you will see a list of VCS.
 
    |ROCGUI|
 
-Uninstalling the Aether-Roc-Umbrella Helm chart
------------------------------------------------
+Uninstalling the ``aether-roc-umbrella`` Helm chart
+---------------------------------------------------
 
 To tear things back down, usually as part of a developer loop prior to redeploying again, do the following::
 
@@ -159,15 +166,17 @@ The following port-forwards may be useful::
 
    kubectl -n micro-onos port-forward service/onos-gui --address 0.0.0.0 8182:80
 
-Aether-roc-api and aether-roc-gui are in our experience the most useful two port-forwards.
-Aether-roc-api is useful to be able to POST REST API requests.
-Aether-roc-gui is useful to be able to interactively browse the current configuration.
+``aether-roc-api`` and ``aether-roc-gui`` are in our experience the most useful two port-forwards.
+
+``aether-roc-api`` is useful to be able to POST REST API requests.
+
+``aether-roc-gui`` is useful to be able to interactively browse the current configuration.
 
 Deploying using custom images
 -----------------------------
 
 Custom images may be used by editing the values-override.yaml file.
-For example, to deploy a custom sdcore-adapter::
+For example, to deploy a custom ``sdcore-adapter``::
 
    sdcore-adapter-v3:
 
@@ -181,13 +190,13 @@ For example, to deploy a custom sdcore-adapter::
 
    pullPolicy: Always
 
-The above example assumes you have published a docker images at my-private-repo/sdcore-adapter:my-tag.
+The above example assumes you have published a docker images at ``my-private-repo/sdcore-adapter:my-tag``.
 My particular workflow is to deploy a local-docker registry and push my images to that.
 Please do not publish ONF images to a public repository unless the image is intended to be public.
 Several ONF repositories are private, and therefore their docker artifacts should also be private.
 
 There are alternatives to using a private docker repository.
-For example, if you are using kubadm, then you may be able to simply tag the image locally.
+For example, if you are using kubeadm, then you may be able to simply tag the image locally.
 If you’re using KinD, then you can push a local image to into the kind cluster::
 
    kind load docker-image sdcore-adapter:my-tag
@@ -209,23 +218,24 @@ Then you can inspect a specific pod/container::
 Securing ROC
 ------------
 
-When deploying ROC with the **aether-roc-umbrella** chart, secure mode can be enabled by
+When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode can be enabled by
 specifying an OpenID Connect (OIDC) issuer like::
 
     helm -n micro-onos install aether-roc-umbrella sdran/aether-roc-umbrella \
         --set onos-config.openidc.issuer=http://dex-ldap-umbrella:5556 \
         --set aether-roc-gui-v3.openidc.issuer=http://dex-ldap-umbrella:5556
 
-The choice of OIDC issuer in this case is **dex-ldap-umbrella**
+The choice of OIDC issuer in this case is ``dex-ldap-umbrella``.
 
-dex-ldap-umbrella
-~~~~~~~~~~~~~~~~~
+``dex-ldap-umbrella``
+"""""""""""""""""""""
 
 Dex is a cloud native OIDC Issuer than can act as a front end to several authentication systems
 e.g. LDAP, Crowd, Google, GitHub
 
-Dex-LDAP-Umbrella is a Helm chart that combines a Dex server with an LDAP installation, and an
-LDAP administration tool. It can be deployed in to the same cluster namespace as **aether-roc-umbrella**.
+``dex-ldap-umbrella`` is a Helm chart that combines a Dex server with an LDAP
+installation, and an LDAP administration tool. It can be deployed in to the
+same cluster namespace as ``aether-roc-umbrella``.
 
 Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
 
@@ -241,7 +251,8 @@ See `public dex <https://dex.aetherproject.org/dex/.well-known/openid-configurat
 .. note:: Your RBAC access to ROC will be limited by the groups you belong to in Crowd.
 
 Role Based Access Control
-~~~~~~~~~~~~~~~~~~~~~~~~~
+"""""""""""""""""""""""""
+
 When secured, access to the configuration in ROC is limited by the **groups** that a user belongs to.
 
 * **AetherROCAdmin** - users in this group have full read **and** write access to all configuration.
@@ -255,13 +266,14 @@ When secured, access to the configuration in ROC is limited by the **groups** th
     linked with the *starbucks* enterprise.
 
 Requests to a Secure System
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""""""""""""""""""""""""""
+
 When configuration is retrieved or updated  through *aether-config*, a Bearer Token in the
-form of a Json Web Token (JWT) issued by the selected OIDC Issuer server must accompany
+form of a JSON Web Token (JWT) issued by the selected OIDC Issuer server must accompany
 the request as an Authorization Header.
 
-This applies to both the REST interface of *aether-roc-api* **and** the *gnmi* interface of
-*aether-rconfig*.
+This applies to both the REST interface of ``aether-roc-api`` **and** the *gnmi* interface of
+``aether-rconfig``.
 
 In the Aether ROC, a Bearer Token can be generated by logging in and selecting API Key from the
 menu. This pops up a window with a copy button, where the key can be copied.
@@ -279,7 +291,8 @@ Accessing the REST interface from a tool like Postman, should include this Auth 
     :alt: Postman showing Authentication Token pasted in
 
 Logging
-~~~~~~~
+"""""""
+
 The logs of *aether-config* will contain the **username** and **timestamp** of
 any **gnmi** call when security is enabled.
 
@@ -288,7 +301,8 @@ any **gnmi** call when security is enabled.
     :alt: aether-config log message showing username and timestamp
 
 Accessing GUI from an external system
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""""""""""""""""""""""""""""""""""""
+
 To access the ROC GUI from a computer outside the Cluster machine using *port-forwarding* then
 it is necessary to:
 
@@ -297,10 +311,11 @@ it is necessary to:
 
     <ip address of cluster> dex-ldap-umbrella aether-roc-gui
 * Verify that you can access the Dex server by its name *http://dex-ldap-umbrella:5556/.well-known/openid-configuration*
-* Access the GUI through the hostname (rather than ip address) *http://aether-roc-gui:8183*
+* Access the GUI through the hostname (rather than ip address) ``http://aether-roc-gui:8183``
 
 Troubleshooting Secure Access
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"""""""""""""""""""""""""""""
+
 While every effort has been made to ensure that securing Aether is simple and effective,
 some difficulties may arise.
 
@@ -327,7 +342,7 @@ This shows the **groups** that the user belongs to, and can be used to debug RBA
 
 When you sign out of the ROC GUI, if you are not redirected to the Dex Login Page,
 you should check the Developer Console of the browser. The console should show the correct
-OIDC issuer (dex server), and that Auth is enabled.
+OIDC issuer (Dex server), and that Auth is enabled.
 
 .. image:: images/aether-roc-gui-console-loggedin.png
     :width: 418
@@ -339,7 +354,7 @@ ROC Data Model Conventions and Requirements
 The MEGA-Patch described above will bring up a fully compliant sample data model.
 However, it may be useful to bring up your own data model, customized to a different
 site of sites. This subsection documents conventions and requirements for the Aether
-modeling within the roc.
+modeling within the ROC.
 
 The ROC models must be configured with the following:
 
@@ -357,23 +372,26 @@ device group's name must end in the suffix `-default`. For example, `acme-chicag
 Some exercises to get familiar
 ------------------------------
 
-1) Deploy the ROC and POST the mega-patch, go into the aether-roc-GUI and click through the VCS, DeviceGroup, and
-other objects to see that they were created as expected.
+1. Deploy the ROC and POST the mega-patch, go into the ``aether-roc-gui`` and click
+   through the VCS, DeviceGroup, and other objects to see that they were
+   created as expected.
 
-2) Examine the log of the sdcore-adapter-v3 container.
-It should be attempting to push the mega-patch’s changes.
-If you don’t have a core available, it may be failing the push, but you should see the attempts.
+2. Examine the log of the ``sdcore-adapter-v3`` container.  It should be
+   attempting to push the mega-patch’s changes.  If you don’t have a core
+   available, it may be failing the push, but you should see the attempts.
 
-3) Change an object in the GUI.
-Watch the sdcore-adapter-v3 log file and see that the adapter attempts to push the change.
+3. Change an object in the GUI.  Watch the ``sdcore-adapter-v3`` log file and
+   see that the adapter attempts to push the change.
 
-4) Try POSTing a change via the API.
-Observe the sdcore-adapter-v3 log file and see that the adapter attempts to push the change.
+4. Try POSTing a change via the API.  Observe the ``sdcore-adapter-v3`` log
+   file and see that the adapter attempts to push the change.
 
-5) Deploy a 5G Aether-in-a-Box (See sd-core developer guide), modify the mega-patch to specify the URL for the
-Aether-in-a-Box webui container, POST the mega-patch, and observe that the changes were correctly pushed via the
-sdcore-adapter-v3 into the sd-core’s webui container (webui container log will show configuration as it is
-received)
+5. Deploy a 5G Aether-in-a-Box (See :doc:`Aether SD-Core Developer Guide
+   <sdcore>`), modify the mega-patch to specify the URL for the Aether-in-a-Box
+   ``webui`` container, POST the mega-patch, and observe that the changes were
+   correctly pushed via the ``sdcore-adapter-v3`` into the ``sd-core``’s
+   ``webui`` container (``webui`` container log will show configuration as it
+   is received)
 
 .. |ROCGUI| image:: images/rocgui.png
     :width: 945

@@ -29,8 +29,8 @@ To gracefully shutdown an Aether Edge Pod, follow the following steps:
 
       ansible -i inventory/sitename.ini -b -m shutdown -a "delay=60" all
 
-   The ``delay=60`` arg is to allow hosts behind the management server to be
-   reached before the management server shuts down.
+   The ``delay=60`` argument is to allow hosts behind the management server to
+   be reached before the management server shuts down.
 
 Edge power up procedure
 -----------------------

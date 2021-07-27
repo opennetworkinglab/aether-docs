@@ -20,8 +20,8 @@ and must also be created with attributes like:
 
 * **SD** (slice differentiator)
 * **SST** (slice/service type)
-* **Uplink** (data rate in mbps)
-* **Downlink** (data rate in mbps)
+* **Uplink** (data rate in Mbps)
+* **Downlink** (data rate in Mbps)
 
 Provisioning a new VCS
 ----------------------

@@ -53,26 +53,28 @@ on the remote to ``_build``. This will use a fork of `sphinx-multiversion
 <https://github.com/Holzhaus/sphinx-multiversion>`_ to build multiple versions
 for the site.
 
-Creating Graphs and Diagrams
-----------------------------
+Adding Images and Diagrams
+--------------------------
 
-Multiple tools are available to render inline text-based graphs definitions and
-diagrams within the documentation. This is preferred over images as it's easier
-to change and see changes over time as a diff.
+There are multiple ways to add images and diagrams to the documentation.
+Generally, you should prefer using `SVG
+<https://en.wikipedia.org/wiki/Scalable_Vector_Graphics>`_ images, as these can
+be scaled to any size without quality loss.
 
-:doc:`Graphviz <sphinx:usage/extensions/graphviz>` supports many standard graph
-types.
+If you're creating diagrams, there are multiple tools available.
+:doc:`Graphviz <sphinx:usage/extensions/graphviz>` can render inline text-based
+graphs definitions and diagrams within the documentation, and is best for
+simple diagrams.
 
-The `blockdiag <http://blockdiag.com/en/blockdiag/sphinxcontrib.html>`_,
-`nwdiag, and rackdiag <http://blockdiag.com/en/nwdiag/sphinxcontrib.html>`_,
-and `seqdiag <http://blockdiag.com/en/seqdiag/sphinxcontrib.html>`_ suites of
-tools can be used to create specific types of diagrams:
+More complex diagrams can be created in `Diagrams.net/Draw.io
+<https://www.diagrams.net/>`_ format. When saving these diagrams, use the
+SVG format, and check the "Include a copy of my diagram". This will let
+someone open the SVG later directly from the documentation and edit it, without
+any loss in functionality or quality.
 
-- `blockdiag examples <http://blockdiag.com/en/blockdiag/examples.html>`_
-- `nwdiag examples <http://blockdiag.com/en/nwdiag/nwdiag-examples.html>`_
-- `rackdiag examples <http://blockdiag.com/en/nwdiag/rackdiag-examples.html>`_
-- `seqdiag examples <http://blockdiag.com/en/seqdiag/examples.html>`_
-
-The styles applied to nodes and connections in these diagrams can be customized
-using `attributes
-<http://blockdiag.com/en/blockdiag/attributes/node.attributes.html>`_.
+The last resort is to use raster images. If they're drawings or screen
+captures, use the `PNG
+<https://en.wikipedia.org/wiki/Portable_Network_Graphics>`_ format.  Consider
+compressing them with a tool like `OptiPNG <http://optipng.sourceforge.net/>`_,
+or `pngquant <https://pngquant.org/>`_.  If it's a photograph, use `JPEG
+<https://en.wikipedia.org/wiki/JPEG>`_.
