@@ -34,6 +34,13 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    edge_deployment/enb_installation
    edge_deployment/troubleshooting
 
+.. toctree::
+   :maxdepth: 3
+   :caption: Aether Management Platform
+   :hidden:
+   :glob:
+
+   amp/roc
 
 .. toctree::
    :maxdepth: 3
