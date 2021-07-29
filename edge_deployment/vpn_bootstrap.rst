@@ -5,19 +5,64 @@
 VPN Bootstrap
 =============
 
-This section walks you through how to set up a VPN between ACE and Aether
-Central in GCP.  We will be using GitOps based Aether CD pipeline for this, so
-we just need to create a patch to **aether-pod-configs** repository.  Note that
-some of the steps described here are not directly related to setting up a VPN,
+This section guides you through setting up a VPN connection between Aether Central in GCP and ACE.
+We will be using GitOps based Aether CI/CD system for this and all you need to do is to
+create a couple of patches to Aether GitOps repositories.
+Note that some of the steps described here are not directly related to setting up a VPN,
 but rather are a prerequisite for adding a new ACE.
 
-.. attention::
+Add deployment jobs
+-------------------
+First, you need to add Jenkins jobs to Aether CI/CD system that build and apply
+infrastructure change plans for the new edge. This is done by creating a patch to
+**aether-ci-management** repository.
 
-   If you are adding another ACE to an existing VPN connection, go to
-   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`
+Download **aether-ci-management** repository.
 
-Before you begin
-----------------
+.. code-block:: shell
+
+   $ cd $WORKDIR
+   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-ci-management"
+
+Add the jobs for the new cluster at the end of the `cd-pipeline-terraform-ace` project job list.
+Make sure to add both pre-merge and post-merge jobs.
+Note that the cluster name specified here will be used in the rest of the deployment procedure.
+
+.. code-block:: diff
+
+   $ cd $WORKDIR/aether-ci-management
+   $ vi jjb/repos/cd-pipeline-terraform.yaml
+
+   # Add jobs for the new cluster
+   diff jjb/repos/cd-pipeline-terraform.yamll
+   --- a/jjb/repos/cd-pipeline-terraform.yaml
+   +++ b/jjb/repos/cd-pipeline-terraform.yaml
+   @@ -227,3 +227,9 @@
+          - 'cd-pipeline-terraform-postmerge-cluster':
+              pod: 'production'
+              cluster: 'ace-eks'
+   +      - 'cd-pipeline-terraform-premerge-cluster':
+   +          pod: 'production'
+   +          cluster: 'ace-test'
+   +      - 'cd-pipeline-terraform-postmerge-cluster':
+   +          pod: 'production'
+   +          cluster: 'ace-test'
+
+Commit your change and wait for the jobs you just added available in Aether Jenkins.
+
+.. code-block:: shell
+
+   $ git status
+   Changes not staged for commit:
+
+     modified:   jjb/repos/cd-pipeline-terraform.yaml
+
+   $ git add .
+   $ git commit -m "Add test ACE deployment job"
+   $ git review
+
+Gather VPN information
+----------------------
 
 * Make sure firewall in front of ACE allows UDP port 500, UDP port 4500, and
   ESP packets from **gcpvpn1.infra.aetherproject.net(35.242.47.15)** and
@@ -31,7 +76,7 @@ in the rest of this section.  Make sure to replace the sample values when you
 actually create a review request.
 
 +-----------------------------+----------------------------------+
-| Management node external IP | 128.105.144.189                  |
+| Management node external IP | 66.201.42.222                    |
 +-----------------------------+----------------------------------+
 | ASN                         | 65003                            |
 +-----------------------------+----------------------------------+
@@ -45,25 +90,32 @@ actually create a review request.
 +-----------------------------+----------------------------------+
 | PSK                         | UMAoZA7blv6gd3IaArDqgK2s0sDB8mlI |
 +-----------------------------+----------------------------------+
-| Management Subnet           | 10.91.0.0/24                     |
+| Management Subnet           | 10.32.4.0/24                     |
 +-----------------------------+----------------------------------+
-| K8S Subnet                  | Pod IP: 10.66.0.0/17             |
+| K8S Subnet                  | Pod IP: 10.33.0.0/17             |
 |                             +----------------------------------+
-|                             | Cluster IP: 10.66.128.0/17       |
+|                             | Cluster IP: 10.33.128.0/17       |
 +-----------------------------+----------------------------------+
 
-Download aether-pod-configs repository
---------------------------------------
+.. note::
+   Use `this site <https://cloud.google.com/network-connectivity/docs/vpn/how-to/generating-pre-shared-key/>`_ to generate a new strong pre-shared key.
 
-.. code-block:: shell
+.. attention::
 
-   $ cd $WORKDIR
-   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
+   If you are adding another ACE to an existing VPN connection, go to
+   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`
 
 .. _update_global_resource:
 
 Update global resource maps
 ---------------------------
+
+Download aether-pod-configs repository.
+
+.. code-block:: shell
+
+   $ cd $WORKDIR
+   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
 Add a new ACE information at the end of the following global resource maps.
 
@@ -72,7 +124,7 @@ Add a new ACE information at the end of the following global resource maps.
 * ``vpn_map.tfvars``
 
 As a note, you can find several other global resource maps under the
-``production`` directory.  Resource definitions that need to be shared among
+``production`` directory. Resource definitions that need to be shared among
 clusters or are better managed in a single file to avoid configuration
 conflicts are maintained in this way.
 
@@ -113,11 +165,11 @@ conflicts are maintained in this way.
    +    },
    +    ace-test = {
    +      cluster_name            = "ace-test"
-   +      management_subnets      = ["10.91.0.0/24"]
+   +      management_subnets      = ["10.32.4.0/24"]
    +      k8s_version             = "v1.18.8-rancher1-1"
-   +      k8s_pod_range           = "10.66.0.0/17"
-   +      k8s_cluster_ip_range    = "10.66.128.0/17"
-   +      kube_dns_cluster_ip     = "10.66.128.10"
+   +      k8s_pod_range           = "10.33.0.0/17"
+   +      k8s_cluster_ip_range    = "10.33.128.0/17"
+   +      kube_dns_cluster_ip     = "10.33.128.10"
    +      cluster_domain          = "prd.test.aetherproject.net"
    +      calico_ip_detect_method = "can-reach=www.google.com"
          }
@@ -140,7 +192,7 @@ conflicts are maintained in this way.
    +  },
    +  ace-test = {
    +    peer_name                = "production-ace-test"
-   +    peer_vpn_gateway_address = "128.105.144.189"
+   +    peer_vpn_gateway_address = "66.201.42.222"
    +    tunnel_shared_secret     = "UMAoZA7blv6gd3IaArDqgK2s0sDB8mlI"
    +    bgp_peer_asn             = "65003"
    +    bgp_peer_ip_range_1      = "169.254.0.9/30"
@@ -160,7 +212,6 @@ Create ACE specific configurations
 In this step, we will create a directory under `production` with the same name
 as ACE, and add several Terraform configurations and Ansible inventory needed
 to configure a VPN connection.
-
 Throughout the deployment procedure, this directory will contain all ACE
 specific configurations.
 
@@ -170,11 +221,10 @@ ACE directory.
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs/tools
-   $ cp ace_env /tmp/ace_env
-   $ vi /tmp/ace_env
-   # Set environment variables
+   $ cp ace_config.yaml.example ace_config.yaml
+   $ vi ace_config.yaml
+   # Set all values
 
-   $ source /tmp/ace_env
    $ make vpn
    Created ../production/ace-test
    Created ../production/ace-test/main.tf
@@ -187,12 +237,9 @@ ACE directory.
    Created ../production/ace-test/ansible/hosts.ini
    Created ../production/ace-test/ansible/extra_vars.yml
 
-.. attention::
-   The predefined templates are tailored to Pronto BOM. You'll need to fix `cluster_val.tfvars` and `ansible/extra_vars.yml`
-   when using a different BOM.
 
-Create a review request
------------------------
+Commit your change
+------------------
 
 .. code-block:: shell
 
@@ -215,7 +262,7 @@ Create a review request
    $ git review
 
 Once the review request is accepted and merged,
-CD pipeline will create VPN tunnels on both GCP and the management node.
+the post-merge job will create VPN tunnels on both GCP and the management node.
 
 Verify VPN connection
 ---------------------
@@ -233,20 +280,21 @@ and three additional routing entries via one of the tunnel interfaces.
    $ netstat -rn
    Kernel IP routing table
    Destination     Gateway         Genmask         Flags   MSS Window  irtt Iface
-   0.0.0.0         128.105.144.1   0.0.0.0         UG        0 0          0 eno1
+   0.0.0.0         66.201.42.209   0.0.0.0         UG        0 0          0 eno1
+   10.32.4.0       0.0.0.0         255.255.255.128 U         0 0          0 eno2
+   10.32.4.128     0.0.0.0         255.255.255.128 U         0 0          0 mgmt800
    10.45.128.0     169.254.0.9     255.255.128.0   UG        0 0          0 gcp_tunnel1
    10.52.128.0     169.254.0.9     255.255.128.0   UG        0 0          0 gcp_tunnel1
-   10.66.128.0     10.91.0.8       255.255.128.0   UG        0 0          0 eno1
-   10.91.0.0       0.0.0.0         255.255.255.0   U         0 0          0 eno1
+   10.33.128.0     10.32.4.138     255.255.128.0   UG        0 0          0 mgmt800
    10.168.0.0      169.254.0.9     255.255.240.0   UG        0 0          0 gcp_tunnel1
-   128.105.144.0   0.0.0.0         255.255.252.0   U         0 0          0 eno1
+   66.201.42.208   0.0.0.0         255.255.252.0   U         0 0          0 eno1
    169.254.0.8     0.0.0.0         255.255.255.252 U         0 0          0 gcp_tunnel1
    169.254.1.8     0.0.0.0         255.255.255.252 U         0 0          0 gcp_tunnel2
 
    # Verify ACC VM access
    $ ping 10.168.0.6
 
-   # Verify ACC K8S cluster access
+   # Verify ACC K8S Service access
    $ nslookup kube-dns.kube-system.svc.prd.acc.gcp.aetherproject.net 10.52.128.10
 
 You can further verify whether the ACE routes are propagated well to GCP
@@ -265,7 +313,7 @@ no harm to re-run the ansible playbook but not recommended.
    $ cd $WORKDIR/aether-pod-configs/production/$ACE_NAME
    $ mv ansible _ansible
    $ git add .
-   $ git commit -m "Mark ansible done for test ACE"
+   $ git commit -m "Ansible done for test ACE"
    $ git review
 
 .. _add_ace_to_vpn:
@@ -285,8 +333,9 @@ management node and manually update BIRD configuration.
 
    $ sudo vi /etc/bird/bird.conf
    protocol static {
+      # Routings for the existing cluster
       ...
-      route 10.66.128.0/17 via 10.91.0.10;
+      route 10.33.128.0/17 via 10.32.4.138;
 
       # Add routings for the new ACE's K8S cluster IP range via cluster nodes
       # TODO: Configure iBGP peering with Calico nodes and dynamically learn these routings
@@ -297,7 +346,7 @@ management node and manually update BIRD configuration.
 
    filter gcp_tunnel_out {
       # Add the new ACE's K8S cluster IP range and the management subnet if required to the list
-      if (net ~ [ 10.91.0.0/24, 10.66.128.0/17, <NEW-ACE-CLUSTER-IP-RANGE> ]) then accept;
+      if (net ~ [ 10.32.4.0/24, 10.33.128.0/17, <NEW-ACE-CLUSTER-MGMT-SUBNET>, <NEW-ACE-CLUSTER-IP-RANGE> ]) then accept;
       else reject;
    }
    # Save and exit
