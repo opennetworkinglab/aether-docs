@@ -2,18 +2,25 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-Aether Runtime Deployment
-=========================
+Runtime Deployment
+==================
 
-This section describes how to install Aether edge runtime and Aether managed applications
-including monitoring and logging system, as well as User Plane Function(UPF).
-We will be using GitOps based Aether CI/CD system for this and all you need to do is to
-create several patches to Aether GitOps repositories.
+This section describes how to configure and install Aether edge runtime including K8S
+and system level resources.
+We will be using GitOps based Aether CI/CD system for this and what you need to do is
+create a patch to Aether GitOps repository, **aether-pod-configs**, with the edge
+specific information.
+
+.. attention::
+
+   If you skipped VPN bootstap step and didn't add the deployment jobs for the new edge,
+   go to :ref:`Add deployment jobs <add_deployment_jobs>` step and finish it first
+   before proceeding.
 
 Download aether-pod-configs repository
 --------------------------------------
 
-Download the ``aether-pod-configs`` repository if you don't have it already in
+Download ``aether-pod-configs`` repository if you don't have it already in
 your development machine.
 
 .. code-block:: shell
@@ -21,95 +28,20 @@ your development machine.
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
-Update global resource maps
----------------------------
+.. _create_cluster_configs:
+
+Create cluster configurations
+-----------------------------
 
 .. attention::
 
-   Skip this section and go to :ref:`Create runtime configurations <create_runtime_configs>`
-   if you have already done the same in the
-   :ref:`Update Global Resources Map for VPN <update_global_resource>` section.
-
-Add a new ACE information at the end of the following global resource maps.
-
-* user_map.tfvars
-* cluster_map.tfvars
-
-As a note, you can find several other global resource maps under the
-`production` directory.  Resource definitions that need to be shared among
-clusters or are better managed in a single file to avoid configuration
-conflicts are maintained in this way.
-
-.. code-block:: diff
-
-   $ cd $WORKDIR/aether-pod-configs/production
-   $ vi user_map.tfvars
-
-   # Add the new cluster admin user at the end of the map
-   $ git diff user_map.tfvars
-   --- a/production/user_map.tfvars
-   +++ b/production/user_map.tfvars
-   @@ user_map = {
-      username      = "menlo"
-      password      = "changeme"
-      global_roles  = ["user-base", "catalogs-use"]
-   +  },
-   +  test_admin = {
-   +    username      = "test"
-   +    password      = "changeme"
-   +    global_roles  = ["user-base", "catalogs-use"]
-      }
-   }
-
-.. code-block:: diff
-
-   $ cd $WORKDIR/aether-pod-configs/production
-   $ vi cluster_map.tfvars
-
-   # Add the new K8S cluster information at the end of the map
-   $ git diff cluster_map.tfvars
-   --- a/production/cluster_map.tfvars
-   +++ b/production/cluster_map.tfvars
-   @@ cluster_map = {
-         kube_dns_cluster_ip     = "10.53.128.10"
-         cluster_domain          = "prd.menlo.aetherproject.net"
-         calico_ip_detect_method = "can-reach=www.google.com"
-   +    },
-   +    ace-test = {
-   +      cluster_name            = "ace-test"
-   +      management_subnets      = ["10.32.4.0/24"]
-   +      k8s_version             = "v1.18.8-rancher1-1"
-   +      k8s_pod_range           = "10.33.0.0/17"
-   +      k8s_cluster_ip_range    = "10.33.128.0/17"
-   +      kube_dns_cluster_ip     = "10.33.128.10"
-   +      cluster_domain          = "prd.test.aetherproject.net"
-   +      calico_ip_detect_method = "can-reach=www.google.com"
-         }
-      }
-   }
-
-You'll have to get this change merged before proceeding.
-
-.. code-block:: shell
-
-   $ git status
-   On branch tools
-   Changes not staged for commit:
-
-      modified:   cluster_map.tfvars
-      modified:   user_map.tfvars
-
-   $ git add .
-   $ git commit -m "Add test ACE"
-   $ git review
-
-.. _create_runtime_configs:
-
-Create runtime configurations
------------------------------
+   If you skipped VPN bootstap step and didn't update global resource maps for the new edge,
+   go to :ref:`Update global resource maps <update_global_resource>` step and
+   finish ``cluster_map.tfvars`` and ``user_map.tfvars`` update first before proceeding.
 
 Run the following commands to auto-generate Terraform configurations needed to
-create K8S cluster in Rancher and add servers and switches to the cluster.
+create a new cluster in `Rancher <https://rancher.aetherproject.org>`_  and add servers and
+switches to the cluster.
 
 .. code-block:: shell
 
@@ -121,14 +53,21 @@ create K8S cluster in Rancher and add servers and switches to the cluster.
 
    $ make runtime
    Created ../production/ace-test/provider.tf
-   Created ../production/ace-test/member.tf
+   Created ../production/ace-test/cluster.tf
    Created ../production/ace-test/rke-bare-metal.tf
    Created ../production/ace-test/addon-manifests.yml.tpl
    Created ../production/ace-test/project.tf
+   Created ../production/ace-test/member.tf
+   Created ../production/ace-test/backend.tf
+   Created ../production/ace-test/cluster_val.tfvars
 
 
-Create a review request
------------------------
+Commit your change
+------------------
+
+Lastly, create a review request with the changes.
+Once your review request is accepted and merged, the post-merge job will start to deploy K8S at the edge.
+Wait until the cluster is **Active** status in `Rancher <https://rancher.aetherproject.org>`_.
 
 .. code-block:: shell
 
@@ -137,6 +76,3 @@ Create a review request
    $ git add .
    $ git commit -m "Add test ACE runtime configs"
    $ git review
-
-Once the review request is accepted and merged, the post-merge job will start to deploy K8S.
-Wait until the cluster is **Active** status in Rancher.
