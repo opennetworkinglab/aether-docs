@@ -6,16 +6,17 @@ VPN Bootstrap
 =============
 
 This section guides you through setting up a VPN connection between Aether Central in GCP and ACE.
-We will be using GitOps based Aether CI/CD system for this and all you need to do is to
-create a couple of patches to Aether GitOps repositories.
+We will be using GitOps based Aether CI/CD system for this and what you need to do is
+create a patch to Aether GitOps repository, **aether-pod-configs**, with the edge specific information.
 Note that some of the steps described here are not directly related to setting up a VPN,
 but rather are a prerequisite for adding a new ACE.
 
+.. _add_deployment_jobs:
+
 Add deployment jobs
 -------------------
-First, you need to add Jenkins jobs to Aether CI/CD system that build and apply
-infrastructure change plans for the new edge. This is done by creating a patch to
-**aether-ci-management** repository.
+First, you need to add Jenkins to the CI/CD system that build and apply infrastructure change
+plans for the new edge. This can be done by creating a patch to **aether-ci-management** repository.
 
 Download **aether-ci-management** repository.
 
@@ -241,13 +242,13 @@ ACE directory.
 
    $ make vpn
    Created ../production/ace-test
-   Created ../production/ace-test/main.tf
-   Created ../production/ace-test/variables.tf
-   Created ../production/ace-test/gcp_fw.tf
+   Created ../production/ace-test/provider.tf
+   Created ../production/ace-test/cluster.tf
    Created ../production/ace-test/gcp_ha_vpn.tf
-   Created ../production/ace-test/ansible
+   Created ../production/ace-test/gcp_fw.tf
    Created ../production/ace-test/backend.tf
    Created ../production/ace-test/cluster_val.tfvars
+   Created ../production/ace-test/ansible
    Created ../production/ace-test/ansible/hosts.ini
    Created ../production/ace-test/ansible/extra_vars.yml
 
