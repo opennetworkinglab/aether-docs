@@ -105,6 +105,19 @@ actually create a review request.
    If you are adding another ACE to an existing VPN connection, go to
    :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`
 
+Get access to encrypted files in aether-pod-configs repository
+--------------------------------------------------------------
+
+`git-crypt <https://github.com/AGWA/git-crypt>` is used to securely store encrypted files
+in the aether-pod-configs repository. Before proceeding, (1) install git-crypt and `gpg <https://gnupg.org/>`,
+(2) create a GPG keypair, and (3) ask a member of the Aether OPs team add your public key
+to the aether-pod-configs keyring.  To create the keypair follow these steps:
+
+.. code-block:: shell
+
+   $ gpg --full-generate-key
+   $ gpg --output <key-name>.gpg --armor --export <your-email-address>
+
 .. _update_global_resource:
 
 Update global resource maps
@@ -116,6 +129,7 @@ Download aether-pod-configs repository.
 
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
+   $ git-crypt unlock
 
 Add a new ACE information at the end of the following global resource maps.
 
