@@ -56,6 +56,15 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    testing/acceptance_specification
 
 .. toctree::
+   :maxdepth: 3
+   :caption: Aether Developer Notes
+   :hidden:
+   :glob:
+
+   developer/sdcore
+   developer/roc
+
+.. toctree::
    :maxdepth: 1
    :caption: Meta
    :hidden:
