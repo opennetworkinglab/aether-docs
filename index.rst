@@ -41,6 +41,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    :glob:
 
    amp/roc
+   amp/monitoring
 
 .. toctree::
    :maxdepth: 3
