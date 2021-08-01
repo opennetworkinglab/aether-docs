@@ -107,7 +107,7 @@ Open ``fleet.yaml`` under ``infrastructure/rancher-monitoring`` and add a new cu
 with the new cluster name as selector like the example below.
 Don't forget to replace ``ace-test`` in the example to the new cluster name.
 
-.. code-block:: shell
+.. code-block:: yaml
 
    $ cd $WORKDIR/aether-app-configs/infrastructure/rancher-monitoring
    $ vi fleet.yaml
@@ -134,21 +134,61 @@ Don't forget to replace ``ace-test`` in the example to the new cluster name.
 Configure ue-dns
 ################
 
-For UE-DNS, you are required to generate a Helm value for the new cluster.
-You can use the same ``Makefile`` that you used for generating the runtime configs for this.
+For UE-DNS, you are required to create Helm values for the new cluster.
+You'll need cluster domain and kube-dns ClusterIP address. Both can be found in
+``aether-pod-configs/production/cluster_map.tfvars``.
+Be sure to replace ``[ ]`` in the example configuration below to the actual cluster value.
 
-.. code-block:: shell
+.. code-block:: yaml
 
    $ cd $WORKDIR/aether-app-configs/infrastructure/coredns
    $ mkdir overlays/prd-ace-test
+   $ vi overlays/prd-ace-test/values.yaml
+   # SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
 
-   $ cd $WORKDIR/aether-pod-configs/tools
-   $ make uedns > $WORKDIR/aether-app-configs/infrastructure/coredns/overlays/prd-ace-test/values.yaml
+   serviceType: ClusterIP
+   service:
+     clusterIP: [next address of the kube-dns ip]
+   servers:
+     - zones:
+         - zone: .
+       port: 53
+       plugins:
+         - name: errors
+         - name: health
+           configBlock: |-
+             lameduck 5s
+         - name: ready
+         - name: prometheus
+           parameters: 0.0.0.0:9153
+         - name: forward
+           parameters: . /etc/resolv.conf
+         - name: cache
+           parameters: 30
+         - name: loop
+         - name: reload
+         - name: loadbalance
+     - zones:
+         - zone: aetherproject.net
+       port: 53
+       plugins:
+         - name: errors
+         - name: rewrite continue
+           configBlock: |-
+             name regex (.*)\.aetherproject.net {1}.svc.[cluster domain]
+             answer name (.*)\.svc\.[cluster domain] {1}.aetherproject.net
+         - name: forward
+           parameters: . [kube-dns ip]
+           configBlock: |-
+             except kube-system.svc.[cluster domain] aether-sdcore.svc.[cluster domain] tost.svc.[cluster domain]
+         - name: cache
+           parameters: 30
 
-Update ``fleet.yaml`` under ``infrastructure/coredns`` for the new cluster and specify the Helm values file
-you just created.
 
-.. code-block:: shell
+Next, update ``fleet.yaml`` under ``infrastructure/coredns`` so that Fleet can use the custom configuration
+you just created when deploying UE-DNS to the cluster.
+
+.. code-block:: yaml
 
    $ cd $WORKDIR/aether-app-configs/infrastructure/coredns
    $ vi fleet.yaml
@@ -162,7 +202,7 @@ you just created.
          - overlays/prd-ace-test/values.yaml
 
 
-Commit your changes.
+Submit your changes.
 
 .. code-block:: shell
 

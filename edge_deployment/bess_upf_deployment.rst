@@ -86,7 +86,7 @@ Move the directory to ``apps/bess-upf`` and create Helm values file for the new 
 The configuration below is for the example environment.
 Don't forget to replace the IP addresses in the example configuration with the addresses of the actual cluster.
 
-.. code-block:: shell
+.. code-block:: yaml
 
    $ cd $WORKDIR/aether-app-configs/apps/bess-upf/upf1
    $ mkdir overlays/prd-ace-test
@@ -113,7 +113,7 @@ Don't forget to replace the IP addresses in the example configuration with the a
 
 Update ``fleet.yaml`` in the same directory to let Fleet know the custom configuration.
 
-.. code-block:: shell
+.. code-block:: yaml
 
    $ vi fleet.yaml
    # add following block at the end
@@ -126,7 +126,7 @@ Update ``fleet.yaml`` in the same directory to let Fleet know the custom configu
          - overlays/prd-ace-test/values.yaml
 
 
-Commit your changes.
+Submit your changes.
 
 .. code-block:: shell
 
