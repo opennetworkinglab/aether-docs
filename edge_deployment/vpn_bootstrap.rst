@@ -49,7 +49,7 @@ Note that the cluster name specified here will be used in the rest of the deploy
    +          pod: 'production'
    +          cluster: 'ace-test'
 
-Commit your change and wait for the jobs you just added available in Aether Jenkins.
+Submit your change and wait for the jobs you just added available in Aether Jenkins.
 
 .. code-block:: shell
 
@@ -253,7 +253,7 @@ ACE directory.
    Created ../production/ace-test/ansible/extra_vars.yml
 
 
-Commit your change
+Submit your change
 ------------------
 
 .. code-block:: shell
