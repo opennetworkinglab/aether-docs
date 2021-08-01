@@ -85,15 +85,15 @@ System Application Deployment
 
 For the system application deployment, we will be using Rancher's built-in GitOps tool, **Fleet**.
 Fleet uses a git repository as a single source of truth to manage applications in the clusters.
-For Aether, **aether-app-configs** is the repository for Fleet, where all Aether applications
-are configured.
+For Aether, **aether-app-configs** is the repository where all Aether applications
+are defined.
 
 Most of the Aether system applications do not require cluster specific configurations,
 except **rancher-monitoring** and **uedns**.
-For these applications, you are required to manually create custom configurations and
-commit to aether-app-configs.
+For these applications, you will have to manually create custom configurations and
+commit them to aether-app-configs.
 
-Download ``aether-app-configs`` if you don't have it already in your development machine.
+First, download ``aether-app-configs`` if you don't have it already in your development machine.
 
 .. code-block:: shell
 
@@ -103,16 +103,16 @@ Download ``aether-app-configs`` if you don't have it already in your development
 Configure rancher-monitoring
 ############################
 
-Open ``fleet.yaml`` under ``infrastructure/rancher-monitoring`` and add a new custom target
-with the new cluster name as selector like the example below.
-Don't forget to replace ``ace-test`` in the example to the new cluster name.
+Open ``fleet.yaml`` under ``infrastructure/rancher-monitoring``, add a custom target
+with the new cluster name as a selector, and provide cluster specific Helm values and
+kustomize overlay directory path like below.
 
 .. code-block:: yaml
 
    $ cd $WORKDIR/aether-app-configs/infrastructure/rancher-monitoring
    $ vi fleet.yaml
    # add following block at the end
-   - name: ace-eks
+   - name: ace-test
      clusterSelector:
        matchLabels:
          management.cattle.io/cluster-display-name: ace-test
@@ -134,10 +134,10 @@ Don't forget to replace ``ace-test`` in the example to the new cluster name.
 Configure ue-dns
 ################
 
-For UE-DNS, you are required to create Helm values for the new cluster.
-You'll need cluster domain and kube-dns ClusterIP address. Both can be found in
+For UE-DNS, it is required to create a Helm values file for the new cluster.
+You'll need cluster domain and kube-dns ClusterIP. Both can be found in
 ``aether-pod-configs/production/cluster_map.tfvars``.
-Be sure to replace ``[ ]`` in the example configuration below to the actual cluster value.
+Be sure to replace ``[ ]`` in the example configuration below to the actual cluster values.
 
 .. code-block:: yaml
 
@@ -219,8 +219,8 @@ Assign Fleet workspace
 By default, all new clusters are assgiend to a default Fleet workspace called **fleet-default**.
 To make a cluster part of Aether and have the applications defined in aether-app-configs deployed,
 you must assign the cluster to either **aether-stable** or **aether-alpha** workspace.
-For clusters expecting minimal downtime, assign them to **aether-stable**.
-For clusters for development or previewing upcoming release, assign them to **aether-alpha**.
+For clusters expecting minimal downtime, assign to **aether-stable**.
+For clusters for development or previewing upcoming release, assign to **aether-alpha**.
 
 Log in to `Rancher <https://rancher.aetherproject.org>`_ as ``admin`` or ``onfadmin`` user
 and go to the **Cluster Explorer**.
@@ -229,13 +229,12 @@ In the top left dropdown menu, click **Cluster Explorer > Continuous Delivery**.
 .. image:: images/fleet-move-workspace.png
 
 
-1) Switch the Fleet workspace to **fleet-default** by selecting it from the drop down menu
-   in the top menu bar.
+1) Click the second dropdown menu from the left at the top and select **fleet-default**.
 2) Select **Clusters** on the left menu and you'll see the new cluster.
-3) Select the cluster by clicking the checkbox on the left of the cluster name.
-4) Select **Assign to...** button to assign the cluster to the target workspace.
+3) Click the checkbox in front of the cluster name.
+4) Select **Assign to...** button and assign the cluster to the Aether workspace.
 
-Switch to the target workspace, click **Clusters** in the left menu, and check the
+Switch the workspace to the Aether workspace, click **Clusters** in the left menu, and check the
 new cluster exists.
 Wait until the cluster state becomes **Active**.
 
