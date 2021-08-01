@@ -15,7 +15,7 @@ but rather are a prerequisite for adding a new ACE.
 
 Add deployment jobs
 -------------------
-First, you need to add Jenkins to the CI/CD system that build and apply infrastructure change
+First, you need to add Jenkins jobs to Aether CI/CD system that build and apply infrastructure change
 plans for the new edge. This can be done by creating a patch to **aether-ci-management** repository.
 
 Download **aether-ci-management** repository.
@@ -132,16 +132,11 @@ Download aether-pod-configs repository.
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
    $ git-crypt unlock
 
-Add a new ACE information at the end of the following global resource maps.
+Add the new cluster information at the end of the following global resource maps.
 
 * ``user_map.tfvars``
 * ``cluster_map.tfvars``
 * ``vpn_map.tfvars``
-
-As a note, you can find several other global resource maps under the
-``production`` directory. Resource definitions that need to be shared among
-clusters or are better managed in a single file to avoid configuration
-conflicts are maintained in this way.
 
 .. code-block:: diff
 
@@ -221,17 +216,12 @@ conflicts are maintained in this way.
    Unless you have a specific requirement, set ASN and BGP addresses to the next available values in the map.
 
 
-Create ACE specific configurations
-----------------------------------
+Create Terraform and Ansible configurations
+-------------------------------------------
 
-In this step, we will create a directory under `production` with the same name
-as ACE, and add several Terraform configurations and Ansible inventory needed
-to configure a VPN connection.
-Throughout the deployment procedure, this directory will contain all ACE
-specific configurations.
-
-Run the following commands to auto-generate necessary files under the target
-ACE directory.
+In this step, we will create a directory under ``production`` with the same name
+as the cluster, and add Terraform configurations and Ansible inventory needed
+to configure a VPN in GCP and ACE accordingly.
 
 .. code-block:: shell
 
@@ -276,18 +266,17 @@ Submit your change
    $ git commit -m "Add test ACE"
    $ git review
 
-Once the review request is accepted and merged,
-the post-merge job will create VPN tunnels on both GCP and the management node.
+After the change is merged, wait for a while until the post-merge job finishes.
 
 Verify VPN connection
 ---------------------
 
-You can verify the VPN connections after successful post-merge job by checking
+You can verify the VPN connections by checking
 the routing table on the management node and trying to ping to one of the
 central cluster VMs.
 
-Make sure two tunnel interfaces, `gcp_tunnel1` and `gcp_tunnel2`, exist
-and three additional routing entries via one of the tunnel interfaces.
+Be sure there are two tunnel interfaces, `gcp_tunnel1` and `gcp_tunnel2`,
+and three routing entries via one of the tunnel interfaces.
 
 .. code-block:: shell
 
@@ -312,16 +301,15 @@ and three additional routing entries via one of the tunnel interfaces.
    # Verify ACC K8S Service access
    $ nslookup kube-dns.kube-system.svc.prd.acc.gcp.aetherproject.net 10.52.128.10
 
-You can further verify whether the ACE routes are propagated well to GCP
-by checking GCP dashboard **VPC Network > Routes > Dynamic**.
+You can also login to GCP console and check if the edge subnets exist in
+**VPC Network > Routes > Dynamic**.
 
 
 Post VPN setup
 --------------
 
-Once you verify the VPN connections, please update `ansible` directory name to
-`_ansible` to prevent the ansible playbook from running again.  Note that it is
-no harm to re-run the ansible playbook but not recommended.
+Once you verify the VPN connections, update ``ansible`` directory name to
+``_ansible`` to prevent the ansible playbook from being rerun.
 
 .. code-block:: shell
 
@@ -337,7 +325,7 @@ Add another ACE to an existing VPN connection
 """""""""""""""""""""""""""""""""""""""""""""
 
 VPN connections can be shared when there are multiple ACE clusters in a site.
-In order to add ACE to an existing VPN connection, you'll have to SSH into the
+In order to add another cluster to an existing VPN connection, you'll have to SSH into the
 management node and manually update BIRD configuration.
 
 .. note::
