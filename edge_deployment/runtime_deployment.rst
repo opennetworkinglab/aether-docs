@@ -5,11 +5,21 @@
 Runtime Deployment
 ==================
 
-This section describes how to configure and install Aether edge runtime including K8S
-and system level resources.
-We will be using GitOps based Aether CI/CD system for this and what you need to do is
-create a patch to Aether GitOps repository, **aether-pod-configs**, with the edge
-specific information.
+This section describes how to install and configure Aether Edge Runtime including Kubernetes
+and system level applications listed below.
+
+* sealed-secrets
+* rancher-monitoring
+* fluent-bit
+* opendistro-es
+* hostpath-provisioner
+* edge-maintenance-agent
+* sriov-device-plugin
+* uedns
+
+For this, we will be using GitOps based CI/CD systems and what you will need to do is
+create patches in Aether GitOps repositories, **aether-pod-configs** and **aether-app-configs**,
+to provide the cluster configurations to the CI/CD systems.
 
 .. attention::
 
@@ -17,8 +27,8 @@ specific information.
    go to :ref:`Add deployment jobs <add_deployment_jobs>` step and finish it first
    before proceeding.
 
-Download aether-pod-configs repository
---------------------------------------
+K8S cluster deployment
+----------------------
 
 Download ``aether-pod-configs`` repository if you don't have it already in
 your development machine.
@@ -28,20 +38,15 @@ your development machine.
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
-.. _create_cluster_configs:
-
-Create cluster configurations
------------------------------
-
 .. attention::
 
    If you skipped VPN bootstap step and didn't update global resource maps for the new edge,
    go to :ref:`Update global resource maps <update_global_resource>` step and
    finish ``cluster_map.tfvars`` and ``user_map.tfvars`` update first before proceeding.
 
-Run the following commands to auto-generate Terraform configurations needed to
-create a new cluster in `Rancher <https://rancher.aetherproject.org>`_  and add servers and
-switches to the cluster.
+Run the following commands to automatically generate Terraform configurations needed to
+create a new cluster in `Rancher <https://rancher.aetherproject.org>`_ and add the servers
+and switches to the cluster.
 
 .. code-block:: shell
 
@@ -61,18 +66,139 @@ switches to the cluster.
    Created ../production/ace-test/backend.tf
    Created ../production/ace-test/cluster_val.tfvars
 
-
-Commit your change
-------------------
-
-Lastly, create a review request with the changes.
-Once your review request is accepted and merged, the post-merge job will start to deploy K8S at the edge.
-Wait until the cluster is **Active** status in `Rancher <https://rancher.aetherproject.org>`_.
+Create a review request.
 
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs
-   $ git status
    $ git add .
    $ git commit -m "Add test ACE runtime configs"
    $ git review
+
+Once your review request is accepted and merged, Aether CI/CD system starts to deploy K8S.
+Wait until the cluster status changes to **Active** in `Rancher <https://rancher.aetherproject.org>`_.
+It normally takes 10 - 15 minutes depending on the speed of the container images
+download at the edge.
+
+System Application Deployment
+-----------------------------
+
+For the system application deployment, we will be using Rancher's built-in GitOps tool, **Fleet**.
+Fleet uses a git repository as a single source of truth to manage applications in the clusters.
+For Aether, **aether-app-configs** is the repository for Fleet, where all Aether applications
+are configured.
+
+Most of the Aether system applications do not require cluster specific configurations,
+except **rancher-monitoring** and **uedns**.
+For these applications, you are required to manually create custom configurations and
+commit to aether-app-configs.
+
+Download ``aether-app-configs`` if you don't have it already in your development machine.
+
+.. code-block:: shell
+
+   $ cd $WORKDIR
+   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
+
+Configure rancher-monitoring
+############################
+
+Open ``fleet.yaml`` under ``infrastructure/rancher-monitoring`` and add a new custom target
+with the new cluster name as selector like the example below.
+Don't forget to replace ``ace-test`` in the example to the new cluster name.
+
+.. code-block:: shell
+
+   $ cd $WORKDIR/aether-app-configs/infrastructure/rancher-monitoring
+   $ vi fleet.yaml
+   # add following block at the end
+   - name: ace-eks
+     clusterSelector:
+       matchLabels:
+         management.cattle.io/cluster-display-name: ace-test
+     helm:
+       values:
+         prometheus:
+           prometheusSpec:
+             additionalAlertRelabelConfigs:
+               - source_labels: [__address__]
+                 target_label: cluster
+                 replacement: ace-test
+     kustomize:
+       dir: overlays/prd-ace
+
+.. note::
+
+   Above step will not be required in Rancher v2.6 as it supports using cluster labels as helm values in a list.
+
+Configure ue-dns
+################
+
+For UE-DNS, you are required to generate a Helm value for the new cluster.
+You can use the same ``Makefile`` that you used for generating the runtime configs for this.
+
+.. code-block:: shell
+
+   $ cd $WORKDIR/aether-app-configs/infrastructure/coredns
+   $ mkdir overlays/prd-ace-test
+
+   $ cd $WORKDIR/aether-pod-configs/tools
+   $ make uedns > $WORKDIR/aether-app-configs/infrastructure/coredns/overlays/prd-ace-test/values.yaml
+
+Update ``fleet.yaml`` under ``infrastructure/coredns`` for the new cluster and specify the Helm values file
+you just created.
+
+.. code-block:: shell
+
+   $ cd $WORKDIR/aether-app-configs/infrastructure/coredns
+   $ vi fleet.yaml
+   # add following block at the end
+   - name: prd-ace-test
+     clusterSelector:
+       matchLabels:
+         management.cattle.io/cluster-display-name: ace-test
+     helm:
+       valuesFiles:
+         - overlays/prd-ace-test/values.yaml
+
+
+Commit your changes.
+
+.. code-block:: shell
+
+   $ cd $WORKDIR/aether-app-configs
+   $ git status
+   $ git add .
+   $ git commit -m "Add test ACE application configs"
+   $ git review
+
+
+Assign Fleet workspace
+######################
+
+By default, all new clusters are assgiend to a default Fleet workspace called **fleet-default**.
+To make a cluster part of Aether and have the applications defined in aether-app-configs deployed,
+you must assign the cluster to either **aether-stable** or **aether-alpha** workspace.
+For clusters expecting minimal downtime, assign them to **aether-stable**.
+For clusters for development or previewing upcoming release, assign them to **aether-alpha**.
+
+Log in to `Rancher <https://rancher.aetherproject.org>`_ as ``admin`` or ``onfadmin`` user
+and go to the **Cluster Explorer**.
+In the top left dropdown menu, click **Cluster Explorer > Continuous Delivery**.
+
+.. image:: images/fleet-move-workspace.png
+
+
+1) Switch the Fleet workspace to **fleet-default** by selecting it from the drop down menu
+   in the top menu bar.
+2) Select **Clusters** on the left menu and you'll see the new cluster.
+3) Select the cluster by clicking the checkbox on the left of the cluster name.
+4) Select **Assign to...** button to assign the cluster to the target workspace.
+
+Switch to the target workspace, click **Clusters** in the left menu, and check the
+new cluster exists.
+Wait until the cluster state becomes **Active**.
+
+.. attention::
+
+   Ignore BESS UPF failure at this point.
