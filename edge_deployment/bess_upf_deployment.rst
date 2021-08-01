@@ -99,9 +99,11 @@ Don't forget to replace the IP addresses in the example configuration with the a
        access:
          ip: "192.168.3.1/24"
          gateway: "192.168.3.254"
+         vlan: 3
        core:
          ip: "192.168.4.1/24"
          gateway: "192.168.4.254"
+         vlan: 4
      # Below is required only when connecting to 5G core
      cfgFiles:
        upf.json:
