@@ -5,11 +5,11 @@
 BESS UPF Deployment
 ===================
 
-This section describes how to configure and install BESS UPF.
+This section describes how to configure and deploy BESS UPF.
 
 
-Network Plans
--------------
+Network Settings
+----------------
 
 BESS UPF requires three networks, **enb**, **access**, and **core**, and all
 three networks must use different subnets. To help your understanding,
@@ -42,8 +42,8 @@ Note that the management server has the only external routable address and acts 
 all networks in the Aether pod.
 So in order for UE to access the Internet, two things need to be done in the managmenet server.
 
-* Masquerade UE pool with the external address of the management server.
-* For the response traffic to be delivered to UE, forward them to UPF's **core** interface.
+* For outgoing traffic, masquerade the internal adddress with the external address of the management server.
+* For response traffic to UE, forward them to UPF's **core** interface.
 
 
 Check Cluster Resources
@@ -72,8 +72,8 @@ You can use the following command to check allocatable resources in the cluster 
    }
 
 
-Configure BESS UPF
-------------------
+Configure and Deploy
+--------------------
 
 Download ``aether-app-configs`` if you don't have it already in your development machine.
 
@@ -82,8 +82,7 @@ Download ``aether-app-configs`` if you don't have it already in your development
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
 
-Move the directory to ``apps/bess-upf`` and create Helm values file for the new cluster.
-The configuration below is for the example environment.
+Move the directory to ``apps/bess-upf/upf1`` and create a Helm values file for the new cluster as shown below.
 Don't forget to replace the IP addresses in the example configuration with the addresses of the actual cluster.
 
 .. code-block:: yaml
@@ -111,7 +110,8 @@ Don't forget to replace the IP addresses in the example configuration with the a
            hostname: "upf"
 
 
-Update ``fleet.yaml`` in the same directory to let Fleet know the custom configuration.
+Update ``fleet.yaml`` in the same directory to let Fleet use the custom configuration when deploying
+BESS UPF to the new cluster.
 
 .. code-block:: yaml
 
@@ -138,4 +138,4 @@ Submit your changes.
 
 
 Go to Fleet dashboard and wait until the cluster status becomes **Active**.
-Note that it can take up to 1 min for Fleet to fetch the configuration updates.
+It can take up to 1 min for Fleet to fetch the configuration updates.
