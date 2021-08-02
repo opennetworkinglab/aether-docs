@@ -15,6 +15,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
 
    operations/procedures
    operations/sop
+   operations/subscriber
 
 .. toctree::
    :maxdepth: 3
