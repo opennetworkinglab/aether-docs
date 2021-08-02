@@ -111,7 +111,7 @@ Get access to encrypted files in aether-pod-configs repository
 
 `git-crypt <https://github.com/AGWA/git-crypt>`_ is used to securely store encrypted files
 in the aether-pod-configs repository. Before proceeding, (1) install git-crypt and `gpg <https://gnupg.org/>`_,
-(2) create a GPG keypair, and (3) ask a member of the Aether OPs team add your public key
+(2) create a GPG keypair, and (3) ask a member of the Aether OPs team to add your public key
 to the aether-pod-configs keyring.  To create the keypair follow these steps:
 
 .. code-block:: shell
