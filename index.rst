@@ -14,7 +14,6 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    :glob:
 
    operations/procedures
-   operations/sop
    operations/subscriber
 
 .. toctree::

@@ -49,25 +49,16 @@ You’ll want to override several of the defaults in the ROC helm charts::
 
    cat > values-override.yaml <<EOF
    import:
-   onos-gui:
-      enabled: true
+     onos-gui:
+       enabled: true
 
    onos-gui:
-   ingress:
-      enabled: false
-
-   sdcore-adapter-v3:
-   prometheusEnabled: false
-
-   sdcore-exporter:
-   prometheusEnabled: false
-
-   onos-exporter:
-   prometheusEnabled: false
+     ingress:
+       enabled: false
 
    aether-roc-gui-v3:
-   ingress:
-      enabled: false
+     ingress:
+       enabled: false
    EOF
 
 Installing the Aether-Roc-Umbrella Helm chart
@@ -329,6 +320,27 @@ OIDC issuer (dex server), and that Auth is enabled.
 .. image:: images/aether-roc-gui-console-loggedin.png
     :width: 418
     :alt: Browser Console showing correct configuration
+
+ROC Data Model Conventions and Requirements
+-------------------------------------------
+
+The MEGA-Patch described above will bring up a fully compliant sample data model.
+However, it may be useful to bring up your own data model, customized to a different
+site of sites. This subsection documents conventions and requirements for the Aether
+modeling within the roc.
+
+The ROC models must be configured with the following:
+
+* A default enterprise with the id `defaultent`.
+* A default ip-domain with the id `defaultent-defaultip`.
+* A default site with the id `defaultent-defaultsite`.
+  This site should be linked to the `defaultent` enterprise.
+* A default device group with the id `defaultent-defaultsite-default`.
+  This device group should be linked to the `defaultent-defaultip` ip-domain
+  and the `defaultent-defaultsite` site.
+
+Each Enterprise Site must be configured with a default device group and that default
+device group's name must end in the suffix `-default`. For example, `acme-chicago-default`.
 
 Some exercises to get familiar
 ------------------------------
