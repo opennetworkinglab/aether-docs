@@ -55,7 +55,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    testing/pdp_testing
    testing/fabric_testing
    testing/sdcore_testing
-   testing/aether-roc-api-tests
+   testing/aether-roc-tests
    testing/acceptance_specification
 
 .. toctree::
