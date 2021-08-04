@@ -1,3 +1,4 @@
 venv-docs
 _build
 .vscode
+.env
