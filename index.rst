@@ -52,7 +52,6 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    :glob:
 
    testing/about_system_tests
-   testing/pdp_testing
    testing/fabric_testing
    testing/sdcore_testing
    testing/aether-roc-api-tests
