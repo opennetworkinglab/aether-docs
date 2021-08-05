@@ -51,7 +51,6 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    :glob:
 
    testing/about_system_tests
-   testing/fabric_testing
    testing/sdcore_testing
    testing/aether-roc-api-tests
    testing/acceptance_specification
