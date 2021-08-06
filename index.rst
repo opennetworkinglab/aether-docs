@@ -15,6 +15,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
 
    operations/procedures
    operations/subscriber
+   operations/vcs
 
 .. toctree::
    :maxdepth: 3
@@ -54,6 +55,8 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    testing/sdcore_testing
    testing/aether-roc-api-tests
    testing/acceptance_specification
+   testing/fabric_testing
+   testing/pdp_testing
 
 .. toctree::
    :maxdepth: 3

@@ -56,6 +56,8 @@ detail is configured via the SIM Management application, Simapp.
 TODO: This file will probably be placed under gitops control once the 5G ROC is deployed. Document
 the new location of the file.
 
+.. _configure_device_group:
+
 Configure Connectivity Service for a new UE
 -------------------------------------------
 
@@ -112,6 +114,8 @@ When the entries on the DeviceGroup edit page are valid the **Update** will beco
 .. note::
     The changes are not committed to **aether-config** until the **Basket** is committed.
     This allows several changes to be gathered together in one transaction and checked before committing.
+
+.. _committing:
 
 Committing
 **********
@@ -190,9 +194,7 @@ a Virtual Connectivity Service (VCS).
 
 Navigate to the *VCS* list view to see the list of VCS's and their associations to DeviceGroups.
 
-.. image:: images/aether-roc-gui-vcs-list.png
-    :width: 920
-    :alt: VCS List View in Aether ROC GUI showing DeviceGroup association
+    |VCS-LIST|
 
 To edit a *VCS* click on the *edit* button next to it in this list.
 
@@ -213,6 +215,45 @@ Remove a DeviceGroup from a Virtual Connectivity Service (VCS)
 
 The procedure is covered in the above section.
 
+.. _monitor_device_group:
+
+Monitoring a DeviceGroup
+------------------------
+
+The performance of a Device Group can be monitored in many ways, by clicking its |monitor| (**monitor**) icon:
+
+* From the *VCS Monitor* page, which shows all DeviceGroup's belonging to an VCS.
+* From the DeviceGroup List Page - click the |monitor| icon for the DeviceGroup.
+* When editing an existing DeviceGroup - in the Edit page, the |monitor| is next to the *id*
+
+The *monitor* page itself shows:
+
+* An information Panel for each *IMSI Range* in the *DeviceGroup*
+
+    * Each UE has a |monitor| button that allows further drill down
+    * Each UE is shown with its fully expanded IMSI number (a combination of *Imsi ID* and *Site* parameters)
+* An information panel for the *Site* and *IP Domain* of the *DeviceGroup*
+
+    * Clicking on the down arrow expands each panel
+
+.. image:: images/aether-roc-gui-devicegroup-monitor.png
+    :width: 600
+    :alt: DeviceGroup Monitor View with UE links and information panels
+
+The per UE Monitor panel contains:
+
+* a graph of the UE's Throughput and Latency over the last 15 minutes
+* a graph of the UE's connectivity over the last 15 minutes
+
+.. image:: images/aether-roc-gui-ue-monitor.png
+    :width: 600
+    :alt: DeviceGroup Monitor View with UE links and information panels
+
+
+.. |monitor| image:: images/monitor-icon.png
+    :width: 28
+    :alt: Monitor icon
+
 .. |DEVICEGROUP-LIST| image:: images/aether-roc-gui-devicegroups-list.png
     :width: 755
     :alt: Device Groups List View in Aether ROC GUI showing Site association and Imsi Range of all DeviceGroups
@@ -220,3 +261,7 @@ The procedure is covered in the above section.
 .. |DEVICEGROUP-EDIT| image:: images/aether-roc-gui-devicegroup-edit.png
     :width: 755
     :alt: Device Groups Edit View in Aether ROC GUI showing Imsi Range
+
+.. |VCS-LIST| image:: images/aether-roc-gui-vcs-list.png
+    :width: 920
+    :alt: VCS List View in Aether ROC GUI showing DeviceGroup association

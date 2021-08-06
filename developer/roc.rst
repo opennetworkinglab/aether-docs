@@ -287,6 +287,18 @@ any **gnmi** call when security is enabled.
     :width: 887
     :alt: aether-config log message showing username and timestamp
 
+Accessing GUI from an external system
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+To access the ROC GUI from a computer outside the Cluster machine using *port-forwarding* then
+it is necessary to:
+
+* Ensure that all *port-forward*'s have **--address=0.0.0.0**
+* Add to the IP address of the cluster machine to the **/etc/hosts** of the outside computer as::
+
+    <ip address of cluster> dex-ldap-umbrella aether-roc-gui
+* Verify that you can access the Dex server by its name *http://dex-ldap-umbrella:5556/.well-known/openid-configuration*
+* Access the GUI through the hostname (rather than ip address) *http://aether-roc-gui:8183*
+
 Troubleshooting Secure Access
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 While every effort has been made to ensure that securing Aether is simple and effective,
