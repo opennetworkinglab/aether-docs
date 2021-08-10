@@ -60,7 +60,7 @@ You can use the following command to check allocatable resources in the cluster 
 
 .. code-block:: shell
 
-   $ kubectl get nodes -o json | jq '.items[].status.available'
+   $ kubectl get nodes -o json | jq '.items[].status.allocatable'
    {
      "cpu": "95",
      "ephemeral-storage": "1770223432846",
