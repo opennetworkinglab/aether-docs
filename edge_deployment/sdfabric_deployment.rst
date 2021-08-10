@@ -2,8 +2,8 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-TOST Deployment
-===============
+SDFabric Deployment
+===================
 
 Update aether-pod-config
 ------------------------
@@ -30,9 +30,8 @@ Here is an example folder structure:
    ├── onos
    │   ├── app_map.tfvars
    │   ├── backend.tf
+   │   ├── kubeconfig -> ../../../../common/tost/apps/onos/kubeconfig/
    │   ├── main.tf -> ../../../../common/tost/apps/onos/main.tf
-   │   ├── onos-netcfg.json
-   │   ├── onos-netcfg.json.license
    │   ├── onos.yaml
    │   └── variables.tf -> ../../../../common/tost/apps/onos/variables.tf
    ├── stratum
@@ -72,7 +71,6 @@ It can be used to specify prerequisites in the future.
    project_name     = "tost"
    namespace_name   = "tost"
 
-   app_map = {}
 
 ONOS folder
 """""""""""
@@ -94,7 +92,7 @@ as custom value files.
          target_namespace = "onos-tost"
          catalog_name     = "onos"
          template_name    = "onos-tost"
-         template_version = "0.1.18"
+         template_version = "0.1.40"
          values_yaml      = ["onos.yaml"]
       }
    }
@@ -144,17 +142,23 @@ as custom value files.
             log4j2.logger.segmentrouting.level = DEBUG
 
       config:
-         server: gerrit.opencord.org
-         repo: aether-pod-configs
-         folder: staging/ace-menlo/tost/onos
-         file: onos-netcfg.json
-         netcfgUrl: http://onos-tost-onos-classic-hs.tost.svc:8181/onos/v1/network/configuration
-         clusterUrl: http://onos-tost-onos-classic-hs.tost.svc:8181/onos/v1/cluster
+        netcfg: >
+          {
+            "devices": {
+              "device:leaf1": {
+                "segmentrouting": {
+                  "ipv4NodeSid": 201,
+                  "ipv4Loopback": "10.128.100.38",
+                  "routerMac": "00:00:0A:80:64:26",
+                  "isEdgeRouter": true,
+                  "adjacencySids": []
+                },
+              }
+            }
+          }
 
-Once the **onos-tost** containers are deployed into Kubernetes,
-it will read **onos-netcfg.json** file from the **aether-pod-config** and please change the folder name to different location if necessary.
 
-**onos-netcfg.json** is environment dependent and please change it to fit your environment.
+**config.netcfg** is environment dependent and please change it to fit your environment.
 
 ..
    TODO: Add an example based on the recommended topology
@@ -175,7 +179,7 @@ The customize value file is named **stratum.yaml**
          target_namespace = "stratum"
          catalog_name     = "stratum"
          template_name    = "stratum"
-         template_version = "0.1.9"
+         template_version = "0.1.13"
          values_yaml      = ["stratum.yaml"]
       }
    }
@@ -233,20 +237,19 @@ The app_map.tfvars specify the Helm Chart version and the filename of the custom
 .. code-block::
 
    apps=["telegraf"]
-
    app_map = {
-      telegraf= {
-         app_name         = "telegraf"
-         project_name     = "tost"
-         target_namespace = "telegraf"
-         catalog_name     = "influxdata"
-         template_name    = "telegraf"
-         template_version = "1.7.23"
-         values_yaml      = ["telegraf.yaml"]
-      }
+     telegraf = {
+       app_name         = "telegraf"
+       project_name     = "tost"
+       target_namespace = "tost"
+       catalog_name     = "aether"
+       template_name    = "tost-telegraf"
+       template_version = "0.1.1"
+       values_yaml      = ["telegraf.yaml"]
+     }
    }
 
-The **telegraf.yaml** used to override the Telegraf Helm Chart and its environment-dependent.
+The **telegraf.yaml** used to override the ONOS-Telegraf Helm Chart and its environment-dependent.
 Please pay attention to the **inputs.addresses** section.
 Telegraf will read data from stratum so we need to specify all Tofino switch’s IP addresses here.
 Taking Menlo staging pod as example, there are four switches so we fill out 4 IP addresses.
@@ -284,23 +287,19 @@ The easiest way to create your own configs is running the template script.
 
 Assumed we would like to set up the **ace-example** pod in the production environment.
 
-1. open the **tools/ace_env**
+1. open the **tools/ace_config.yaml** (You should already have this file when you finish VPN bootstrap stage)
 2. fill out all required variables
-3. import the environment variables from **tools/ace_env**
-4. perform the makefile command to generate configuration and directory for TOST
-5. update **onos-netcfg.json** for ONOS
-6. update **${hostname}-chassis-config.pb.txt** for Stratum
-7. update all switch IPs in **telegraf.yaml**
-8. commit your change and open the Gerrit patch
+3. perform the makefile command to generate configuration and directory for TOST
+4. update **onos.yaml** for ONOS
+5. update **${hostname}-chassis-config.pb.txt** for Stratum
+6. commit your change and open the Gerrit patch
 
 .. code-block:: console
 
-  vim tools/ace_env
-  source tools/ace_env
+  vim tools/ace_config.yaml
   make -C tools/  tost
-  vim production/ace-example/tost/onos/onos-netcfg.json
+  vim production/ace-example/tost/onos/onos.yaml
   vim production/ace-example/tost/stratum/*${hostname}-chassis-config.pb.txt**
-  vim production/ace-example/tost/telegraf/telegraf.yam
   git add commit
   git review
 
@@ -311,7 +310,7 @@ Quick recap
 To recap, most of the files in **tost** folder can be copied from existing examples.
 However, there are a few files we need to pay extra attentions to.
 
-- **onos-netcfg.json** in **onos** folder
+- **onos.yaml** in **onos** folder
 - Chassis config in **stratum** folder
   There should be one chassis config for each switch. The file name needs to be
   **${hostname}-chassis-config.pb.txt**
@@ -574,36 +573,20 @@ parameters and Jenkins jobs it wants to use.
 
 .. code-block:: yaml
 
+
    - project:
-         name: deploy-menlo-tost-dev
-         rancher_cluster: "menlo-tost-dev"
-         terraform_dir: "testing/menlo-tost"
-         rancher_api: "{rancher_testing_access}"
-         jobs:
-            - "deploy"
-            - "deploy-onos"
-            - "deploy-stratum"
-            - "deploy-telegraf"
-   - project:
-         name: deploy-menlo-tost-staging
-         rancher_cluster: "ace-menlo"
-         terraform_dir: "staging/ace-menlo"
-         rancher_api: "{rancher_staging_access}"
-         jobs:
-            - "deploy"
-            - "deploy-onos"
-            - "deploy-stratum"
-            - "deploy-telegraf"
-   - project:
-         name: deploy-menlo-production
-         rancher_cluster: "ace-menlo"
-         terraform_dir: "production/ace-menlo"
-         rancher_api: "{rancher_production_access}"
-         jobs:
-            - "deploy"
-            - "deploy-onos"
-            - "deploy-stratum"
-            - "deploy-telegraf"
+       name: deploy-tucson-pairedleaves-dev
+       rancher_cluster: "dev-pairedleaves-tucson"
+       terraform_dir: "staging/dev-pairedleaves-tucson"
+       rancher_api: "{rancher_staging_access}"
+       properties:
+         - onf-infra-onfstaff-private
+       jobs:
+         - "deploy"
+         - "deploy-onos"
+         - "deploy-stratum"
+         - "deploy-telegraf"
+         - "debug-tost"
 
 
 Create Your Own Jenkins Job
@@ -617,17 +600,20 @@ Add the following content into repos/tost.yaml
 
 .. code-block:: yaml
 
-   - project:
-         name: deploy-tost-example-production
-         rancher_cluster: "ace-test-example"
-         terraform_dir: "production/tost-example"
-         rancher_api: "{rancher_production_access}"
-         jobs:
-            - "deploy"
-            - "deploy-onos"
-            - "deploy-stratum"
-            - "deploy-telegraf"
 
+   - project:
+       name: deploy-tost-example-production
+       rancher_cluster: "ace-test-example"
+       terraform_dir: "production/tost-example"
+       rancher_api: "{rancher_production_access}"
+       properties:
+         - onf-infra-onfstaff-private
+       jobs:
+         - "deploy"
+         - "deploy-onos"
+         - "deploy-stratum"
+         - "deploy-telegraf"
+         - "debug-tost"
 
 .. note::
 

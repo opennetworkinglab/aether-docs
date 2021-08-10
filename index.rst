@@ -31,7 +31,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    edge_deployment/vpn_bootstrap
    edge_deployment/runtime_deployment
    edge_deployment/bess_upf_deployment
-   edge_deployment/tost_deployment
+   edge_deployment/sdfabric_deployment
    edge_deployment/connectivity_service_update
    edge_deployment/enb_installation
    edge_deployment/troubleshooting
