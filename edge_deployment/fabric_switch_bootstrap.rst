@@ -53,7 +53,7 @@ Using the Serial-over-LAN Console, enter ONL::
 .. note::
   If `sol.sh` is unresponsive, please try to restart the mainboard with::
 
-    root@onl:~# wedge_power.sh restart
+    root@onl:~# wedge_power.sh reset
 
 
 Change the boot mode to rescue mode with the command ``onl-onie-boot-mode

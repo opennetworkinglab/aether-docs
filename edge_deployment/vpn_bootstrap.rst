@@ -227,8 +227,9 @@ to configure a VPN in GCP and ACE accordingly.
 
    $ cd $WORKDIR/aether-pod-configs/tools
    $ cp ace_config.yaml.example ace_config.yaml
+
+   # Set all values in ace_config.yaml
    $ vi ace_config.yaml
-   # Set all values
 
    $ make vpn
    Created ../production/ace-test
