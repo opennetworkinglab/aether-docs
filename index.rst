@@ -53,7 +53,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
 
    testing/about_system_tests
    testing/sdcore_testing
-   testing/aether-roc-api-tests
+   testing/aether-roc-tests
    testing/acceptance_specification
    testing/fabric_testing
    testing/pdp_testing
