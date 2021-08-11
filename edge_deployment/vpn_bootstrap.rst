@@ -213,7 +213,8 @@ Add the new cluster information at the end of the following global resource maps
    }
 
 .. note::
-   Unless you have a specific requirement, set ASN and BGP addresses to the next available values in the map.
+   Unless you have a specific requirement, set ASN to the next available value in the map.
+   For BGP peer IP range and address, use the next available /30 subnet in the map.
 
 
 Create Terraform and Ansible configurations

@@ -80,6 +80,17 @@ Wait until the cluster status changes to **Active** in `Rancher <https://rancher
 It normally takes 10 - 15 minutes depending on the speed of the container images
 download at the edge.
 
+It is also a good idea to check the system pod status after successful K8S deployment.
+To do so, login to Rancher, open the cluster that you just deployed in the **Global** view, and click
+**Launch kubectl** button. You can interact with the cluster using the window that opens.
+Run the following commands and make sure all pods are ``Running``.
+
+.. code-block:: shell
+
+  # Run kubectl commands inside here
+  # e.g. kubectl get all
+  > kubectl get po -A
+
 System Application Deployment
 -----------------------------
 
@@ -222,22 +233,26 @@ you must assign the cluster to either **aether-stable** or **aether-alpha** work
 For clusters expecting minimal downtime, assign to **aether-stable**.
 For clusters for development or previewing upcoming release, assign to **aether-alpha**.
 
-Log in to `Rancher <https://rancher.aetherproject.org>`_ as ``admin`` or ``onfadmin`` user
-and go to the **Cluster Explorer**.
-In the top left dropdown menu, click **Cluster Explorer > Continuous Delivery**.
+Workspace assignment can be done from Fleet dashboard.
+To access Fleet dashboard, log in to `Rancher <https://rancher.aetherproject.org>`_ as
+``admin`` or ``onfadmin`` user, go to the **Cluster Explorer**,
+and click **Cluster Explorer > Continuous Delivery** in the top left dropdown menu.
+Now, perform the following steps to assign the new cluster to one of the Aether workspaces.
 
 .. image:: images/fleet-move-workspace.png
 
+1) Click the second dropdown menu from the left at the top and switch the current workspace
+   to **fleet-default**.
+2) Click **Clusters** on the left menu.
+3) Select the cluster.
+4) Click **Assign to...** button and choose **aether-stable** or **aether-alpha**
+   in from the popup menu.
 
-1) Click the second dropdown menu from the left at the top and select **fleet-default**.
-2) Select **Clusters** on the left menu and you'll see the new cluster.
-3) Click the checkbox in front of the cluster name.
-4) Select **Assign to...** button and assign the cluster to the Aether workspace.
-
-Switch the workspace to the Aether workspace, click **Clusters** in the left menu, and check the
-new cluster exists.
-Wait until the cluster state becomes **Active**.
+To verify, switch the current workspace to the workspace the cluster is assigned to,
+click **Clusters** in the left menu, and check if the cluster exists.
+Wait for the system application deployment to complete and the cluster state
+to become **Active**.
 
 .. attention::
 
-   Ignore BESS UPF failure at this point.
+   Ignore BESS UPF failure at this point if BESS UPF is enabled.
