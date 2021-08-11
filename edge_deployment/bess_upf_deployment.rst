@@ -104,12 +104,15 @@ Don't forget to replace the IP addresses in the example configuration with the a
          ip: "192.168.4.1/24"
          gateway: "192.168.4.254"
          vlan: 4
-     # Below is required only when connecting to 5G core
-     cfgFiles:
-       upf.json:
-         cpiface:
-           dnn: "8internet"
-           hostname: "upf"
+       # Override SRIOV resource name when using a NIC other than Intel
+       #sriov:
+       #  resourceName: "mellanox.com/mellanox_sriov_vfio"
+     # Add below when connecting to 5G core
+     #cfgFiles:
+     #  upf.json:
+     #    cpiface:
+     #      dnn: "8internet"
+     #      hostname: "upf"
 
 
 Update ``fleet.yaml`` in the same directory to let Fleet use the custom configuration when deploying
