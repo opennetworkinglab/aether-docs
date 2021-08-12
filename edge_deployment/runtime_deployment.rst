@@ -19,7 +19,7 @@ and system level applications listed below.
 
 For this, we will be using GitOps based CI/CD systems and what you will need to do is
 create patches in Aether GitOps repositories, **aether-pod-configs** and **aether-app-configs**,
-to provide the cluster configurations to the CI/CD systems.
+to provide cluster and application configurations to the CI/CD systems.
 
 .. attention::
 

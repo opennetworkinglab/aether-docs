@@ -7,9 +7,39 @@ VPN Bootstrap
 
 This section guides you through setting up a VPN connection between Aether Central in GCP and ACE.
 We will be using GitOps based Aether CI/CD system for this and what you need to do is
-create a patch to Aether GitOps repository, **aether-pod-configs**, with the edge specific information.
-Note that some of the steps described here are not directly related to setting up a VPN,
-but rather are a prerequisite for adding a new ACE.
+create a patch for the new edge in **aether-pod-configs**, where all edge infrastructure
+configuration is stored.
+
+Here is a brief overview of each step. Note that some of the steps described here are not
+directly related to setting up a VPN, but are prerequisites for adding a new edge.
+
+**1. Add deployment jobs**
+Each edge has its own Jenkins jobs that build and apply infrastructure change plans.
+In this step, you'll add those jobs for the new edge.
+
+**2. Update global resource maps**
+aether-pod-configs maintains complete list of clusters, VPN connections, and users
+in separate global resource files. Before adding edge specific configurations,
+it is required to update those global resource maps first.
+
+**3. Generate Ansible and Terraform configs**
+In this step, you'll add Ansible and Terraform configs necessary to install and
+configure VPN softwares at the edge and set up VPN gateway, router,
+and firewall on GCP.
+
+**4. Submit your changes**
+Finally, submit your change to run the deployment job added in the first step.
+
+
+.. attention::
+
+  Make sure that UDP port 500, UDP port 4500, and ESP from **gcpvpn1.infra.aetherproject.net(35.242.47.15)**
+  and **gcpvpn2.infra.aetherproject.net(34.104.68.78)** are allowed in the firewall.
+
+.. attention::
+
+   If you are adding another ACE to an existing VPN connection, go to
+   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`. Verify VPN connection.
 
 .. _add_deployment_jobs:
 
@@ -62,49 +92,6 @@ Submit your change and wait for the jobs you just added available in Aether Jenk
    $ git commit -m "Add test ACE deployment job"
    $ git review
 
-Gather VPN information
-----------------------
-
-* Make sure firewall in front of ACE allows UDP port 500, UDP port 4500, and
-  ESP packets from **gcpvpn1.infra.aetherproject.net(35.242.47.15)** and
-  **gcpvpn2.infra.aetherproject.net(34.104.68.78)**
-
-* Make sure that the external IP on ACE side is owned by or routed to the
-  management node
-
-To help your understanding, the following sample ACE environment will be used
-in the rest of this section.  Make sure to replace the sample values when you
-actually create a review request.
-
-+-----------------------------+----------------------------------+
-| Management node external IP | 66.201.42.222                    |
-+-----------------------------+----------------------------------+
-| ASN                         | 65003                            |
-+-----------------------------+----------------------------------+
-| GCP BGP IP address          | Tunnel 1: 169.254.0.9/30         |
-|                             +----------------------------------+
-|                             | Tunnel 2: 169.254.1.9/30         |
-+-----------------------------+----------------------------------+
-| ACE BGP IP address          | Tunnel 1: 169.254.0.10/30        |
-|                             +----------------------------------+
-|                             | Tunnel 2: 169.254.1.10/30        |
-+-----------------------------+----------------------------------+
-| PSK                         | UMAoZA7blv6gd3IaArDqgK2s0sDB8mlI |
-+-----------------------------+----------------------------------+
-| Management Subnet           | 10.32.4.0/24                     |
-+-----------------------------+----------------------------------+
-| K8S Subnet                  | Pod IP: 10.33.0.0/17             |
-|                             +----------------------------------+
-|                             | Cluster IP: 10.33.128.0/17       |
-+-----------------------------+----------------------------------+
-
-.. note::
-   Use `this site <https://cloud.google.com/network-connectivity/docs/vpn/how-to/generating-pre-shared-key/>`_ to generate a new strong pre-shared key.
-
-.. attention::
-
-   If you are adding another ACE to an existing VPN connection, go to
-   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`
 
 Get access to encrypted files in aether-pod-configs repository
 --------------------------------------------------------------
@@ -213,23 +200,28 @@ Add the new cluster information at the end of the following global resource maps
    }
 
 .. note::
+   Use `this site <https://cloud.google.com/network-connectivity/docs/vpn/how-to/generating-pre-shared-key/>`_
+   to generate a strong tunnel shared secret.
+
+.. note::
    Unless you have a specific requirement, set ASN to the next available value in the map.
    For BGP peer IP range and address, use the next available /30 subnet in the map.
 
 
-Create Terraform and Ansible configurations
--------------------------------------------
+Generate Ansible and Terraform configurations
+---------------------------------------------
 
 In this step, we will create a directory under ``production`` with the same name
-as the cluster, and add Terraform configurations and Ansible inventory needed
-to configure a VPN in GCP and ACE accordingly.
+as the cluster, and add Ansible and Terraform configurations needed
+to configure a VPN in ACE and GCP using a tool.
 
 .. code-block:: shell
 
    $ cd $WORKDIR/aether-pod-configs/tools
    $ cp ace_config.yaml.example ace_config.yaml
+
+   # Set all values in ace_config.yaml
    $ vi ace_config.yaml
-   # Set all values
 
    $ make vpn
    Created ../production/ace-test
@@ -267,17 +259,17 @@ Submit your change
    $ git commit -m "Add test ACE"
    $ git review
 
-After the change is merged, wait for a while until the post-merge job finishes.
+Wait for a while until the post-merge job finishes after the change is merged.
 
 Verify VPN connection
 ---------------------
 
 You can verify the VPN connections by checking
-the routing table on the management node and trying to ping to one of the
+the routing table from the management server and trying to ping to one of the
 central cluster VMs.
 
 Be sure there are two tunnel interfaces, `gcp_tunnel1` and `gcp_tunnel2`,
-and three routing entries via one of the tunnel interfaces.
+and three additional routing entries via one of the tunnel interfaces.
 
 .. code-block:: shell
 
