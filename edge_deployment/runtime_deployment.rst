@@ -66,6 +66,12 @@ and switches to the cluster.
    Created ../production/ace-test/backend.tf
    Created ../production/ace-test/cluster_val.tfvars
 
+.. attention::
+
+  If the cluster has an even number of compute nodes, edit **cluster_val.tfvars**
+  file so that only the odd number of nodes have **etcd** and **controlplane**
+  roles.
+
 Create a review request.
 
 .. code-block:: shell
