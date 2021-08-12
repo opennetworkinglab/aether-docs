@@ -5,7 +5,8 @@
 VPN Bootstrap
 =============
 
-This section guides you through setting up a VPN connection between Aether Central in GCP and ACE.
+This section guides you through setting up a VPN connection between Aether
+Central in GCP and ACE.
 We will be using GitOps based Aether CI/CD system for this and what you need to do is
 create a patch for the new edge in **aether-pod-configs**, where all edge infrastructure
 configuration is stored.
@@ -14,8 +15,9 @@ Here is a brief overview of each step. Note that some of the steps described her
 directly related to setting up a VPN, but are prerequisites for adding a new edge.
 
 **1. Add deployment jobs**
-Each edge has its own Jenkins jobs that build and apply infrastructure change plans.
-In this step, you'll add those jobs for the new edge.
+Each edge has its own Jenkins jobs that build and execute an infrastructure change plan
+based on the configurations specified in aether-pod-configs.
+In this step, you'll add those jobs to Aether CI/CD system for the new edge.
 
 **2. Update global resource maps**
 aether-pod-configs maintains complete list of clusters, VPN connections, and users
@@ -28,18 +30,18 @@ configure VPN softwares at the edge and set up VPN gateway, router,
 and firewall on GCP.
 
 **4. Submit your changes**
-Finally, submit your change to run the deployment job added in the first step.
-
-
-.. attention::
-
-  Make sure that UDP port 500, UDP port 4500, and ESP from **gcpvpn1.infra.aetherproject.net(35.242.47.15)**
-  and **gcpvpn2.infra.aetherproject.net(34.104.68.78)** are allowed in the firewall.
+Finally, submit your aether-pod-configs changes to run the deployment job added
+in the first step.
 
 .. attention::
 
    If you are adding another ACE to an existing VPN connection, go to
-   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`. Verify VPN connection.
+   :ref:`Add ACE to an existing VPN connection <add_ace_to_vpn>`.
+
+.. attention::
+
+  Make sure that UDP port 500, UDP port 4500, and ESP from **gcpvpn1.infra.aetherproject.net(35.242.47.15)**
+  and **gcpvpn2.infra.aetherproject.net(34.104.68.78)** are allowed in the firewall at the edge.
 
 .. _add_deployment_jobs:
 
