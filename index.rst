@@ -66,6 +66,7 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
 
    developer/sdcore
    developer/roc
+   developer/roc-api
 
 .. toctree::
    :maxdepth: 1
