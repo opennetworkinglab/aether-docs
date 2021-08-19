@@ -5,6 +5,7 @@ Atomix
 BMC
 BMv
 BMv2
+BoM
 CLI
 Cloudlab
 DNS
@@ -132,6 +133,7 @@ pxeboot
 qa
 qsfp
 rackmount
+rackmounted
 reStructuredText
 readme
 reenable
@@ -146,6 +148,7 @@ runtime
 scalability
 scalable
 spgw
+splitter
 subcomponent
 subnet
 subnets
@@ -153,6 +156,7 @@ tAC
 tcp
 telegraf
 tfvars
+topologies
 tost
 udp
 ul

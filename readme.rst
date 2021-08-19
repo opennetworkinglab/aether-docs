@@ -7,7 +7,7 @@ Writing Documentation
 Docs are generated using :doc:`Sphinx <sphinx:usage/index>`.
 
 Documentation is written in :doc:`reStructuredText
-<sphinx:usage/restructuredtext/basics>`.
+<sphinx:usage/restructuredtext/basics>` - see this link for the basic format.
 
 In reStructuredText documents, to create the section hierarchy (mapped in HTML
 to ``<h1>`` through ``<h5>``) use these characters to underline headings in the

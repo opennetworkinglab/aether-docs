@@ -260,9 +260,9 @@ following information needs to be added to `NetBox
 15. Add Cables between physical interfaces on the devices
 
     The topology needs to match the logical diagram presented in the
-    :ref:`Network Cable Plan <edge_deployment/overview:Network Cable Plan>`.
-    Note that many of the management interfaces need to be located either on
-    the MGMT or ADMIN VLANs, and the management switch is
+    :ref:`Production Environments <edge_deployment/overview:Production
+    Environments>`.  Note that many of the management interfaces need to be
+    located either on the MGMT or ADMIN VLANs, and the management switch is
     used to provide that separation.
 
 Rackmount of Equipment
@@ -276,8 +276,9 @@ Guidelines for mounting this equipment:
   configuration, so hot air exhaust is out the back of the switch near the
   power inlets, away from the 32 QSFP network ports on the front of the switch.
 
-- The full-depth 1U and 2U Supermicro servers also have front-to-back airflow
-  but have most of their ports on the rear of the device.
+- The full-depth servers (such as the 1U and 2U Supermicro servers used in
+  Pronto) also have front-to-back airflow but have most of their ports on the
+  rear of the device.
 
 - Airflow through the rack should be in one direction to avoid heat being
   pulled from one device into another.  This means that to connect the QSFP
@@ -285,10 +286,9 @@ Guidelines for mounting this equipment:
   through the rack from front (switch) to back (server).  Empty rack spaces
   should be reserved for this purpose.
 
-- The short-depth management HP Switch and 1U Supermicro servers should be
-  mounted on the rear of the rack.  They both don't generate an appreciable
-  amount of heat, so the airflow direction isn't a significant factor in
-  racking them.
+- The short-depth management switches and management servers should be mounted
+  on the rear of the rack.  They don't generate an appreciable amount of heat,
+  so the airflow direction isn't a significant factor in racking them.
 
 Inventory
 ---------

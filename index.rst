@@ -1,21 +1,31 @@
 Aether Documentation
 ====================
 
+Aether is an ONF's 5G/LTE Connected Edge Platform-as-a-Service.  More
+information about Aether can be found at the `ONF website
+<https://opennetworking.org/aether/>`_.
+
+Aether Components
+-----------------
+
+Aether uses components from several ONF projects. More information can be found
+at these sites:
+
+* `SD-Core <https://opennetworking.org/sd-core/>`_
+* :doc:`SD-Fabric (Trellis) <trellis:index>`
+* `SD-RAN <https://docs.sd-ran.org/master/index.html>`_
+* `Stratum <https://github.com/stratum/stratum/>`_
+* `µONOS <https://docs.onosproject.org/>`_
+
+More information about mobile networks and 5G can be found in the :doc:`5G
+Mobile Networks: A Systems Approach <sysapproach5g:intro>` book.
+
 Community
 ---------
 
 Information about participating in the Aether community and development process
-can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
-
-.. toctree::
-   :maxdepth: 3
-   :caption: Operations
-   :hidden:
-   :glob:
-
-   operations/procedures
-   operations/subscriber
-   operations/vcs
+can be found on the `ONF Wiki
+<https://wiki.opennetworking.org/display/COM/Aether>`_.
 
 .. toctree::
    :maxdepth: 3
@@ -36,6 +46,16 @@ can be found on the `ONF Wiki <https://wiki.opennetworking.org/>`_.
    edge_deployment/enb_installation
    edge_deployment/troubleshooting
    edge_deployment/pronto
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Operations
+   :hidden:
+   :glob:
+
+   operations/procedures
+   operations/subscriber
+   operations/vcs
 
 .. toctree::
    :maxdepth: 3
