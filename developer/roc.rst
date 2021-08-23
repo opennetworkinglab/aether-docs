@@ -28,21 +28,39 @@ Atomix and onos-operator must be installed::
    kubectl create namespace micro-onos
 
    # install atomix
-   helm -n kube-system install atomix-controller atomix/atomix-controller
-   helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage
+   export ATOMIX_CONTROLLER_VERSION=0.6.7
+   helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
+   export ATOMIX_RAFT_VERSION=0.1.8
+   helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --VERSION $ATOMIX_RAFT_VERSION
 
    # install the onos operator
-   helm install -n kube-system onos-operator onosproject/onos-operator
+   ONOS_OPERATOR_VERSION=0.4.8
+   helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
+.. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
+    shown above are correct for the 1.2.x versions of the *aether-roc-umbrella*.
+
+.. list-table:: ROC support component version matrix
+   :widths: 28 24 24 24
+   :header-rows: 1
+
+   * - ROC Version
+     - Atomix Controller
+     - Atomix Raft
+     - Onos Operator
+   * - 1.2.x
+     - 0.6.7
+     - 0.1.8
+     - 0.4.8
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
 *onos-operator-config*, and *onos-operator-topo*.
 Execute these commands::
 
+   helm -n kube-system list
    kubectl -n kube-system get pods | grep -i atomix
    kubectl -n kube-system get pods | grep -i onos
-
 
 Create a values-override.yaml
 -----------------------------
@@ -171,6 +189,11 @@ The following port-forwards may be useful::
 ``aether-roc-api`` is useful to be able to POST REST API requests.
 
 ``aether-roc-gui`` is useful to be able to interactively browse the current configuration.
+
+.. note:: Internally the ``aether-roc-gui`` operates a Reverse Proxy on the ``aether-roc-api``. This
+    means that if you have done a ``port-forward`` to ``aether-roc-gui`` say on port ``8183`` there's no
+    need to do another on the ``aether-roc-api`` instead you can access the API on
+    ``http://localhost:8183/aether-roc-api``
 
 Deploying using custom images
 -----------------------------

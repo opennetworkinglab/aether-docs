@@ -110,6 +110,7 @@ Architecture
 Below is a high-level architectural diagram of the ROC:
 
 .. image:: images/aether-architecture.svg
+    :width: 1000
 
 The following walks through the main stack of ROC components in a top-down manner, starting with the GUI(s) and
 ending with the devices/services.
@@ -245,6 +246,7 @@ There is no fixed distinction between high-level and low-level modeling in the R
 There is one set of Aether modeling that might have customer-facing and internal-facing aspects.
 
 .. image:: images/aether-highlevel.svg
+    :width: 600
 
 The above diagram is an example of how a single set of models could serve both high-level and low-level needs and
 is not necessarily identical to the current implementation.
@@ -258,6 +260,7 @@ the configuration details of the radio (signal strength, IP address, etc) are op
 An approximation of the current Aether-3.0 (Release 1.5) modeling is presented below:
 
 .. image:: images/aether-3.0-models.svg
+    :width: 800
 
 The key Enterprise-facing abstractions are *Applicatio*\ n, *Virtual Cellular Service* (VCS), and *DeviceGroup*.
 

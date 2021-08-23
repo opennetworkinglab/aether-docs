@@ -3,6 +3,21 @@
 Aether ROC Control API
 ======================
 
+Access
+------
+The ROC API specification can be accessed from the running ROC cluster at the API URL.
+
+e.g. on a local system (if the GUI has been port-forwarded on port 8183)
+*http://localhost:8183/aether-roc-api/*
+
+On the Production system it would be *https://roc.aetherproject.org/aether-roc-api/*
+
+.. note:: Opening this in a browser will display a HTML view of the API (powered by *ReDoc*).
+
+    To access the raw YAML format use
+    ``curl -H "Accept: application/yaml" http://localhost:8183/aether-roc-api/aether-3.0.0-openapi3.yaml``
+    This YAML format can be imported in to various different tools e.g. |postman_link|
+
 Background
 ----------
 
@@ -24,7 +39,7 @@ Endpoints are named based on the type of object. Some examples:
 * `PATCH http://roc/aether/v3.0.0/connectivity-service-v3/site/Starbucks-NewYork`. Update the Starbucks New York site.
 
 This document is a high-level description of the objects that can be interacted with. For a
-low-level description, see the Swagger API specification.
+low-level description, see the specification (:ref:`developer/roc-api:Access` section above).
 
 Identifying and Referencing Objects
 -----------------------------------
@@ -203,3 +218,7 @@ Specifies the UPF that should forward packets. Has the following fields:
 * `address`. Hostname or IP address of UPF.
 * `port`. Port number of UPF.
 * `enterprise`. Enterprise that owns this UPF.
+
+.. |postman_link| raw:: html
+
+   <a href="http://postman.com" target="_blank">Postman</a>
