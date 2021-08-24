@@ -25,16 +25,25 @@ Deploy Aether-in-a-Box and start the 4G core::
     #create K8s cluster for you and also start 4G network functions and carry out 1 ping test
     make test
 
-Apply the necessary pull secrets
---------------------------------
+Create the pull secret
+----------------------
 
 The deployment may fail and leave pods in ImagePullBackoff status if the
-necessary secrets are not applied.
-Obtain the secret from ONF, and then execute the following::
+necessary secret is not present.  To create the pull secret, follow these
+steps:
 
-    cat > ~/registry-secret.json
-         ... paste the secret here ...
-    kubectl apply -f ~/registry-secret.json
+* Log into the `Aether Harbor Registry <https://registry.aetherproject.org>`_ using your Crowd credentials
+* Select *User Profile* from the drop-down menu in the upper right corner
+* Copy the *CLI secret* to the clipboard
+
+Then run the following command, replacing the bracketed fields with the information
+from your User Profile::
+
+    kubectl -n omec create secret docker-registry aether.registry \
+        --docker-server=https://registry.aetherproject.org \
+        --docker-username=<your-username> \
+        --docker-password=<pasted-cli-secret> \
+        --docker-email=<your-email>
 
 
 
