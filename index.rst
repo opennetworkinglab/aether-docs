@@ -76,8 +76,6 @@ can be found on the `ONF Wiki
    testing/sdcore_testing
    testing/aether-roc-tests
    testing/acceptance_specification
-   testing/fabric_testing
-   testing/pdp_testing
 
 .. toctree::
    :maxdepth: 3
