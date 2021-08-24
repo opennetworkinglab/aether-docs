@@ -28,10 +28,10 @@ Atomix and onos-operator must be installed::
    kubectl create namespace micro-onos
 
    # install atomix
-   export ATOMIX_CONTROLLER_VERSION=0.6.7
+   export ATOMIX_CONTROLLER_VERSION=0.6.8
    helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
-   export ATOMIX_RAFT_VERSION=0.1.8
-   helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --VERSION $ATOMIX_RAFT_VERSION
+   export ATOMIX_RAFT_VERSION=0.1.9
+   helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
 
    # install the onos operator
    ONOS_OPERATOR_VERSION=0.4.8
@@ -41,16 +41,20 @@ Atomix and onos-operator must be installed::
     shown above are correct for the 1.2.x versions of the *aether-roc-umbrella*.
 
 .. list-table:: ROC support component version matrix
-   :widths: 28 24 24 24
+   :widths: 40 20 20 20
    :header-rows: 1
 
    * - ROC Version
      - Atomix Controller
      - Atomix Raft
      - Onos Operator
-   * - 1.2.x
+   * - 1.2.25-1.2.45
      - 0.6.7
      - 0.1.8
+     - 0.4.8
+   * - 1.3.0-
+     - 0.6.8
+     - 0.1.9
      - 0.4.8
 
 Verify that these services were installed properly.
