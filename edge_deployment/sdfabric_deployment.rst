@@ -2,8 +2,8 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-SDFabric Deployment
-===================
+SD-Fabric Deployment
+====================
 
 Update aether-pod-configs
 -------------------------
@@ -11,7 +11,7 @@ Update aether-pod-configs
 ``aether-pod-configs`` is a git project hosted on **gerrit.opencord.org** and
 we placed the following materials in it.
 
-- Terraform scripts to install TOST applications on Rancher, including ONOS, Stratum and Telegraf.
+- Terraform scripts to install SD-Fabric applications on Rancher, including ONOS, Stratum and Telegraf.
 - Customized configuration for each application (helm values).
 - Application specific configuration files, including ONOS network configuration and Stratum chassis config.
 
@@ -62,8 +62,8 @@ Root folder
 Terraform reads **app_map.tfvars** to know which application will be installed on Rancher
 and which version and customized values need to apply to.
 
-Here is the example of **app_map.tfvars** which defines prerequisite apps for TOST
-as well as project and namespace in which TOST apps will be provisioned.
+Here is the example of **app_map.tfvars** which defines prerequisite apps for SD-Fabric
+as well as project and namespace in which SD-fabric apps will be provisioned.
 Note that currently we don't have any prerequisite so we left this blank intentionally.
 It can be used to specify prerequisites in the future.
 
@@ -290,7 +290,7 @@ Assumed we would like to set up the **ace-example** pod in the production enviro
 
 1. open the **tools/ace_config.yaml** (You should already have this file when you finish VPN bootstrap stage)
 2. fill out all required variables
-3. perform the makefile command to generate configuration and directory for TOST
+3. perform the makefile command to generate configuration and directory for SD-Fabric
 4. update **onos.yaml** for ONOS
 5. update **${hostname}-chassis-config.pb.txt** for Stratum
 6. commit your change and open the Gerrit patch
@@ -331,8 +331,8 @@ Please refer to :doc:`Aether Runtime Deployment <runtime_deployment>` to
 create a review request.
 
 
-Create TOST deployment job in Jenkins
--------------------------------------
+Create SD-Fabric (named TOST in Jenkins) deployment job in Jenkins
+------------------------------------------------------------------
 
 There are three major components in the Jenkins system, the Jenkins pipeline
 and Jenkins Job Builder and Jenkins Job.
@@ -383,7 +383,7 @@ We will explain more in the next section.
 
 .. note::
 
-   Currently, we don’t perform the incremental upgrade for TOST application.
+   Currently, we don’t perform the incremental upgrade for SD-Fabric application.
    Instead, we perform the clean installation.
    In the pipeline script, Terraform will destroy all existing resources and
    then create them again.
@@ -412,17 +412,21 @@ pipeline script is groovy.
    ├── tost-telegraf.groovy
    └── tost.groovy
 
-Currently, we had four pipeline scripts for TOST deployment.
+Currently, we had five pipeline scripts for SD-Fabric deployment.
 
 1. tost-onos.groovy
 2. tost-stratum.groovy
 3. tost-telegraf.groovy
 4. tost.groovy
+5. tost-onos-debug.groovy
 
 tost-[onos/stratum/telegraf].groovy are used to deploy the individual
 application respectively, and tost.groovy is a high level script, used to
-deploy the TOST application, it will execute the above three scripts in its
+deploy whole SD-Fabric application, it will execute the above three scripts in its
 pipeline script.
+
+tost-onos-debug.groovy is used to dump the debug information from the ONOS controller
+and it will be executed automatically when ONOS is deployed.
 
 
 Jenkins jobs
@@ -435,7 +439,7 @@ Jenkins job is the task unit in the Jenkins system. A Jenkins job contains the f
 - Build trigger
 - Source code management
 
-We created one Jenkins job for each TOST component, per Aether edge.
+We created one Jenkins job for each SD-Fabric component, per Aether edge.
 
 We have four Jenkins jobs (HostPath provisioner, ONOS, Stratum and Telegraf)
 for each edge as of today.
@@ -463,7 +467,7 @@ Cluster level
 
 - **gcp_credential**: Google Cloud Platform credential for remote storage, used
   by Terraform.
-- **terraform_dir**: The root directory of the TOST directory.
+- **terraform_dir**: The root directory of the SD-Fabric directory.
 - **rancher_cluster**: target Rancher cluster name.
 - **rancher_api_env**: Rancher credential to access Rancher, used by Terraform.
 
@@ -508,7 +512,7 @@ All the template files are placed under templates directory.
    ├── verify-licensed.yaml
    └── versioning.yaml
 
-We defined all TOST required job templates in tost.yaml and here is its partial
+We defined all SD-Fabric required job templates in tost.yaml and here is its partial
 content.
 
 .. code-block:: yaml
@@ -596,7 +600,7 @@ Create Your Own Jenkins Job
 Basically, if you don't need to customize the Jenkins pipeline script and the job configuration, the only thing
 you need to do is modify the repos/tost.yaml to add your project.
 
-For example, we would like to deploy the TOST to our production pod, let's assume it named "tost-example".
+For example, we would like to deploy the SD-Fabric to our production pod, let's assume it named "tost-example".
 Add the following content into repos/tost.yaml
 
 .. code-block:: yaml
@@ -622,13 +626,13 @@ Add the following content into repos/tost.yaml
    already there before running the Jenkins job.
 
 
-Trigger TOST deployment in Jenkins
-----------------------------------
+Trigger SD-Fabric (named TOST in Jenkins) deployment in Jenkins
+---------------------------------------------------------------
 
 Whenever a change is merged into **aether-pod-config**,
-the Jenkins job should be triggered automatically to (re)deploy TOST.
+the Jenkins job should be triggered automatically to (re)deploy SD-Fabric (named TOST in Jenkins).
 
-You can also type the comment **apply** in the Gerrit patch, it will trigger Jenkins jobs to deploy TOST for you.
+You can also type the comment **apply** in the Gerrit patch, it will trigger Jenkins jobs to deploy SD-Fabric for you.
 
 
 Verification
@@ -685,13 +689,13 @@ You should then see the ``bf_sde`` prompt:
 Accessing the ONOS CLI
 """"""""""""""""""""""
 
-After setting up kubectl to access the TOST pods, run:
+After setting up kubectl to access the SD-Fabric pods, run:
 
 .. code-block:: sh
 
   $ kubectl get pods -n tost
 
-Pick a TOST pod, and make a port forward to it, then login to it with the
+Pick a SD-Fabric pod, and make a port forward to it, then login to it with the
 ``onos`` CLI tool:
 
 .. code-block:: sh

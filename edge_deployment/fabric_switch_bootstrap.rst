@@ -165,4 +165,4 @@ Then run the playbook to create the ``terraform`` user::
 
   ansible-playbook -i inventory/sitename.ini playbooks/aetherfabric-playbook.yml
 
-Once completed, the switch should now be ready for TOST runtime install.
+Once completed, the switch should now be ready for SD-Fabric runtime install.

@@ -12,7 +12,7 @@ Aether uses components from several ONF projects. More information can be found
 at these sites:
 
 * `SD-Core <https://opennetworking.org/sd-core/>`_
-* :doc:`SD-Fabric (Trellis) <trellis:index>`
+* `SD-Fabric <https://opennetworking.org/sd-fabric/>`_
 * `SD-RAN <https://docs.sd-ran.org/master/index.html>`_
 * `Stratum <https://github.com/stratum/stratum/>`_
 * `µONOS <https://docs.onosproject.org/>`_

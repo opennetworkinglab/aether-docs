@@ -5,7 +5,7 @@
 ===========================
 Connectivity Control Update
 ===========================
-At this point, Aether runtime and TOST should be ready.
+At this point, Aether runtime and SD-Fabric should be ready.
 But in order to make Aether connectivity control to serve the new ACE,
 we need to create another patch to `aether-pod-configs` repository and update `omec-control-plane`.
 

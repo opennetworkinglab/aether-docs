@@ -11,7 +11,7 @@ categories of tests.  Framework includes libraries and tools that allows both
 component level and integration level tests. Robot Framework will be used for
 covering integration tests. Component level test coverage have been
 accomplished by leveraging the existing test frameworks that were developed in
-their respective projects. Component level tests include tests for TOST, PDP,
+their respective projects. Component level tests include tests for SD-Fabric, PDP,
 SD-CORE areas. For detailed information on component tests, please see their
 respective documentation pages.
 

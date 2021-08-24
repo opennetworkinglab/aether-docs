@@ -84,7 +84,7 @@ In this page, we should change four values in the `IP Address section`.
 * Gateway address: 192.168.251.1
 
 The IP address in this menu is the IP address for the WAN port.
-The Gateway address is the TOST IP address.
+The Gateway address is the SD-Fabric IP address.
 After pushing those values on the network configuration page, click the `Save` button at the bottom.
 
 .. note::
