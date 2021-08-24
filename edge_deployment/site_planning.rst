@@ -8,9 +8,9 @@ Site Planning
 Site Design in Netbox
 ---------------------
 
-The Aether project uses Netbox as source of truth, and the automation script uses
-it's API to create input files for Ansible Playbooks which are used to configure
-each site.
+The Aether project uses Netbox as source of truth, and the automation script
+uses the Netbox API to create input files for Ansible Playbooks which are used
+to configure each site.
 
 Once the hardware has been ordered, the installation can be planned.  The
 following information needs to be added to `NetBox
@@ -268,9 +268,9 @@ following information needs to be added to `NetBox
 Rackmount of Equipment
 ----------------------
 
-Most of the Pronto equipment has a 19" rackmount form factor.
-
-Guidelines for mounting this equipment:
+Most of the switch and server equipment used for Aether is available in the 19"
+rackmount form factor, but care needs to be taken in mounting this equipment to
+ensure proper airflow. Please follow these guidelines:
 
 - The EdgeCore Wedge Switches have a front-to-back (aka "port-to-power") fan
   configuration, so hot air exhaust is out the back of the switch near the

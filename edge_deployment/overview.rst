@@ -42,7 +42,7 @@ multiple VLANs, routing, and other network-level configuration is required to
 make a functional Aether edge.
 
 There are also possible RAS improvements that can be done at a topology level -
-for example, fabric switch connections can be made with using two cables, and
+for example, fabric switch connections can be made with two cables, and
 configured to tolerate the failure or replacement of one cable or NIC port,
 which is recommended especially for inter-switch links.
 
@@ -53,12 +53,28 @@ Aether's is a managed service, and Aether Edges require a constant connection
 via VPN to the 4G and 5G core in Aether Central for managing subscriber
 information.
 
-At a minimum, the site must provide a public static IP address that can be used
-for the VPN connection. This can be behind NAT using port forwarding can be
-configured to the Aether Edge within the network.
+The edge site must provide internet access to the Aether edge, specifically the
+Management Server. The traffic required is:
 
-Additionally, for initial installation and setup and and managing
-updates to the edge sites, access via SSH (public key only) is required.
+* VPN connection (ESP protocol, Ports UDP/500 and UDP/4500) to Aether Central
+
+* SSH (TCP/22). used for installation, troubleshooting, and updating the site.
+
+* General outgoing internet access used for installation of software and other
+  components from ONF and public (Ubuntu) software repositories.
+
+The open ports can be restricted to specific internet addresses which are used
+for Aether.
+
+The Management Server needs to have an IP address assigned to it, which can be either:
+
+* A public static IP address
+
+* Behind NAT with port forwarding with the ports listed above forwarded to the
+  Management Server
+
+In either case, the Management Server's IP address should be assigned using
+a reserved DHCP if possible, which eases the installation process.
 
 BESS-based Network Topology
 ---------------------------
@@ -71,12 +87,12 @@ do not have P4 switching hardware.
    :alt: BESS network topology
 
 
-BESS runs on an x86 compute server, and is deployed using Kubernetes. In
-production it requires a SR-IOV capable network card, and specific K8s CNIs to
-be used.
+`BESS <https://github.com/NetSys/bess>`_ runs on an x86 compute server, and is
+deployed using Kubernetes. In production it requires an SR-IOV capable network
+card, and specific K8s CNIs to be used.
 
-The Management Server and Switch must be configured with multiple VLANs which
-provide subnets required for routing within the BESS UPF.
+The Management Server and Switch must be configured with multiple VLANs and
+subnets with routing required for the BESS UPF.
 
 P4-based Network Topology
 -------------------------
@@ -88,12 +104,14 @@ redundancy:
 .. image:: images/edge_single.svg
    :alt: Single Switch Topology
 
-If another switch is added, and a "Paired Leaves"  (aka :doc:`Paired Switches
-<trellis:supported-topology>`) topology is used, which can tolerate the loss of
-a leaf switch and retain connections for all dual-homed devices. Single homed
-devices on the failed leaf would need another form of HA, for example,
-deploying multiple eNBs where some are connected to each leaf, and can provide
-radio coverage.:
+If another switch is added, the "Paired Leaves" (aka :doc:`Paired Switches
+<trellis:supported-topology>`) topology can be used, which can tolerate the
+loss of a leaf switch and still retain connections for all dual-homed devices.
+Single homed devices on the failed leaf would lose their connections (the
+single-homed server is shown for reference, and not required). If HA is needed
+for single-homed devices, one option would be to deploying multiple of those
+devices in a way that provides that redundancy - for example, multiple eNBs
+where some are connected to each leaf and have overlapping radio coverage:
 
 .. image:: images/edge_paired_leaves.svg
    :alt: Paired Leaves Topology
@@ -105,7 +123,7 @@ does not support dual-homing of devices.
 .. image:: images/edge_2x2.svg
    :alt: 2x2 Fabric Topology
 
-Other topologies as described in the :doc:`Trellis Documentaiton
+Other topologies as described in the :doc:`Trellis Documentation
 <trellis:supported-topology>` can possibly be used, but are not actively being
 tested at this time.
 
@@ -144,7 +162,7 @@ These switches feature 32 QSFP+ ports capable of running in 100GbE, 40GbE, or
 4x 10GbE mode (using a split DAC or fiber cable) and have a 1GbE management
 network interface.
 
-See also the :ref:`Rackmount of Eqiupment
+See also the :ref:`Rackmount of Equipment
 <edge_deployment/site_planning:rackmount of equipment>` for how the Fabric
 switches should be rackmounted to ensure proper airflow within a rack.
 
@@ -157,7 +175,7 @@ Minimum hardware specifications:
 
 * AMD64 (aka x86-64) architecture
 
-* 8 CPU Cores (minimum), 16-64 recommended
+* 8 CPU Cores (minimum), 16+ recommended
 
 * 32GB of RAM (minimum), 128GB+ recommended
 
@@ -165,7 +183,8 @@ Minimum hardware specifications:
 
 * 2x 40GbE or 100GbE Ethernet network card to P4 switches, with DPDK support
 
-* 1x 1GbE management network port.  2x required for BESS UPF.
+* 1x 1GbE management network port, with PXE boot support.  2x required for BESS
+  UPF.
 
 Optional but highly recommended:
 
@@ -192,7 +211,8 @@ Minimum hardware specifications:
 
 * 120GB of storage (SSD preferred), or more
 
-* 2x 1GbE Network interfaces (one for WAN, one to the management switch)
+* 2x 1GbE Network interfaces (one for WAN, one to the management switch) with
+  PXE boot support.
 
 Optional:
 
@@ -211,15 +231,15 @@ management connections on the equipment.
 
 Minimum requirements:
 
-* 8x 1GbE Copper ports (adjust to provide a sufficient number for every copper
-  1GbE port in the system)
+* 8x 1GbE Copper Ethernet ports (adjust to provide a sufficient number for
+  every copper 1GbE port in the system)
 
 * 2x 10GbE SFP+ or 40GbE QSFP interfaces (only required if management server
   does not have a network card with these ports)
 
 * Managed via SSH or web interface
 
-* Support the LLDP protocol for debugging cabling issues
+* LLDP protocol support, for debugging cabling issues
 
 * Capable supporting VLANs on each port, with both tagged and untagged traffic
   sharing a port.
@@ -241,7 +261,7 @@ While this unit ships with a separate power brick, it also supports PoE+ power
 on the WAN port, which provides deployment location flexibility. Either a PoE+
 capable switch or PoE+ power injector should be purchased.
 
-If connecting directly to the fabric switch through a QSFP to 4x SFP+ splitter
+If connecting directly to the fabric switch through a QSFP to 4x SFP+ split
 cable, a 10GbE SFP+ to 1GbE Copper media converter should be purchased. The `FS
 UMC-1S1T <https://www.fs.com/products/101476.html>`_ has been used for this
 purpose successfully.
@@ -255,7 +275,7 @@ Testing Hardware
 ----------------
 
 The following hardware is used to test the network and determine uptime of
-edges.  It's currently required, to properly validate that an edge site is
+edges.  It is currently required, to properly validate that an edge site is
 functioning properly.
 
 Monitoring Raspberry Pi and CBRS dongle
@@ -264,14 +284,14 @@ Monitoring Raspberry Pi and CBRS dongle
 One pair of Raspberry Pi and CBRS band supported LTE dongle is required to
 monitor the connectivity service at the edge.
 
-The Raspberry Pi model used in Pronto is a `Raspberry Pi 4 Model B/2GB
+The Raspberry Pi model used in Aether is a `Raspberry Pi 4 Model B/2GB
 <https://www.pishop.us/product/raspberry-pi-4-model-b-2gb/>`_
 
 Which is configured with:
 
-* HighPi Raspberry Pi case for P4
+* Raspberry Pi case (HiPi is recommended for PoE Hat)
 
-* Either a:
+* A power source, either one of:
 
   * PoE Hat used with a PoE switch (recommended, allows remote power control)
 
@@ -323,7 +343,7 @@ Quantity     Type                  Description/Use
 1            Management Server     At least 1x 40GbE QSFP ports recommended
 1-3          Compute Servers       Recommended at least 3 for Kubernetes HA
 2x #Server   40GbE QSFP DAC cable  Between Compute, Management, and Fabric Switch
-1            QSFP to 4x SFP+ DAC   Splitter between Fabric and eNB
+1            QSFP to 4x SFP+ DAC   Split cable between Fabric and eNB
 1 (or more)  eNB
 1x #eNB      10GbE to 1GbE Media   Required unless using switch to convert from
              converter             fabric to eNB
@@ -343,7 +363,7 @@ Quantity     Type                  Description/Use
 3            Compute Servers
 2            100GbE QSFP DAC cable Between Fabric switches
 2x #Server   40GbE QSFP DAC cable  Between Compute, Management, and Fabric Switch
-1 (or more)  QSFP to 4x SFP+ DAC   Splitter between Fabric and eNB
+1 (or more)  QSFP to 4x SFP+ DAC   Split cable between Fabric and eNB
 1 (or more)  eNB
 1x #eNB      10GbE to 1GbE Media   Required unless using switch to convert from
              converter             fabric to eNB
@@ -364,7 +384,7 @@ Quantity     Type                  Description/Use
 3            Compute Servers
 8            100GbE QSFP DAC cable Between Fabric switches
 2x #Server   40GbE QSFP DAC cable  Between Compute, Management, and Fabric Switch
-1 (or more)  QSFP to 4x SFP+ DAC   Splitter between Fabric and eNB
+1 (or more)  QSFP to 4x SFP+ DAC   Split cable between Fabric and eNB
 1 (or more)  eNB
 1x #eNB      10GbE to 1GbE Media   Required unless using switch to convert from
              converter             fabric to eNB
