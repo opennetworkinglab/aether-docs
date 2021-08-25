@@ -7,56 +7,59 @@ BESS UPF Deployment
 
 This section describes how to configure and deploy BESS UPF.
 
+Network Configuration
+---------------------
 
-Network Settings
-----------------
+BESS UPF enabled edge setup requires three additional user plane subnets
+apart from the default K8S subnets.
 
-BESS UPF requires three networks, **enb**, **access**, and **core**, and all
-three networks must use different subnets. To help your understanding,
-the following example ACE environment will be used in the rest of the guide.
+* **enb**: Used to provide eNBs with connectivity to SD-Core and UPF.
+* **access**: Used to provide UPF with connectivity to eNBs.
+* **core**: Used to provide UPF with edge services as well as the Internet access.
+
+To help your understanding, the following example ACE environment will be used in the rest of the guide.
 
 .. image:: images/bess-upf-example-network.svg
 
-+-----------+-----------+------------------------------------+-------------------+---------------+
-| Network   | VLAN      | Subnet                             | Interface         | IP address    |
-+-----------+-----------+------------------------------------+-------------------+---------------+
-| eNB       | 2         | 192.168.2.0/24 (gw: 192.168.2.254) | mgmt server VLAN2 | 192.168.2.254 |
-|           |           |                                    +-------------------+---------------+
-|           |           |                                    | eNB               | 192.168.2.10  |
-+-----------+-----------+------------------------------------+-------------------+---------------+
-| access    | 3         | 192.168.3.0/24 (gw: 192.168.3.254) | mgmt server VLAN3 | 192.168.3.254 |
-|           |           |                                    +-------------------+---------------+
-|           |           |                                    | upf access        | 192.168.3.1   |
-+-----------+-----------+------------------------------------+-------------------+---------------+
-| core      | 4         | 192.168.4.0/24 (gw: 192.168.4.254) | mgmt server VLAN4 | 192.168.4.254 |
-|           |           |                                    +-------------------+---------------+
-|           |           |                                    | upf core          | 192.168.4.1   |
-+-----------+-----------+------------------------------------+-------------------+---------------+
-
 .. note::
 
-   Management plane and out-of-band network are not depicted in the diagram.
+   Admin and out-of-band networks are not depicted in the diagram.
 
++-----------+-----------+------------------------------------+-------------------+---------------+
+| Network   | VLAN ID   | Subnet                             | Interface         | IP address    |
++-----------+-----------+------------------------------------+-------------------+---------------+
+| k8smgmt   | 1         | 192.168.1.0/24 (gw: 192.168.1.1)   | management server | 192.168.1.254 |
+|           |           |                                    +-------------------+---------------+
+|           |           |                                    | compute1          | 192.168.1.3   |
+|           |           |                                    +-------------------+---------------+
+|           |           |                                    | compute2          | 192.168.1.4   |
+|           |           |                                    +-------------------+---------------+
+|           |           |                                    | compute3          | 192.168.1.5   |
++-----------+-----------+------------------------------------+-------------------+---------------+
+| enb       | 2         | 192.168.2.0/24 (gw: 192.168.2.1)   | enb1              | 192.168.2.10  |
++-----------+-----------+------------------------------------+-------------------+---------------+
+| access    | 3         | 192.168.3.0/24 (gw: 192.168.3.1)   | upf1 access       | 192.168.3.10  |
++-----------+-----------+------------------------------------+-------------------+---------------+
+| core      | 4         | 192.168.4.0/24 (gw: 192.168.4.1)   | management server | 192.168.4.254 |
+|           |           |                                    +-------------------+---------------+
+|           |           |                                    | upf1 core         | 192.168.4.10  |
++-----------+-----------+------------------------------------+-------------------+---------------+
 
-Note that the management server has the only external routable address and acts as a router for
-all networks in the Aether pod.
-So in order for UE to access the Internet, two things need to be done in the management server.
-
-* For outgoing traffic, masquerade the internal address with the external address of the management server.
-* For response traffic to UE, forward them to UPF's **core** interface.
+It is assumed that the management server has the only external routable address and acts
+as a router connecting the Aether pod to the outside.
+This means that all uplink packets leaving the Aether pod needs to be masqueraded with the
+external address of the management server or the k8smgmt address if the destination
+is Aether central.
+Also, in order for downlink traffic to UE to be delivered to its destination,
+it must be forwarded to the UPF's core interface.
+This adds additional routes to the management server and L3 switch.
 
 
 Check Cluster Resources
 -----------------------
 
-Before proceeding with the deployment, make sure the cluster has enough resources to run BESS UPF.
-
-* 2 dedicated cores (``"cpu"``)
-* 2 1GiB HugePages (``"hugepages-1Gi"``)
-* 2 SRIOV Virtual Functions bound to **vfio-pci** driver (``"intel.com/intel_sriov_vfio"``)
-
-In fact, these requirements are not mandatory to run BESS UPF, but are recommended for best performance.
-You can use the following command to check allocatable resources in the cluster nodes.
+Before proceeding with the deployment, make sure the cluster has enough resources
+to run BESS UPF by running the command below.
 
 .. code-block:: shell
 
@@ -71,6 +74,14 @@ You can use the following command to check allocatable resources in the cluster 
      "pods": "110"
    }
 
+For best performance, BESS UPF requires the following resources:
+
+* 2 dedicated cores (``"cpu"``)
+* 2 1GiB HugePages (``"hugepages-1Gi"``)
+* 2 SRIOV Virtual Functions bound to **vfio-pci** driver (``"intel.com/intel_sriov_vfio"``)
+
+For environments where these resources are not available, contact Ops team for
+advanced configuration.
 
 Configure and Deploy
 --------------------
@@ -90,23 +101,20 @@ Don't forget to replace the IP addresses in the example configuration with the a
    $ cd $WORKDIR/aether-app-configs/apps/bess-upf/upf1
    $ mkdir overlays/prd-ace-test
    $ vi overlays/prd-ace-test/values.yaml
-   # SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+   # SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
 
    config:
      upf:
        enb:
          subnet: "192.168.2.0/24"
        access:
-         ip: "192.168.3.1/24"
-         gateway: "192.168.3.254"
+         ip: "192.168.3.10/24"
+         gateway: "192.168.3.1"
          vlan: 3
        core:
-         ip: "192.168.4.1/24"
-         gateway: "192.168.4.254"
+         ip: "192.168.4.10/24"
+         gateway: "192.168.4.1"
          vlan: 4
-       # Override SRIOV resource name when using a NIC other than Intel
-       #sriov:
-       #  resourceName: "mellanox.com/mellanox_sriov_vfio"
      # Add below when connecting to 5G core
      #cfgFiles:
      #  upf.json:

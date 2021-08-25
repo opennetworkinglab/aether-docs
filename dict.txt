@@ -74,6 +74,7 @@ differentiator
 dl
 downlink
 dropdown
+enb
 eNB
 eNBID
 eNBs
@@ -91,6 +92,7 @@ iface
 ip
 jitter
 jjb
+k8smgmt
 keypair
 keyring
 kubeadm
@@ -147,6 +149,7 @@ rscript
 runtime
 scalability
 scalable
+smgmt
 spgw
 splitter
 subcomponent
