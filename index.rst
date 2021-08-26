@@ -5,8 +5,24 @@ Aether is an ONF's 5G/LTE Connected Edge Platform-as-a-Service.  More
 information about Aether can be found at the `ONF website
 <https://opennetworking.org/aether/>`_.
 
-Aether Components
------------------
+
+Getting Started with Aether
+---------------------------
+
+Here are some useful places to start with Aether:
+
+* Read the most recent :doc:`Release Notes </release/1.5>`.
+
+* Learn the requirements of hosting an :doc:`Aether Connected Edge
+  </edge_deployment/overview>`.
+
+* Learn about the :doc:`Aether Managemnt Platform </amp/roc>`.
+
+* Setup an Aether software development environment with :doc:`Aether-in-a-Box
+  </developer/sdcore>`.
+
+Aether Architecture and Components
+----------------------------------
 
 Aether uses components from several ONF projects. More information can be found
 at these sites:
@@ -14,8 +30,6 @@ at these sites:
 * `SD-Core <https://opennetworking.org/sd-core/>`_
 * `SD-Fabric <https://opennetworking.org/sd-fabric/>`_
 * `SD-RAN <https://docs.sd-ran.org/master/index.html>`_
-* `Stratum <https://github.com/stratum/stratum/>`_
-* `µONOS <https://docs.onosproject.org/>`_
 
 More information about mobile networks and 5G can be found in the :doc:`5G
 Mobile Networks: A Systems Approach <sysapproach5g:intro>` book.
@@ -93,8 +107,8 @@ can be found on the `ONF Wiki
    :hidden:
    :glob:
 
-   release/process.rst
    release/1*
+   release/process.rst
 
 .. toctree::
    :maxdepth: 1

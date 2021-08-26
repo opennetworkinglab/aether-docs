@@ -2,8 +2,13 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-SD-Fabric Deployment
-====================
+SD-Fabric Deployment (Beta)
+===========================
+
+.. note::
+
+   SD-Fabric using the P4 UPF is a beta feature in the Aether 1.5 release, and
+   the hardware and software setup is not required if using the BESS UPF.
 
 Update aether-pod-configs
 -------------------------

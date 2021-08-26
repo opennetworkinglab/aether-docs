@@ -5,6 +5,21 @@
 Site Planning
 =============
 
+Planning an edge site generally happens in three phases:
+
+1. A BoM of equipment is defined, then purchased.
+
+2. The equipment is delivered and inventoried. This usually is done by the edge
+   site, and involves collecting information like the serial numbers, MAC
+   addresses and other details about the specific pieces of equipment being
+   installed.
+
+3. ONF Staff enters this information into Netbox, which is used to generate
+   configuration for the edge site and document the configuration.
+
+This document describes the 3rd phase, and exists primarily as a reference for
+ONF Staff.
+
 Site Design in Netbox
 ---------------------
 
