@@ -27,6 +27,11 @@ Atomix and onos-operator must be installed::
    # create necessary namespaces
    kubectl create namespace micro-onos
 
+   # add repos
+   helm repo add atomix https://charts.atomix.io
+   helm repo add onosproject https://charts.onosproject.org
+   helm repo update
+
    # install atomix
    export ATOMIX_CONTROLLER_VERSION=0.6.8
    helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
