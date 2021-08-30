@@ -418,8 +418,8 @@ Some exercises to get familiar
 4. Try POSTing a change via the API.  Observe the ``sdcore-adapter-v3`` log
    file and see that the adapter attempts to push the change.
 
-5. Deploy a 5G Aether-in-a-Box (See :doc:`Aether SD-Core Developer Guide
-   <sdcore>`), modify the mega-patch to specify the URL for the Aether-in-a-Box
+5. Deploy a 5G Aether-in-a-Box (See :doc:`Setting Up Aether-in-a-Box
+   <aiab>`), modify the mega-patch to specify the URL for the Aether-in-a-Box
    ``webui`` container, POST the mega-patch, and observe that the changes were
    correctly pushed via the ``sdcore-adapter-v3`` into the ``sd-core``’s
    ``webui`` container (``webui`` container log will show configuration as it

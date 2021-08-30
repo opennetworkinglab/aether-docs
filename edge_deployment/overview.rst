@@ -20,7 +20,7 @@ Development Environments
 
 For users looking for a development or fully software-simulated environment,
 there is ``Aether-in-a-Box (AiaB)`` - instructions for running this can be
-found in the :doc:`Aether SD-Core Developer Guide </developer/sdcore>`.  AiaB
+found in the :doc:`Setting Up Aether-in-a-Box </developer/aiab>`.  AiaB
 is only suitable for testing and developing software, and can't connect to
 physical hardware, but is a good choice for learning about the different
 software components within Aether.

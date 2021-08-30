@@ -83,7 +83,7 @@ can be found on the `ONF Wiki
    :hidden:
    :glob:
 
-   developer/sdcore
+   developer/aiab
    developer/roc
    developer/roc-api
 
