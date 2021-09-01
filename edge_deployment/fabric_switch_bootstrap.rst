@@ -2,8 +2,14 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-Fabric Switch Bootstrap
-=======================
+Fabric Switch Bootstrap (Beta)
+==============================
+
+.. note::
+
+   Fabric switches running the P4 UPF is a beta feature of the Aether 1.5
+   release, and the hardware and software setup is not required if using the
+   BESS UPF.
 
 The installation of the ONL OS image on the fabric switches uses the DHCP and
 HTTP server set up on the management server.

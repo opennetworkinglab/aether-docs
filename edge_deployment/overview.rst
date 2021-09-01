@@ -79,9 +79,9 @@ a reserved DHCP if possible, which eases the installation process.
 BESS-based Network Topology
 ---------------------------
 
-The :doc:`Software-only BESS UPF
-</edge_deployment/bess_upf_deployment>`, which can be used for deployments that
-do not have P4 switching hardware.
+The :doc:`Software-only BESS UPF </edge_deployment/bess_upf_deployment>`, is
+supported for production use in the Aether 1.5 release.  This UPF can be used
+for deployments that do not have P4 switching hardware.
 
 .. image:: images/edge_mgmt_only.svg
    :alt: BESS network topology
@@ -96,6 +96,12 @@ subnets with routing required for the BESS UPF.
 
 P4-based Network Topology
 -------------------------
+
+.. note::
+
+  The P4-based SD-Fabric UPF is an advanced feature and is of beta quality in
+  the Aether 1.5 release.  It requires one or more P4-capable switches using
+  the Tofino chipset.
 
 If only a single P4 switch is used, the :doc:`Simple
 <trellis:supported-topology>` topology can be used, but provides no network
@@ -312,11 +318,11 @@ below, which reference the hardware descriptions given above.
 Some quantities are dependent on other quantities - for example, the number of
 DAC cables frequently depends on the number of servers in use.
 
-These BOMs do not include UE devices.  It's recommended that the testing
+These BoMs do not include UE devices.  It's recommended that the testing
 hardware given above be added to every BoM for monitoring purposes.
 
 
-BESS UPF Testing BOM
+BESS UPF Testing BoM
 """"""""""""""""""""
 
 The following is the minimum BoM required to run Aether with the BESS UPF.
@@ -332,7 +338,7 @@ Quantity     Type                  Purpose
 Sufficient   Cat6 Network Cabling  Between all equipment
 ============ ===================== ===============================================
 
-P4 UPF Testing BOM
+P4 UPF Testing BoM
 """"""""""""""""""
 
 ============ ===================== ===============================================
@@ -351,7 +357,7 @@ Quantity     Type                  Description/Use
 Sufficient   Cat6 Network Cabling  Between all equipment
 ============ ===================== ===============================================
 
-P4 UPF Paired Leaves BOM
+P4 UPF Paired Leaves BoM
 """"""""""""""""""""""""
 
 ============ ===================== ===============================================
@@ -372,7 +378,7 @@ Sufficient   Cat6 Network Cabling  Between all equipment
 ============ ===================== ===============================================
 
 
-P4 UPF 2x2 Leaf Spine Fabric BOM
+P4 UPF 2x2 Leaf Spine Fabric BoM
 """"""""""""""""""""""""""""""""
 
 ============ ===================== ===============================================
