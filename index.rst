@@ -19,7 +19,7 @@ Here are some useful places to start with Aether:
 * Learn about the :doc:`Aether Managemnt Platform </amp/roc>`.
 
 * Setup an Aether software development environment with :doc:`Aether-in-a-Box
-  </developer/sdcore>`.
+  </developer/aiab>`.
 
 Aether Architecture and Components
 ----------------------------------
