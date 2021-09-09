@@ -137,51 +137,20 @@ in the ``api_endpoint`` address and ``token`` with an API key you get out of
 the NetBox instance.  List the IP Prefixes used by the site in the
 ``ip_prefixes`` list.
 
-Next, run the ``scripts/netbox_edgeconfig.py`` to generate a host_vars file for
-the management server.  Assuming that the management server in the edge is
-named ``mgmtserver1.stage1.menlo``, you'd run::
+Next, run the ``scripts/edgeconfig.py`` to generate a host variables file in
+``inventory/host_vars/<device name>.yaml`` for the management server and other
+compute servers.::
 
-  python scripts/netbox_edgeconfig.py inventory/my-netbox.yml > inventory/host_vars/mgmtserver1.stage1.menlo.yml
+  python scripts/edgeconfig.py inventory/staging-netbox.yml
 
-One manual change needs to be made to this output - edit the
-``inventory/host_vars/mgmtserver1.stage1.menlo.yml`` file and add the following
-to the bottom of the file, replacing the IP addresses with the management
-server IP address for each segment.
+The script will use the **Tenant** as the key to lookup data, and write the
+configuration files for each host. These configuration files will only be generated
+for device roles **Router** and **Server**.
 
 In the case of the Fabric that has two leaves and IP ranges, add the Management
 server IP address used for the leaf that it is connected to, and then add a
 route for the other IP address range for the non-Management-connected leaf that
 is via the Fabric router address in the connected leaf range.
-
-This configures the `netplan <https://netplan.io>`_ on the management server,
-and creates a SNAT rule for the UE range route, and will be automated away
-soon::
-
-  # added manually
-  netprep_netplan:
-    ethernets:
-      eno2:
-        addresses:
-          - 10.0.0.1/25
-    vlans:
-      mgmt800:
-        id: 800
-        link: eno2
-        addresses:
-          - 10.0.0.129/25
-      fabr801:
-        id: 801
-        link: eno2
-        addresses:
-          - 10.0.1.129/25
-        routes:
-          - to: 10.0.1.0/25
-            via: 10.0.1.254
-            metric: 100
-
-  netprep_nftables_nat_postrouting: >
-    ip saddr 10.0.1.0/25 ip daddr 10.168.0.0/20 counter snat to 10.0.1.129;
-
 
 Using the ``inventory/example-aether.ini`` as a template, create an
 :doc:`ansible inventory <ansible:user_guide/intro_inventory>` file for the
