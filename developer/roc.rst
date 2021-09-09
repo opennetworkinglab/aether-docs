@@ -233,6 +233,27 @@ If you’re using KinD, then you can push a local image to into the kind cluster
 
    kind load docker-image sdcore-adapter:my-tag
 
+Developing using a custom onos-config
+-------------------------------------
+
+The onos-operator is responsible for building model plugins at runtime. To do this, it needs source code
+for onos-config that matches the onos-config image that is deployed. One way to do this is to fork the
+onos-config repository and commit your onos-config changes to a personal repository, and then reference
+that personal repository in the values.yaml. For example::
+
+  onos-config:
+    plugin:
+      compiler:
+        target: "github.com/mygithubaccount/onos-config@mytag"
+    image:
+      repository: mydockeraccount/onos-config
+      tag: mytag
+      pullPolicy: Always
+
+In the above example, the operator will pull the image from `mydockeraccount`, and it'll pull the
+onos-config code from `mygithubaccount`. Using a personal docker account is not strictly necessary;
+images can also be built and tagged entirely locally.
+
 Inspecting logs
 ---------------
 
