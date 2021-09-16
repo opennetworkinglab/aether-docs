@@ -5,135 +5,109 @@
 ===========================
 Connectivity Control Update
 ===========================
-At this point, Aether runtime and SD-Fabric should be ready.
-But in order to make Aether connectivity control to serve the new ACE,
-we need to create another patch to `aether-pod-configs` repository and update `omec-control-plane`.
-
-.. attention::
-
-   Note that this step will be done via ROC in the future.
+At this point, the Aether runtime should be ready.
+In order to make Aether connectivity control to serve the new ACE,
+we need to provision the subscriber and configure the connectivity service.
 
 Before you begin
 ================
 Make sure you have the edge pod checklist ready.
 Specifically, the following information is required in this section.
 
-* MCC
-* MNC
-* TAC
-* Subscriber IMSI list
+* `Enterprise Name`. Choose a concise text identifier for the enterprise.
+* `MCC`. Mobile country code. Consult Aether PMFE for assignment.
+* `MNC`. Mobile network code. Consult Aether PMFE for assignment.
+* `Enterprise ID`. A numeric ID that uniquely identifies each enterprise
+  within Aether. Consult Aether PMFE for assignment.
+* List of small cell `addresses` and their `TAC` assignments.
+* Address of `BESS UPF`. See the previous section on setting up the BESS UPF.
+* Subscriber `IMSI list`. A list of IMSIs for SIMs that the Enterprise will
+  be provided with. New IMSIs can always be added later.
 
-Download aether-pod-configs repository
+Download aether-app-configs repository
 ======================================
-First, download the aether-pod-configs repository to your development machine.
+First, download the aether-app-configs repository to your development machine.
 
 .. code-block:: shell
 
    $ cd $WORKDIR
-   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
+   $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
 
-Update OMEC control plane configs
-=================================
-Once you successfully download the `aether-pod-configs` repository to your local development machine
-then move the directory to `aether-pod-configs/production/acc-gcp/app_values`
-and edit `omec-control-plane.yml` file to add new user profile and subscribers for the new ACE.
+Update simapp settings
+======================
 
-Here is an example of the patch https://gerrit.opencord.org/c/aether-pod-configs/+/21396.
-Please change MCC, MNC, TAC and IMSI in the example accordingly to match the new ACE.
-Also, change FQDN of the `pfcp-agent` service of the target ACE cluster as `user-plane` value
-and `UE_DNS` address as `dns_primary` value.
+Edit the simapp configuration and add the new IMSIs to sim management. The
+file to edit depends on which Aether Connectivity Cluster serves the Enterprise
+site. The appropriate file for standard Aether production is
+`aether-app-configs/apps/sim-app/overlays/prd-acc-gcp1/values.yaml`. Other
+clusters will be located in similar directories.
+
+The following example demonstrates adding IMSIs 123456789123460-123456789123465:
 
 .. code-block:: diff
 
-   $ cd $WORKDIR/aether-pod-configs/production/acc-gcp/app_values
-   $ vi omec-control-plane.yml
-   # Add the new ACE user profile and subscribers
+   simapp.yaml:
+      info:
+         version: 1.0.0
+         description: SIMAPP initial local configuration
+      logger:
+         # network function
+         APP:
+         debugLevel: info
+         ReportCaller: false
+      configuration:
+         provision-network-slice: false
+         subscribers:
+         - ueId-start: 123456789123458
+           ueId-end: 123456789123458
+           plmnId: 20893
+           opc: 8e27b6af0e692e750f32667a3b14605d
+           key: 8baf473f2f8fd09487cccbd7097c6862
+           sequenceNumber: 16f3b3f70fc2
+   +      - ueId-start: 123456789123460
+   +        ueId-end: 123456789123465
+   +        plmnId: 20893
+   +        opc: 8e27b6af0e692e750f32667a3b14605d
+   +        key: 8baf473f2f8fd09487cccbd7097c6862
+   +        sequenceNumber: 16f3b3f70fc2
 
-   $ git diff
-   diff --git a/production/acc-gcp/app_values/omec-control-plane.yml b/production/acc-gcp/app_values/omec-control-plane.yml
-   index 24d19d9..0350fc1 100644
-   --- a/production/acc-gcp/app_values/omec-control-plane.yml
-   +++ b/production/acc-gcp/app_values/omec-control-plane.yml
-   @@ -76,6 +76,17 @@ config:
-                  - access-all
-               selected-apn-profile: "apn-internet-menlo"
-               selected-qos-profile: "qos-profile1"
-   +          - selected-user-plane-profile: "test"
-   +            keys:
-   +              serving-plmn:
-   +                mcc: 315
-   +                mnc: 10
-   +                tac: 205
-   +            priority: 5
-   +            selected-access-profile:
-   +              - access-all
-   +            selected-apn-profile: "apn-internet-test"
-   +            selected-qos-profile: "qos-profile1"
-            user-plane-profiles:
-            onf-tucson:
-               user-plane: "upf.omec.svc.prd.tucson.aetherproject.net"
-   @@ -87,6 +98,8 @@ config:
-               user-plane: "upf.omec.svc.prd.intel.aetherproject.net"
-            menlo:
-               user-plane: "pfcp-agent.omec.svc.prd.menlo.aetherproject.net"
-   +          test:
-   +            user-plane: "pfcp-agent.omec.svc.prd.new.aetherproject.net"
-            apn-profiles:
-            apn-internet-default:
-               apn-name: "internet"
-   @@ -120,6 +133,14 @@ config:
-               dns_primary: "10.59.128.11"
-               dns_secondary: "1.1.1.1"
-               mtu: 1460
-   +          apn-internet-test:
-   +            apn-name: "internet"
-   +            usage: 1
-   +            network: "lbo"
-   +            gx_enabled: true
-   +            dns_primary: "10.54.128.11"
-   +            dns_secondary: "1.1.1.1"
-   +            mtu: 1460
-      mme:
-      cfgFiles:
-         config.json:
-   @@ -206,6 +227,14 @@ config:
-            key: "ACB9E480B30DC12C6BDD26BE882D2940"
-            opc: "F5929B14A34AD906BC44D205242CD182"
-            sqn: 135
-   +        # test
-   +        - imsiStart: "315010777712301"
-   +          msisdnStart: "9999234455"
-   +          count: 30
-   +          apn: "internet"
-   +          key: "000102030405060708090a0b0c0d0e0f"
-   +          opc: "69d5c2eb2e2e624750541d3bbc692ba5"
-   +          sqn: 135
-         mmes:
-            - id: 1
-            mme_identity: "mme.omec.svc.prd.acc.gcp.aetherproject.net"
-
-   $ git add .
-   $ git commit -m “Update OMEC control plane for the new ACE”
-   $ git review
+Commit your change back to the aether-app-configs repository when you are
+finished.
 
 
-Add subscribers to HSSDB
-========================
-Attach to one of the **cassandra-0** pod and run `hss-add-user.sh` script to add the subscribers.
+Configure Connectivity
+======================
+Once the SIMs are provisioned in `simapp`, the next step is to provision the customer in the ROC.
+All of these steps are done using the Portal.
 
-.. code-block:: shell
+#. Create a new Enterprise. Link a Connectivity Service to the Enterprise.
 
-   $ kubectl exec -it cassandra-0 /bin/bash -n omec
-   # hss-add-user.sh arguments
-   # count=${1}
-   # imsi=${2}
-   # msisdn=${3}
-   # apn=${4}
-   # key=${5:-'000102030405060708090a0b0c0d0e0f'}
-   # opc=${6:-'69d5c2eb2e2e624750541d3bbc692ba5'}
-   # sqn=${7:-'135'}
-   # cassandra_ip=${8:-'localhost'}
-   # mmeidentity=${9:-'mme.omec.svc.prd.acc.gcp.aetherproject.net'}
-   # mmerealm=${10:-'omec.svc.prd.acc.gcp.aetherproject.net'}
+#. Create an AP-List. Enter all of the small cells and their TACs into the AP-List.
 
-   $ root@cassandra-0:/# ./hss-add-user.sh 10 315010777712301 9999234455 internet
+#. Create a Site for the Enterprise. Each site should represent one geographical
+   point of presence where the Enterprise expects to have an Aether installation. Each site
+   will need the `MNC`, `MCC`, and `Enterprise ID`. Enter these parameters into the
+   `IMSI Format` together with a mask. Using a mask that is 15 "S" characters
+   (`SSSSSSSSSSSSSSS`) would allow arbitrary IMSIs to be associated with the Site. Add the
+   AP-List you created previously to the Site.
+
+#. Create an IP-Domain for the Enterprise. The IP-Domain should contain the DNS servers
+   and a subnet that can be assigned to the connected devices.
+
+#. Create a UPF object. Populate the UPF object with the address and port of the UPF.
+
+#. Create a Device-Group. Populate the Device-Group with the list of IMSIs that have
+   been assigned to the Enterprise. Link in the IP-Domain that was created previously, and
+   attach it to the site.
+
+#. Create a VCS. Select an appropriate template for the VCS. Link in the Device-Group,
+   AP-List, and UPF that was created previously.
+
+#. Repeat the steps above as necessary for each VCS and for each Site that belongs to
+   the enterprise.
+
+.. note:: This workflow does not address creating applications, as application filtering is
+   not part of the Aether-1.5 feature set.
+
+.. note:: This workflow does not address creating default sites, default device groups, or
+   default VCSes, as subscriber-proxy based subscriber-learning is not enabled at this time.
