@@ -3,10 +3,25 @@
 Setting Up Aether-in-a-Box
 ==========================
 
-Aether-in-a-Box (AiaB) provides an easy way to deploy the Aether software stack and
-run basic tests.  This guide describes the steps to set up AiaB.
+Aether-in-a-Box (AiaB) provides an easy way to deploy Aether's SD-CORE and ROC
+components, and then run basic tests to validate the installation.
+This guide describes the steps to set up AiaB.
 
-AiaB can be run on a bare metal machine or VM.  Prerequisites:
+AiaB can be set up with a 4G or 5G SD-CORE.  In either case, SD-CORE configuration
+can be done with or without the ROC.  The ROC
+provides an interactive GUI for examining and changing the configuration, and is used to
+manage the production Aether; it can be deployed to test the integration between
+ROC and SD-CORE.  If the ROC is not deployed, a simple tool called SimApp
+is used to configure the required state in SD-CORE for testing core functionality.
+
+Helm charts are the primary method of installing the SD-CORE and ROC resources.
+AiaB offers a great deal of flexibility regarding which Helm chart versions to install:
+
+* Local definitions of charts (for testing Helm chart changes)
+* Latest published charts (for deploying a development version of Aether)
+* Specified versions of charts (for deploying a specific Aether release)
+
+AiaB can be run on a bare metal machine or VM.  System prerequisites:
 
 * Ubuntu 18.04
 * Kernel 4.15 or later
@@ -15,19 +30,36 @@ AiaB can be run on a bare metal machine or VM.  Prerequisites:
 Clone Repositories
 ------------------
 
-Clone the following repositories, using your gerrit ids as necessary::
+To initialize the AiaB environment, first clone the following repository
+using your Gerrit ID::
 
-    mkdir -p ~/cord    # need to clone below 2 repos in this directory
+    cd ~
+    git clone "ssh://<username>@gerrit.opencord.org:29418/aether-in-a-box"
+
+If you are going to install AiaB using published Helm charts, you can proceed to the
+next section.
+
+If you wish to install SD-CORE from local Helm charts, clone these additional repositories::
+
+    mkdir -p ~/cord
+    cd ~/cord
     git clone "ssh://<username>@gerrit.opencord.org:29418/helm-charts"
     git clone "ssh://<username>@gerrit.opencord.org:29418/aether-helm-charts"
 
-    cd ~  # go back to home directory
-    git clone "ssh://<username>@gerrit.opencord.org:29418/aether-in-a-box"
+If you wish to install the ROC from local Helm charts, clone these::
+
+    mkdir -p ~/cord
+    cd ~/cord
+    git clone https://github.com/atomix/atomix-helm-charts.git
+    git clone https://github.com/onosproject/onos-helm-charts.git
+    git clone https://github.com/onosproject/sdran-helm-charts.git  # Private repo
+
+Now change to *~/aether-in-a-box* directory.
 
 Set up Authentication Tokens
 ----------------------------
 
-Edit the file *aether-in-a-box/configs/authentication*.
+Edit the file *configs/authentication*.
 
 Fill out REGISTRY_USERNAME and REGISTRY_CLI_SECRET as follows:
 
@@ -36,77 +68,165 @@ Fill out REGISTRY_USERNAME and REGISTRY_CLI_SECRET as follows:
 * For REGISTRY_USERNAME, use the *Username* in your profile
 * Copy the *CLI secret* to the clipboard and paste to REGISTRY_CLI_SECRET
 
-If you want to install using Aether's published Helm charts rather than the local charts
-checked out in the previous step, fill out REPO_USERNAME and REPO_PASSWORD with the
-information needed to authenticate with Aether's Helm chart repository.  This step is optional.
+If you wish to install SD-CORE using Aether's published Helm charts, or if you are installing the ROC, also
+fill out REPO_USERNAME and REPO_PASSWORD with the information needed to authenticate with Aether's Helm
+chart repository.
 
-Start the 4G Core
------------------
+If you have already set up AiaB but you used incorrect credentials, first clean up AiaB as described
+in the `Cleanup`_ section, then edit *configs/authentication* and re-build AiaB.
 
-Deploy Aether-in-a-Box and start the 4G core::
+Installing the ROC
+------------------
 
-    cd aether-in-a-box
+Note that you must install the ROC *before* installing SD-CORE.
+If you are not using the ROC to configure SD-CORE, you can skip this step.
 
-    make test  # create K8s cluster, start 4G network functions, and run ping test
+First choose whether you will install the 4G or 5G SD-CORE.  To install the ROC to
+configure the 4G SD-CORE::
 
-By default, the installation uses the local charts that were checked out earlier.  However the
-files in the *configs/* directory can be used to install AiaB using charts published to the Aether Helm
-chart repository.  For example, the file *configs/rc-1.5* can be used to install the Aether 1.5 release candidate.
-To install AiaB using the chart versions specified in this file, set the *CHARTS* variable when invoking *make*::
+    make roc-4g-models
+
+To install the ROC to configure the 5G SD-CORE::
+
+    make roc-5g-models
+
+By default the above commands install the ROC from the local charts in the Git repos cloned
+earlier.  In order to install the ROC using the latest published charts, add *CHARTS=latest*
+to the command, e.g.,::
+
+    CHARTS=latest make roc-4g-models
+
+To install the Aether 1.5 release candidate version, add *CHARTS=rc-1.5*::
+
+    CHARTS=rc-1.5 make roc-4g-models
+
+Start the 4G SD-CORE
+--------------------
+
+If you are installing the 5G SD-CORE, you can skip this step.
+
+To deploy the 4G SD-CORE and run a simple ping test::
+
+    make test
+
+By default the above commands install the 4G SD-CORE from the local charts in the Git repos cloned
+earlier.  In order to install the SD-CORE using the latest published charts, add *CHARTS=latest*
+to the command, e.g.,::
+
+    CHARTS=latest make test
+
+To install the Aether 1.5 release candidate version, add *CHARTS=rc-1.5*::
 
     CHARTS=rc-1.5 make test
 
-Once you are done with the test, stop the 4G Core as follows::
+Start the 5G SD-CORE
+--------------------
 
-    make reset-test  # this does not destroy K8s cluster
+If you have already installed the 4G SD-CORE, you must skip this step.  Only one version of
+the SD-CORE can be installed at a time.
 
-Start the 5G Core
------------------
+To deploy the 5G SD-CORE::
 
-Deploy Aether-in-a-Box and start the 5G core::
+    make 5gc
 
-    cd aether-in-a-box
+By default the above commands install the 5G SD-CORE from the local charts in the Git repos cloned
+earlier.  In order to install the SD-CORE using the latest published charts, add *CHARTS=latest*
+to the command, e.g.,::
 
-    make 5gc  # start all 5G network functions with default images
+    CHARTS=latest make 5gc
 
-    kubectl get pods -n omec # verify that all 5g pods are started
+To install the Aether 1.5 release candidate version, add *CHARTS=rc-1.5*::
 
-Sample output::
-
-    NAME                       READY   STATUS      RESTARTS   AGE
-    amf-7d6f649b4f-jzd9r       1/1     Running     0          41s
-    ausf-8dd5d7465-xrjdl       1/1     Running     0          41s
-    gnbsim-0                   1/1     Running     0          25s
-    mongodb-55555bc884-wqcrh   1/1     Running     0          41s
-    nrf-ddd7d8d5b-vjv84        1/1     Running     0          41s
-    nssf-7978bb74cc-zct9v      1/1     Running     0          41s
-    pcf-5bbbff96d6-l54f6       1/1     Running     0          41s
-    smf-86b6fd5674-tq8h9       1/1     Running     0          41s
-    udm-5fdf9cf56d-76hlt       1/1     Running     0          41s
-    udr-d8f855c6b-jj8lw        1/1     Running     0          41s
-    upf-0                      4/4     Running     0          55s
-    webui-79c8b7dfc7-wn6st     1/1     Running     0          41s
+    CHARTS=rc-1.5 make 5gc
 
 You can use *gnbsim* to test 5G functionality.  For example, to run the 5G user registration::
 
     kubectl -n omec exec gnbsim-0 -- /go/src/gnbsim/gnbsim register
 
+Currently there is no ping test for the 5G SD-CORE.
 
-SD-CORE Developer Loop
-----------------------
+Cleanup
+-------
 
-Tips for SD-CORE developers:
+The first time you build AiaB, it takes a while because it sets up the Kubernetes cluster.
+Subsequent builds will be much faster if you follow these steps to clean up the Helm charts without
+destroying the Kubernetes cluster.
 
-Deploy custom images by editing `~/aether-in-a-box/aether-in-a-box-values.yaml`::
+* Clean up the 4G SD-CORE: *make reset-test*
+* Clean up the 5G SD-CORE: *make reset-5g-test*
+* Clean up the ROC: *make roc-clean*
+
+It's normal for the above commands to take a minute or two to complete.
+
+As an example, suppose that you want to test the 4G SD-CORE with the ROC, and then the 5G SD-CORE
+with the ROC.  You could run these commands::
+
+    CHARTS=latest make roc-4g-models   # Install ROC with 4G configuration
+    CHARTS=latest make test            # Install 4G SD-CORE and run ping test
+    make reset-test
+    make roc-clean
+    CHARTS=latest make roc-5g-models   # Install ROC with 5G configuration
+    CHARTS=latest make 5gc             # Install 5G SD-CORE
+    make reset-5g-test
+    make roc-clean
+
+Developer Loop
+--------------
+
+Suppose you wish to test a new build of a 5G SD-CORE services. You can deploy custom images
+by editing `~/aether-in-a-box/5g-core-values.yaml`, for example::
 
     images:
         tags:
             webui: registry.aetherproject.org/omecproject/5gc-webui:onf-release3.0.5-roc-935305f
         pullPolicy: IfNotPresent
-        pullSecrets:
-            - name: "aether.registry"
 
-Stop the 5G Core and start it again::
+To upgrade a running 5G SD-CORE with the new image, or to deploy the 5G SD-CORE with the image::
 
-    make reset-5g-test
     make 5gc
+
+Troubleshooting / Known Issues
+------------------------------
+
+If you suspect a problem, first verify that all pods are in Running state::
+
+    kubectl -n omec get pods
+    kubectl -n aether-roc get pods
+
+If the pods are stuck in ImagePullBackOff state, then it's likely an issue with credentials.  See the
+`Set up Authentication Tokens`_ section.
+
+4G Test Fails
+^^^^^^^^^^^^^
+Occasionally *make test* (for 4G) fails for unknown reasons; this is true regardless of which Helm charts are used.
+If this happens, first try cleaning up AiaB and re-running the test.  If *make test* fails consistently, check
+whether the configuration has been pushed to the SD-CORE::
+
+    kubectl -n omec logs config4g-0 | grep "Successfully"
+
+You should see that a device group and slice has been pushed::
+
+    [INFO][WebUI][CONFIG] Successfully posted message for device group 4g-oaisim-user to main config thread
+    [INFO][WebUI][CONFIG] Successfully posted message for slice default to main config thread
+
+Then tail the *config4g-0* log and make sure that the configuration has been successfully pushed to all
+SD-CORE components.
+
+5G Test Fails
+^^^^^^^^^^^^^
+Currently the 5G *gnbsim* does not support data packets, though the UE can successfully register.
+For example the *gnbsim register* command gets stuck here::
+
+    ip address in string  172.250.0.1
+    err <nil>
+    UE address -  172.250.0.1
+    Assigned address to UE address  172.250.0.1
+    sent message NGAP-PDU Session Resource Setup Response
+    Failed to write gtpu packet
+    Sent uplink gtpu packet
+    Failed to write gtpu packet
+    Sent uplink gtpu packet
+    Failed to write gtpu packet
+    Sent uplink gtpu packet
+
+Fixing this is work-in-progress.
