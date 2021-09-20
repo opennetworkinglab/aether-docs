@@ -39,11 +39,11 @@ Atomix and onos-operator must be installed::
    helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
 
    # install the onos operator
-   ONOS_OPERATOR_VERSION=0.4.8
+   ONOS_OPERATOR_VERSION=0.4.10
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
 .. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
-    shown above are correct for the 1.2.x versions of the *aether-roc-umbrella*.
+    shown above are correct for the 1.3.x versions of the *aether-roc-umbrella*.
 
 .. list-table:: ROC support component version matrix
    :widths: 40 20 20 20
@@ -60,7 +60,7 @@ Atomix and onos-operator must be installed::
    * - 1.3.0-
      - 0.6.8
      - 0.1.9
-     - 0.4.8
+     - 0.4.10
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
@@ -98,11 +98,11 @@ Add the necessary helm repositories::
    # obtain username and password from Michelle and/or ONF infra team
    export repo_user=<username>
    export repo_password=<password>
-   helm repo add sdran --username "$repo_user" --password "$repo_password" https://sdrancharts.onosproject.org
+   helm repo add aether --username "$repo_user" --password "$repo_password" https://charts.aetherproject.org
 
 ``aether-roc-umbrella`` will bring up the ROC and its services::
 
-   helm -n micro-onos install aether-roc-umbrella sdran/aether-roc-umbrella -f values-override.yaml
+   helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella -f values-override.yaml
 
    kubectl wait pod -n micro-onos --for=condition=Ready -l type=config --timeout=300s
 

@@ -28,11 +28,11 @@ Running the ROC API tests
 -------------------------
 Follow the steps below to access the ROC API:
 
-1. Deploy the ``aether-roc-umbrella`` chart from the SD-RAN repo with the following command:
+1. Deploy the ``aether-roc-umbrella`` chart from the Aether repo with the following command:
 
 .. code-block:: shell
 
-    helm -n micro-onos install aether-roc-umbrella sdran/aether-roc-umbrella
+    helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella
 
 2. Check if all pods are in a Running state:
 
@@ -135,12 +135,12 @@ readme file in `this repository
 Once that you have installed the ``dex-ldap-umbrella`` chart, follow the steps
 below to install the ROC on a local Dex server:
 
-1. Deploy the ``aether-roc-umbrella`` chart from the SD-RAN repo with the
+1. Deploy the ``aether-roc-umbrella`` chart from the Aether repo with the
    following command:
 
 .. code-block:: shell
 
-    helm -n micro-onos install aether-roc-umbrella sdran/aether-roc-umbrella --set onos-config.openidc.issuer=http://dex-ldap-umbrella:5556 --set aether-roc-gui-v3.openidc.issuer=http://dex-ldap-umbrella:5556 --set import.sdcore-adapter.v2_1.enabled=false
+    helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella --set onos-config.openidc.issuer=http://dex-ldap-umbrella:5556 --set aether-roc-gui-v3.openidc.issuer=http://dex-ldap-umbrella:5556 --set import.sdcore-adapter.v2_1.enabled=false
 
 2. Check if all pods are in a Running state:
 
