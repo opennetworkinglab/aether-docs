@@ -274,7 +274,7 @@ Securing ROC
 When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode can be enabled by
 specifying an OpenID Connect (OIDC) issuer like::
 
-    helm -n micro-onos install aether-roc-umbrella sdran/aether-roc-umbrella \
+    helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
         --set onos-config.openidc.issuer=http://dex-ldap-umbrella:5556 \
         --set aether-roc-gui-v3.openidc.issuer=http://dex-ldap-umbrella:5556
 

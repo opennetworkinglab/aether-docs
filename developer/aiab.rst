@@ -52,7 +52,7 @@ If you wish to install the ROC from local Helm charts, clone these::
     cd ~/cord
     git clone https://github.com/atomix/atomix-helm-charts.git
     git clone https://github.com/onosproject/onos-helm-charts.git
-    git clone https://github.com/onosproject/sdran-helm-charts.git  # Private repo
+    git clone "ssh://<username>@gerrit.opencord.org:29418/roc-helm-charts"
 
 Now change to *~/aether-in-a-box* directory.
 
@@ -96,9 +96,9 @@ to the command, e.g.,::
 
     CHARTS=latest make roc-4g-models
 
-To install the Aether 1.5 release candidate version, add *CHARTS=rc-1.5*::
+To install the Aether 1.5 release, add *CHARTS=release-1.5*::
 
-    CHARTS=rc-1.5 make roc-4g-models
+    CHARTS=release-1.5 make roc-4g-models
 
 Start the 4G SD-CORE
 --------------------
@@ -115,9 +115,9 @@ to the command, e.g.,::
 
     CHARTS=latest make test
 
-To install the Aether 1.5 release candidate version, add *CHARTS=rc-1.5*::
+To install the Aether 1.5 release, add *CHARTS=release-1.5*::
 
-    CHARTS=rc-1.5 make test
+    CHARTS=release-1.5 make test
 
 Start the 5G SD-CORE
 --------------------
@@ -135,9 +135,9 @@ to the command, e.g.,::
 
     CHARTS=latest make 5gc
 
-To install the Aether 1.5 release candidate version, add *CHARTS=rc-1.5*::
+To install the Aether 1.5 release, add *CHARTS=release-1.5*::
 
-    CHARTS=rc-1.5 make 5gc
+    CHARTS=release-1.5 make 5gc
 
 You can use *gnbsim* to test 5G functionality.  For example, to run the 5G user registration::
 
