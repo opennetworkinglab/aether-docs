@@ -68,6 +68,7 @@ arp
 atomix
 ausf
 auth
+bess
 bootable
 bootloader
 bootstrap
@@ -104,6 +105,7 @@ gw
 hoc
 hostname
 hss
+hssdb
 iPXE
 iface
 incrementing
@@ -149,7 +151,9 @@ pcap
 pcaps
 pcf
 pcrf
+pcrfdb
 pfcp
+pfcpiface
 pre
 preconfigured
 preseed
