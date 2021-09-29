@@ -26,6 +26,7 @@ IaC
 IaaC
 Istio
 Jenkins
+Keycloak
 KinD
 Kubernetes
 LTE

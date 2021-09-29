@@ -275,18 +275,41 @@ When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode can be en
 specifying an OpenID Connect (OIDC) issuer like::
 
     helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
-        --set onos-config.openidc.issuer=http://dex-ldap-umbrella:5556 \
-        --set aether-roc-gui-v3.openidc.issuer=http://dex-ldap-umbrella:5556
+        --set onos-config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
+        --set aether-roc-gui-v3.openidc.issuer=http://k3u-keycloak:5557/auth/realms/master
 
-The choice of OIDC issuer in this case is ``dex-ldap-umbrella``.
+The choice of OIDC issuer in this case is ``keycloak-389-umbrella``, or alternately ``dex-ldap-umbrella`` (deprecated).
 
-``dex-ldap-umbrella``
-"""""""""""""""""""""
+``keycloak-389-umbrella``
+"""""""""""""""""""""""""
+
+Keycloak is an Open Source Identity and Access Management for Modern Applications and
+Services. It can be used as an OIDC Issuer than can act as a front end to several authentication systems
+e.g. LDAP, Crowd, Google, GitHub
+
+``keycloak-389-umbrella`` is a Helm chart that combines a Keycloak server with an LDAP
+installation (389 Directory Server), and an LDAP administration tool. It can be deployed in to the
+same cluster namespace as ``aether-roc-umbrella``.
+
+Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
+
+When running it should be available at *http://k3u-keycloak:5557/auth/realms/master/.well-known/openid-configuration*.
+
+See `keycloak-389-umbrella <https://github.com/onosproject/onos-helm-charts/tree/master/keycloak-389-umbrella#readme>`_
+for more details.
+
+In a production environment, the public Aether Keycloak (with its LDAP server populated with Aether users and groups) should be used.
+See `public keycloak <https://keycloak.opennetworking.org/auth/realms/master/.well-known/openid-configuration>`_ for more details.
+
+.. note:: Your RBAC access to ROC will be limited by the groups you belong to in its LDAP store.
+
+``dex-ldap-umbrella`` (Deprecated)
+""""""""""""""""""""""""""""""""""
 
 Dex is a cloud native OIDC Issuer than can act as a front end to several authentication systems
 e.g. LDAP, Crowd, Google, GitHub
 
-``dex-ldap-umbrella`` is a Helm chart that combines a Dex server with an LDAP
+``dex-ldap-umbrella`` is a Helm chart that combines a Dex server with an OpenLDAP
 installation, and an LDAP administration tool. It can be deployed in to the
 same cluster namespace as ``aether-roc-umbrella``.
 
@@ -312,7 +335,7 @@ When secured, access to the configuration in ROC is limited by the **groups** th
 * *<enterprise>* - users in a group the lowercase name of an enterprise, will have **read** access to that enterprise.
 * **EnterpriseAdmin** - users in this group will have read **and** write access the enterprise they belong to.
 
-    For example in *dex-ldap-umbrella* the user *Daisy Duke* belongs to *starbucks* **and**
+    For example in *keycloak-389-umbrella* the user *Daisy Duke* belongs to *starbucks* **and**
     *EnterpriseAdmin* and so has read **and** write access to items linked with *starbucks* enterprise.
 
     By comparison the user *Elmer Fudd* belongs only to *starbucks* group and so has only **read** access to items
@@ -362,8 +385,8 @@ it is necessary to:
 * Ensure that all *port-forward*'s have **--address=0.0.0.0**
 * Add to the IP address of the cluster machine to the **/etc/hosts** of the outside computer as::
 
-    <ip address of cluster> dex-ldap-umbrella aether-roc-gui
-* Verify that you can access the Dex server by its name *http://dex-ldap-umbrella:5556/.well-known/openid-configuration*
+    <ip address of cluster> k3u-keycloak aether-roc-gui
+* Verify that you can access the Keycloak server by its name *http://k3u-keycloak:5557/auth/realms/master/.well-known/openid-configuration*
 * Access the GUI through the hostname (rather than ip address) ``http://aether-roc-gui:8183``
 
 Troubleshooting Secure Access
@@ -372,19 +395,19 @@ Troubleshooting Secure Access
 While every effort has been made to ensure that securing Aether is simple and effective,
 some difficulties may arise.
 
-One of the most important steps is to validate that the OIDC Issuer (Dex server) can be reached
+One of the most important steps is to validate that the OIDC Issuer (Keycloak server) can be reached
 from the browser. The **well_known** URL should be available and show the important endpoints are correct.
 
-.. image:: images/dex-ldap-umbrella-well-known.png
+.. image:: images/keycloak-389-umbrella-well-known.png
     :width: 580
-    :alt: Dex Well Known page
+    :alt: Keycloak Well Known page
 
 If logged out of the Browser when accessing the Aether ROC GUI, accessing any page of the application should
-redirect to the Dex login page.
+redirect to the Keycloak login page.
 
-.. image:: images/dex-ldap-login-page.png
+.. image:: images/keycloak-ldap-login-page.png
     :width: 493
-    :alt: Dex Login page
+    :alt: Keycloak Login page
 
 When logged in the User details can be seen by clicking the User's name in the drop down menu.
 This shows the **groups** that the user belongs to, and can be used to debug RBAC issues.
@@ -393,9 +416,9 @@ This shows the **groups** that the user belongs to, and can be used to debug RBA
     :width: 700
     :alt: User Details page
 
-When you sign out of the ROC GUI, if you are not redirected to the Dex Login Page,
+When you sign out of the ROC GUI, if you are not redirected to the Keycloak Login Page,
 you should check the Developer Console of the browser. The console should show the correct
-OIDC issuer (Dex server), and that Auth is enabled.
+OIDC issuer (Keycloak server), and that Auth is enabled.
 
 .. image:: images/aether-roc-gui-console-loggedin.png
     :width: 418
