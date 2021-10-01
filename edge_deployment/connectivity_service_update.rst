@@ -39,7 +39,7 @@ Update simapp settings
 Edit the simapp configuration and add the new IMSIs to sim management. The
 file to edit depends on which Aether Connectivity Cluster serves the Enterprise
 site. The appropriate file for standard Aether production is
-`aether-app-configs/apps/sim-app/overlays/prd-acc-gcp1/values.yaml`. Other
+`aether-app-configs/apps/sd-core-4g/overlays/prd-acc-gcp1/values.yaml`. Other
 clusters will be located in similar directories.
 
 The following example demonstrates adding IMSIs 123456789123460-123456789123465:

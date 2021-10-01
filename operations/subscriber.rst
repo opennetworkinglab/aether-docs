@@ -22,7 +22,7 @@ performed by Aether Operations.
 Each UE is assigned a PLMN and a set of security keys. Depending on the deployment scenario, these
 keys might be shared by several UEs, or they might be unique to each UE. The allocation of PLMNs and
 keys is currently performed manually by the Aether Operations team. This subscriber-related
-detail is configured via the SIM Management application, ``Simapp``.
+detail is configured via the SIM Management application, ``simapp``.
 
 ``simapp.yaml`` needs to be adjusted to include the new UE IMSIs to the subscriber list. For example::
 
@@ -53,8 +53,12 @@ detail is configured via the SIM Management application, ``Simapp``.
             key: 8baf473f2f8fd09487cccbd7097c6862
             sequenceNumber: 16f3b3f70fc2
 
-TODO: This file will probably be placed under GitOps control once the 5G ROC is deployed. Document
-the new location of the file.
+The simapp configurations for all deployments are stored in the ``aether-app-configs`` repository:
+
+* Production deployment: ``apps/sd-core-4g/overlays/prd-acc-gcp1/values.yaml``
+* Staging deployment: ``apps/sd-core-4g/overlays/stg-acc-aws/values.yaml``
+
+Fleet will automatically deploy changes to these files once they are merged.
 
 .. _configure_device_group:
 
