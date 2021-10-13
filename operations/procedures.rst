@@ -82,15 +82,15 @@ Restore stateful application procedure
 .. code-block:: shell
 
    # Assume that we lost all HSSDB data
-   $ kubectl exec cassandra-0 -n aether-sdcore -- cqlsh $cassandra_ip -e 'select * from vhss.users_imsi'
+   $ kubectl exec cassandra-0 -n aether-sdcore-4g -- cqlsh $cassandra_ip -e 'select * from vhss.users_imsi'
    <stdin>:1:InvalidRequest: code=2200 [Invalid query] message="Keyspace vhss does not exist"
 
    # Confirm the application is uninstalled after updating the cluster label
-   $ helm list -n aether-sdcore
+   $ helm list -n aether-sdcore-4g
    (no result)
 
    # Clean up any remaining resources including PVC
-   $ kubectl delete ns aether-sdcore
+   $ kubectl delete ns aether-sdcore-4g
 
    # Clean up released PVs if exists
    $ kubectl delete pv $(kubectl get pv | grep cassandra | grep Released | awk '$1 {print$1}')
@@ -101,31 +101,28 @@ Restore stateful application procedure
 
    # Find the relevant backup schedule name
    $ velero schedule get
-   NAME                      STATUS    CREATED                         SCHEDULE    BACKUP TTL   LAST BACKUP   SELECTOR
-   velero-daily-logging      Enabled   2021-09-25 01:35:24 -0700 PDT   0 0 * * *   720h0m0s     19h ago       <none>
-   velero-daily-monitoring   Enabled   2021-09-25 01:35:25 -0700 PDT   0 0 * * *   720h0m0s     19h ago       <none>
-   velero-daily-roc          Enabled   2021-09-25 01:35:25 -0700 PDT   0 0 * * *   720h0m0s     19h ago       <none>
-   velero-daily-sdcore       Enabled   2021-09-25 01:35:25 -0700 PDT   0 0 * * *   720h0m0s     19h ago       <none>
+   NAME                      STATUS    CREATED             SCHEDULE    BACKUP      TTL          LAST BACKUP   SELECTOR
+   velero-daily-cassandra    Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app=cassandra
+   velero-daily-mongodb      Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app.kubernetes.io/name=mongodb
 
    # List the backups
-   $ velero backup get --selector velero.io/schedule-name=velero-daily-sdcore
-   NAME                                 STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
-   velero-daily-sdcore-20211001000013   Completed   0        0          2021-09-30 17:00:19 -0700 PDT   29d       default            <none>
-   velero-daily-sdcore-20210930000013   Completed   0        0          2021-09-29 17:00:28 -0700 PDT   28d       default            <none>
+   $ velero backup get --selector velero.io/schedule-name=velero-daily-cassandra
+   NAME                                    STATUS      ERRORS   WARNINGS   CREATED                         EXPIRES   STORAGE LOCATION   SELECTOR
+   velero-daily-cassandra-20211012070020   Completed   0        0          2021-10-12 00:00:41 -0700 PDT   29d       default            app=cassandra
+   velero-daily-cassandra-20211011070019   Completed   0        0          2021-10-11 00:00:26 -0700 PDT   28d       default            app=cassandra
    ...
 
    # Confirm the backup includes all the necessary resources
-   $ velero backup describe velero-daily-sdcore-20211001000013 --details
+   $ velero backup describe velero-daily-cassandra-20211012070020 --details
    ...
    Resource List:
-    v1/PersistentVolume:
-      - pvc-67f82bc9-14f3-4faf-bf24-a2a3d6ccc411
-      - pvc-b19d996b-cc83-4c10-9888-a55ba0eedc93
-      - pvc-d2473b2e-8e6c-42d2-9d13-8fdb842d8cb1
-    v1/PersistentVolumeClaim:
-      - aether-sdcore/data-cassandra-0
-      - aether-sdcore/data-cassandra-1
-      - aether-sdcore/data-cassandra-2
+     v1/PersistentVolume:
+       - pvc-50ccd76e-3808-432b-882f-8858ecebf25b
+       - pvc-67f82bc9-14f3-4faf-bf24-a2a3d6ccc411
+     v1/PersistentVolumeClaim:
+       - aether-sdcore-4g/data-cassandra-0
+       - aether-sdcore-4g/data-cassandra-1
+       - aether-sdcore-4g/data-cassandra-2
 
 6. Update the backup storage location to read-only mode to prevent backup object from being created or
    deleted in the backup location during the restore process.
@@ -142,12 +139,12 @@ Restore stateful application procedure
 .. code-block:: shell
 
    # Create restore
-   $ velero restore create --from-backup velero-daily-sdcore-20211001000013
+   $ velero restore create --from-backup velero-daily-cassandra-20211012070020
 
    # Wait STATUS become Completed
    $ velero restore get
-   NAME                                                BACKUP                               STATUS       STARTED                         COMPLETED   ERRORS   WARNINGS   CREATED                         SELECTOR
-   velero-daily-sdcore-20211001000013-20211001141850   velero-daily-sdcore-20211001000013   Completed    2021-10-01 13:11:20 -0700 PDT   <nil>       0        0          2021-10-01 13:11:20 -0700 PDT   <none>
+   NAME                                                     BACKUP                                 STATUS       STARTED                         COMPLETED   ERRORS   WARNINGS   CREATED                         SELECTOR
+   velero-daily-cassandra-20211012070020-20211012141850     velero-daily-cassandra-20211012070020  Completed    2021-10-12 13:11:20 -0700 PDT   <nil>       0        0          2021-10-12 13:11:20 -0700 PDT   <none>
 
 8. Confirm that PVCs are restored and "Bound" to the restored PV successfully.
 
@@ -155,9 +152,9 @@ Restore stateful application procedure
 
    $ kubectl get pvc -n aether-sdcore
    NAME                STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-   data-cassandra-0    Bound    pvc-67f82bc9-14f3-4faf-bf24-a2a3d6ccc411   10Gi       RWO            standard       45s
-   data-cassandra-1    Bound    pvc-b19d996b-cc83-4c10-9888-a55ba0eedc93   10Gi       RWO            standard       45s
-   data-cassandra-2    Bound    pvc-d2473b2e-8e6c-42d2-9d13-8fdb842d8cb1   10Gi       RWO            standard       45s
+   data-cassandra-0    Bound    pvc-50ccd76e-3808-432b-882f-8858ecebf25b   10Gi       RWO            standard       45s
+   data-cassandra-1    Bound    pvc-67f82bc9-14f3-4faf-bf24-a2a3d6ccc411   10Gi       RWO            standard       45s
+   data-cassandra-2    Bound    pvc-a7f055b2-aab1-41ce-b3f4-c4bcb83b0232   10Gi       RWO            standard       45s
 
 9. Revert the backup storage location to read-write mode.
 
@@ -174,10 +171,11 @@ Restore stateful application procedure
 .. code-block:: shell
 
    # Confirm the application is installed
-   $ helm list -n aether-sdcore
-   NAME      	NAMESPACE       	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
-   cassandra 	aether-sdcore     8       	2021-10-01 22:27:18.739617668 +0000 UTC	deployed	cassandra-0.15.1	3.11.6
-   sd-core-4g	aether-sdcore     26      	2021-10-02 00:55:25.317693605 +0000 UTC	deployed	sd-core-0.7.3
+   $$ kubectl get po -n aether-sdcore-4g -l app=cassandra
+   NAME          READY   STATUS    RESTARTS   AGE
+   cassandra-0   1/1     Running   0          1h
+   cassandra-1   1/1     Running   0          1h
+   cassandra-2   1/1     Running   0          1h
 
    # Confirm the data is restored
    $ kubectl exec cassandra-0 -n aether-sdcore -- cqlsh $cassandra_ip -e 'select * from vhss.users_imsi'
