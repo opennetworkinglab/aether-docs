@@ -101,9 +101,11 @@ Restore stateful application procedure
 
    # Find the relevant backup schedule name
    $ velero schedule get
-   NAME                      STATUS    CREATED             SCHEDULE    BACKUP      TTL          LAST BACKUP   SELECTOR
-   velero-daily-cassandra    Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app=cassandra
-   velero-daily-mongodb      Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app.kubernetes.io/name=mongodb
+   NAME                          STATUS    CREATED             SCHEDULE    BACKUP      TTL          LAST BACKUP   SELECTOR
+   velero-daily-cassandra        Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app=cassandra
+   velero-daily-mongodb          Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app.kubernetes.io/name=mongodb
+   velero-daily-opendistro-es    Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app=opendistro-es
+   velero-daily-prometheus       Enabled   2021-10-11 15:33:30 -0700 PDT   0 7 * * *   720h0m0s     11h ago       app=prometheus
 
    # List the backups
    $ velero backup get --selector velero.io/schedule-name=velero-daily-cassandra
