@@ -42,6 +42,7 @@ PoE
 QoS
 ROC
 Raspbian
+SAS
 Sercomm
 Speedtest
 Supermicro
@@ -95,6 +96,7 @@ dropdown
 eNB
 eNBID
 eNBs
+eNodeB
 enb
 etcd
 ethernet
@@ -115,6 +117,7 @@ incrementing
 ip
 jitter
 jjb
+json
 k8smgmt
 keypair
 keyring
@@ -181,6 +184,7 @@ roc
 routable
 rscript
 runtime
+sas
 scalability
 scalable
 sd

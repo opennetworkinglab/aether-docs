@@ -244,7 +244,9 @@ todo_include_todos = True
 # The link checker strips off .md from links and then complains
 linkcheck_ignore = [
     r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*',
-    r'https://jenkins.aetherproject.org/.*'
+    r'https://jenkins.aetherproject.org/.*',
+    r'https://gerrit.opencord.org/.*',
+    r'https://sas.goog/.*',
 ]
 
 linkcheck_timeout = 3
