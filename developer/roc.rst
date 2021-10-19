@@ -35,11 +35,11 @@ Atomix and onos-operator must be installed::
    # install atomix
    export ATOMIX_CONTROLLER_VERSION=0.6.8
    helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
-   export ATOMIX_RAFT_VERSION=0.1.9
+   export ATOMIX_RAFT_VERSION=0.1.14
    helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
 
    # install the onos operator
-   ONOS_OPERATOR_VERSION=0.4.10
+   ONOS_OPERATOR_VERSION=0.4.12
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
 .. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
@@ -57,10 +57,14 @@ Atomix and onos-operator must be installed::
      - 0.6.7
      - 0.1.8
      - 0.4.8
-   * - 1.3.0-
+   * - 1.3.0-1.3.10
      - 0.6.8
      - 0.1.9
      - 0.4.10
+   * - 1.3.11-,1.4.0-
+     - 0.6.8
+     - 0.1.14
+     - 0.4.12
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
@@ -123,7 +127,7 @@ Execute the following::
    git clone https://github.com/onosproject/aether-roc-api.git
 
    # execute the mega-patch (it will post via CURL to localhost:8181)
-   bash ~/path/to/aether-roc-api/examples/MEGA_Patch.curl
+   bash ~/path/to/aether-roc-api/examples/MEGA_Patch_40.curl
 
 
 You may wish to customize the mega patch.
@@ -133,10 +137,10 @@ For example, by default the patch configures the ``sdcore-adapter`` to push to
 
 You could configure it to push to a live aether-in-a-box core by doing something like this::
 
-   sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch.curl
+   sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch_40.curl
 
    #apply the patch
-   ./MEGA_Patch.curl
+   ./MEGA_Patch_40.curl
 
 (Note that if your Aether-in-a-Box was installed on a different machine that port-forwarding may be necessary)
 
@@ -163,9 +167,9 @@ not getting cleaned up. The following may be useful::
 
    # fix stuck finalizers in operator CRDs
 
-   kubectl -n micro-onos patch entities connectivity-service-v2 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
-
    kubectl -n micro-onos patch entities connectivity-service-v3 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
+
+   kubectl -n micro-onos patch entities connectivity-service-v4 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 
    kubectl -n micro-onos patch kind aether --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 

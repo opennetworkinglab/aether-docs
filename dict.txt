@@ -3,6 +3,7 @@ Alertmanager
 Ansible
 Anthos
 Atomix
+bitrate
 BMC
 BMv
 BMv2
@@ -19,6 +20,7 @@ GbE
 GiB
 GitOps
 Github
+gNodeB
 Grafana
 Haswell
 IPMI
