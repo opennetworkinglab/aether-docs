@@ -123,30 +123,8 @@ Download aether-pod-configs repository.
 
 Add the new cluster information at the end of the following global resource maps.
 
-* ``user_map.tfvars``
 * ``cluster_map.tfvars``
 * ``vpn_map.tfvars``
-
-.. code-block:: diff
-
-   $ cd $WORKDIR/aether-pod-configs/production
-   $ vi user_map.tfvars
-
-   # Add the new cluster admin user at the end of the map
-   $ git diff user_map.tfvars
-   --- a/production/user_map.tfvars
-   +++ b/production/user_map.tfvars
-   @@ user_map = {
-      username      = "menlo"
-      password      = "changeme"
-      global_roles  = ["user-base", "catalogs-use"]
-   +  },
-   +  test_admin = {
-   +    username      = "test"
-   +    password      = "changeme"
-   +    global_roles  = ["user-base", "catalogs-use"]
-      }
-   }
 
 .. code-block:: diff
 
@@ -249,7 +227,6 @@ Submit your change
    Changes not staged for commit:
 
       modified:   cluster_map.tfvars
-      modified:   user_map.tfvars
       modified:   vpn_map.tfvars
 
    Untracked files:

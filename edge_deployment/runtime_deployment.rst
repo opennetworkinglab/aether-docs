@@ -177,7 +177,7 @@ your development machine.
 
    If you skipped VPN bootstrap step and didn't update global resource maps for the new edge,
    go to :ref:`Update global resource maps <update_global_resource>` step and
-   finish ``cluster_map.tfvars`` and ``user_map.tfvars`` update first before proceeding.
+   finish ``cluster_map.tfvars`` update first before proceeding.
 
 Run the following commands to automatically generate Terraform configurations needed to
 create a new cluster in `Rancher <https://rancher.aetherproject.org>`_ and add the servers
@@ -197,7 +197,6 @@ and switches to the cluster.
    Created ../production/ace-test/rke-bare-metal.tf
    Created ../production/ace-test/addon-manifests.yml.tpl
    Created ../production/ace-test/project.tf
-   Created ../production/ace-test/member.tf
    Created ../production/ace-test/backend.tf
    Created ../production/ace-test/cluster_val.tfvars
 
