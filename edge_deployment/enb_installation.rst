@@ -12,93 +12,49 @@ which is the default eNB device for Aether/Pronto project.
 
 Preliminaries
 =============
-In order to install and configure the Sercomm eNB, we should prepare following device:
+Prepare the following devices:
 
-* Laptop or PC
-* USB-Ethernet adapter or Ethernet port on Laptop/PC
-* CAT5/6/7 cable
 * Sercomm eNB
-* 1G-10G converter
+* 10GbE SFP+ to 1/10GbE copper media converter
+* Workstation to remotely access and configure the eNB
 
-Also, we should know the below information:
+Collect the following information:
 
+* eNB IP address
 * MME IP address (10.168.0.6 by default)
 * TAC
 * Cell ID
 
-How to access the Sercomm eNB admin UI?
-=======================================
-The default Sercomm eNB has default configuration values which are not working within the Aether/Pronto edge.
-In order to configure the Sercomm eNB, we need to access the Sercomm eNB admin web UI.
-We can initially access the UI through the LAN port on the Sercomm eNB device.
+.. warning::
 
-.. image:: images/enb-ser-1.jpg
-  :width: 1008
-  :height: 756
-  :alt: Sercomm eNB Port Panel
+  ``Cell ID`` and ``TAC`` are critical parameters and the values must
+  be assigned the by OPs team.
 
-The above figure depicts the Sercomm eNB port panel which has two Ethernet ports, one power port, and one GPS port.
-We should make a physical link between the laptop/PC and LAN port on the Sercomm eNB.
-In the above figure, the yellow cable should be connected to the laptop/PC.
-Once the physical link is established,
-the Ethernet interface on the laptop/PC should have an IP address in 11.11.11.0/24 subnet.
-The Sercomm eNB will automatically assign the IP address to the Ethernet interface on the laptop/PC,
-since the eNB is working as a DHCP server.
-Of course, the interface should be set to DHCP, not static.
+Connect the eNB
+===============
 
-.. note::
+Connect the eNB to the fabric switch through the media converter and power on,
+then it will automatically get pre-configured IP address using DHCP.
+Verify that you can access the web-based configuration(`https://<eNB IP>`) from your workstation.
+If the eNB address is not directly reachable, use the management server as a jump host.
 
-   If the Sercomm eNB does not assign the IP address on the laptop/PC's Ethernet interface, please double-check the physical link.
-   Or, it is possible to assign the static IP address on the laptop/PC's Ethernet interface. Aforementioned before, the IP address should be in 11.11.11.0/24 subnet.
+The default credentials for the Sercomm eNB are:
 
-After the Ethernet interface on the laptop/PC has the IP address in 11.11.11.0/24 subnet,
-we can access the Sercomm eNB.
-We can open the Web browser (e.g., Chrome, Firefox, etc.), and go to `https://11.11.11.188`. Then, we can see the below login page on the Web browser.
-
-.. image:: images/enb-ser-2.png
-  :alt: Sercomm eNB UI login pae
-
-With the below credentials, we can log in the UI:
-
-* ID: ``sc_femto``
+* Username: ``sc_femto``
 * Password: ``scHt3pp`` (or ``sc_femto``)
 
-After log-in, we can see the state page.
-
-.. image:: images/enb-ser-3.png
-  :alt: Sercomm eNB UI state page
-
-Network configuration
-=====================
-We should then configure the IP address on the WAN port which will be connected to the Tofino switch.
-The network configuration page shows up when we click `NetWork set` button on the top menu bar.
-
-.. image:: images/enb-ser-4.png
-  :alt: Sercomm eNB UI network configuration page
-
-In this page, we should change four values in the `IP Address section`.
-
-* Connected type: Static IP
-* IP Address: 192.168.251.5
-* Network mask: 255.255.255.0
-* Gateway address: 192.168.251.1
-
-The IP address in this menu is the IP address for the WAN port.
-The Gateway address is the SD-Fabric IP address.
-After pushing those values on the network configuration page, click the `Save` button at the bottom.
-
-.. note::
-   No need to touch any other parameters in this configuration page.
+.. image:: images/enb-sercomm-home.png
+  :width: 800
 
 LTE configuration
 =================
-Next, we should configure the LTE parameters.
-Click the `Manage` button on the top menu bar and then go to the `LTE Basic Setting` tab.
 
-.. image:: images/enb-ser-5.png
+Go to **Manage > LTE Basic Settings** tab and change the parameters as shown below.
+Click ``Save`` at the bottom after making the changes.
+
+.. image:: images/enb-sercomm-lte.png
+  :width: 800
   :alt: Sercomm eNB UI LTE configuration page
-
-In this page, we should change below parameters:
 
 * Carrier Number: `2`
 * Carrier Aggregation: `unchecked`
@@ -115,16 +71,15 @@ In this page, we should change below parameters:
 * Sync Source: `FREE_RUNNING`
 * Enable CWMP: `unchecked`
 
-Among those parameters, we should carefully set values to CellIdentity and TAC.
-Those parameters are the preliminaries which ONF OPs team will assign to each site.
-Likewise, after pushing those parameters, click the `Save` button at the bottom.
+SAS configuration
+=================
 
-Then, click `SAS Configuration` tab in the same page.
+Go to **Manage > SAS Configuration** tab and change the parameters as shown below.
+Click ``Save`` at the bottom after making the changes.
 
-.. image:: images/enb-ser-6.png
+.. image:: images/enb-sercomm-sas.png
+  :width: 800
   :alt: Sercomm eNB UI SAS configuration page
-
-In this page, we should change five values in the `Location Configuration` section as follows:
 
 * Location: `Indoor`
 * Location Source: `Manual`
@@ -132,38 +87,28 @@ In this page, we should change five values in the `Location Configuration` secti
 * Longitude: `0`
 * Elevation: `-18000`
 
-Do not forget to click the save button at the bottom after pushing values.
 
-Last, click `FAPService` menu at the top menu bar and go to `FAPControl` tab.
+Other Settings
+==============
 
-.. image:: images/enb-ser-7.png
+Go to **TR098 > SysPara** tab and set ``fsminitd`` parameter setting to ``2``.
+Click ``Modify`` button right next to the parameter value, and ``Save`` button at the bottom.
+
+.. image:: images/enb-sercomm-syspara.png
+  :width: 800
+
+Go to **FAPService > FAPControl** tab and check the box next to the ``AdminState``.
+Click ``Save`` button at the bottom after making the change.
+
+.. image:: images/enb-sercomm-admin-state.png
+  :width: 800
   :alt: Sercomm eNB UI FAP Control page
 
-In this page, we have to check a single radio box, `AdminState` in the `FAPService_FAPControl_LTE` section.
-Then, click the `Save` button at the bottom.
 
-This is the all steps to configure the Sercomm eNB.
+Reboot the eNB
+==============
 
-Connect the Sercomm eNB to the fabric switch
-============================================
-After the above configuration, we should power off the Sercomm eNB and connect the eNB WAN port to the fabric switch.
-The Sercomm eNB is actually has 1G WAN port, although the fabric switch has 40G interfaces.
-Therefore, we should use the 1G-10G converter in which the 1G port is connected with the Sercomm eNB
-whereas the 10G port is connected to 10G-40G breakout cable linked to the fabric switch.
-
-.. note::
-   Alternatively, we can use an any 1G/10G switch, if we do not have a 1G-10G converter.
-
-Then, power on the Sercomm eNB device and get rid of the LAN port cable.
-
-.. note::
-   Without the LAN port cable, we can access the Sercomm eNB admin UI through
-   `https://192.168.251.5` URL, if the laptop/PC is connected to the same
-   network via the fabric switch.
-
-   For our convenience, we can optionally add forwarding rules into the
-   firewall configuration on the management node to access the Sercomm eNB
-   admin UI from outside the network.
+Reboot the eNB to make all changes take effect.
 
 Troubleshooting
 ===============
@@ -171,15 +116,11 @@ Troubleshooting
 Connectivity check
 ^^^^^^^^^^^^^^^^^^
 In order to check the connectivity, we can use the Sercomm eNB admin UI.
-Open the web browser and go to `https://192.168.251.5` and log in.
-Then, click the `Manage` menu and go to the `IP Diagnose` tab.
+Go to **Manage > IP Diagnose** tab.
 
-.. image:: images/enb-ser-8.png
+.. image:: images/enb-sercomm-ip-diagnose.png
+  :width: 800
   :alt: Sercomm eNB UI IP Diagnose page
 
-In this page, check the ping menu and write down the IP address `192.168.251.1` in the white box.
-Then, click the `Run` button.
-
+In this page, check the ``ping`` menu, put IP address to test in the text box, and click ``Run`` button.
 After a few seconds, we can see the ping results.
-If there is no results, the connectivity between the eNB and the fabric switch has a problem.
-Otherwise, the fabric switch is not up and running correctly.
