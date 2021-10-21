@@ -29,8 +29,8 @@ Collect the following information:
 * Cell ID
 
 .. warning::
-  ``Cell ID`` and ``TAC`` are critical parameters and the values must
-  be assigned the by OPs team.
+  ``Cell ID`` and ``TAC`` are critical parameters that need to be globally unique.
+  Please get the assigned value from OPs team.
 
 Connect the eNB
 ---------------
@@ -84,6 +84,9 @@ Click ``Save`` at the bottom after making the changes.
 * PLMNID: ``315010``
 * Sync Source: ``FREE_RUNNING``
 * Enable CWMP: ``unchecked``
+
+.. note::
+  E-UTRAN Cell Global Identifier (ECGI) should be used for the `CellIdentity` field
 
 Other Settings
 --------------
