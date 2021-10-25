@@ -60,6 +60,19 @@ The default credentials for the Sercomm eNB are:
 
 .. image:: images/enb-sercomm-home.png
 
+Upgrade Firmware
+----------------
+
+Download the latest firmware to your workstation.
+
+From the eNB configuration page,
+go to **Manage > Firmware Management**, click **Choose File** button, select the downloaded firmware,
+and click **Upload** button. Reboot the eNB if it does not automatically.
+
+.. image:: images/enb-sercomm-firmware-upgrade.png
+
+After the reboot, confirm the ``Software version`` from the **State > State** menu.
+
 LTE configuration
 -----------------
 
@@ -184,7 +197,6 @@ In order to check the connectivity, we can use the Sercomm eNB admin UI.
 Go to **Manage > IP Diagnose** tab
 
 .. image:: images/enb-sercomm-ip-diagnose.png
-  :width: 800
   :alt: Sercomm eNB UI IP Diagnose page
 
 In this page, check the ``ping`` menu, put an IP address to test in the text
