@@ -235,3 +235,28 @@ Run the following commands and make sure all pods are ``Running``.
 
    Ignore BESS UPF failure at this point if BESS UPF is enabled.
    We'll fix it in :doc:`BESS UPF </edge_deployment/bess_upf_deployment>` step.
+
+Disable deployment jobs
+-----------------------
+After confirming the K8S cluster is ready, disable the deployment job.
+
+.. code-block:: diff
+
+   $ cd $WORKDIR/aether-ci-management
+   $ vi jjb/repos/cd-pipeline-terraform.yaml
+
+   # Add jobs for the new cluster
+   diff jjb/repos/cd-pipeline-terraform.yamll
+   --- a/jjb/repos/cd-pipeline-terraform.yaml
+   +++ b/jjb/repos/cd-pipeline-terraform.yaml
+   @@ -227,3 +227,9 @@
+          - 'cd-pipeline-terraform-postmerge-cluster':
+              cluster: 'ace-eks'
+          - 'cd-pipeline-terraform-premerge-cluster':
+              cluster: 'ace-test'
+   -          disable-job: false
+          - 'cd-pipeline-terraform-postmerge-cluster':
+              cluster: 'ace-test'
+   -          disable-job: false
+
+Submit your change and wait for the job is updated.

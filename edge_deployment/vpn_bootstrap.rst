@@ -57,7 +57,7 @@ Download **aether-ci-management** repository.
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-ci-management"
 
-Add the jobs for the new cluster at the end of the ``cd-pipeline-terraform-ace`` project job list.
+Add the jobs for the new cluster at the end of the ``cd-pipeline-terraform-ace-prd`` project job list.
 Make sure to add both pre-merge and post-merge jobs.
 Note that the cluster name specified here will be used in the rest of the deployment procedure.
 
@@ -72,14 +72,13 @@ Note that the cluster name specified here will be used in the rest of the deploy
    +++ b/jjb/repos/cd-pipeline-terraform.yaml
    @@ -227,3 +227,9 @@
           - 'cd-pipeline-terraform-postmerge-cluster':
-              pod: 'production'
               cluster: 'ace-eks'
    +      - 'cd-pipeline-terraform-premerge-cluster':
-   +          pod: 'production'
    +          cluster: 'ace-test'
+   +          disable-job: false
    +      - 'cd-pipeline-terraform-postmerge-cluster':
-   +          pod: 'production'
    +          cluster: 'ace-test'
+   +          disable-job: false
 
 Submit your change and wait for the jobs you just added available in Aether Jenkins.
 
