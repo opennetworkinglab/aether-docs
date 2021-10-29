@@ -616,6 +616,7 @@ Add the following content into repos/tost.yaml
        rancher_cluster: "ace-test-example"
        terraform_dir: "production/tost-example"
        rancher_api: "{rancher_production_access}"
+       disable-job: false
        properties:
          - onf-infra-onfstaff-private
        jobs:
@@ -649,6 +650,31 @@ have an IP address and are **able to reach each other via fabric interface** bef
 
 This can be simply done by running a **ping** command from one server to another server's fabric IP.
 
+
+Disable deployment jobs
+-----------------------
+
+After verifying the SD-Fabric is ready, please submit another patch to disable the job.
+
+.. code-block:: diff
+
+   $ cd $WORKDIR/aether-ci-management
+   $ vi jjb/repos/tost.yaml
+
+   # Add jobs for the new cluster
+   diff --git a/jjb/repos/tost.yaml b/jjb/repos/tost.yaml
+   index 19bade4..81b4ab1 100644
+   --- a/jjb/repos/tost.yaml
+   +++ b/jjb/repos/tost.yaml
+   @@ -478,7 +478,7 @@
+        rancher_cluster: "ace-ntt"
+        terraform_dir: "production/ace-ntt"
+        rancher_api: "{rancher_production_access}"
+   -    disable-job: false
+   +    disable-job: true
+        properties:
+          - onf-infra-onfstaff-private
+        jobs:
 
 Troubleshooting
 ---------------
