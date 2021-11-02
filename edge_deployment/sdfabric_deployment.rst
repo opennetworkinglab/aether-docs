@@ -24,42 +24,31 @@ Here is an example folder structure:
 
 .. code-block:: console
 
-   ╰─$ tree staging/ace-menlo/tost
-   staging/ace-menlo/tost
+   ╰─$ tree staging/stg-ace-menlo/sdfabric
+   staging/stg-ace-menlo/sdfabric
    ├── app_map.tfvars
    ├── backend.tf
-   ├── deepinsight
-   │   ├── README.md
-   │   ├── deepinsight-topo.json
-   │   └── deepinsight-topo.json.license
-   ├── main.tf -> ../../../common/tost/main.tf
-   ├── onos
+   ├── main.tf -> ../../../common/sdfabric/main.tf
+   ├── sdfabric
    │   ├── app_map.tfvars
    │   ├── backend.tf
-   │   ├── kubeconfig -> ../../../../common/tost/apps/onos/kubeconfig/
-   │   ├── main.tf -> ../../../../common/tost/apps/onos/main.tf
-   │   ├── onos.yaml
-   │   └── variables.tf -> ../../../../common/tost/apps/onos/variables.tf
-   ├── stratum
-   │   ├── app_map.tfvars
-   │   ├── backend.tf
-   │   ├── main.tf -> ../../../../common/tost/apps/stratum/main.tf
-   │   ├── menlo-staging-leaf-1-chassis-config.pb.txt
-   │   ├── menlo-staging-leaf-2-chassis-config.pb.txt
-   │   ├── menlo-staging-spine-1-chassis-config.pb.txt
-   │   ├── menlo-staging-spine-2-chassis-config.pb.txt
-   │   ├── stratum.yaml
-   │   ├── tost-dev-chassis-config.pb.txt
-   │   └── variables.tf -> ../../../../common/tost/apps/stratum/variables.tf
+   │   ├── kubeconfig -> ../../../../common/sdfabric/apps/onos/kubeconfig
+   │   ├── leaf1-chassis-config.pb.txt
+   │   ├── leaf2-chassis-config.pb.txt
+   │   ├── main.tf -> ../../../../common/sdfabric/apps/sdfabric/main.tf
+   │   ├── sdfabric.yaml
+   │   ├── spine1-chassis-config.pb.txt
+   │   ├── spine2-chassis-config.pb.txt
+   │   └── variables.tf -> ../../../../common/sdfabric/apps/sdfabric/variables.tf
    ├── telegraf
    │   ├── app_map.tfvars
    │   ├── backend.tf
-   │   ├── main.tf -> ../../../../common/tost/apps/telegraf/main.tf
+   │   ├── main.tf -> ../../../../common/sdfabric/apps/telegraf/main.tf
    │   ├── telegraf.yaml
-   │   └── variables.tf -> ../../../../common/tost/apps/telegraf/variables.tf
+   │   └── variables.tf -> ../../../../common/sdfabric/apps/telegraf/variables.tf
    └── variables.tf -> ../../../common/tost/variables.tf
 
-There are four Terraform scripts inside **tost** directory and are responsible for managing each service.
+There are three Terraform scripts inside **sdfabric** directory and are responsible for managing each service.
 
 Root folder
 """""""""""
@@ -74,12 +63,12 @@ It can be used to specify prerequisites in the future.
 
 .. code-block::
 
-   project_name     = "tost"
+   project_name     = "sdfabric"
    namespace_name   = "tost"
 
 
-ONOS folder
-"""""""""""
+SD-FABRIC folder
+""""""""""""""""
 
 All files under **onos** directory are related to ONOS application.
 The **app_map.tfvars** in this folder describes the information about ONOS helm chart.
@@ -90,142 +79,27 @@ as custom value files.
 .. code-block::
 
    apps = ["onos"]
+   namespace_name = "tost"
 
    app_map = {
-      onos = {
-         app_name         = "onos-tost"
-         project_name     = "tost"
-         target_namespace = "onos-tost"
-         catalog_name     = "onos"
-         template_name    = "onos-tost"
-         template_version = "0.1.40"
-         values_yaml      = ["onos.yaml"]
+      sdfabric = {
+        app_name         = "onos-tost"
+        repo_name        = "aether"
+        chart_name       = "sdfabric"
+        chart_version    = "1.0.7"
+        values_yaml      = "sdfabric.yaml"
       }
    }
 
-**onos.yaml** used to custom your ONOS-tost Helm chart values and please pay attention to the last section, config.
-
-.. code-block:: yaml
-
-   onos-classic:
-      image:
-         tag: master
-         pullPolicy: Always
-      replicas: 1
-      atomix:
-         replicas: 1
-      logging:
-         config: |
-            # Common pattern layout for appenders
-            log4j2.stdout.pattern = %d{RFC3339} %-5level [%c{1}] %msg%n%throwable
-
-            # Root logger
-            log4j2.rootLogger.level = INFO
-
-            # OSGi appender
-            log4j2.rootLogger.appenderRef.PaxOsgi.ref = PaxOsgi
-            log4j2.appender.osgi.type = PaxOsgi
-            log4j2.appender.osgi.name = PaxOsgi
-            log4j2.appender.osgi.filter = *
-
-            # stdout appender
-            log4j2.rootLogger.appenderRef.Console.ref = Console
-            log4j2.appender.console.type = Console
-            log4j2.appender.console.name = Console
-            log4j2.appender.console.layout.type = PatternLayout
-            log4j2.appender.console.layout.pattern = ${log4j2.stdout.pattern}
-
-            # SSHD logger
-            log4j2.logger.sshd.name = org.apache.sshd
-            log4j2.logger.sshd.level = INFO
-
-            # Spifly logger
-            log4j2.logger.spifly.name = org.apache.aries.spifly
-            log4j2.logger.spifly.level = WARN
-
-            # SegmentRouting logger
-            log4j2.logger.segmentrouting.name = org.onosproject.segmentrouting
-            log4j2.logger.segmentrouting.level = DEBUG
-
-      config:
-        netcfg: >
-          {
-            "devices": {
-              "device:leaf1": {
-                "segmentrouting": {
-                  "ipv4NodeSid": 201,
-                  "ipv4Loopback": "10.128.100.38",
-                  "routerMac": "00:00:0A:80:64:26",
-                  "isEdgeRouter": true,
-                  "adjacencySids": []
-                },
-              }
-            }
-          }
-
-
-**config.netcfg** is environment dependent and please change it to fit your environment.
+**sdfabric.yaml** used to custom your sdfabric Helm chart values and please check
+`SD-Fabric Helm chart <https://gerrit.opencord.org/plugins/gitiles/sdfabric-helm-charts/+/HEAD/sdfabric/README.md>`_
+to see how to configure it.
 
 ..
-   TODO: Add an example based on the recommended topology
 
-Stratum folder
-""""""""""""""
-
-Stratum uses a similar directory structure as ONOS for Terraform and its configuration files.
-
-The customize value file is named **stratum.yaml**
-
-.. code-block::
-
-   app_map = {
-      stratum= {
-         app_name         = "stratum"
-         project_name     = "tost"
-         target_namespace = "stratum"
-         catalog_name     = "stratum"
-         template_name    = "stratum"
-         template_version = "0.1.13"
-         values_yaml      = ["stratum.yaml"]
-      }
-   }
-
-Like ONOS, **stratum.yaml** used to customize Stratum Helm Chart and please pay attention to the config section.
-
-.. code-block:: yaml
-
-   image:
-      registry: registry.aetherproject.org
-      repository: tost/stratum-bfrt
-      tag: 9.2.0-4.14.49
-      pullPolicy: Always
-      pullSecrets:
-         - aether-registry-credential
-
-   extraParams:
-      - "-max_log_size=0"
-      - '-write_req_log_file=""'
-      - '-read_req_log_file=""'
-      - "-v=0"
-      - "-stderrthreshold=0"
-      - "-bf_switchd_background=false"
-
-   nodeSelector:
-   node-role.aetherproject.org: switch
-
-   tolerations:
-      - effect: NoSchedule
-         value: switch
-         key: node-role.aetherproject.org
-
-   config:
-      server: gerrit.opencord.org
-      repo: aether-pod-configs
-      folder: staging/ace-onf-menlo/tost/stratum
-
-Stratum has the same deployment workflow as ONOS.
-Once it is deployed to Kubernetes, it will read switch-dependent config files from the aether-pod-configs repo.
-The key folder indicates that relative path of configs.
+Once the Stratum is deployed to Kubernetes, it will read switch-dependent config files
+from the aether-pod-configs repo.
+The key folder(**stratum.config.folder**) indicates that relative path of configs.
 
 .. attention::
 
@@ -243,16 +117,15 @@ The app_map.tfvars specify the Helm Chart version and the filename of the custom
 .. code-block::
 
    apps=["telegraf"]
+   namespace_name = "tost"
    app_map = {
      telegraf = {
        app_name         = "telegraf"
-       project_name     = "tost"
-       target_namespace = "tost"
-       catalog_name     = "aether"
-       template_name    = "tost-telegraf"
-       template_version = "0.1.1"
-       values_yaml      = ["telegraf.yaml"]
-     }
+       repo_name        = "aether"
+       chart_name       = "tost-telegraf"
+       chart_version    = "0.1.5"
+       values_yaml      = "telegraf.yaml"
+    }
    }
 
 The **telegraf.yaml** used to override the ONOS-Telegraf Helm Chart and its environment-dependent.
@@ -299,13 +172,14 @@ Assumed we would like to set up the **ace-example** pod in the production enviro
 4. update **onos.yaml** for ONOS
 5. update **${hostname}-chassis-config.pb.txt** for Stratum
 6. commit your change and open the Gerrit patch
+7. deploy your patch to ACE cluster and merge it after verifying the fabric connectivity
 
 .. code-block:: console
 
   vim tools/ace_config.yaml
-  make -C tools/  tost
-  vim production/ace-example/tost/onos/onos.yaml
-  vim production/ace-example/tost/stratum/*${hostname}-chassis-config.pb.txt**
+  make -C tools sdfabric
+  vim production/ace-example/sdfabric/sdfabric/sdfabric.yaml
+  vim production/ace-example/sdfabric/sdfabric/*${hostname}-chassis-config.pb.txt**
   git add commit
   git review
 
@@ -316,15 +190,14 @@ Quick recap
 To recap, most of the files in **tost** folder can be copied from existing examples.
 However, there are a few files we need to pay extra attentions to.
 
-- **onos.yaml** in **onos** folder
-- Chassis config in **stratum** folder
+- **sdfabric.yaml** in **sdfabric** folder
+- Chassis config in **sdfabric** folder
   There should be one chassis config for each switch. The file name needs to be
   **${hostname}-chassis-config.pb.txt**
 - **telegraf.yaml** in **telegraf** folder need to be updated with all switch
   IP addresses
 
 Double check these files and make sure they have been updated accordingly.
-
 
 Create a review request
 """""""""""""""""""""""
@@ -335,6 +208,24 @@ the **Aether Runtime Deployment**.
 Please refer to :doc:`Aether Runtime Deployment <runtime_deployment>` to
 create a review request.
 
+Deploy to ACE cluster
+"""""""""""""""""""""
+
+SD-Fabric is environment dependent application and you have to prepare correct
+configurations for both ONOS and Stratum to make it work.
+
+A recommended approach is verifying your patch before merging it. You can
+type the comment **apply-all** in the Gerrit patch to trigger the deployment
+process, and then start to verify fabric connectivity.
+
+.. attention::
+
+   Due to the limitation of Terraform's dependent issue, you have to type the
+   comment **apply-all** to trigger root folder's Terraform script to setup
+   project and namespace before merging the patch.
+
+
+Check below section to learn more about how we setup the Jenkins job and how it works
 
 Create SD-Fabric (named TOST in Jenkins) deployment job in Jenkins
 ------------------------------------------------------------------
@@ -417,22 +308,22 @@ pipeline script is groovy.
    ├── tost-telegraf.groovy
    └── tost.groovy
 
+
+
 Currently, we had five pipeline scripts for SD-Fabric deployment.
 
-1. tost-onos.groovy
-2. tost-stratum.groovy
+1. tost.groovy
+2. sdfabric.groovy
 3. tost-telegraf.groovy
-4. tost.groovy
-5. tost-onos-debug.groovy
+4. tost-onos-debug.groovy
 
-tost-[onos/stratum/telegraf].groovy are used to deploy the individual
+sdfabric.groovy and tost-telegraf.groovy are used to deploy the individual
 application respectively, and tost.groovy is a high level script, used to
 deploy whole SD-Fabric application, it will execute the above three scripts in its
 pipeline script.
 
 tost-onos-debug.groovy is used to dump the debug information from the ONOS controller
 and it will be executed automatically when ONOS is deployed.
-
 
 Jenkins jobs
 """"""""""""
@@ -599,6 +490,7 @@ parameters and Jenkins jobs it wants to use.
          - "debug-tost"
 
 
+
 Create Your Own Jenkins Job
 """""""""""""""""""""""""""
 
@@ -617,14 +509,21 @@ Add the following content into repos/tost.yaml
        terraform_dir: "production/tost-example"
        rancher_api: "{rancher_production_access}"
        disable-job: false
+       need_stratum: false
+       need_onos: false
+       need_sdfabric: true
+       debug_namespace: tost
+       topology:
+         - sdfabric
        properties:
          - onf-infra-onfstaff-private
        jobs:
          - "deploy"
-         - "deploy-onos"
-         - "deploy-stratum"
+             trigger_path: "sdfabric/.*
+         - "deploy-sdfabric"
          - "deploy-telegraf"
          - "debug-tost"
+
 
 .. note::
 
@@ -753,4 +652,3 @@ then logging into that one:
   $ kill 0123
   $ kubectl -n tost port-forward onos-tost-onos-classic-1 8181 8101
   $ onos karaf@localhost
-

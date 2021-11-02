@@ -191,6 +191,7 @@ scalability
 scalable
 sd
 sdcore
+sdfabric
 simapp
 smf
 smgmt
