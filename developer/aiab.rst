@@ -43,7 +43,7 @@ If you wish to install SD-CORE from local Helm charts, clone these additional re
 
     mkdir -p ~/cord
     cd ~/cord
-    git clone "ssh://<username>@gerrit.opencord.org:29418/helm-charts"
+    git clone "ssh://<username>@gerrit.opencord.org:29418/sdcore-helm-charts"
     git clone "ssh://<username>@gerrit.opencord.org:29418/aether-helm-charts"
 
 If you wish to install the ROC from local Helm charts, clone these::
@@ -68,9 +68,8 @@ Fill out REGISTRY_USERNAME and REGISTRY_CLI_SECRET as follows:
 * For REGISTRY_USERNAME, use the *Username* in your profile
 * Copy the *CLI secret* to the clipboard and paste to REGISTRY_CLI_SECRET
 
-If you wish to install SD-CORE using Aether's published Helm charts, or if you are installing the ROC, also
-fill out REPO_USERNAME and REPO_PASSWORD with the information needed to authenticate with Aether's Helm
-chart repository.
+Also fill out REPO_USERNAME and REPO_PASSWORD with the information needed to authenticate
+with Aether's Helm chart repositories.
 
 If you have already set up AiaB but you used incorrect credentials, first clean up AiaB as described
 in the `Cleanup`_ section, then edit *configs/authentication* and re-build AiaB.
