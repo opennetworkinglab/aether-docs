@@ -70,6 +70,7 @@ can be found on the `ONF Wiki
    operations/procedures
    operations/subscriber
    operations/vcs
+   advanced/appfilter
 
 .. toctree::
    :maxdepth: 3
