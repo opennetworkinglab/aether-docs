@@ -46,12 +46,10 @@ If you wish to install SD-CORE from local Helm charts, clone these additional re
     git clone "ssh://<username>@gerrit.opencord.org:29418/sdcore-helm-charts"
     git clone "ssh://<username>@gerrit.opencord.org:29418/aether-helm-charts"
 
-If you wish to install the ROC from local Helm charts, clone these::
+If you wish to install the ROC from local Helm charts, clone this::
 
     mkdir -p ~/cord
     cd ~/cord
-    git clone https://github.com/atomix/atomix-helm-charts.git
-    git clone https://github.com/onosproject/onos-helm-charts.git
     git clone "ssh://<username>@gerrit.opencord.org:29418/roc-helm-charts"
 
 Now change to *~/aether-in-a-box* directory.
