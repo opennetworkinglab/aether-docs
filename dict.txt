@@ -129,6 +129,7 @@ kubectl
 kustomize
 lifecycle
 linecard
+localhost
 loopback
 macOS
 macroENB
@@ -166,6 +167,7 @@ pfcpiface
 pre
 preconfigured
 preseed
+programmatically
 protobuf
 provisioner
 ptf

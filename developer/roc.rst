@@ -35,15 +35,15 @@ Atomix and onos-operator must be installed::
    # install atomix
    export ATOMIX_CONTROLLER_VERSION=0.6.8
    helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
-   export ATOMIX_RAFT_VERSION=0.1.14
+   export ATOMIX_RAFT_VERSION=0.1.15
    helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
 
    # install the onos operator
-   ONOS_OPERATOR_VERSION=0.4.12
+   ONOS_OPERATOR_VERSION=0.4.14
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
 .. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
-    shown above are correct for the 1.3.x versions of the *aether-roc-umbrella*.
+    shown above are correct for the 1.4.42- versions of the *aether-roc-umbrella*.
 
 .. list-table:: ROC support component version matrix
    :widths: 40 20 20 20
@@ -65,6 +65,10 @@ Atomix and onos-operator must be installed::
      - 0.6.8
      - 0.1.14
      - 0.4.12
+   * - 1.4.42-
+     - 0.6.8
+     - 0.1.15
+     - 0.4.14
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
@@ -165,13 +169,14 @@ To tear things back down, usually as part of a developer loop prior to redeployi
 If the uninstall hangs or if a subsequent reinstall hangs, it could be an issue with some of the CRDs
 not getting cleaned up. The following may be useful::
 
-   # fix stuck finalizers in operator CRDs
+    # fix stuck finalizers in operator CRDs
+    kubectl -n micro-onos patch entities connectivity-service-v4 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities connectivity-service-v3 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities plproxy-amp --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities plproxy-acc --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch kind plproxy --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch kind aether --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 
-   kubectl -n micro-onos patch entities connectivity-service-v3 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
-
-   kubectl -n micro-onos patch entities connectivity-service-v4 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
-
-   kubectl -n micro-onos patch kind aether --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
 
 Useful port forwards
 --------------------
@@ -187,15 +192,11 @@ The following port-forwards may be useful::
 
    # aether-roc-gui
 
-   kubectl -n micro-onos port-forward service/aether-roc-gui --address 0.0.0.0 8183:80
+   kubectl -n micro-onos port-forward service/aether-roc-gui-v4 --address 0.0.0.0 8183:80
 
    # grafana
 
    kubectl -n micro-onos port-forward service/aether-roc-umbrella-grafana --address 0.0.0.0 8187:80
-
-   # onos gui
-
-   kubectl -n micro-onos port-forward service/onos-gui --address 0.0.0.0 8182:80
 
 ``aether-roc-api`` and ``aether-roc-gui`` are in our experience the most useful two port-forwards.
 
@@ -268,7 +269,7 @@ The names may change from deployment to deployment, so start by getting a list o
 
 Then you can inspect a specific pod/container::
 
-   kubectl -n micro-onos logs sdcore-adapter-v3-7468cc58dc-ktctz sdcore-adapter-v3
+   kubectl -n micro-onos logs deployment/sdcore-adapter-v4
 
 .. _securing_roc:
 
@@ -280,9 +281,13 @@ specifying an OpenID Connect (OIDC) issuer like::
 
     helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
         --set onos-config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
-        --set aether-roc-gui-v3.openidc.issuer=http://k3u-keycloak:5557/auth/realms/master
+        --set aether-roc-api.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
+        --set aether-roc-gui-v4.openidc.issuer=http://k3u-keycloak:5557/auth/realms/master \
+        --set prom-label-proxy-acc.config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
+        --set prom-label-proxy-amp.config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master
 
-The choice of OIDC issuer in this case is ``keycloak-389-umbrella``, or alternately ``dex-ldap-umbrella`` (deprecated).
+The choice of OIDC issuer in this case is ``keycloak-389-umbrella``, or alternately ``dex-ldap-umbrella``
+(`deprecated <https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_).
 
 ``keycloak-389-umbrella``
 """""""""""""""""""""""""
@@ -292,12 +297,25 @@ Services. It can be used as an OIDC Issuer than can act as a front end to severa
 e.g. LDAP, Crowd, Google, GitHub
 
 ``keycloak-389-umbrella`` is a Helm chart that combines a Keycloak server with an LDAP
-installation (389 Directory Server), and an LDAP administration tool. It can be deployed in to the
-same cluster namespace as ``aether-roc-umbrella``.
+installation (389 Directory Server), and an LDAP administration tool. It can be deployed (with name ``k3u`` in to the
+same cluster namespace as ``aether-roc-umbrella``::
 
-Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
+    helm -n micro-onos install k3u onosproject/keycloak-389-umbrella
+
+
+.. note:: Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
+
+To make the deployment available with the hostname ``k3u-keycloak`` requires:
+
+#. a port forward like ``kubectl -n micro-onos  port-forward service/k3u-keycloak --address=0.0.0.0 5557:80``
+#. editing your ``/etc/hosts`` file (on the machine where your browser runs) so that the name ``k3u-keycloak`` points
+   to the IP address of the machine where the ``port-forward`` runs (usually ``localhost``).
 
 When running it should be available at *http://k3u-keycloak:5557/auth/realms/master/.well-known/openid-configuration*.
+
+.. note:: You can access the Keycloak management page from *http://k3u-keycloak:5557/auth/admin* but you must
+    login as `admin/changeme`. Because of the SSO feature of Keycloak this will affect your Aether ROC GUI login too.
+    To login as 2 separate users at the same time, use a private browser window for one.
 
 See `keycloak-389-umbrella <https://github.com/onosproject/onos-helm-charts/tree/master/keycloak-389-umbrella#readme>`_
 for more details.
@@ -306,29 +324,6 @@ In a production environment, the public Aether Keycloak (with its LDAP server po
 See `public keycloak <https://keycloak.opennetworking.org/auth/realms/master/.well-known/openid-configuration>`_ for more details.
 
 .. note:: Your RBAC access to ROC will be limited by the groups you belong to in its LDAP store.
-
-``dex-ldap-umbrella`` (Deprecated)
-""""""""""""""""""""""""""""""""""
-
-Dex is a cloud native OIDC Issuer than can act as a front end to several authentication systems
-e.g. LDAP, Crowd, Google, GitHub
-
-``dex-ldap-umbrella`` is a Helm chart that combines a Dex server with an OpenLDAP
-installation, and an LDAP administration tool. It can be deployed in to the
-same cluster namespace as ``aether-roc-umbrella``.
-
-Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
-
-When running it should be available at *http://dex-ldap-umbrella:5556/.well-known/openid-configuration*.
-
-See `dex-ldap-umbrella <https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella#readme>`_
-for more details.
-
-As an alternative there is a public Dex server connected to the ONF Crowd server, that allows
-ONF staff to login with their own credentials:
-See `public dex <https://dex.aetherproject.org/dex/.well-known/openid-configuration>`_ for more details.
-
-.. note:: Your RBAC access to ROC will be limited by the groups you belong to in Crowd.
 
 Role Based Access Control
 """""""""""""""""""""""""
@@ -353,10 +348,21 @@ form of a JSON Web Token (JWT) issued by the selected OIDC Issuer server must ac
 the request as an Authorization Header.
 
 This applies to both the REST interface of ``aether-roc-api`` **and** the *gnmi* interface of
-``aether-rconfig``.
+``aether-config``.
 
 In the Aether ROC, a Bearer Token can be generated by logging in and selecting API Key from the
 menu. This pops up a window with a copy button, where the key can be copied.
+
+Alternatively with Keycloak a Token may be requested programmatically through the Keycloak API::
+
+    curl --location --request POST 'http://k3u-keycloak:5557/auth/realms/master/protocol/openid-connect/token' \
+    --header 'Content-Type: application/x-www-form-urlencoded' \
+    --data-urlencode 'grant_type=password' \
+    --data-urlencode 'client_id=aether-roc-gui' \
+    --data-urlencode 'username=alicea' \
+    --data-urlencode 'password=password' \
+    --data-urlencode 'scope=openid profile email groups' | jq "access_token"
+
 
 The key will expire after 24 hours.
 
@@ -427,6 +433,16 @@ OIDC issuer (Keycloak server), and that Auth is enabled.
 .. image:: images/aether-roc-gui-console-loggedin.png
     :width: 418
     :alt: Browser Console showing correct configuration
+
+Keycloak installation issues
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The ``fedorea-389ds`` pod may restart a couple of times before it finally reaches running.
+There are 2 post install jobs that take some time to start. Overall allow 3 minutes for startup.
+
+Some users are finding that the Fedora pod will never reach a running state on resource
+constrained machines. This issue is being investigated.
+
 
 ROC Data Model Conventions and Requirements
 -------------------------------------------
