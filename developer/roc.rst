@@ -171,7 +171,6 @@ not getting cleaned up. The following may be useful::
 
     # fix stuck finalizers in operator CRDs
     kubectl -n micro-onos patch entities connectivity-service-v4 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch entities connectivity-service-v3 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch entities plproxy-amp --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch entities plproxy-acc --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch kind plproxy --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
@@ -276,34 +275,59 @@ Then you can inspect a specific pod/container::
 Securing ROC
 ------------
 
+keycloak-dev.onlab.us
+^^^^^^^^^^^^^^^^^^^^^
+Keycloak is an Open Source Identity and Access Management for Modern Applications and
+Services. It can be used as an OIDC Issuer than can act as a front end to several authentication systems
+e.g. LDAP, Crowd, Google, GitHub
+
 When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode can be enabled by
 specifying an OpenID Connect (OIDC) issuer like::
 
     helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
-        --set onos-config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
-        --set aether-roc-api.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
-        --set aether-roc-gui-v4.openidc.issuer=http://k3u-keycloak:5557/auth/realms/master \
-        --set prom-label-proxy-acc.config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master \
-        --set prom-label-proxy-amp.config.openidc.issuer=http://k3u-keycloak:80/auth/realms/master
+        --set onos-config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+        --set aether-roc-api.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+        --set aether-roc-gui-v4.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+        --set prom-label-proxy-acc.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+        --set prom-label-proxy-amp.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master
 
-The choice of OIDC issuer in this case is ``keycloak-389-umbrella``, or alternately ``dex-ldap-umbrella``
-(`deprecated <https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_).
+The choice of OIDC issuer in this case is the **development** Keycloak server at https://keycloak-dev.onlab.us
 
-``keycloak-389-umbrella``
-"""""""""""""""""""""""""
+Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
 
-Keycloak is an Open Source Identity and Access Management for Modern Applications and
-Services. It can be used as an OIDC Issuer than can act as a front end to several authentication systems
-e.g. LDAP, Crowd, Google, GitHub
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| User             | login    | mixedGroup: | charactersGroup | AetherROCAdmin  | EnterpriseAdmin | starbucks | acme |
++==================+==========+=============+=================+=================+=================+===========+======+
+| Alice Admin      | alicea   |      ✓      |                 |        ✓        |                 |           |      |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| Bob Cratchit     | bobc     |      ✓      |      ✓          |                 |                 |           |      |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| Charlie Brown    | charlieb |             |      ✓          |                 |                 |           |      |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| Daisy Duke       | daisyd   |             |      ✓          |                 |         ✓       |      ✓    |      |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| Elmer Fudd       | elmerf   |             |      ✓          |                 |                 |      ✓    |      |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| Fred Flintstone  | fredf    |             |      ✓          |                 |         ✓       |           |   ✓  |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+| Gandalf The Grey | gandalfg |             |      ✓          |                 |                 |           |   ✓  |
++------------------+----------+-------------+-----------------+-----------------+-----------------+-----------+------+
+
+.. note:: all users have the same password - please contact `aether-roc <https://onf-internal.slack.com/archives/C01S7BVC1FX>`_ slack group if you need it
+
+.. note:: Because of the SSO feature of Keycloak you will need to explicitly logout of Keycloak to change users.
+          To login as 2 separate users at the same time, use a private browser window for one.
+
+Running your own Keycloak Server
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+It is also possible to run your own own Keycloak server inside of Kubernetes.
 
 ``keycloak-389-umbrella`` is a Helm chart that combines a Keycloak server with an LDAP
 installation (389 Directory Server), and an LDAP administration tool. It can be deployed (with name ``k3u`` in to the
 same cluster namespace as ``aether-roc-umbrella``::
 
     helm -n micro-onos install k3u onosproject/keycloak-389-umbrella
-
-
-.. note:: Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
 
 To make the deployment available with the hostname ``k3u-keycloak`` requires:
 
@@ -314,19 +338,27 @@ To make the deployment available with the hostname ``k3u-keycloak`` requires:
 When running it should be available at *http://k3u-keycloak:5557/auth/realms/master/.well-known/openid-configuration*.
 
 .. note:: You can access the Keycloak management page from *http://k3u-keycloak:5557/auth/admin* but you must
-    login as `admin/changeme`. Because of the SSO feature of Keycloak this will affect your Aether ROC GUI login too.
+    login as `admin`. Because of the SSO feature of Keycloak this will affect your Aether ROC GUI login too.
     To login as 2 separate users at the same time, use a private browser window for one.
+
+.. note:: Services inside the cluster (e.g. onos-config) should set the issuer to *https://k3u-keycloak:80/auth/realms/master*
+    on port 80, while the aether-roc-gui should use port 5557
+
+As any OIDC server can work with ROC you can alternately use ``dex-ldap-umbrella``
+(`deprecated <https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_).
 
 See `keycloak-389-umbrella <https://github.com/onosproject/onos-helm-charts/tree/master/keycloak-389-umbrella#readme>`_
 for more details.
 
-In a production environment, the public Aether Keycloak (with its LDAP server populated with Aether users and groups) should be used.
+Production Environment
+^^^^^^^^^^^^^^^^^^^^^^
+In a production environment, the public Aether Keycloak (with its LDAP server populated with real Aether users and groups) should be used.
 See `public keycloak <https://keycloak.opennetworking.org/auth/realms/master/.well-known/openid-configuration>`_ for more details.
 
 .. note:: Your RBAC access to ROC will be limited by the groups you belong to in its LDAP store.
 
 Role Based Access Control
-"""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When secured, access to the configuration in ROC is limited by the **groups** that a user belongs to.
 
@@ -341,7 +373,7 @@ When secured, access to the configuration in ROC is limited by the **groups** th
     linked with the *starbucks* enterprise.
 
 Requests to a Secure System
-"""""""""""""""""""""""""""
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When configuration is retrieved or updated  through *aether-config*, a Bearer Token in the
 form of a JSON Web Token (JWT) issued by the selected OIDC Issuer server must accompany
@@ -355,7 +387,7 @@ menu. This pops up a window with a copy button, where the key can be copied.
 
 Alternatively with Keycloak a Token may be requested programmatically through the Keycloak API::
 
-    curl --location --request POST 'http://k3u-keycloak:5557/auth/realms/master/protocol/openid-connect/token' \
+    curl --location --request POST 'https://keycloak-dev.onlab.us/auth/realms/master/protocol/openid-connect/token' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
     --data-urlencode 'grant_type=password' \
     --data-urlencode 'client_id=aether-roc-gui' \
@@ -396,7 +428,7 @@ it is necessary to:
 * Add to the IP address of the cluster machine to the **/etc/hosts** of the outside computer as::
 
     <ip address of cluster> k3u-keycloak aether-roc-gui
-* Verify that you can access the Keycloak server by its name *http://k3u-keycloak:5557/auth/realms/master/.well-known/openid-configuration*
+* Verify that you can access the Keycloak server by its name *https://keycloak-dev.onlab.us/auth/realms/master/.well-known/openid-configuration*
 * Access the GUI through the hostname (rather than ip address) ``http://aether-roc-gui:8183``
 
 Troubleshooting Secure Access

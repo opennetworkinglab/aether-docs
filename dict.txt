@@ -10,12 +10,15 @@ BMv2
 BoM
 CLI
 Cloudlab
+Cratchit
 DNS
 Deutsche
 Dex
 Dockerfile
 Downlink
 Epyc
+Flintstone
+Fudd
 GbE
 GiB
 GitOps
@@ -65,6 +68,7 @@ VOLTHA
 Wireshark
 YAML
 aether
+alicea
 allocatable
 amf
 analytics
@@ -75,17 +79,21 @@ atomix
 ausf
 auth
 bess
+bobc
 bootable
 bootloader
 bootstrap
 cassandra
 chainloadable
+charactersGroup
+charlieb
 chipset
 clusterRole
 config
 configs
 controlplane
 cpu
+daisyd
 dataplane
 degister
 deregister
@@ -96,6 +104,7 @@ disaggregated
 dl
 downlink
 dropdown
+elmerf
 eNB
 eNBID
 eNBs
@@ -103,7 +112,9 @@ eNodeB
 enb
 etcd
 ethernet
+fredf
 func
+gandalfg
 gNMI
 gRPC
 gerrit
@@ -122,6 +133,7 @@ jitter
 jjb
 json
 k8smgmt
+keycloak
 keypair
 keyring
 kubeadm
@@ -138,6 +150,7 @@ makefile
 menlo
 mgmt
 microservice
+mixedGroup
 mme
 mongodb
 nVME
@@ -152,6 +165,7 @@ nginx
 nrf
 nssf
 omec
+onlab
 onos
 opencord
 orchestrator
@@ -201,6 +215,7 @@ smgmt
 spgw
 spgwc
 splitter
+starbucks
 stateful
 subcomponent
 subnet
