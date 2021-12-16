@@ -88,7 +88,6 @@ can be found on the `ONF Wiki
    :glob:
 
    testing/about_system_tests
-   testing/sdcore_testing
    testing/aether-roc-tests
    testing/acceptance_specification
 

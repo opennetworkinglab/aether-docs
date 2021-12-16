@@ -90,24 +90,6 @@ Testing
 Aether uses automated testing based on Jenkins and Robot Framework. The tests
 performed are described below.
 
-SD-Core Tests
-"""""""""""""
-
-* 4G
-
-  * Functional coverage: attach, detach, dataplane traffic, handover, TAU, paging,
-    error scenarios, failure/restart of network functions
-
-* 5G
-
-  * Functional Coverage: register, deregister,dataplane traffic scenarios,
-    handover, TAU, DDN, few error scenarios, few failure/restart of network
-    functions
-
-Jenkins jobs for functional and scale tests can be found on `Aether Jenkins -
-SD-Core System Tests
-<https://jenkins.aetherproject.org/view/SD%20Core%20System%20Tests/>`_
-
 ROC
 """
 
@@ -168,13 +150,9 @@ ROC:
 
 * aether-roc-umbrella: 1.4.64
 
-SD-Core:
+`SD-Core 1.0 <https://docs.sd-core.opennetworking.org/master/release/1.0.html>`_
 
-* sdcore-helm-chart: 0.9.16
-
-BESS UPF
-
-* omec-user-plane: 0.5.4
+* sdcore-helm-chart: 0.9.17
 
 `SD-Fabric 1.0.1 <https://docs.sd-fabric.org/1.0.1/release/1.0.1.html>`_
 
