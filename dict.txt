@@ -4,6 +4,7 @@ Ansible
 Anthos
 Atomix
 bitrate
+bitrates
 BMC
 BMv
 BMv2
@@ -95,6 +96,7 @@ controlplane
 cpu
 daisyd
 dataplane
+dbuf
 degister
 deregister
 deregistration
@@ -165,6 +167,7 @@ nginx
 nrf
 nssf
 omec
+onboarding
 onlab
 onos
 opencord
