@@ -176,8 +176,7 @@ BESS UPF
 
 * omec-user-plane: 0.5.4
 
-SD-Fabric 1.0.1 release (`release note
-<https://docs.sd-fabric.org/1.0.1/release/1.0.1.html>`_)
+`SD-Fabric 1.0.1 <https://docs.sd-fabric.org/1.0.1/release/1.0.1.html>`_
 
 * sdfabric: 1.0.10
 
