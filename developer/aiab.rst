@@ -93,9 +93,9 @@ to the command, e.g.,::
 
     CHARTS=latest make roc-4g-models
 
-To install the Aether 1.5 release, add *CHARTS=release-1.5*::
+To install the Aether 1.6 release, add *CHARTS=release-1.6*::
 
-    CHARTS=release-1.5 make roc-4g-models
+    CHARTS=release-1.6 make roc-4g-models
 
 Start the 4G SD-CORE
 --------------------
@@ -112,9 +112,9 @@ to the command, e.g.,::
 
     CHARTS=latest make test
 
-To install the Aether 1.5 release, add *CHARTS=release-1.5*::
+To install the Aether 1.6 release, add *CHARTS=release-1.6*::
 
-    CHARTS=release-1.5 make test
+    CHARTS=release-1.6 make test
 
 Start the 5G SD-CORE
 --------------------
@@ -122,25 +122,24 @@ Start the 5G SD-CORE
 If you have already installed the 4G SD-CORE, you must skip this step.  Only one version of
 the SD-CORE can be installed at a time.
 
-To deploy the 5G SD-CORE::
+To deploy the 5G SD-CORE and run a test with gNBSim that performs Registration + UE-initiated
+PDU Session Establishment + sends User Data packets::
 
-    make 5gc
+    make 5g-test
 
 By default the above commands install the 5G SD-CORE from the local charts in the Git repos cloned
 earlier.  In order to install the SD-CORE using the latest published charts, add *CHARTS=latest*
 to the command, e.g.,::
 
-    CHARTS=latest make 5gc
+    CHARTS=latest make 5g-test
 
-To install the Aether 1.5 release, add *CHARTS=release-1.5*::
+To install the Aether 1.6 release, add *CHARTS=release-1.6*::
 
-    CHARTS=release-1.5 make 5gc
+    CHARTS=release-1.6 make 5g-test
 
-You can use *gnbsim* to test 5G functionality.  For example, to run the 5G user registration::
-
-    kubectl -n omec exec gnbsim-0 -- /go/src/gnbsim/gnbsim register
-
-Currently there is no ping test for the 5G SD-CORE.
+To change the behavior of the test run by gNBSim, change the contents of *gnb.conf*
+in *ransim-values.yaml*.  Consult the
+`gNBSim documentation <https://docs.sd-core.opennetworking.org/master/developer/gnbsim.html>`_ for more information.
 
 Cleanup
 -------
@@ -163,7 +162,7 @@ with the ROC.  You could run these commands::
     make reset-test
     make roc-clean
     CHARTS=latest make roc-5g-models   # Install ROC with 5G configuration
-    CHARTS=latest make 5gc             # Install 5G SD-CORE
+    CHARTS=latest make 5g-test         # Install 5G SD-CORE and run gNB Sim test
     make reset-5g-test
     make roc-clean
 
@@ -180,7 +179,7 @@ by editing `~/aether-in-a-box/5g-core-values.yaml`, for example::
 
 To upgrade a running 5G SD-CORE with the new image, or to deploy the 5G SD-CORE with the image::
 
-    make 5gc
+    make 5g-test
 
 Troubleshooting / Known Issues
 ------------------------------
@@ -208,22 +207,3 @@ You should see that a device group and slice has been pushed::
 
 Then tail the *config4g-0* log and make sure that the configuration has been successfully pushed to all
 SD-CORE components.
-
-5G Test Fails
-^^^^^^^^^^^^^
-Currently the 5G *gnbsim* does not support data packets, though the UE can successfully register.
-For example the *gnbsim register* command gets stuck here::
-
-    ip address in string  172.250.0.1
-    err <nil>
-    UE address -  172.250.0.1
-    Assigned address to UE address  172.250.0.1
-    sent message NGAP-PDU Session Resource Setup Response
-    Failed to write gtpu packet
-    Sent uplink gtpu packet
-    Failed to write gtpu packet
-    Sent uplink gtpu packet
-    Failed to write gtpu packet
-    Sent uplink gtpu packet
-
-Fixing this is work-in-progress.

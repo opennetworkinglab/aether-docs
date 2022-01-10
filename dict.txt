@@ -25,6 +25,7 @@ GiB
 GitOps
 Github
 gNodeB
+gNBSim
 Grafana
 Haswell
 IPMI
@@ -63,6 +64,7 @@ Telekom
 Terraform
 TestVectors
 Tofino
+UE
 UPF
 Velero
 VOLTHA
