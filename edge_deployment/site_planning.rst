@@ -269,7 +269,7 @@ following information needs to be added to `NetBox
       router IP is ``10.0.1.126/25`` then ``RFC3442 Routes`` should be set to
       ``10.0.1.128\25`` (and the reverse - on ``10.0.1.254/25`` the ``RFC3442
       Routes`` would be set to be ``10.0.1.0/25``).  This creates an `RFC3442
-      Classless Static Route Option <https://tools.ietf.org/html/rfc3442>`_
+      Classless Static Route Option <https://datatracker.ietf.org/doc/html/rfc3442>`_
       for the subnet in DHCP.
 
 15. Add Cables between physical interfaces on the devices

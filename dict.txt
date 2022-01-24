@@ -95,6 +95,7 @@ clusterRole
 config
 configs
 controlplane
+coverages
 cpu
 daisyd
 dataplane
