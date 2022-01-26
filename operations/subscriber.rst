@@ -6,7 +6,7 @@ Subscriber and Connectivity Management
 ======================================
 
 Subscriber management includes workflows associated with provisioning new subscribers, removing
-existing subscribers, and associating subscribers with virtual connectivity services.
+existing subscribers, and associating subscribers with Virtual Connectivity Services (VCS).
 
 .. note::
     This section refers to a fully installed ROC GUI, properly secured and with Enterprises, Connectivity Services
@@ -72,17 +72,15 @@ the UE's IMSI to the DeviceGroup.
 
 The Site details can be seen by navigating to the Site list view.
 
-.. image:: images/aether-roc-gui-sites-list.png
-    :width: 755
-    :alt: Sites List View in Aether ROC GUI showing site details
+|SITE-LIST|
 
 In the ROC GUI, navigate to the Device Groups list view, to see the list of
 Device Groups and their association to Sites.
 
-    |DEVICEGROUP-LIST|
+|DEVICEGROUP-LIST|
 
-In the DeviceGroup *New York POS* example above an IMSI Range **store** of
-**70-73** will mean the set of IMSI IDs (when the *format* specifier of the
+In the DeviceGroup *New York POS* example above an UE ID Range **store** of
+**70-73** will mean the set of UE IDs (when the *format* specifier of the
 *starbucks-newyork* Site are applied to its *MCC*, *MNC* and *Enterprise*) of
 
 * 021032002000070 (021-032-002-000070)
@@ -97,17 +95,19 @@ In the DeviceGroup *New York POS* example above an IMSI Range **store** of
 
 Editing
 *******
-Edit the DeviceGroup by clicking on the Edit icon, and in the Edit page,
-adjust an existing range or create a new range (by clicking on the `+` icon).
+Edit the DeviceGroup by clicking on the Edit icon, and in the List page,
+adjust an existing UE ID range or create a new range (by clicking on the `+` icon).
 
-    |DEVICEGROUP-EDIT|
+|DEVICEGROUP-EDIT|
 
 The following restrictions apply
 
-#. The IMSI ID specified in "from" or "to" is relative to *MCC*, *MNC* and *Enterprise* of the Site.
+#. The "end" value must be greater than or equal to the "start" value. If the 2 are equal then this constitutes
+   a range of size 1.
+#. The IMSI ID specified in "start" or "end" is relative to *MCC*, *MNC* and *Enterprise* of the Site.
 #. The maximum value of an IMSI ID is defined by the number of **S** characters in the `format` specifier of the Site.
 #. IMSI Ranges are contiguous ranges of IMSI IDs. To accommodate non contiguous IMSI IDs, add extra Ranges.
-#. IMSI Ranges can have a maximum span of 100 between "from" and "to" IMSI IDs. Break bigger spans in to many ranges.
+#. IMSI Ranges can have a maximum span of 100 between "start" and "end" IMSI IDs. Break bigger spans in to many ranges.
 #. IMSI ranges within a DeviceGroup cannot not overlap.
 
 When the entries on the DeviceGroup edit page are valid the **Update** will become available
@@ -125,14 +125,21 @@ Committing
 **********
 To commit the changes
 
-#. click on the **Basket** icon (2nd icon from top right) to see the Basket view
-#. inspect the changes to be committed (optional)
-#. click **commit** to perform the commit
-#. observe the response that's temporarily displayed that shows the success or failure of the commit
+#. Click on the **Basket** icon (2nd icon from top right) to see the Basket view
+#. Inspect the changes to be committed (optional)
+#. Click **Commit** to perform the commit
+#. Observe the response that's temporarily displayed that shows the success or failure of the commit
 
-.. image:: images/aether-roc-gui-basket-view-new-range.png
-    :width: 635
-    :alt: Basket View with some changes ready to be committed
+|BASKETVIEW-NEWRANGE|
+
+History
+*******
+If you are an Aether ROC Administrator, you will be able to see the History of changes, from the *Basket View* by
+clicking on the **History** button.
+
+|BASKETVIEW-HISTORY|
+
+.. note:: The *History* button will only be visible if you are in the **AetherROCAdmin** group.
 
 Remove Connectivity Service from an existing UE
 -----------------------------------------------
@@ -146,9 +153,10 @@ then it might be necessary to split that range into multiple ranges.
     click the *trash can* icon next to that *IMSI Range* and
     use the *+* icon to add new Ranges for the remaining IMSI IDs.
 * Alternatively if the UE to be removed has an IMSI ID at the start or end of an existing IMSI Range:
-    then adjust the *from* or *to* value accordingly.
+    then adjust the **start** or **end** value accordingly.
+* Once finished editing, proceed to the *Basket View*, inspect the changes and Commit.
 
-    |DEVICEGROUP-EDIT|
+|DEVICEGROUP-EDIT|
 
 .. note::
     The UE may continue to have connectivity until its next detach/attach cycle.
@@ -158,20 +166,18 @@ Create a new DeviceGroup
 
 DeviceGroups allow UEs to be grouped and configured together. Each site comes preconfigured with
 a default DeviceGroup, but additional DeviceGroups may be created. For example, placing all IP
-Cameras in an my-site-ip-cameras DeviceGroup would allow you to group IP Cameras together.
+Cameras in an "my-site-ip-cameras" DeviceGroup would allow you to group IP Cameras together.
 
 To add a DeviceGroup, navigate to the list of DeviceGroups and click `Add` in the upper right.
 (This may be grayed out if you do not have appropriate permissions).
 
 * Specify a unique **id** for the DeviceGroup
     40 characters max and only alphanumeric and `-`, `_` and `.` allowed
-* Choose a *Site* from the list of preconfigured list
+* Choose a *Site* from the preconfigured list
     It will not be possible to add IMSI Ranges until the Site is chosen
-* IMSI Ranges can be added at this stage or later
+* UE ID Ranges can be added at this stage or later
 
-.. image:: images/aether-roc-gui-devicegroup-add.png
-    :width: 490
-    :alt: Adding a new Device Group requires an *id* and choosing a Site
+|DEVICEGROUP-ADD|
 
 Delete a DeviceGroup
 --------------------
@@ -187,7 +193,7 @@ A DeviceGroup can be deleted from the DeviceGroup list view, by clicking the *tr
 next to it. The deletion is added to the **Basket** directly. Navigate to the *Basket View*
 to commit the change.
 
-    |DEVICEGROUP-LIST|
+|DEVICEGROUP-LIST|
 
 
 Add a DeviceGroup to a Virtual Connectivity Service (VCS)
@@ -198,7 +204,7 @@ a Virtual Connectivity Service (VCS).
 
 Navigate to the *VCS* list view to see the list of VCS's and their associations to DeviceGroups.
 
-    |VCS-LIST|
+|VCS-LIST|
 
 To edit a *VCS* click on the *edit* button next to it in this list.
 
@@ -207,12 +213,10 @@ DeviceGroups can be associated with it.
 
 * Click the *trash can* symbol to remove a DeviceGroup from the VCS
 * Click the *+* icon to add a DeviceGroup
-* Click the *Allow* slider to Allow or Disallow the DeviceGroup
-    This is a way of disabling or reenabling the DeviceGroup within a VCS without having to remove it
+* Click the *Enable* slider to Enable or Disable the DeviceGroup
+   * This is a way of disabling or reenabling the DeviceGroup within a VCS without having to remove it
 
-.. image:: images/aether-roc-gui-vcs-edit.png
-    :width: 562
-    :alt: VCS Edit View in Aether ROC GUI showing DeviceGroup association editing
+|VCS-EDIT|
 
 Remove a DeviceGroup from a Virtual Connectivity Service (VCS)
 --------------------------------------------------------------
@@ -258,14 +262,34 @@ The per UE Monitor panel contains:
     :width: 28
     :alt: Monitor icon
 
+.. |DEVICEGROUP-ADD| image:: images/aether-roc-gui-devicegroup-add.png
+    :width: 490
+    :alt: Adding a new Device Group requires an *id* and choosing a Site
+
 .. |DEVICEGROUP-LIST| image:: images/aether-roc-gui-devicegroups-list.png
-    :width: 755
+    :width: 1000
     :alt: Device Groups List View in Aether ROC GUI showing Site association and IMSI Range of all DeviceGroups
 
 .. |DEVICEGROUP-EDIT| image:: images/aether-roc-gui-devicegroup-edit.png
-    :width: 755
+    :width: 700
     :alt: Device Groups Edit View in Aether ROC GUI showing IMSI Range
 
 .. |VCS-LIST| image:: images/aether-roc-gui-vcs-list.png
     :width: 920
     :alt: VCS List View in Aether ROC GUI showing DeviceGroup association
+
+.. |VCS-EDIT| image:: images/aether-roc-gui-vcs-edit.png
+    :width: 700
+    :alt: VCS Edit View in Aether ROC GUI showing DeviceGroup association editing
+
+.. |BASKETVIEW-NEWRANGE| image:: images/aether-roc-gui-basket-view-new-range.png
+    :width: 635
+    :alt: Basket View with some changes ready to be committed
+
+.. |BASKETVIEW-HISTORY| image:: images/aether-roc-gui-basket-view-history.png
+    :width: 800
+    :alt: Basket View with history of last changes
+
+.. |SITE-LIST| image:: images/aether-roc-gui-sites-list.png
+    :width: 755
+    :alt: Sites List View in Aether ROC GUI showing site details

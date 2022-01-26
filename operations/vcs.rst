@@ -10,18 +10,19 @@ QOS parameters.
 
 To define a VCS requires it to be associated with:
 
-* one or more **Application**
+* an Enterprise
+* a Site
+* one or more **Filter** (Application)
 * one or more **DeviceGroup**
-* an **AccessPointList**
 * a **UPF**
-* a **TrafficClass**
 
 and must also be created with attributes like:
 
 * **SD** (slice differentiator)
 * **SST** (slice/service type)
-* **Uplink** (data rate in Mbps)
-* **Downlink** (data rate in Mbps)
+* **Default Behavior** (for Application Filtering)
+* **Uplink** (data rate in bps)
+* **Downlink** (data rate in bps)
 
 Provisioning a new VCS
 ----------------------
@@ -37,25 +38,29 @@ to configure DeviceGroups.
 
 To add a new VCS, click the **Add** button in the VCS List View.
 
-    |VCS-LIST|
+|VCS-LIST|
 
 In the resulting VCS edit page:
 
-#. enter a VCS ID (this must be unique across the whole system).
-#. enter a Display Name (optional).
-#. enter a Description (optional).
+#. Enter a VCS ID (this must be unique across the whole system).
+#. Enter a Display Name (optional).
+#. Enter a Description (optional).
+#. Choose an Enterprise (may already have been selected)
+#. Choose a Site
 #. Choose a template
 
     * this will copy over values from that template, which may be edited individually at this create stage
     * they will not be editable afterwards.
-#. Choose an *Access Point List* from the drop down list.
+#. Accept the Default Behavior, SD and SST, and Uplink and Downlink values or change them.
 #. Choose a *UPF* from the drop down list.
+
+    * UPFs will previously have been added to a pool - those remaining unused will appear for selection.
 
 .. image:: images/aether-roc-gui-add-vcs.png
     :width: 500
     :alt: VCS Edit page adding a new VCS
 
-One or more Applications and or DeviceGroups can be associated with the VCS at this
+One or more Filters (Applications) and/or DeviceGroups can be associated with the VCS at this
 stage or later, by clicking on the *+* icon.
 
 When chosen, they appear as a list in the VCS edit page, and are automatically enabled/allowed:
@@ -72,24 +77,23 @@ Editing an existing VCS
 -----------------------
 When editing an existing VCS, it will not be possible to change:
 
-* the **id**
-* the **template** or any of the parameters beneath it
+* The **id**.
+* The **template** or the *SD* or *SST* parameters beneath it.
 
-Existing *Applications* or *DeviceGroups* can be removed by clicking the *trash can* icon next to it.
+Existing *Filters* or *DeviceGroups* can be removed by clicking the *trash can* icon next to it.
 
-Alternatively existing *Applications* or *DeviceGroups* can be *disabled/disallowed* by clicking the slider
+Alternatively existing *Filters* or *DeviceGroups* can be *disabled/disallowed* by clicking the slider
 next to it. This will have the same effect as disabling it.
 
-If one of the *DeviceGroup*s or *Application*s, *Access Point List*, *Traffic Class* or *UPF*
-itself is modified, then the changes on the VCS will take effect whenever changes to those
-objects are committed.
+.. note:: The *DeviceGroup* or *Filter* and *UPF* here are *references*. If the underlying object is modified, then
+    the changes on the VCS will take effect whenever changes to those objects are committed.
 
 Removing a VCS
 --------------
 Removing a VCS can be achieved by clicking the *trash can* icon next to the VCS in the
 VCS List page
 
-   |VCS-LIST|
+|VCS-LIST|
 
 Monitoring a VCS
 ----------------
@@ -102,17 +106,10 @@ The performance of a VCS can be monitored in many ways, by clicking its |monitor
 
 The *monitor* page itself shows:
 
-* A stacked bar graph of the Connectivity count of UEs over the last 15 minutes
-
-    * This shows the count of UE in the 3 different states - Active, Inactive and Idle
-* A line graph of the Throughput, Latency and Jitter of the VCS over the last 15 minutes
-* The live Throughput, Latency and Jitter values
+* A link to the Monitoring page of each Device Group. See :ref:`monitor_device_group`.
 * Information panels for each sub-object of the VCS
 
     * Clicking on the down arrow expands each panel
-
-The DeviceGroup(s) associated with the VCS has itself a |monitor| button that allows
-monitoring of each DeviceGroup. See :ref:`monitor_device_group`.
 
 .. image:: images/aether-roc-vcs-monitor.png
     :width: 920
