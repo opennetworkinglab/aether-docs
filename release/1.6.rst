@@ -137,6 +137,57 @@ Known Issues and Limitations
 * UPFs listed in the ROC should all be reachable, cannot include an unreachable
   UPF which may keep the existing UPFs to not function properly.
 
+Limitations on modifying objects by Enterprise Administrators
+-------------------------------------------------------------
+
+The following models and fields contain information that is configured by ONF
+Operations and should not be edited by an Enterprise Administrator. The GUI does
+not currently prevent editing these fields.
+
+* `Connectivity Service`. This object is fully managed by ONF. Do not add or edit.
+
+
+* `Enterprise`. This object is fully managed by ONF. Do not add or edit.
+
+* `IP Domain`.
+
+  * `Subnet` must match the deployed UPF associated with the VCS that this
+    IP Domain is used from. Do not change the subnet once it has been set. Do
+    not attempt to share a Subnet or a DNN across multiple VCSes.
+
+  * `DNN` must be unique per VCS that uses this IP Domain.
+
+* `Site`. New sites should not be added by the enterprise, but limited editing
+  of the site can take place, for example to change the `Display Name` or the
+  `Description`.
+
+  * `Small Cells` are preconfigured by ONF, but an enterprise may
+    add additional small cells over time with assistance from ONF for
+    configuration.
+
+  * `Monitoring` URLs should not be changed.
+
+  * `Edge Devices` are preconfigured by ONF, but an enterprise may add additional
+    edge devices over time. These devices are specifically Aether Edge Monitoring
+    Devices. Do not add non-Monitoring edge devices.
+
+  *  The `IMSI` (`MCC`, `MNC`, `Enterprise`, and `Format`) should not be
+     changed without consultation with ONF.
+
+* `Template`. These are fully managed by ONF. Do not add or edit.
+
+* `Traffic Class`. These are fully managed by ONF. Do not add or edit.
+
+* `UPF`. UPFs are created at enterprise onboarding time and made available by a
+  pool. There are no enterprise-modifiable attributes within the UPF object. If
+  the Enterprise needs to create an additional VCS and there are no available
+  UPFs, then please contact ONF and additional UPFs will be provisioned and added
+  to the pool.
+
+* `VCS`. VCSes may be added by the enterprise, up to the number of available UPFs.
+
+  * `Device Groups`. It is recommended that only one device group be added per VCS at this time.
+
 Component Versions
 ------------------
 

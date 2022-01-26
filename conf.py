@@ -248,6 +248,7 @@ linkcheck_ignore = [
     r'https://gerrit.opencord.org/.*',
     r'https://sas.goog/.*',
     r'https://www.fs.com/.*',
+    r'https://velero.io/.*',
 ]
 
 linkcheck_timeout = 3
