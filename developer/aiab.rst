@@ -26,6 +26,7 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
 * Ubuntu 18.04
 * Kernel 4.15 or later
 * Haswell CPU or newer
+* At least 4 CPUs and 12GB RAM
 
 Clone Repositories
 ------------------
@@ -70,7 +71,12 @@ Also fill out REPO_USERNAME and REPO_PASSWORD with the information needed to aut
 with Aether's Helm chart repositories.
 
 If you have already set up AiaB but you used incorrect credentials, first clean up AiaB as described
-in the `Cleanup`_ section, then edit *configs/authentication* and re-build AiaB.
+in the `Cleanup`_ section, and also run these commands::
+
+    kubectl -n omec delete secret aether.registry
+    rm /tmp/build/milestones/helm-ready
+
+Then edit *configs/authentication* and re-build AiaB.
 
 Installing the ROC
 ------------------
@@ -149,6 +155,7 @@ Subsequent builds will be much faster if you follow these steps to clean up the 
 destroying the Kubernetes cluster.
 
 * Clean up the 4G SD-CORE: *make reset-test*
+* Reset the 4G UE / eNB in order to re-run the 4G test: *make reset-ue*
 * Clean up the 5G SD-CORE: *make reset-5g-test*
 * Clean up the ROC: *make roc-clean*
 
@@ -189,14 +196,27 @@ If you suspect a problem, first verify that all pods are in Running state::
     kubectl -n omec get pods
     kubectl -n aether-roc get pods
 
-If the pods are stuck in ImagePullBackOff state, then it's likely an issue with credentials.  See the
-`Set up Authentication Tokens`_ section.
+Pods in ImagePullBackOff State
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+If the pods are stuck in ImagePullBackOff state, then it's likely an issue with credentials.  To verify this,
+run *kubectl describe* on a pod in that state, for example::
+
+    kubectl -n omec describe pod gnbsim-0
+
+Look in the *Events* section for more information about why the image pull failed.  If you see *unauthorized to
+access repository* then it's probably a credentials issue; see `Set up Authentication Tokens`_ above.
 
 4G Test Fails
 ^^^^^^^^^^^^^
 Occasionally *make test* (for 4G) fails for unknown reasons; this is true regardless of which Helm charts are used.
-If this happens, first try cleaning up AiaB and re-running the test.  If *make test* fails consistently, check
-whether the configuration has been pushed to the SD-CORE::
+If this happens, first try recreating the simulated UE / eNB and re-running the test as follows::
+
+    make reset-ue
+    make test
+
+If that does not work, try cleaning up AiaB as described above and re-building it.
+
+If *make test* fails consistently, check whether the configuration has been pushed to the SD-CORE::
 
     kubectl -n omec logs config4g-0 | grep "Successfully"
 
