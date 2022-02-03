@@ -71,6 +71,7 @@ can be found on the `ONF Wiki
    operations/subscriber
    operations/vcs
    advanced/appfilter
+   advanced/metering
 
 .. toctree::
    :maxdepth: 3
