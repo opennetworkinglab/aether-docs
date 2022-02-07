@@ -103,6 +103,23 @@ To install the Aether 1.6 release, add *CHARTS=release-1.6*::
 
     CHARTS=release-1.6 make roc-4g-models
 
+The ROC has successfully initialized when you see output like this::
+
+    echo "ONOS CLI pod: pod/onos-cli-5b947f8f6-4r5nm"
+    ONOS CLI pod: pod/onos-cli-5b947f8f6-4r5nm
+    until kubectl -n aether-roc exec pod/onos-cli-5b947f8f6-4r5nm -- \
+        curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
+        --header 'Content-Type: application/json' \
+        --data-raw "$(cat /root/aether-in-a-box//roc-5g-models-v4.json)"; do sleep 5; done
+    command terminated with exit code 22
+    command terminated with exit code 22
+    command terminated with exit code 22
+    "9513ea10-883d-11ec-84bf-721e388172cd"
+
+Don't worry if you see a few lines of *command terminated with exit code 22*; that command is trying to
+load the ROC models, and the message appears if the ROC isn't ready yet.  However if you see that message
+more than 10 times then something is probably wrong with the ROC or its models.
+
 Start the 4G SD-CORE
 --------------------
 
@@ -146,6 +163,15 @@ To install the Aether 1.6 release, add *CHARTS=release-1.6*::
 To change the behavior of the test run by gNBSim, change the contents of *gnb.conf*
 in *ransim-values.yaml*.  Consult the
 `gNBSim documentation <https://docs.sd-core.opennetworking.org/master/developer/gnbsim.html>`_ for more information.
+
+Exploring AiaB
+--------------
+
+The *kubectl* tool is the best way to get familiar with the pods and other Kubernetes objects installed by AiaB.
+The SD-CORE services, UPF, and simulated edge devices run in the *omec* namespace, while the ROC is running
+in the *aether-roc* namespace.
+
+The ROC GUI is available on port 31194 on the host running AiaB.
 
 Cleanup
 -------
