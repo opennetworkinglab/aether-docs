@@ -227,6 +227,7 @@ stateful
 subcomponent
 subnet
 subnets
+sudo
 tAC
 tcp
 telegraf

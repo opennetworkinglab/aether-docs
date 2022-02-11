@@ -23,19 +23,19 @@ AiaB offers a great deal of flexibility regarding which Helm chart versions to i
 
 AiaB can be run on a bare metal machine or VM.  System prerequisites:
 
-* Ubuntu 18.04
+* Ubuntu 18.04 clean install
 * Kernel 4.15 or later
 * Haswell CPU or newer
 * At least 4 CPUs and 12GB RAM
+* Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
 
 Clone Repositories
 ------------------
 
-To initialize the AiaB environment, first clone the following repository
-using your Gerrit ID::
+To initialize the AiaB environment, first clone the following repository::
 
     cd ~
-    git clone "ssh://<username>@gerrit.opencord.org:29418/aether-in-a-box"
+    git clone "https://gerrit.opencord.org:29418/aether-in-a-box"
 
 If you are going to install AiaB using published Helm charts, you can proceed to the
 next section.
@@ -44,14 +44,14 @@ If you wish to install SD-CORE from local Helm charts, clone these additional re
 
     mkdir -p ~/cord
     cd ~/cord
-    git clone "ssh://<username>@gerrit.opencord.org:29418/sdcore-helm-charts"
-    git clone "ssh://<username>@gerrit.opencord.org:29418/aether-helm-charts"
+    git clone "https://gerrit.opencord.org:29418/sdcore-helm-charts"
+    git clone "https://gerrit.opencord.org:29418/aether-helm-charts"
 
 If you wish to install the ROC from local Helm charts, clone this::
 
     mkdir -p ~/cord
     cd ~/cord
-    git clone "ssh://<username>@gerrit.opencord.org:29418/roc-helm-charts"
+    git clone "https://gerrit.opencord.org:29418/roc-helm-charts"
 
 Now change to *~/aether-in-a-box* directory.
 
@@ -67,14 +67,10 @@ Fill out REGISTRY_USERNAME and REGISTRY_CLI_SECRET as follows:
 * For REGISTRY_USERNAME, use the *Username* in your profile
 * Copy the *CLI secret* to the clipboard and paste to REGISTRY_CLI_SECRET
 
-Also fill out REPO_USERNAME and REPO_PASSWORD with the information needed to authenticate
-with Aether's Helm chart repositories.
-
 If you have already set up AiaB but you used incorrect credentials, first clean up AiaB as described
-in the `Cleanup`_ section, and also run these commands::
+in the `Cleanup`_ section, and also run::
 
     kubectl -n omec delete secret aether.registry
-    rm /tmp/build/milestones/helm-ready
 
 Then edit *configs/authentication* and re-build AiaB.
 
