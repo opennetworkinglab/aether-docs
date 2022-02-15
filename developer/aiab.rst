@@ -154,10 +154,13 @@ to the command, e.g.,::
 
 To install the Aether 1.6 release, add *CHARTS=release-1.6*::
 
-    CHARTS=release-1.6 make 5g-test
+    CHARTS=release-1.6 make 5gc
+
+NOTE: The *5g-test* target is not supported in Aether-1.6, but you can use the *5gc* target
+to build the 5G core.
 
 To change the behavior of the test run by gNBSim, change the contents of *gnb.conf*
-in *ransim-values.yaml*.  Consult the
+in *sd-core-5g-values.yaml*.  Consult the
 `gNBSim documentation <https://docs.sd-core.opennetworking.org/master/developer/gnbsim.html>`_ for more information.
 
 Exploring AiaB
@@ -199,16 +202,17 @@ Developer Loop
 --------------
 
 Suppose you wish to test a new build of a 5G SD-CORE services. You can deploy custom images
-by editing `~/aether-in-a-box/5g-core-values.yaml`, for example::
+by editing `~/aether-in-a-box/sd-core-5g-values.yaml`, for example::
 
-    images:
-        tags:
-            webui: registry.aetherproject.org/omecproject/5gc-webui:onf-release3.0.5-roc-935305f
-        pullPolicy: IfNotPresent
+    omec-control-plane:
+        images:
+            tags:
+                webui: registry.aetherproject.org/omecproject/5gc-webui:onf-release3.0.5-roc-935305f
+            pullPolicy: IfNotPresent
 
 To upgrade a running 5G SD-CORE with the new image, or to deploy the 5G SD-CORE with the image::
 
-    make 5g-test
+    make reset-5g-test; make 5g-test
 
 Troubleshooting / Known Issues
 ------------------------------
