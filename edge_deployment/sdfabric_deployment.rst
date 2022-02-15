@@ -13,130 +13,246 @@ SD-Fabric Deployment (Beta)
 Update aether-pod-configs
 -------------------------
 
-``aether-pod-configs`` is a git project hosted on **gerrit.opencord.org** and
+``aether-app-configs`` is a git project hosted on **gerrit.opencord.org** and
 we placed the following materials in it.
 
-- Terraform scripts to install SD-Fabric applications on Rancher, including ONOS, Stratum and Telegraf.
+- Rancher Fleet's configuration to install SD-Fabric applications on Rancher,
+  including ONOS, Stratum, Telegraf and PFCP-Agent.
 - Customized configuration for each application (helm values).
 - Application specific configuration files, including ONOS network configuration and Stratum chassis config.
 
 Here is an example folder structure:
 
-.. code-block:: console
+.. code-block::  bash
 
-   ╰─$ tree staging/stg-ace-menlo/sdfabric
-   staging/stg-ace-menlo/sdfabric
-   ├── app_map.tfvars
-   ├── backend.tf
-   ├── main.tf -> ../../../common/sdfabric/main.tf
-   ├── sdfabric
-   │   ├── app_map.tfvars
-   │   ├── backend.tf
-   │   ├── kubeconfig -> ../../../../common/sdfabric/apps/onos/kubeconfig
-   │   ├── leaf1-chassis-config.pb.txt
-   │   ├── leaf2-chassis-config.pb.txt
-   │   ├── main.tf -> ../../../../common/sdfabric/apps/sdfabric/main.tf
-   │   ├── sdfabric.yaml
-   │   ├── spine1-chassis-config.pb.txt
-   │   ├── spine2-chassis-config.pb.txt
-   │   └── variables.tf -> ../../../../common/sdfabric/apps/sdfabric/variables.tf
-   ├── telegraf
-   │   ├── app_map.tfvars
-   │   ├── backend.tf
-   │   ├── main.tf -> ../../../../common/sdfabric/apps/telegraf/main.tf
-   │   ├── telegraf.yaml
-   │   └── variables.tf -> ../../../../common/sdfabric/apps/telegraf/variables.tf
-   └── variables.tf -> ../../../common/tost/variables.tf
+   ╰─$ tree aether-dev/app/onos aether-dev/app/stratum aether-dev/app/pfcp-agent aether-dev/app/telegraf
+   ├── fleet.yaml
+   ├── kustomization.yaml
+   ├── overlays
+   │   ├── dev-pairedleaves-tucson
+   │   │   └── values.yaml
+   │   ├── dev-pdp-menlo
+   │   │   └── values.yaml
+   │   └── dev-sdfabric-menlo
+   │       └── values.yaml
+   └── registry-sealed-secret.yaml
+   aether-dev/app/stratum
+   ├── fleet.yaml
+   └── overlays
+      ├── dev-pairedleaves-tucson
+      │   ├── kustomization.yaml
+      │   ├── leaf1
+      │   ├── leaf2
+      │   ├── qos-config-leaf1.yaml
+      │   ├── qos-config-leaf2.yaml
+      │   └── values.yaml
+      └── dev-sdfabric-menlo
+         ├── kustomization.yaml
+         ├── menlo-sdfabric-leaf1
+         ├── menlo-sdfabric-leaf2
+         └── values.yaml
+   aether-dev/app/pfcp-agent
+   ├── fleet.yaml
+   └── overlays
+      ├── dev-pairedleaves-tucson
+      │   └── values.yaml
+      └── dev-sdfabric-menlo
+         └── values.yaml
+   aether-dev/app/telegraf
+   ├── fleet.yaml
+   └── overlays
+      ├── dev-pairedleaves-tucson
+      │   └── values.yaml
+      └── dev-sdfabric-menlo
+         └── values.yaml
 
-There are three Terraform scripts inside **sdfabric** directory and are responsible for managing each service.
 
-Root folder
-"""""""""""
+App folder
+""""""""""
 
-Terraform reads **app_map.tfvars** to know which application will be installed on Rancher
-and which version and customized values need to apply to.
+Rancher Fleet reads ``fleet.yaml`` to know where to download the Helm Chart manifest and
+how to customize the deployment for each target clusters.
 
-Here is the example of **app_map.tfvars** which defines prerequisite apps for SD-Fabric
-as well as project and namespace in which SD-fabric apps will be provisioned.
-Note that currently we don't have any prerequisite so we left this blank intentionally.
-It can be used to specify prerequisites in the future.
+Here is the example of ``fleet.yaml`` which downloads SD-Fabric(1.0.18) Helm Chart from
+**https://charts.aetherproject.org** and then use the **overlays/$cluster_name/values.yaml**
+to customize each cluster.
 
-.. code-block::
+.. code-block:: YAML
 
-   project_name     = "sdfabric"
-   namespace_name   = "tost"
+   # SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
+
+   defaultNamespace: tost
+   helm:
+   releaseName: sdfabric
+   repo: https://charts.aetherproject.org
+   chart: sdfabric
+   version: 1.0.18
+   helm:
+      values:
+         import:
+         stratum:
+            enabled: false
+   targetCustomizations:
+   - name: dev-sdfabric-menlo
+      clusterSelector:
+         matchLabels:
+         management.cattle.io/cluster-display-name: dev-sdfabric-menlo
+      helm:
+         valuesFiles:
+         - overlays/dev-sdfabric-menlo/values.yaml
+   - name: dev-pairedleaves-tucson
+      clusterSelector:
+         matchLabels:
+         management.cattle.io/cluster-display-name: dev-pairedleaves-tucson
+      helm:
+         valuesFiles:
+         - overlays/dev-pairedleaves-tucson/values.yaml
+   - name: dev-pdp-menlo
+      clusterSelector:
+         matchLabels:
+         management.cattle.io/cluster-display-name: dev-pdp-menlo
+      helm:
+         valuesFiles:
+         - overlays/dev-pdp-menlo/values.yaml
 
 
-SD-FABRIC folder
-""""""""""""""""
 
-All files under **onos** directory are related to ONOS application.
-The **app_map.tfvars** in this folder describes the information about ONOS helm chart.
-
-In this example, we specify the **onos-tost** helm chart version to **0.1.18** and load **onos.yaml**
-as custom value files.
-
-.. code-block::
-
-   apps = ["onos"]
-   namespace_name = "tost"
-
-   app_map = {
-      sdfabric = {
-        app_name         = "onos-tost"
-        repo_name        = "aether"
-        chart_name       = "sdfabric"
-        chart_version    = "1.0.7"
-        values_yaml      = "sdfabric.yaml"
-      }
-   }
-
-**sdfabric.yaml** used to custom your sdfabric Helm chart values and please check
+**values.yaml** used to custom your sdfabric Helm chart values and please check
 `SD-Fabric Helm chart <https://gerrit.opencord.org/plugins/gitiles/sdfabric-helm-charts/+/HEAD/sdfabric/README.md>`_
 to see how to configure it.
 
+ONOS App
+""""""""
+
+For the ONOS application, the most import configuration is network configuration (netcfg)
+which is environment-dependent configuration and you should configure it properly.
+
+netcfg is configured in the Helm Value files and please check the following example.
+
+.. code-block:: bash
+
+   ╰─$ cat aether-app-configs/aether-dev/app/onos/overlays/dev-sdfabric-menlo/values.yaml                                                                                                                                                    130 ↵
+   # SPDX-FileCopyrightText: 2020-present Open Networking Foundation <info@opennetworking.org>
+
+   # Value file for SDFabric helm chart.
+   ...
+   onos-classic:
+      config:
+         componentConfig:
+            "org.onosproject.net.host.impl.HostManager": >
+            {
+               "monitorHosts": "true",
+               "probeRate": "10000"
+            }
+            "org.onosproject.provider.general.device.impl.GeneralDeviceProvider": >
+            {
+               "readPortId": true
+            }
+         netcfg: >
+            {
+               .....
+            }
+
+
+
+Please check
+`SD-Fabric Configuration Guide <https://docs.sd-fabric.org/master/configuration/network.html>`_
+to learn more about network configuration.
+
+
+Stratum App
+"""""""""""
+
+Stratum reads the chassis config from the Kubernetes configmap resource but it doesn't support the function
+to dynamically reload the chassis config, which means we have to restart the Stratum pod every time
+when we update the chassis config.
+
+In order to solve this problem without modifying Stratum's source code, we have introduced the Kustomize to
+the deployment process. Kustomize supports the function called configMapGenerator which generates the configmap
+with a hash suffix in its name and then inject this hash-based name to the spec section of Stratum YAML file.
+
+See the following example, you can see the configmap name isn't fixed.
+
+.. code-block: bash
+
+   ╰─$ kc -n tost get daemonset stratum -o json
+   | jq '.spec.template.spec.volumes | .[] | select(.name == "chassis-config")'
+   {
+   "configMap": {
+      "defaultMode": 484,
+      "name": "stratum-chassis-configs-7t6tt25654"
+   },
+   "name": "chassis-config"
+   }
+
+
+From the view of the Kubernetes, when it notices the spec of the YAML file is changed, it will redeploy whole
+Stratum application, which means Stratum will read the updated chassis config eventually.
+
+.. code-block:: bash
+
+   ╰─$ tree aether-dev/app/stratum
+   ├── fleet.yaml
+   └── overlays
+      ├── dev-pairedleaves-tucson
+      │   ├── kustomization.yaml
+      │   ├── leaf1
+      │   ├── leaf2
+      │   ├── qos-config-leaf1.yaml
+      │   ├── qos-config-leaf2.yaml
+      │   └── values.yaml
+      └── dev-sdfabric-menlo
+         ├── kustomization.yaml
+         ├── menlo-sdfabric-leaf1
+         ├── menlo-sdfabric-leaf2
+         └── values.yaml
+
+   ╰─$ cat aether-dev/app/stratum/overlays/dev-pairedleaves-tucson/kustomization.yaml
+   # SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
+
+   configMapGenerator:
+   - name: stratum-chassis-configs
+      files:
+         - leaf1
+         - leaf2
+
 ..
 
-Once the Stratum is deployed to Kubernetes, it will read switch-dependent config files
-from the aether-pod-configs repo.
-The key folder(**stratum.config.folder**) indicates that relative path of configs.
+Check `SD-Fabric Doc <https://gerrit.opencord.org/plugins/gitiles/sdfabric-helm-charts/+/HEAD/sdfabric/README.md>`_
+to learn how to write the chassis config and don't forget to add the file name into the kustomization.yaml file
+once you set up your chassis config.
 
 .. attention::
 
-   The switch-dependent config file should be named as **${hostname}-chassis-config.pb.txt**.
-   For example, if the host name of your Tofino switch is **my-leaf**, please name config file **my-leaf-config.pb.txt**.
+   The switch-dependent config file should be named as **${hostname}**.
+   For example, if the host name of your Tofino switch is **my-leaf**, please name config file **my-leaf**.
 
 ..
    TODO: Add an example based on the recommended topology
 
-Telegraf folder
-"""""""""""""""
+Telegraf App
+""""""""""""
 
-The app_map.tfvars specify the Helm Chart version and the filename of the custom Helm value file.
+Below is the example directory structure of Telegraf application.
 
 .. code-block::
 
-   apps=["telegraf"]
-   namespace_name = "tost"
-   app_map = {
-     telegraf = {
-       app_name         = "telegraf"
-       repo_name        = "aether"
-       chart_name       = "tost-telegraf"
-       chart_version    = "0.1.5"
-       values_yaml      = "telegraf.yaml"
-    }
-   }
+   ╰─$ tree aether-dev/app/telegraf                                                                                                                                                                                                 255 ↵
+   aether-dev/app/telegraf
+   ├── fleet.yaml
+   └── overlays
+      ├── dev-pairedleaves-tucson
+      │   └── values.yaml
+      └── dev-sdfabric-menlo
+         └── values.yaml
 
-The **telegraf.yaml** used to override the ONOS-Telegraf Helm Chart and its environment-dependent.
+
+The **values.yaml** used to override the ONOS-Telegraf Helm Chart and its environment-dependent.
 Please pay attention to the **inputs.addresses** section.
 Telegraf will read data from stratum so we need to specify all Tofino switch’s IP addresses here.
 Taking Menlo staging pod as example, there are four switches so we fill out 4 IP addresses.
 
 .. code-block:: yaml
-
-   podAnnotations:
-      field.cattle.io/workloadMetrics: '[{"path":"/metrics","port":9273,"schema":"HTTP"}]'
 
    config:
       outputs:
@@ -162,39 +278,42 @@ Taking Menlo staging pod as example, there are four switches so we fill out 4 IP
 Create Your Own Configs
 """""""""""""""""""""""
 
-The easiest way to create your own configs is running the template script.
+Assume we would like to deploy the SD-Fabric to the ace-example cluster in the development environment.
 
-Assumed we would like to set up the **ace-example** pod in the production environment.
-
-1. open the **tools/ace_config.yaml** (You should already have this file when you finish VPN bootstrap stage)
-2. fill out all required variables
-3. perform the makefile command to generate configuration and directory for SD-Fabric
-4. update **onos.yaml** for ONOS
-5. update **${hostname}-chassis-config.pb.txt** for Stratum
-6. commit your change and open the Gerrit patch
-7. deploy your patch to ACE cluster and merge it after verifying the fabric connectivity
+1. Modify the fleet.yaml to customize your cluster with specific value file.
+2. Add your Helm Values into the overlays folder.
+3. Have to add the chassis config file into the kustomization.yaml for Stratum application.
 
 .. code-block:: console
 
-  vim tools/ace_config.yaml
-  make -C tools sdfabric
-  vim production/ace-example/sdfabric/sdfabric/sdfabric.yaml
-  vim production/ace-example/sdfabric/sdfabric/*${hostname}-chassis-config.pb.txt**
-  git add commit
-  git review
+   ╰─$ git st
+   On branch master
+   Your branch is up to date with 'origin/master'.
+
+   Changes to be committed:
+   (use "git restore --staged <file>..." to unstage)
+         modified:   aether-dev/app/onos/fleet.yaml
+         new file:   aether-dev/app/onos/overlays/dev-my-cluster/values.yaml
+         modified:   aether-dev/app/stratum/fleet.yaml
+         new file:   aether-dev/app/stratum/overlays/dev-my-cluster/kustomization.yaml
+         new file:   aether-dev/app/stratum/overlays/dev-my-cluster/menlo-sdfabric-leaf1
+         new file:   aether-dev/app/stratum/overlays/dev-my-cluster/menlo-sdfabric-leaf2
+         new file:   aether-dev/app/stratum/overlays/dev-my-cluster/values.yaml
+         modified:   aether-dev/app/telegraf/fleet.yaml
+         new file:   aether-dev/app/telegraf/overlays/dev-my-cluster/values.yaml
 
 
 Quick recap
 """""""""""
 
-To recap, most of the files in **tost** folder can be copied from existing examples.
+To recap, most of the files in **app** folder can be copied from existing examples.
 However, there are a few files we need to pay extra attentions to.
 
-- **sdfabric.yaml** in **sdfabric** folder
-- Chassis config in **sdfabric** folder
+- ``fleet.yaml`` in each app folder
+- Chassis config in **app/stratum/overlays/$cluster_name/** folder
   There should be one chassis config for each switch. The file name needs to be
-  **${hostname}-chassis-config.pb.txt**
-- **telegraf.yaml** in **telegraf** folder need to be updated with all switch
+  **${hostname}**
+- **values.yaml** in **telegraf** folder need to be updated with all switch
   IP addresses
 
 Double check these files and make sure they have been updated accordingly.
@@ -214,27 +333,21 @@ Deploy to ACE cluster
 SD-Fabric is environment dependent application and you have to prepare correct
 configurations for both ONOS and Stratum to make it work.
 
-A recommended approach is verifying your patch before merging it. You can
-type the comment **apply-all** in the Gerrit patch to trigger the deployment
-process, and then start to verify fabric connectivity.
-
-.. attention::
-
-   Due to the limitation of Terraform's dependent issue, you have to type the
-   comment **apply-all** to trigger root folder's Terraform script to setup
-   project and namespace before merging the patch.
-
-
 Check below section to learn more about how we setup the Jenkins job and how it works
 
-Create SD-Fabric (named TOST in Jenkins) deployment job in Jenkins
-------------------------------------------------------------------
+Create SD-Fabric deployment job in Jenkins
+------------------------------------------
 
-There are three major components in the Jenkins system, the Jenkins pipeline
-and Jenkins Job Builder and Jenkins Job.
+We have been using the Rancher Fleet to deploy SD-Fabric as the GitOps approach which means every change
+we push to the Git repo will be synced to the target cluster automatically.
 
-We follow the Infrastructure as Code principle to place three major components
-in a Git repo, ``aether-ci-management``
+However, ONOS doesn't support the incremental upgrade which means we have to delete all ONOS instance and
+then create all instance again every time we want to upgrade ONOS application.
+
+Rancher Fleet doesn't support the full recreation during the Application upgrade and that's reason we have
+created a Jenkins job to recreate the ONOSs application.
+
+You have to add the Jenkins job for new cluster by modifying ``aether-ci-management``
 
 Download the ``aether-ci-management`` repository.
 
@@ -244,300 +357,55 @@ Download the ``aether-ci-management`` repository.
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-ci-management"
 
 
-Here is the example of folder structure, we put everything related to three
-major components under the jjb folder.
-
-.. code-block:: console
-
-   $ tree -d jjb
-   jjb
-   ├── ci-management
-   ├── global
-   │   ├── jenkins-admin -> ../../global-jjb/jenkins-admin
-   │   ├── jenkins-init-scripts -> ../../global-jjb/jenkins-init-scripts
-   │   ├── jjb -> ../../global-jjb/jjb
-   │   └── shell -> ../../global-jjb/shell
-   ├── pipeline
-   ├── repos
-   ├── shell
-   └── templates
-
-
-Jenkins pipeline
-""""""""""""""""
-
-Jenkins pipeline runs the Terraform scripts to install desired applications
-into the specified Kubernetes cluster.
-
-Both ONOS and Stratum will read configuration files (network config, chassis
-config) from aether-pod-config.
-
-The default git branch is master.  For testing purpose, we also provide two
-parameters to specify the number of reviews and patchset.
-
-We will explain more in the next section.
-
-.. note::
-
-   Currently, we don’t perform the incremental upgrade for SD-Fabric application.
-   Instead, we perform the clean installation.
-   In the pipeline script, Terraform will destroy all existing resources and
-   then create them again.
-
-
-We put all pipeline scripts under the pipeline directory, the language of the
-pipeline script is groovy.
-
-.. code-block:: console
-
-   $ tree pipeline
-   pipeline
-   ├── aether-in-a-box.groovy
-   ├── artifact-release.groovy
-   ├── cd-pipeline-charts-postrelease.groovy
-   ├── cd-pipeline-dockerhub-postrelease.groovy
-   ├── cd-pipeline-postrelease.groovy
-   ├── cd-pipeline-terraform.groovy
-   ├── docker-publish.groovy
-   ├── ng40-func.groovy
-   ├── ng40-scale.groovy
-   ├── reuse-scan-gerrit.groovy
-   ├── reuse-scan-github.groovy
-   ├── tost-onos.groovy
-   ├── tost-stratum.groovy
-   ├── tost-telegraf.groovy
-   └── tost.groovy
-
-
-
-Currently, we had five pipeline scripts for SD-Fabric deployment.
-
-1. tost.groovy
-2. sdfabric.groovy
-3. tost-telegraf.groovy
-4. tost-onos-debug.groovy
-
-sdfabric.groovy and tost-telegraf.groovy are used to deploy the individual
-application respectively, and tost.groovy is a high level script, used to
-deploy whole SD-Fabric application, it will execute the above three scripts in its
-pipeline script.
-
-tost-onos-debug.groovy is used to dump the debug information from the ONOS controller
-and it will be executed automatically when ONOS is deployed.
-
-Jenkins jobs
-""""""""""""
-
-Jenkins job is the task unit in the Jenkins system. A Jenkins job contains the following information:
-
-- Jenkins pipeline
-- Parameters for Jenkins pipeline
-- Build trigger
-- Source code management
-
-We created one Jenkins job for each SD-Fabric component, per Aether edge.
-
-We have four Jenkins jobs (HostPath provisioner, ONOS, Stratum and Telegraf)
-for each edge as of today.
-
-There are 10+ parameters in Jenkins jobs and they can be divided into two
-parts, cluster-level and application-level.
-
-Here is an example of supported parameters.
-
-.. image:: images/jenkins-onos-params.png
-   :width: 480px
-
-Application level
-'''''''''''''''''
-
-- **GERRIT_CHANGE_NUMBER/GERRIT_PATCHSET_NUMBER**: tell the pipeline script to read
-  the config for aether-pod-configs repo from a specified gerrit review, instead of the
-  HEAD branch. It’s good for developer to test its change before merge.
-- **onos_user**: used to login ONOS controller
-- **git_repo/git_server/git_user/git_password_env**: information of git
-  repository, **git_password_env** is a key for Jenkins Credential system.
-
-Cluster level
-'''''''''''''
-
-- **gcp_credential**: Google Cloud Platform credential for remote storage, used
-  by Terraform.
-- **terraform_dir**: The root directory of the SD-Fabric directory.
-- **rancher_cluster**: target Rancher cluster name.
-- **rancher_api_env**: Rancher credential to access Rancher, used by Terraform.
-
-.. note::
-
-   Typically, developer only focus on **GERRIT_CHANGE_NUMBER** and **GERRIT_PATCHSET_NUMBER**. The rest of them are managed by OPs.
-
-Jenkins Job Builder (JJB)
-"""""""""""""""""""""""""
-
-We prefer to apply the IaC (Infrastructure as Code) for everything.  We use the
-JJB (Jenkins Job Builder) to create new Jenkins Job, including the Jenkins
-pipeline.  We need to clone a set of Jenkins jobs when a new edge is deployed.
-
-In order to provide the flexibility and avoid re-inventing the wheel, we used
-the job template to declare your job.  Thanks to the JJB, we can use the
-parameters in the job template to render different kinds of jobs easily.
-
-All the template files are placed under templates directory.
-
-.. code-block:: console
-
-   ╰─$ tree templates
-   templates
-   ├── aether-in-a-box.yaml
-   ├── archive-artifacts.yaml
-   ├── artifact-release.yml
-   ├── cd-pipeline-terraform.yaml
-   ├── docker-publish-github.yaml
-   ├── docker-publish.yaml
-   ├── helm-lint.yaml
-   ├── make-test.yaml
-   ├── ng40-nightly.yaml
-   ├── ng40-test.yaml
-   ├── private-docker-publish.yaml
-   ├── private-make-test.yaml
-   ├── publish-helm-repo.yaml
-   ├── reuse-gerrit.yaml
-   ├── reuse-github.yaml
-   ├── sync-dir.yaml
-   ├── tost.yaml
-   ├── verify-licensed.yaml
-   └── versioning.yaml
-
-We defined all SD-Fabric required job templates in tost.yaml and here is its partial
-content.
-
-.. code-block:: yaml
-
-   - job-template:
-      name: "{name}-onos"
-      id: "deploy-onos"
-      project-type: pipeline
-      dsl: !include-raw-escape: jjb/pipeline/tost-onos.groovy
-      triggers:
-        - onf-infra-tost-gerrit-trigger:
-           gerrit-server-name: '{gerrit-server-name}'
-           trigger_command: "apply"
-           pattern: "{terraform_dir}/tost/onos/.*"
-      logrotate:
-          daysToKeep: 7
-          numToKeep: 10
-          artifactDaysToKeep: 7
-          artifactNumToKeep: 10
-      parameters:
-          - string:
-                name: gcp_credential
-                default: "{google_bucket_access}"
-          - string:
-                name: rancher_cluster
-                default: "{rancher_cluster}"
-          - string:
-                name: rancher_api_env
-                default: "{rancher_api}"
-          - string:
-                name: git_repo
-                default: "aether-pod-configs"
-          - string:
-                name: git_server
-                default: "gerrit.opencord.org"
-          - string:
-                name: git_ssh_user
-                default: "jenkins"
-
-
-
-
-Once we have the job template, we need to tell the JJB, we want to use the job template to create our own jobs.
-Here comes the concept of project, you need to define job templates you want to use and the values of all parameters.
-
-
-We put all project yaml files under the repo directory and here is the example
-
-.. code-block:: console
-
-   ╰─$ tree repos                                                                                                                                   130 ↵
-   repos
-   ├── aether-helm-charts.yaml
-   ├── aether-in-a-box.yaml
-   ├── cd-pipeline-terraform.yaml
-   ├── ng40-test.yaml
-   ├── spgw.yaml
-   └── tost.yaml
-
-
-Following is the example of tost projects, we defined three projects here, and each project has different
-parameters and Jenkins jobs it wants to use.
-
-.. code-block:: yaml
-
-
-   - project:
-       name: deploy-tucson-pairedleaves-dev
-       rancher_cluster: "dev-pairedleaves-tucson"
-       terraform_dir: "staging/dev-pairedleaves-tucson"
-       rancher_api: "{rancher_staging_access}"
-       properties:
-         - onf-infra-onfstaff-private
-       jobs:
-         - "deploy"
-         - "deploy-onos"
-         - "deploy-stratum"
-         - "deploy-telegraf"
-         - "debug-tost"
-
-
-
 Create Your Own Jenkins Job
 """""""""""""""""""""""""""
 
-Basically, if you don't need to customize the Jenkins pipeline script and the job configuration, the only thing
-you need to do is modify the repos/tost.yaml to add your project.
+Modify jjb/repos/sdfabric.yaml to add your cluster.
 
-For example, we would like to deploy the SD-Fabric to our production pod, let's assume it named "tost-example".
-Add the following content into repos/tost.yaml
+For example, we want to deploy the SD-Fabric to our new cluster **my-cluster** which is on the staging environment.
+Add the following content into jjb/repo/sdfabric.yaml.
+
 
 .. code-block:: yaml
 
+   --- a/jjb/repos/sdfabric.yaml
+   +++ b/jjb/repos/sdfabric.yaml
+   @@ -50,6 +50,17 @@
+         - "deploy-sdfabric-app":
+         - "deploy-debug"
 
-   - project:
-       name: deploy-tost-example-production
-       rancher_cluster: "ace-test-example"
-       terraform_dir: "production/tost-example"
-       rancher_api: "{rancher_production_access}"
-       disable-job: false
-       need_stratum: false
-       need_onos: false
-       need_sdfabric: true
-       debug_namespace: tost
-       topology:
-         - sdfabric
-       properties:
-         - onf-infra-onfstaff-private
-       jobs:
-         - "deploy"
-             trigger_path: "sdfabric/.*
-         - "deploy-sdfabric"
-         - "deploy-telegraf"
-         - "debug-tost"
+   +- project:
+   +    name: my-cluster
+   +    disable-job: false
+   +    fleet-workspace: 'aether-dev'
+   +    properties:
+   +      - onf-infra-onfstaff-private
+   +    jobs:
+   +      - "deploy-sdfabric-app":
+   +      - "deploy-debug"
+   +
+   +
 
+If your cluster is on the production environment, you have to change both **terraform_env** and **fleet-workspace**
 
-.. note::
-
-   The **terraform_dir** indicates the directory location in aether-pod-configs repo, please ensure your Terraform scripts
-   already there before running the Jenkins job.
-
-
-Trigger SD-Fabric (named TOST in Jenkins) deployment in Jenkins
+Trigger SD-Fabric deployment in Jenkins
 ---------------------------------------------------------------
 
-Whenever a change is merged into **aether-pod-config**,
-the Jenkins job should be triggered automatically to (re)deploy SD-Fabric (named TOST in Jenkins).
+Whenever a change is merged into **aether-app-config**,
+the Jenkins job should be triggered automatically to (re)deploy SD-Fabric .
 
-You can also type the comment **apply** in the Gerrit patch, it will trigger Jenkins jobs to deploy SD-Fabric for you.
+You can also manually trigger the job to redeploy SD-Fabric if needed and below
+is an example of default parameters when you run the job.
+
+.. image:: images/jenkins-sdfabric-params.png
+   :width: 480px
+
+
+If you want to capture all SD-Fabric related containers logs before redeploying them,
+please enable ``POD_LOG`` option.
+The Jenkins job helps to redeploy ONOS, Stratum and PFCP-Agent application and the default
+options is ONOS and Stratum, you can redeploy what you want by click those ``REDEPLOY_XXXX``
+options.
 
 
 Verification
@@ -550,51 +418,23 @@ have an IP address and are **able to reach each other via fabric interface** bef
 This can be simply done by running a **ping** command from one server to another server's fabric IP.
 
 
-Disable deployment jobs
------------------------
-
-After verifying the SD-Fabric is ready, please submit another patch to disable the job.
-
-.. code-block:: diff
-
-   $ cd $WORKDIR/aether-ci-management
-   $ vi jjb/repos/tost.yaml
-
-   # Add jobs for the new cluster
-   diff --git a/jjb/repos/tost.yaml b/jjb/repos/tost.yaml
-   index 19bade4..81b4ab1 100644
-   --- a/jjb/repos/tost.yaml
-   +++ b/jjb/repos/tost.yaml
-   @@ -478,7 +478,7 @@
-        rancher_cluster: "ace-ntt"
-        terraform_dir: "production/ace-ntt"
-        rancher_api: "{rancher_production_access}"
-   -    disable-job: false
-   +    disable-job: true
-        properties:
-          - onf-infra-onfstaff-private
-        jobs:
-
 Troubleshooting
 ---------------
 
 The deployment process involves the following steps:
 
-1. Jenkins Job
-2. Jenkins Pipeline
-3. Clone Git Repository
-4. Execute Terraform scripts
-5. Rancher start to install applications
-6. Applications be deployed into Kubernetes cluster
-7. ONOS/Stratum will read the configuration (network config, chassis config)
-8. Pod become running
+1. Jenkins Job (For ONOS Only)
+2. Rancher Fleet upgrade application based on Git change
+3. Applications be deployed into Kubernetes cluster
+4. ONOS/Stratum will read the configuration (network config, chassis config)
+5. Pod become running
 
 Taking ONOS as an example, here's what you can do to troubleshoot.
 
-You can see the log message of the first 4 steps in Jenkins console.
+You can see the log message of the first step in Jenkins console.
 If something goes wrong, the status of the Jenkins job will be in red.
-If Jenkins doesn't report any error message, the next step is going to Rancher's portal
-to ensure the Answers is same as the *onos.yaml* in *aether-pod-configs*.
+If Jenkins doesn't report any error message, the next step is going to Rancher Fleet's
+portal to ensure Fleet works as expected.
 
 Accessing the Stratum CLI
 """""""""""""""""""""""""
