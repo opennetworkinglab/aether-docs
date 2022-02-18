@@ -10,7 +10,7 @@ Recommendations
 
 Metering is fully supported, though it is recommended that changes to metering
 be avoided unless necessary to meet a specific need. Metering can sometimes lead
-to counterintuitive behavior, such as unexpected limitations in network performance.
+to counter-intuitive behavior, such as unexpected limitations in network performance.
 
 Description
 -----------

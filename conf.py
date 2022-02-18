@@ -249,6 +249,7 @@ linkcheck_ignore = [
     r'https://sas.goog/.*',
     r'https://www.fs.com/.*',
     r'https://velero.io/.*',
+    r'https://cloud.google.com/.*',
 ]
 
 linkcheck_timeout = 3

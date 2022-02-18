@@ -58,6 +58,7 @@ can be found on the `ONF Wiki
    edge_deployment/sdfabric_deployment
    edge_deployment/connectivity_service_update
    edge_deployment/enb_installation
+   edge_deployment/site_remove
    edge_deployment/troubleshooting
    edge_deployment/pronto
 
