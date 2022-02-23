@@ -131,7 +131,7 @@ Execute the following::
    git clone https://github.com/onosproject/aether-roc-api.git
 
    # execute the mega-patch (it will post via CURL to localhost:8181)
-   bash ~/path/to/aether-roc-api/examples/MEGA_Patch_40.curl
+   bash ~/path/to/aether-roc-api/examples/MEGA_Patch_20.curl
 
 
 You may wish to customize the mega patch.
@@ -141,10 +141,10 @@ For example, by default the patch configures the ``sdcore-adapter`` to push to
 
 You could configure it to push to a live aether-in-a-box core by doing something like this::
 
-   sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch_40.curl
+   sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch_20.curl
 
    #apply the patch
-   ./MEGA_Patch_40.curl
+   ./MEGA_Patch_20.curl
 
 (Note that if your Aether-in-a-Box was installed on a different machine that port-forwarding may be necessary)
 
@@ -155,7 +155,7 @@ You can also verify that the mega-patch was successful by going into the
 ``aether-roc-gui`` in a browser (see the section on useful port-forwards
 below). The GUI may open to a dashboard that is unpopulated -- you can use the
 dropdown menu (upper-right hand corner of the screen) to select an object such
-as VCS and you will see a list of VCS.
+as Slice and you will see a list of slices.
 
    |ROCGUI|
 
@@ -487,21 +487,16 @@ modeling within the ROC.
 The ROC models must be configured with the following:
 
 * A default enterprise with the id `defaultent`.
-* A default ip-domain with the id `defaultent-defaultip`.
 * A default site with the id `defaultent-defaultsite`.
-  This site should be linked to the `defaultent` enterprise.
-* A default device group with the id `defaultent-defaultsite-default`.
-  This device group should be linked to the `defaultent-defaultip` ip-domain
-  and the `defaultent-defaultsite` site.
-
-Each Enterprise Site must be configured with a default device group and that default
-device group's name must end in the suffix `-default`. For example, `acme-chicago-default`.
+  This site should be within the `defaultent` enterprise.
+  This site is used by ``subscriber-proxy`` to place detected SIM Cards that cannot
+  be matched to an existing site.
 
 Some exercises to get familiar
 ------------------------------
 
 1. Deploy the ROC and POST the mega-patch, go into the ``aether-roc-gui`` and click
-   through the VCS, DeviceGroup, and other objects to see that they were
+   through the Slice, DeviceGroup, and other objects to see that they were
    created as expected.
 
 2. Examine the log of the ``sdcore-adapter-v3`` container.  It should be
@@ -523,4 +518,4 @@ Some exercises to get familiar
 
 .. |ROCGUI| image:: images/rocgui.png
     :width: 945
-    :alt: ROC GUI showing list of VCS
+    :alt: ROC GUI showing list of Slices
