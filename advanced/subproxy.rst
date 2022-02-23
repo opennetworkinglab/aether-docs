@@ -13,7 +13,7 @@ newly provisioned SIM cards to the ROC.
   :width: 400
 
 How Subscriber Proxy Works
-==========================
+--------------------------
 
 The subscriber proxy transparently intercepts simapp traffic and inspects each message for
 the IMSI that is contained in that message. If the IMSI is a new one that is not
@@ -33,7 +33,7 @@ If no appropriate site can be determined, then the subscriber proxy will not add
 sim-card to the ROC, but the request will still be passed to SD-Core.
 
 Configuring simapp
-==================
+------------------
 
 To configure simapp to send messages to the subscriber proxy, edit simapp's configuration
 file as follows::
