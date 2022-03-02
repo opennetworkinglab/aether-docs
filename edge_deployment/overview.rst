@@ -142,35 +142,7 @@ Hardware Descriptions
 
 Fabric Switch
 """""""""""""
-
-To use the P4 UPF, you must use fabric switches based on the `Intel (previously
-Barefoot) Tofino chipset
-<https://www.intel.com/content/www/us/en/products/network-io/programmable-ethernet-switch/tofino-series.html>`_.
-There are two variants of this switching chipset, with different resources and
-capabilities.
-
-Aether currently supports these P4 switch models:
-
-* `EdgeCore Wedge100BF-32X
-  <https://www.edge-core.com/productsInfo.php?cls=1&cls2=180&cls3=181&id=335>`_,
-  a Dual Pipe Tofino ASIC
-
-* `EdgeCore Wedge100BF-32QS
-  <https://www.edge-core.com/productsInfo.php?cls=1&cls2=180&cls3=181&id=770>`_,
-  a Quad Pipe Tofino ASIC, which has more chip resources and a faster embedded
-  system with more memory and storage.
-
-The P4 UPF and SD-Fabric features run within the constraints of the Dual Pipe
-system for production deployments, but for development of features in P4, the
-larger capacity of the Quad Pipe is desirable.
-
-These switches feature 32 QSFP+ ports capable of running in 100GbE, 40GbE, or
-4x 10GbE mode (using a split DAC or fiber cable) and have a 1GbE management
-network interface.
-
-See also the :ref:`Rackmount of Equipment
-<edge_deployment/site_planning:rackmount of equipment>` for how the Fabric
-switches should be rackmounted to ensure proper airflow within a rack.
+See :ref:`Switch Hardware Selection <sdfabric:deployment:switch hardware selection>`
 
 Compute Server
 """"""""""""""

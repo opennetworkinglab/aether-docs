@@ -264,6 +264,7 @@ intersphinx_mapping = {
     'sysapproach5g': ('https://5g.systemsapproach.org/', None),
     'sysapproachnet': ('https://book.systemsapproach.org/', None),
     'sysapproachsdn': ('https://sdn.systemsapproach.org/', None),
+    'sdfabric': ('https://docs.sd-fabric.org/master', None),
     }
 
 def setup(app):
