@@ -15,7 +15,7 @@ On the Production system it would be *https://roc.aetherproject.org/aether-roc-a
 .. note:: Opening this in a browser will display a HTML view of the API (powered by *ReDoc*).
 
     To access the raw YAML format use
-    ``curl -H "Accept: application/yaml" http://localhost:8183/aether-roc-api/aether-4.0.0-openapi3.yaml``
+    ``curl -H "Accept: application/yaml" http://localhost:8183/aether-roc-api/aether-2.0.0-openapi3.yaml``
     This YAML format can be imported in to various different tools e.g. |postman_link|
 
 Background
@@ -33,10 +33,10 @@ The REST API supports the typical GET, POST, PATCH, DELETE operations:
 
 Endpoints are named based on the type of object. Some examples:
 
-* `GET http://roc/aether/v4.0.0/connectivity-service-v3/enterprise/`. Get a list of enterprises.
-* `GET http://roc/aether/v4.0.0/connectivity-service-v3/enterprise/Starbucks`. Get the Starbucks enterprise.
-* `POST http://roc/aether/v4.0.0/connectivity-service-v3/enterprise`. Create a new enterprise.
-* `PATCH http://roc/aether/v4.0.0/connectivity-service-v3/site/Starbucks-NewYork`. Update the Starbucks New York site.
+* `GET http://roc/aether/v2.0.0/connectivity-service-v2/enterprises`. Get a list of enterprises.
+* `GET http://roc/aether/v2.0.0/connectivity-service-v2/enterprises/starbucks`. Get the Starbucks enterprise.
+* `POST http://roc/aether/v2.0.0/connectivity-service-v2/enterprises`. Create a new enterprise.
+* `POST http://roc/aether/v2.0.0/connectivity-service-v2/enterprises/enterprise/starbucks/site/starbucks-newyork`. Update the Starbucks New York site.
 
 This document is a high-level description of the objects that can be interacted with. For a
 low-level description, see the specification (:ref:`developer/roc-api:Access` section above).
@@ -47,13 +47,15 @@ Identifying and Referencing Objects
 Every object contains an `id` that is used to identify the object. The `id` is only unique within
 the scope of a particular type of object. For example, a site may be named `foo` and a device-group
 may also be named `foo`, and the two names do not conflict because they are different object types.
+The `id` is model specific. For example, a site has a `site-id` and an slice has a
+`slice-id`. The models are generally nested, for example `slice` is a member of `site`, which in
+turn is a member of `enterprise`.
 
 In addition to the `id`, most identifiable objects also include a `display-name`. The `display-name`
 may be changed at any time by the user without affecting behavior. In contrast, the `id` is immutable,
 and the only way to change an `id` is to delete the object and make a new one.
 
-Some objects contain references to other objects. For example, many objects contain references to
-the `Enterprise` object, which allows them to be associated with a particular enterprise. References
+Some objects contain references to other objects. References
 are constructed using the `id` field of the referenced object. It is an error to attempt to create
 a reference to an object that does not exist. Deleting an object while there are open references
 to it from other objects is also an error.
@@ -63,7 +65,7 @@ Common Model Fields
 
 Several fields are common to all models in Aether:
 
-* `id`. The identifier for objects of this model.
+* `<modelname>-id`. The identifier for objects of this model.
 * `description`. A human-readable description, used to store additional context about the object.
 * `display-name`. A human-readable name that is shown in the GUI.
 
@@ -92,7 +94,6 @@ Site
 may be either physical or logical (i.e. a single geographic location could in theory contain several
 logical sites). Site contains the following fields:
 
-* `enterprise`. A link to the `Enterprise` that owns this site.
 * `imsi-definition`. A description of how IMSIs are constructed for this site. Contains the following
   sub-fields:
 
@@ -127,54 +128,40 @@ Device-Group
 `Device-Group` allows multiple devices to be logically grouped together. `Device-Group` contains
 the following fields:
 
-* `imsis`. A list of IMSI ranges. Each range has the following
-  fields:
-
-   * `imsi-id`. Identifier of the IMSI. Serves the same purpose as other `id` fields.
-   * `imsi-range-from`. First subscriber in the range.
-   * `imsi-range-to`. Last subscriber in the range. Can be omitted if the range only contains one
-     IMSI. It is recommended to not use this feature, and to represent all IMSIs as singletons. This
-     field will be deprecated in the future.
+* `devices`. A list of Devices. Each device has an `enable` field which can be used to
+  enable or disable the device.
 * `ip-domain`. Reference to an `IP-Domain` object that describes the IP and DNS settings for UEs
   within this group.
-* `site`. Reference to the site where this `Device-Group` may be used. Indirectly identifies the
-  `Enterprise` as `Site` contains a reference to `Enterprise`.
+* `mbr`. Per-device maximum bitrate in bits per second that the application will be limited to:
 
-* `device`. Per-device related QoS settings:
+  * `uplink` the `mbr` from device to slice
+  * `downlink` the `mbr` from slice to device
 
-   * `mbr`. The maximum bitrate in bits per second that the application will be limited to:
+* `traffic-class`. The traffic class to be used for devices in this group.
 
-      * `uplink` the `mbr` from device to slice
-      * `downlink` the `mbr` from slice to device
+Slice
+~~~~~
 
-   * `traffic-class`. The traffic class to be used for devices in this group.
-
-Virtual Cellular Service
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-`Virtual Cellular Service (VCS)` connects a `Device-Group` to an `Application`. `VCS` has the
+`Slice` connects a `Device-Group` to an `Application`. `Slice` has the
 following fields:
 
-* `device-group`. A list of `Device-Group` objects that can participate in this `VCS`. Each
+* `device-group`. A list of `Device-Group` objects that can participate in this `Slice`. Each
   entry in the list contains both the reference to the `Device-Group` as well as an `enable`
   field which may be used to temporarily remove access to the group.
 * `default-behavior`. May be set to either `ALLOW-ALL`, `DENY-ALL`, or `ALLOW-PUBLIC`. This is
   the rule to use if no other rule in the filter matches. `ALLOW-PUBLIC` is a special alias
   that denies all private networks and then allows everything else.
 * `filter`. A list of `Application` objects that are either allowed or denied for this
-  `VCS`. Each entry in the list contains both a reference to the `Application` as well as an
+  `Slice`. Each entry in the list contains both a reference to the `Application` as well as an
   `allow` field which can be set to `true` to allow the application or `false` to deny it. It
   also has a `priority` field which can be used to order the applications when considering the
   enforcing of their `allow` or `deny` conditions.
 * `upf`. Reference to the User Plane Function (`UPF`) that should be used to process packets
-  for this `VCS`. It's permitted for multiple `VCS` to share a single `UPF`.
-* `enterprise`. Reference to the `Enterprise` that owns this `VCS`.
-* `site`. Reference to the `Site` where this `VCS` is deployed. Aether maintains the restriction
-  that the `Site` of the `UPF` and `Device-Group` must match the `Site` of the `VCS`.
+  for this `Slice`. It's permitted for multiple `Slice` to share a single `UPF`.
 * `SST`, `SD`. Slice identifiers. These are assigned by Aether Operations.
-* `slice.mbr.uplink`, `slice.mbr.downlink`. Slice-total Uplink and downlink maximum bit rates in bps.
-* `slice.mbr.uplink-burst-size`, `slice.mbr.downlink-burst-size`. Maximum burst sizes in bytes for
-   the maximum bit rates.
+* `mbr.uplink`, `mbr.downlink`. Slice-total Uplink and downlink maximum bit rates in bps.
+* `mbr.uplink-burst-size`, `mbr.downlink-burst-size`. Maximum burst sizes in bytes for
+  the maximum bit rates.
 
 Application
 ~~~~~~~~~~~
@@ -196,9 +183,6 @@ the termination point for traffic from the UPF. Contains the following fields:
         * `downlink` the `mbr` from application to device
 
     * `traffic-class`. Traffic class to be used when UEs send traffic to this Application endpoint.
-
-* `enterprise`. Link to an `Enterprise` object that owns this application. May be left empty
-  to indicate a global application that may be used by multiple enterprises.
 
 Supporting Aether Objects
 -------------------------
@@ -228,10 +212,10 @@ Template
 ~~~~~~~~
 
 `Template` contains connectivity settings that are pre-configured by Aether Operations.
-Templates are used to initialize `VCS` objects. `Template` has the following fields:
+Templates are used to initialize `Slice` objects. `Template` has the following fields:
 
 * `default-behavior`. May be set to either `ALLOW-ALL`, `DENY-ALL`, or `ALLOW-PUBLIC`. This is
-  the rule to use if no other rule in the VCS's application filter matches. `ALLOW-PUBLIC` is
+  the rule to use if no other rule in the Slice's application filter matches. `ALLOW-PUBLIC` is
   a special alias that denies all private networks and then allows everything else.
 * `sst`, `sd`. Slice identifiers.
 * `uplink`, `downlink`. Guaranteed uplink and downlink bandwidth.
@@ -253,7 +237,7 @@ Specifies the class of traffic. Contains the following:
 UPF
 ~~~
 
-Specifies the UPF that should forward packets. A UPF can only be used by one VCS at a time.
+Specifies the UPF that should forward packets. A UPF can only be used by one Slice at a time.
 Has the following fields:
 
 * `address`. Hostname or IP address of UPF.

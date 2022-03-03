@@ -35,11 +35,11 @@ Atomix and onos-operator must be installed::
    # install atomix
    export ATOMIX_CONTROLLER_VERSION=0.6.8
    helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
-   export ATOMIX_RAFT_VERSION=0.1.15
+   export ATOMIX_RAFT_VERSION=0.1.16
    helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
 
    # install the onos operator
-   ONOS_OPERATOR_VERSION=0.4.14
+   ONOS_OPERATOR_VERSION=0.5.1
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
 .. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
@@ -69,6 +69,10 @@ Atomix and onos-operator must be installed::
      - 0.6.8
      - 0.1.15
      - 0.4.14
+   * - 2.0.29-
+     - 0.6.8
+     - 0.1.16
+     - 0.5.1
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
@@ -93,7 +97,7 @@ You’ll want to override several of the defaults in the ROC helm charts::
      ingress:
        enabled: false
 
-   aether-roc-gui-v3:
+   aether-roc-gui-v2:
      ingress:
        enabled: false
    EOF
@@ -103,10 +107,7 @@ Installing the ``aether-roc-umbrella`` Helm chart
 
 Add the necessary helm repositories::
 
-   # obtain username and password from Michelle and/or ONF infra team
-   export repo_user=<username>
-   export repo_password=<password>
-   helm repo add aether --username "$repo_user" --password "$repo_password" https://charts.aetherproject.org
+   helm repo add aether https://charts.aetherproject.org
 
 ``aether-roc-umbrella`` will bring up the ROC and its services::
 
@@ -170,7 +171,7 @@ If the uninstall hangs or if a subsequent reinstall hangs, it could be an issue 
 not getting cleaned up. The following may be useful::
 
     # fix stuck finalizers in operator CRDs
-    kubectl -n micro-onos patch entities connectivity-service-v4 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities connectivity-service-v2 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch entities plproxy-amp --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch entities plproxy-acc --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch kind plproxy --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
@@ -191,7 +192,7 @@ The following port-forwards may be useful::
 
    # aether-roc-gui
 
-   kubectl -n micro-onos port-forward service/aether-roc-gui-v4 --address 0.0.0.0 8183:80
+   kubectl -n micro-onos port-forward service/aether-roc-gui-v2 --address 0.0.0.0 8183:80
 
    # grafana
 
@@ -214,17 +215,12 @@ Deploying using custom images
 Custom images may be used by editing the values-override.yaml file.
 For example, to deploy a custom ``sdcore-adapter``::
 
-   sdcore-adapter-v3:
-
-   prometheusEnabled: false
-
+   sdcore-adapter-v2:
+     prometheusEnabled: false
    image:
-
-   repository: my-private-repo/sdcore-adapter
-
-   tag: my-tag
-
-   pullPolicy: Always
+     repository: my-private-repo/sdcore-adapter
+     tag: my-tag
+     pullPolicy: Always
 
 The above example assumes you have published a docker images at ``my-private-repo/sdcore-adapter:my-tag``.
 My particular workflow is to deploy a local-docker registry and push my images to that.
@@ -240,23 +236,25 @@ If you’re using KinD, then you can push a local image to into the kind cluster
 Developing using a custom onos-config
 -------------------------------------
 
-The onos-operator is responsible for building model plugins at runtime. To do this, it needs source code
-for onos-config that matches the onos-config image that is deployed. One way to do this is to fork the
-onos-config repository and commit your onos-config changes to a personal repository, and then reference
-that personal repository in the values.yaml. For example::
+The onos-config helm chart is responsible for loading model plugins at runtime. You can override which
+plugins it loads, and optionally override the image for onos-config as well. For example::
 
-  onos-config:
-    plugin:
-      compiler:
-        target: "github.com/mygithubaccount/onos-config@mytag"
-    image:
-      repository: mydockeraccount/onos-config
-      tag: mytag
-      pullPolicy: Always
+    onos-config:
+      image:
+        tag: mytag
+        repository: mydockeraccount/onos-config
+      modelPlugins:
+        - name: aether-2
+          image: mydockeraccount/aether-2.0.x:mytag
+          endpoint: localhost
+          port: 5152
+        - name: aether-4
+          image: mydockeraccount/aether-4.x:mytag
+          endpoint: localhost
+          port: 5153
 
-In the above example, the operator will pull the image from `mydockeraccount`, and it'll pull the
-onos-config code from `mygithubaccount`. Using a personal docker account is not strictly necessary;
-images can also be built and tagged entirely locally.
+In the above example, the onos-config image will be pulled from `mydockeraccount`, and it will install
+two plugins for v2 and v4 models, from that same docker account.
 
 Inspecting logs
 ---------------
@@ -268,7 +266,7 @@ The names may change from deployment to deployment, so start by getting a list o
 
 Then you can inspect a specific pod/container::
 
-   kubectl -n micro-onos logs deployment/sdcore-adapter-v4
+   kubectl -n micro-onos logs deployment/sdcore-adapter-v2
 
 .. _securing_roc:
 
@@ -287,7 +285,7 @@ specifying an OpenID Connect (OIDC) issuer like::
     helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
         --set onos-config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set aether-roc-api.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
-        --set aether-roc-gui-v4.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+        --set aether-roc-gui-v2.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set prom-label-proxy-acc.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set prom-label-proxy-amp.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master
 
@@ -393,7 +391,7 @@ Alternatively with Keycloak a Token may be requested programmatically through th
     --data-urlencode 'client_id=aether-roc-gui' \
     --data-urlencode 'username=alicea' \
     --data-urlencode 'password=password' \
-    --data-urlencode 'scope=openid profile email groups' | jq "access_token"
+    --data-urlencode 'scope=openid profile email groups' | jq "{access_token}"
 
 
 The key will expire after 24 hours.
@@ -499,20 +497,20 @@ Some exercises to get familiar
    through the Slice, DeviceGroup, and other objects to see that they were
    created as expected.
 
-2. Examine the log of the ``sdcore-adapter-v3`` container.  It should be
+2. Examine the log of the ``sdcore-adapter-v2`` container.  It should be
    attempting to push the mega-patch’s changes.  If you don’t have a core
    available, it may be failing the push, but you should see the attempts.
 
-3. Change an object in the GUI.  Watch the ``sdcore-adapter-v3`` log file and
+3. Change an object in the GUI.  Watch the ``sdcore-adapter-v2`` log file and
    see that the adapter attempts to push the change.
 
-4. Try POSTing a change via the API.  Observe the ``sdcore-adapter-v3`` log
+4. Try POSTing a change via the API.  Observe the ``sdcore-adapter-v2`` log
    file and see that the adapter attempts to push the change.
 
 5. Deploy a 5G Aether-in-a-Box (See :doc:`Setting Up Aether-in-a-Box
    <aiab>`), modify the mega-patch to specify the URL for the Aether-in-a-Box
    ``webui`` container, POST the mega-patch, and observe that the changes were
-   correctly pushed via the ``sdcore-adapter-v3`` into the ``sd-core``’s
+   correctly pushed via the ``sdcore-adapter-v2`` into the ``sd-core``’s
    ``webui`` container (``webui`` container log will show configuration as it
    is received)
 
