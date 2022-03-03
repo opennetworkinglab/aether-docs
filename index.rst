@@ -69,8 +69,10 @@ can be found on the `ONF Wiki
    :glob:
 
    operations/procedures
+   operations/gui
    operations/subscriber
-   operations/vcs
+   operations/slice
+   operations/monitor
    advanced/appfilter
    advanced/metering
    advanced/subproxy
