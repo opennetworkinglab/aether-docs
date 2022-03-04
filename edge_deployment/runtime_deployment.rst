@@ -37,8 +37,8 @@ Rancher's built-in GitOps tool, **Fleet**, and **aether-app-configs** is the
 repository where all Aether applications are defined.
 
 Most of the Aether system applications listed above do not require cluster
-specific configurations, except **rancher-monitoring** and **uedns**.
-For these applications, you will have to manually create custom configurations and
+specific configurations except **uedns**.
+For **uedns**, you will have to manually create custom configurations and
 commit them to aether-app-configs.
 
 First, download ``aether-app-configs`` if you don't have it already in your development machine.
@@ -47,37 +47,6 @@ First, download ``aether-app-configs`` if you don't have it already in your deve
 
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
-
-Configure rancher-monitoring
-""""""""""""""""""""""""""""
-
-Open ``fleet.yaml`` under ``infrastructure/rancher-monitoring``, add a custom target
-with the new cluster name as a selector, and provide cluster specific Helm values and
-kustomize overlay directory path like below.
-
-.. code-block:: yaml
-
-   $ cd $WORKDIR/aether-app-configs/infrastructure/rancher-monitoring
-   $ vi fleet.yaml
-   # add following block at the end
-   - name: ace-test
-     clusterSelector:
-       matchLabels:
-         management.cattle.io/cluster-display-name: ace-test
-     helm:
-       values:
-         prometheus:
-           prometheusSpec:
-             additionalAlertRelabelConfigs:
-               - source_labels: [__address__]
-                 target_label: cluster
-                 replacement: ace-test
-     kustomize:
-       dir: overlays/prd-ace
-
-.. note::
-
-   Above step will not be required in Rancher v2.6 as it supports using cluster labels as helm values in a list.
 
 Configure ``ue-dns``
 """"""""""""""""""""
@@ -89,10 +58,10 @@ Be sure to replace ``[ ]`` in the example configuration below to the actual clus
 
 .. code-block:: yaml
 
-   $ cd $WORKDIR/aether-app-configs/infrastructure/coredns
+   $ cd $WORKDIR/aether-app-configs/ace-<cluster group>/infra/coredns
    $ mkdir overlays/prd-ace-test
    $ vi overlays/prd-ace-test/values.yaml
-   # SPDX-FileCopyrightText: 2021-present Open Networking Foundation <info@opennetworking.org>
+   # SPDX-FileCopyrightText: 2022-present Open Networking Foundation <info@opennetworking.org>
 
    serviceType: ClusterIP
    service:
@@ -133,12 +102,12 @@ Be sure to replace ``[ ]`` in the example configuration below to the actual clus
            parameters: 30
 
 
-Next, update ``fleet.yaml`` under ``infrastructure/coredns`` so that Fleet can use the custom configuration
+Next, update ``fleet.yaml`` under ``infra/coredns`` so that Fleet can use the custom configuration
 you just created when deploying UE-DNS to the cluster.
 
 .. code-block:: yaml
 
-   $ cd $WORKDIR/aether-app-configs/infrastructure/coredns
+   $ cd $WORKDIR/aether-app-configs/ace-<cluster group>/infra/coredns
    $ vi fleet.yaml
    # add following block at the end
    - name: prd-ace-test

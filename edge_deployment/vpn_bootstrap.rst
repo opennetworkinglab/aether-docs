@@ -130,7 +130,7 @@ Add the new cluster information at the end of the following global resource maps
    $ cd $WORKDIR/aether-pod-configs/production
    $ vi cluster_map.tfvars
 
-   # Add the new K8S cluster information at the end of the map
+   # Add the new K8S cluster information at the end of the cluster group it belongs to
    $ git diff cluster_map.tfvars
    --- a/production/cluster_map.tfvars
    +++ b/production/cluster_map.tfvars
