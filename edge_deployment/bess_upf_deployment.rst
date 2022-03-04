@@ -54,6 +54,11 @@ Also, in order for downlink traffic to UE to be delivered to its destination,
 it must be forwarded to the UPF's core interface.
 This adds additional routes to the management server and L3 switch.
 
+.. note::
+
+  There is a work-in-progress on interface consolidation in BESS UPF,
+  which will merge `enb`, `access` and `core` into just one interface and
+  simplify the configuration significantly.
 
 Check Cluster Resources
 -----------------------
@@ -118,9 +123,9 @@ Don't forget to replace the IP addresses in the example configuration with the a
      # Add below when connecting to 5G core
      #cfgFiles:
      #  upf.json:
+     #    gtppsc: true
      #    cpiface:
-     #      dnn: "8internet"
-     #      hostname: "upf"
+     #      dnn: "internet" # should match the one configured in ROC
 
 
 Update ``fleet.yaml`` in the same directory to let Fleet use the custom configuration when deploying
