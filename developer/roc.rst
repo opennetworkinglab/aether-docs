@@ -1,5 +1,7 @@
 .. vim: syntax=rst
 
+.. _roc-developer-guide:
+
 Aether ROC Developer Guide
 ==========================
 

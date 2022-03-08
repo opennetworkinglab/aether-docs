@@ -109,19 +109,19 @@ Architecture
 
 Below is a high-level architectural diagram of the ROC:
 
-.. image:: images/aether-architecture.svg
+.. image:: images/roc-diagram-for-guide.svg
     :width: 1000
 
 The following walks through the main stack of ROC components in a top-down manner, starting with the GUI(s) and
 ending with the devices/services.
 
-Operations Portal / Enterprise Portal
-"""""""""""""""""""""""""""""""""""""
+Aether Portals
+""""""""""""""
 
-The code base for the Operations Portal and Enterprise Portal is shared.
-They are two different perspectives of the same portal.
-The *Operations Portal* presents a rougher, more expansive view of the breadth of the Aether modeling.
-The Enterprise Portal presents a more curated view of the modeling.
+One or more portals may reside above the ROC, providing a convenient user interface.
+These will include an *Operations Portal* that will have a high level of technical
+detail for Aether staff, as well as an *Enterprise Portal* that will have a presentation
+aimed at customers.
 These different perspectives can be enforced through the following:
 
 -  RBAC controls, to limit access to information that might be unsuitable for a particular party.
@@ -167,16 +167,18 @@ The API layer serves multiple purposes:
    gNMI supports only "GET" and "SET", whereas the ``aether-roc-api`` natively supports "GET", "PUT", "POST", "PATCH",
    and "DELETE".
 
-aether-config
-"""""""""""""
+aether-config stack
+"""""""""""""""""""
 
 *Aether-config* (a Aether-specific deployment of the "\ *onos-config*\ " microservice) is the core of the ROC's
 configuration system.
 Aether-config is a component that other teams may use in other contexts.
 It's possible that an Aether deployment might have multiple instances of aether-config used for independent purposes.
 The job of aether-config is to store and version configuration data.
-Configuration is pushed to aether-config through the northbound gNMI interface, is stored in an Atomix database
-(not shown in the figure), and is pushed to services and devices using a southbound gNMI interface.
+Configuration is pushed to aether-config through the northbound gNMI interface, stored in an Atomix database,
+then pushed to services and devices using a southbound gNMI interface.
+An operator is part of the aether-config stack and assists in configuring onos-topo (not pictured),
+a topology management component.
 
 Adapters
 """"""""
@@ -194,16 +196,7 @@ Workflow Engine
 """""""""""""""
 
 The workflow engine, to the left of the aether-config stack, is where multi-step workflows may be implemented.
-At this time we do not have these workflows, but during the experience with SEBA/VOLTHA, we learned that workflow
-became a key aspect of the implementation.
-For example, SEBA had a state machine surrounding how devices were authorized, activated, and deactivated.
 The workflow engine is a placeholder where workflows may be implemented in Aether as they are required.
-
-Another use of the workflow engine may be to translate between levels in modeling.
-For example, the workflow engine may examine the high-level Enterprise modeling and make changes to the Operations
-modeling to achieve the Enterprise behavior.
-
-Previously this component was referred to as "onos-ztp".
 It is expected that a workflow engine would both read and write the aether-config data model, as well as respond to
 external events.
 
@@ -211,33 +204,17 @@ Analytics Engine
 """"""""""""""""
 
 The analytics engine, to the right of the aether-config stack, is where enrichment of analytics will be performed.
-Raw metrics and logs are collected with open source components Grafana/Prometheus and ElasticStack.
-Those metrics might need additional transformation before they can be presented to Enterprise users, or in some
-cases even before they are presented to the Ops team.
-The Analytics engine would be a place where those metrics could be transformed or enriched, and then written back
-to Prometheus or Elastic (or forwarded as alerts).
-
-The analytics engine is also where analytics would be related to config models in aether-config, in order for
-Enterprise or Operations personnel to take action in response to data and insights received through analytics.
-Action doesn't necessarily have to involve humans.
-It is expected that the combination of Analytics Engine and Workflow Engine could automate a response.
+Raw metrics and events are pushed to the analytics engine through an event bus such as Kafka.
+The events are processed by an event processor that enriches the event with context from multiple sources, including
+from the configuration system.
+The enriched events are then stored in a local database.
+Aether-config can query the enriched events as part of gNMI operational state.
+The enriched events are also pushed through a northbound abstraction, where they may be utilized by
+Grafana, or utilized directly by the Aether portals.
 
 The analytics engine also provides an opportunity to implement access control from the telemetry API.
-Prometheus itself is not multi-tenant and does not support fine-grained access controls.
-
-Aether Operator
-"""""""""""""""
-
-Not pictured in the diagram is the ONOS Operator, which is responsible for configuring the models within
-aether-config. Models to load are specified by a helm chart.
-The operator compiles them on demand and incorporates them into aether-config.
-This eliminates dynamic load compatibility issues that were previously a problem with building models and
-aether-config separately. Operators are considered a best practice in Kubernetes.
-
-Modules are loaded into the process primarily for performance and simplicity reasons.
-The design team has had experience with other systems (for example, VOLTHA and XOS) where modules were decoupled
-and message buses introduced between them, but that can lead to both complexity issues and performance bottlenecks
-in those systems. The same module and operator pattern will be applied to ``aether-roc-api``.
+For example, if Prometheus is chosen as the northbound abstraction, then a solution such as
+prom-label-proxy may be used for access control.
 
 Aether Modeling
 ---------------
@@ -257,12 +234,7 @@ Similarly, some objects might be partially customer-facing and partially operato
 For example, a *Radio* is a piece of hardware the customer has deployed on his premises, so he must know of it, but
 the configuration details of the radio (signal strength, IP address, etc) are operator-facing.
 
-An approximation of the current Aether-3.0 (Release 1.5) modeling is presented below:
-
-.. image:: images/aether-3.0-models.svg
-    :width: 800
-
-The key Enterprise-facing abstractions are *Applicatio*\ n, *Virtual Cellular Service* (VCS), and *DeviceGroup*.
+For further information on the set of models used in this Aether release, consult :ref:`roc-developer-guide`.
 
 Identity Management
 -------------------
@@ -326,50 +298,3 @@ The Operations Portal is built on Angular 12 framework, and is compatible with t
    * - Google Android
      - 2 most recent major versions
 
-Logging in to the portal
-""""""""""""""""""""""""
-Navigating to the portal URL e.g. ``https://roc.<cluster-ingress-hostname>`` will briefly show
-an empty dashboard, before temporarily redirecting to the Authentication server's login
-page e.g. ``https://keycloak.ananki.io``
-
-.. image:: images/keycloak-login.png
-    :width: 800
-
-.. note:: The username and password are your Keycloak credentials - if you have forgotten
-    your password, please contact the system administrator.
-
-On entering the "username" and "password" you will be redirected to the dashboard.
-
-Clicking the user name in the drop down menu will display your name and the groups you belong to:
-
-.. image:: images/ops-portal-login-details.png
-    :width: 800
-
-.. note:: Click on the panel to dismiss it
-
-Clicking on the API Key, shows your Session API Key, along with the time it
-expires (in 24 hours time).
-
-.. image:: images/ops-portal-api-key.png
-    :width: 800
-
-Logging out of the portal
-"""""""""""""""""""""""""
-
-To log out of the portal click the "Sign Out" button at the end of the drop down menu.
-This releases all resources and redirects you to the Keycloak Account Management page,
-where you will have to click **Sign Out** to terminate the Keycloak session.
-
-.. image:: images/keycloak-account-management.png
-    :width: 800
-
-Before you "Sign Out", while still in this screen, it is possible to:
-
-* inspect your **Personal Info**,
-* configure ways to sign in
-* set up 2 factor authentication
-* change your password if required.
-* see your device activity
-
-.. note:: To return to the Operations Portal you can simply browse to the Portal's URL, or use the
-    browser's back button to return to the dashboard.
