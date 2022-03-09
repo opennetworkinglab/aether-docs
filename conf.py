@@ -1,4 +1,8 @@
 # -*- coding: utf-8 -*-
+
+# SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
+# SPDX-License-Identifier: Apache-2.0
+
 #
 # Configuration file for the Sphinx documentation builder.
 #
@@ -71,6 +75,10 @@ prep_commands = [
 # inlcude only the branches matching master and aether-*
 smv_branch_whitelist = r'^(master|aether-.*)$'
 
+# Don't include any tags - smv docs say you can put None here, but that is broken
+# https://github.com/Holzhaus/sphinx-multiversion/issues/47
+smv_tag_whitelist = r'notags'
+
 # include all remote branches
 smv_remote_whitelist = r'^.*$'
 
@@ -100,10 +108,11 @@ exclude_patterns = [
         '*/LICENSE.md',
         '*/vendor',
         '.DS_Store',
+        'README',
         'Thumbs.db',
         '_build',
-        'venv-docs',
         'requirements.txt',
+        'venv-docs',
 ]
 
 # The name of the Pygments (syntax highlighting) style to use.
@@ -261,6 +270,9 @@ intersphinx_mapping = {
     'ansible': ('https://docs.ansible.com/ansible/latest', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None),
     'trellis': ('https://docs.trellisfabric.org/master', None),
+    'sdcore': ('https://docs.sd-core.opennetworking.org/master', None),
+    'sdran': ('https://docs.sd-ran.org/master', None),
+    'sdfabric': ('https://docs.sd-fabric.org/master', None),
     'sysapproach5g': ('https://5g.systemsapproach.org/', None),
     'sysapproachnet': ('https://book.systemsapproach.org/', None),
     'sysapproachsdn': ('https://sdn.systemsapproach.org/', None),

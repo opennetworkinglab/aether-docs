@@ -201,11 +201,11 @@ ROC:
 
 * aether-roc-umbrella: 1.4.64
 
-`SD-Core 1.0 <https://docs.sd-core.opennetworking.org/master/release/1.0.html>`_
+:doc:`SD-Core 1.0 <sdcore:release/1.0>`
 
 * sdcore-helm-chart: 0.9.17
 
-`SD-Fabric 1.0.1 <https://docs.sd-fabric.org/1.0.1/release/1.0.1.html>`_
+:doc:`SD-Fabric 1.0.1 <sdfabric:release/1.0.1>`
 
 * sdfabric: 1.0.10
 

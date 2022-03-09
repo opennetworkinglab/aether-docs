@@ -114,11 +114,3 @@ can be found on the `ONF Wiki
 
    release/1*
    release/process.rst
-
-.. toctree::
-   :maxdepth: 1
-   :caption: Meta
-   :hidden:
-   :glob:
-
-   readme
