@@ -10,7 +10,7 @@ device is allowed to connect to. Configuration is possible of not only whether a
 application endpoint is reachable or not, but also what maximum bitrate and traffic
 class should be associated with that endpoint.
 
-A VCS may have a total of five user-defined application endpoints associated with it. Logically
+A Slice may have a total of five user-defined application endpoints associated with it. Logically
 this could be one application with five endpoints, five applications with one endpoint
 each, or any other combination that is less than or equal to five endpoints total.
 
@@ -32,15 +32,15 @@ endpoint may also have associated with it a maximum bitrate and a traffic-class.
 maximum bitrate is per-device to the application; it is not the sum of all devices to the
 application.
 
-Adding Applications to VCSes
-----------------------------
+Adding Applications to Slices
+-----------------------------
 
-Each VCS has an application filter, which is a list of applications. Each entry
+Each Slice has an application filter, which is a list of applications. Each entry
 in this list has a priority and an allow|deny setting. Keep in mind that the total
-number of endpoints for all applications attached to the VCS must be less than or
+number of endpoints for all applications attached to the Slice must be less than or
 equal to five.
 
-Also configurable for the VCS is the default-behavior, which will automatically
+Also configurable for the Slice is the default-behavior, which will automatically
 be evaluated at the lowest priority, only taking effect if no other rule matches.
 The default behavior does not count against the 5-endpoint limit.
 

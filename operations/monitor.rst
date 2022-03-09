@@ -57,7 +57,7 @@ The *monitor* page itself shows:
 
     * Clicking on the down arrow expands each panel
 
-.. image:: images/aether-roc-vcs-monitor.png
+.. image:: images/aether-roc-slice-monitor.png
     :width: 920
     :alt: Slice Monitor View with Connectivity and Performance Charts
 

@@ -100,14 +100,15 @@ All of these steps are done using the Portal.
    been assigned to the Enterprise. Link in the IP-Domain that was created previously, and
    attach it to the site.
 
-#. Create a VCS. Select an appropriate template for the VCS. Link in the Device-Group,
+#. Create a Slice. Select an appropriate template for the Slice. Link in the Device-Group,
    AP-List, and UPF that was created previously.
 
-#. Repeat the steps above as necessary for each VCS and for each Site that belongs to
+#. Repeat the steps above as necessary for each Slice and for each Site that belongs to
    the enterprise.
+
+#. If the `Subscriber Proxy` is to be used, then create a default enterprise named
+   `defaultent` and a default site within that enterprise named
+   `defaultent-defaultsite`.
 
 .. note:: This workflow does not address creating applications, as application filtering is
    not part of the Aether-1.5 feature set.
-
-.. note:: This workflow does not address creating default sites, default device groups, or
-   default VCSes, as subscriber-proxy based subscriber-learning is not enabled at this time.
