@@ -113,4 +113,5 @@ can be found on the `ONF Wiki
    :glob:
 
    release/1*
+   release/2*
    release/process.rst

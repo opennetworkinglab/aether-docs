@@ -45,6 +45,7 @@ PFCP
 PoE
 QoS
 ROC
+Radisys
 Raspbian
 SAS
 Sercomm
@@ -98,6 +99,7 @@ controlplane
 coverages
 cpu
 daisyd
+datapath
 dataplane
 dbuf
 degister
@@ -120,7 +122,9 @@ etcd
 ethernet
 fredf
 func
+gNB
 gNBSim
+gNBs
 gNMI
 gNodeB
 gRPC
@@ -159,6 +163,7 @@ makefile
 menlo
 mgmt
 microservice
+misconfiguration
 mixedGroup
 mme
 mongodb
@@ -206,6 +211,7 @@ reStructuredText
 readme
 reenable
 reenabling
+reimplemented
 renderer
 repo
 repos
