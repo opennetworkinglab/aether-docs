@@ -146,9 +146,10 @@ SD-Core Tests:
 
 * 5G
 
-   * Functional Coverage: register, deregister,dataplane traffic
+   * Functional Coverage: register, deregister, dataplane traffic
      scenarios, handover, TAU, DDN, few error scenarios, few
-     failure/restart of network functions
+     failure/restart of network functions, application filtering,
+     QoS
 
 * Jenkins jobs for functional can be found at
 
@@ -222,9 +223,9 @@ ROC:
 
 * onos-operator: 0.5.1
 
-* aether-roc-umbrella: 2.0.39
+* aether-roc-umbrella: 2.0.40
 
-SD-Core (SD-Core 1.1 release):
+:doc:`SD-Core 1.1 <sdcore:release/1.1>`
 
 * sdcore-helm-chart: 0.10.13 (Umbrella Helm Chart)
 
@@ -238,11 +239,15 @@ SD-Core (SD-Core 1.1 release):
 
 UPF: bess-upf: 0.0.5
 
-SD-Fabric (1.1 release):
+:doc:`SD-Fabric 1.1 <sdfabric:release/1.1.0>`
 
-* sdfabric: 1.0.30
+* sdfabric: 1.1.0
 
-Sercomm eNB
+Hardware and Vendor Dependencies:
 
-* Firmware version: 3922
+* Sercomm eNB: Firmware version 3922
+
+* Radisys 5G-SA RAN stack: TRILLIUM_5GNR_NXP_GNB_AIO_QCOM_SUB6_WITH_DPDK_BIN_REL_2.4.3
+
+* T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
 
