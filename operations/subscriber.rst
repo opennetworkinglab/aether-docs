@@ -2,8 +2,8 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-Subscriber and Connectivity Management
-======================================
+Subscriber and Device Management
+================================
 
 Subscriber management includes workflows associated with provisioning new subscribers, removing
 existing subscribers, and associating subscribers with slices.
@@ -130,9 +130,8 @@ In the Device-Group *New York POS* example above there are two devices listed,
 *till-pos-1* and *till-pos-2*.
 
 .. note::
-    For 4G service, a Device may participate in at most one DeviceGroup, and that DeviceGroup may
-    participate in at most one Slice. For 5G service, a Device can participate in many DeviceGroups, and each
-    DeviceGroup may participate in many Slices.
+    A Device may participate in at most one DeviceGroup, and that DeviceGroup may
+    participate in at most one Slice.
 
 Editing
 *******

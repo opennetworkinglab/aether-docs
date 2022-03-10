@@ -64,27 +64,27 @@ can be found on the `ONF Wiki
 
 .. toctree::
    :maxdepth: 3
-   :caption: Operations
-   :hidden:
-   :glob:
-
-   operations/procedures
-   operations/gui
-   operations/subscriber
-   operations/slice
-   operations/monitor
-   advanced/appfilter
-   advanced/metering
-   advanced/subproxy
-
-.. toctree::
-   :maxdepth: 3
    :caption: Aether Management Platform
    :hidden:
    :glob:
 
    amp/roc
+   amp/subproxy
    amp/monitoring
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Operations
+   :hidden:
+   :glob:
+
+   operations/gui
+   operations/subscriber
+   operations/application
+   operations/slice
+   operations/metering
+   operations/monitor
+   operations/procedures
 
 .. toctree::
    :maxdepth: 3
