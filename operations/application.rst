@@ -2,6 +2,8 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
+.. _application:
+
 Application Management
 ======================
 
@@ -13,6 +15,15 @@ class should be associated with that endpoint.
 A Slice may have a total of five user-defined application endpoints associated with it. Logically
 this could be one application with five endpoints, five applications with one endpoint
 each, or any other combination that is less than or equal to five endpoints total.
+
+Each application has an address field which may be
+set to an IPv4 address or an IPv4 subnet, which may in turn match several IPv4
+addresses. This address is common to all endpoints for the application.
+Each endpoint is a port range, specified by its start and end port. A range of
+exactly one port is also acceptable. The protocol may be set to either TCP or UDP. Each
+endpoint may also have associated with it a maximum bitrate and a traffic-class. The
+maximum bitrate (MBR) is per-device to the application; it is not the sum of all devices to the
+application. For more information see the section on :ref:`metering`.
 
 In addition to
 these five user configurable endpoints, the default behavior can be set to either
@@ -31,18 +42,13 @@ This will open a page where application details may be specified:
 
 |app-add|
 
-Each application has an address field which may be
-set to an IPv4 address or an IPv4 subnet, which may in turn match several IPv4
-addresses. Once the address is set, move on to creating endpoints. Press the plus
+Set the address and then move on to creating endpoints. Press the *+*
 button to add an endpoint.
 
 |app-add-endpoint|
 
-Each endpoint is a port range, specified by its start and end port. A range of
-exactly one port is also acceptable. The protocol may be set to either TCP or UDP. Each
-endpoint may also have associated with it a maximum bitrate and a traffic-class. The
-maximum bitrate is per-device to the application; it is not the sum of all devices to the
-application.
+Specify the port range, protocol, and optionally the MBR and traffic class for the
+endpoint.
 
 Once all endpoints have been added, they will be summarized on the application page. Update
 and commit the changes.

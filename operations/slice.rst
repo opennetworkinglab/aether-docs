@@ -6,23 +6,37 @@ Slice Management
 ================
 
 A **Slice** is a unit of network access for a set of UEs with a defined set of
-QOS parameters.
+QOS parameters. The following properties are important to the definition of a slice:
 
-To define a Slice requires it to be associated with:
+* an **Enterprise** and **Site**
 
-* an Enterprise
-* a Site
+    Slices always exist within a site and an individual slice never spans more than one site.
+
 * one or more **Filter** (Application)
+
+    See :ref:`application` for more information on application filtering.
+
 * one or more **DeviceGroup**
-* a **UPF**
 
-and must also be created with attributes like:
+    See :ref:`subscriber_device_management` for more information on DeviceGroups.
 
-* **SD** (slice differentiator)
-* **SST** (slice/service type)
+* a User Plane Function (**UPF**)
+
+    UPFs are provisioned by Aether Operations.
+
+* **SD** (slice differentiator) and  **SST** (slice/service type)
+
+    These are assigned by Aether Operations.
+
 * **Default Behavior** (for Application Filtering)
-* **Uplink** (data rate in bps)
-* **Downlink** (data rate in bps)
+
+   The default behavior is used when no application filtering rules match.
+
+* **Uplink** and **Downlink** maximum bitrate (data rate in bps)
+
+   Slice MBRs are the aggregate
+   of all traffic within the slice and may represent the traffic of multiple devices.
+   For more information, see :ref:`metering`.
 
 Provisioning a new Slice
 ------------------------
@@ -51,7 +65,8 @@ In the resulting Slice edit page:
 
     * this will copy over values from that template, which may be edited individually at this create stage
     * they will not be editable afterwards.
-#. Accept the Default Behavior, SD and SST, and Uplink and Downlink values or change them.
+#. Accept the Default Behavior, SD and SST or change them.
+#. Accept the Maximum Bitrate (MBR) Uplink and Downlink values or change them.
 #. Choose a *UPF* from the drop down list.
 
     * UPFs will previously have been added to a pool - those remaining unused will appear for selection.

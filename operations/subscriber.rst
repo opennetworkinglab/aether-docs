@@ -2,6 +2,8 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
+.. _subscriber_device_management:
+
 Subscriber and Device Management
 ================================
 
@@ -185,6 +187,12 @@ To add a DeviceGroup, navigate to the list of DeviceGroups and click `Add` in th
 * Choose an *Enterprise* and *Site* from the preconfigured list
     It will not be possible to add Devices until the Site is chosen
 * Devices can be added at this stage or later
+* As part of the DeviceGroup, you may select a maximum bitrate (MBR)
+  that will be used for the devices in the group. This bitrate is applied
+  separately to each device within the group -- it is not an aggregate
+  of all devices within the group.
+  For more information see the section on :ref:`metering`.
+
 
 |DEVICEGROUP-ADD|
 
