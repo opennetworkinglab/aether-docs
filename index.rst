@@ -105,6 +105,7 @@ can be found on the `ONF Wiki
 
    testing/about_system_tests
    testing/aether-roc-tests
+   testing/system-tests
    testing/acceptance_specification
 
 .. toctree::
