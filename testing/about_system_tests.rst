@@ -22,8 +22,7 @@ The following diagram outlines each Aether core component, followed by an online
 of the test frameworks used:
 
 .. image:: images/aether-overview-diagram.png
-  :width: 840
-  :height: 540
+  :width: 600
   :alt: Aether Overview Diagram
 
 .. list-table:: Test Frameworks
@@ -33,11 +32,11 @@ of the test frameworks used:
   * - Aether Core Component
     - Test Framework
   * - SD-Core
-    - `NG40/NG4T <https://www.ng4t.com/>`_
+    - `Robot Framework <https://robotframework.org/>`_, `NG40/NG4T <https://www.ng4t.com/>`_
   * - SD-Fabric
     - `TestON <https://github.com/opennetworkinglab/OnosSystemTest/tree/master/TestON>`_
-  * - PDP
-    - `TestVectors <https://github.com/stratum/testvectors>`_
+  * - ROC
+    - `Robot Framework <https://robotframework.org/>`_, `Selenium <https://selenium-python.readthedocs.io/>`_
   * - SD-RAN
     - `Robot Framework <https://robotframework.org/>`_
 

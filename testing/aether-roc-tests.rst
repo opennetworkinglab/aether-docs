@@ -15,7 +15,7 @@ Additionally, it is necessary to add the SD-RAN chart repo with the following co
 
 .. code-block:: shell
 
-    helm repo add sdran --username USER --password PASSWORD https://sdrancharts.onosproject.org
+    helm repo add sdran --username USER --password PASSWORD https://charts.aetherproject.org
 
 where USER and PASSWORD can be obtained from the Aether Login Information file,
 which is accessible to the ``onfstaff`` group.
@@ -40,31 +40,17 @@ Follow the steps below to access the ROC API:
 
     kubectl -n micro-onos get pods
 
-This should print a table like the one below:
+3. Once all pods are in a Running state, port-forward aether-roc-api to port 8181 with the following command:
 
 .. code-block:: shell
 
-    NAME                                                           READY   STATUS    RESTARTS   AGE
-    aether-roc-api-df499d585-7xmt5                                 2/2     Running   0          2m52s
-    aether-roc-gui-56bfb5fc67-sgxh7                                1/1     Running   0          2m52s
-    aether-roc-umbrella-grafana-6b4d4b55c-4mdww                    1/1     Running   0          2m52s
-    aether-roc-umbrella-prometheus-alertmanager-694c449885-8fsbs   2/2     Running   0          2m52s
-    aether-roc-umbrella-prometheus-server-59c974f84-d56td          2/2     Running   0          2m52s
-    aether-roc-umbrella-sdcore-test-dummy-7f4895c59c-4pvdg         1/1     Running   0          2m52s
-    onos-cli-846d9c8df6-njqgs                                      1/1     Running   0          2m52s
-    onos-config-759fff55f-k9fzr                                    5/5     Running   0          2m52s
-    onos-consensus-store-1-0                                       1/1     Running   0          2m50s
-    onos-topo-56b687f77b-9l8ns                                     3/3     Running   0          2m52s
-    sdcore-adapter-v21-5688b8d458-5sn67                            1/1     Running   0          2m52s
-    sdcore-adapter-v3-56667fd848-9szt5                             2/2     Running   0          2m52s
+    kubectl -n micro-onos port-forward service/aether-roc-api 8181 &
 
-
-3. Once all pods are in a Running state, port-forward to port 8181 with the following command:
+4. Port-forward onos-config to port 5150 with the following command:
 
 .. code-block:: shell
 
-    kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=api -o name) 8181
-
+    kubectl -n micro-onos port-forward service/onos-config 5150 &
 
 Now that we have access to the ROC API, we can proceed with running the ROC API tests from the ``aether-system-tests``
 repository:
@@ -94,12 +80,12 @@ repository:
 
     cd roc
     python libraries/api/codegen/class_generator.py \
-    --models=variables/3_0_0_model_list.json \
+    --models=variables/2_0_0_model_list.json \
     --template=libraries/api/codegen/templates/class_template.py.tmpl \
     --common_files_directory=libraries/api/codegen/common \
     --target_directory=libraries/api/
     python tests/api/codegen/tests_generator.py \
-    --models=variables/3_0_0_model_list.json \
+    --models=variables/2_0_0_model_list.json \
     --template=tests/api/codegen/templates/tests_template.robot.tmpl \
     --target_directory=tests/api
 
@@ -107,7 +93,7 @@ repository:
 
 .. code-block:: shell
 
-    cd tests/api/3_0_0
+    cd tests/api/2_0_0
 
 6. Create a folder for the logs and the output files from the tests:
 
@@ -115,8 +101,8 @@ repository:
 
     mkdir results
 
-7. Run any Robot Framework test file from the ``3_0_0`` directory.
-Each test file corresponds to one of the Aether 3.0.0 models.
+7. Run any Robot Framework test file from the ``2_0_0`` directory.
+Each test file corresponds to one of the Aether 2.0.0 models.
 
 .. code-block:: shell
 
@@ -127,20 +113,33 @@ This will generate test reports and logs in the ``results`` directory.
 Running the ROC GUI tests
 -------------------------
 
-We test the ROC GUI by installing the ROC on a local Dex server. To install the
-Dex server, please follow the steps under the "Helm install" section of the
-readme file in `this repository
-<https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_.
-
-Once that you have installed the ``dex-ldap-umbrella`` chart, follow the steps
-below to install the ROC on a local Dex server:
+We test the ROC GUI by installing the ROC with keycloak-dev.onlab.us.
+Currently, only v4 GUI automation tests are supported:
 
 1. Deploy the ``aether-roc-umbrella`` chart from the Aether repo with the
    following command:
 
 .. code-block:: shell
 
-    helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella --set onos-config.openidc.issuer=http://dex-ldap-umbrella:5556 --set aether-roc-gui-v3.openidc.issuer=http://dex-ldap-umbrella:5556 --set import.sdcore-adapter.v2_1.enabled=false
+    helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
+    --set import.sdcore-adapter.v4.enabled=true \
+    --set import.aether-roc-gui.v4.enabled=true \
+    --set onos-config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set aether-roc-api.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set aether-roc-gui-v4.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set prom-label-proxy-acc.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set prom-label-proxy-amp.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master
+
+Alternatively, v2 GUI can be deployed with the following command:
+
+.. code-block:: shell
+
+    helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
+    --set onos-config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set aether-roc-api.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set aether-roc-gui-v2.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set prom-label-proxy-acc.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+    --set prom-label-proxy-amp.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master
 
 2. Check if all pods are in a Running state:
 
@@ -148,45 +147,17 @@ below to install the ROC on a local Dex server:
 
     kubectl -n micro-onos get pods
 
-This should print a table like the one below:
-
-.. code-block:: shell
-
-    NAME                                                           READY   STATUS    RESTARTS   AGE
-    aether-roc-api-df499d585-srf4c                                 2/2     Running   0          3m36s
-    aether-roc-gui-799d57456-smx6r                                 1/1     Running   0          3m36s
-    aether-roc-umbrella-grafana-55cccb986c-t47gz                   1/1     Running   0          3m37s
-    aether-roc-umbrella-prometheus-alertmanager-694c449885-rk47g   2/2     Running   0          3m36s
-    aether-roc-umbrella-prometheus-server-59c974f84-97z5t          2/2     Running   0          3m36s
-    aether-roc-umbrella-sdcore-test-dummy-7f4895c59c-cv6j7         1/1     Running   0          3m36s
-    dex-ldap-umbrella-75bbc9d676-wfvcb                             1/1     Running   0          8m36s
-    dex-ldap-umbrella-openldap-fc47667c8-9s7q4                     1/1     Running   0          8m36s
-    dex-ldap-umbrella-phpldapadmin-b899f9966-rzwkr                 1/1     Running   0          8m36s
-    onos-cli-846d9c8df6-kf2xk                                      1/1     Running   0          3m37s
-    onos-config-5568487f84-dwfs8                                   5/5     Running   0          3m37s
-    onos-consensus-store-1-0                                       1/1     Running   0          3m35s
-    onos-topo-56b687f77b-vb2sx                                     3/3     Running   0          3m36s
-    sdcore-adapter-v3-56667fd848-g7dh2                             2/2     Running   0          3m37s
-
-
 3. Once all pods are in a Running state, port-forward to port 8183 to access the ROC GUI:
 
 .. code-block:: shell
 
-    kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=arg -o name) 8183:80
+    kubectl -n micro-onos port-forward service/aether-roc-gui-v4 8183:80 &
 
-3. Port-forward to port 8181 to access the ROC API (which is necessary for some test cases):
-
-.. code-block:: shell
-
-    kubectl -n micro-onos port-forward $(kubectl -n micro-onos get pods -l type=api -o name) 8181
-
-3. Finally, port-forward the Dex service to port 5556:
+4. Port-forward to port 8181 to access the ROC API (which is necessary for some test cases):
 
 .. code-block:: shell
 
-    DEX_POD_NAME=$(kubectl -n micro-onos get pods -l "app.kubernetes.io/name=dex,app.kubernetes.io/instance=dex-ldap-umbrella" -o jsonpath="{.items[0].metadata.name}") &&
-    kubectl -n micro-onos port-forward $DEX_POD_NAME 5556:5556
+    kubectl -n micro-onos port-forward service/aether-roc-api 8181 &
 
 Now that we have access to the ROC API and GUI, we can proceed with running the ROC GUI tests from the
 ``aether-system-tests`` repository:
@@ -216,7 +187,7 @@ Now that we have access to the ROC API and GUI, we can proceed with running the 
 
     cd roc
     python tests/gui/codegen/tests_generator.py \
-    --models=variables/3_0_0_model_list.json \
+    --models=variables/4_0_0_model_list.json \
     --template=tests/gui/codegen/templates/tests_template.robot.tmpl \
     --target_directory=tests/gui
 
@@ -224,7 +195,7 @@ Now that we have access to the ROC API and GUI, we can proceed with running the 
 
 .. code-block:: shell
 
-    cd tests/gui/3_0_0
+    cd tests/gui/4_0_0
 
 6. Create a folder for the logs and the output files from the tests:
 
@@ -232,8 +203,8 @@ Now that we have access to the ROC API and GUI, we can proceed with running the 
 
     mkdir results
 
-7. Run any Robot Framework test file from the ``3_0_0`` directory.  Each test
-   file corresponds to one of the Aether 3.0.0 models.
+7. Run any Robot Framework test file from the ``4_0_0`` directory.  Each test
+   file corresponds to one of the Aether 4.0.0 models.
 
 .. code-block:: shell
 
