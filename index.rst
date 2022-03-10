@@ -27,9 +27,20 @@ Aether Architecture and Components
 Aether uses components from several ONF projects. More information can be found
 at these sites:
 
-* `SD-Core <https://opennetworking.org/sd-core/>`_
-* `SD-Fabric <https://opennetworking.org/sd-fabric/>`_
-* `SD-RAN <https://docs.sd-ran.org/master/index.html>`_
+* SD-Core
+
+  * `SD-Core Website <https://opennetworking.org/sd-core/>`_
+  * :doc:`SD-Core Documentation <sdcore:index>`
+
+* SD-Fabric
+
+  * `SD-Fabric Website <https://opennetworking.org/sd-fabric/>`_
+  * :doc:`SD-Fabric Documentation <sdfabric:index>`
+
+* SD-RAN
+
+  * `SD-RAN Website <https://opennetworking.org/sd-ran/>`_
+  * :doc:`SD-RAN Documentation <sdran:index>`
 
 More information about mobile networks and 5G can be found in the :doc:`5G
 Mobile Networks: A Systems Approach <sysapproach5g:intro>` book.
