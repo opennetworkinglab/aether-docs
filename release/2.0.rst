@@ -208,6 +208,9 @@ Limitations and Known Issues
 *  IMSIs should not be removed from Simapp. They may be added at any
    time.
 
+*  When running the ROC GUI in the Firefox browser, it is possible to enter
+   non-numeric characters in to numeric fields.
+
 Component Versions
 ------------------
 
