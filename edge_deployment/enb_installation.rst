@@ -47,9 +47,9 @@ pre-configured IP address using DHCP.
 
 Verify that you can access the web-based configuration(``https://<eNB IP>``)
 from your workstation.  If the eNB address is not directly reachable, use the
-management server as a jump host - this can be done using ssh::
+management router as a jump host - this can be done using ssh::
 
-  ssh user@jumphost -L 8443:<eNB IP>:443
+  ssh user@[ management-router ] -L 8443:<eNB IP>:443
 
 then visiting ``https://localhost:8443``
 

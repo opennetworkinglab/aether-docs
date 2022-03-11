@@ -13,11 +13,16 @@ Network Configuration
 BESS UPF enabled edge setup requires three additional user plane subnets
 apart from the default K8S subnets.
 
-* **enb**: Used to provide eNBs with connectivity to SD-Core and UPF.
-* **access**: Used to provide UPF with connectivity to eNBs.
-* **core**: Used to provide UPF with edge services as well as the Internet access.
+* **enb**: Used to provide eNB/gNB radios with connectivity to SD-Core and
+  UPF.
 
-To help your understanding, the following example ACE environment will be used in the rest of the guide.
+* **access**: Used to provide UPF with connectivity to eNBs.
+
+* **core**: Used to provide UPF with edge services, local breakout, and
+  internet access. This naming comes from the P4 UPF, and is used for uniformity
+
+To help your understanding, the following example ACE environment will be used
+in the rest of the guide.
 
 .. image:: images/bess-upf-example-network.svg
 
@@ -28,7 +33,7 @@ To help your understanding, the following example ACE environment will be used i
 +-----------+-----------+------------------------------------+-------------------+---------------+
 | Network   | VLAN ID   | Subnet                             | Interface         | IP address    |
 +-----------+-----------+------------------------------------+-------------------+---------------+
-| k8smgmt   | 1         | 192.168.1.0/24 (gw: 192.168.1.1)   | management server | 192.168.1.254 |
+| k8smgmt   | 1         | 192.168.1.0/24 (gw: 192.168.1.1)   | management router | 192.168.1.254 |
 |           |           |                                    +-------------------+---------------+
 |           |           |                                    | compute1          | 192.168.1.3   |
 |           |           |                                    +-------------------+---------------+
@@ -40,31 +45,34 @@ To help your understanding, the following example ACE environment will be used i
 +-----------+-----------+------------------------------------+-------------------+---------------+
 | access    | 3         | 192.168.3.0/24 (gw: 192.168.3.1)   | upf1 access       | 192.168.3.10  |
 +-----------+-----------+------------------------------------+-------------------+---------------+
-| core      | 4         | 192.168.4.0/24 (gw: 192.168.4.1)   | management server | 192.168.4.254 |
+| core      | 4         | 192.168.4.0/24 (gw: 192.168.4.1)   | management router | 192.168.4.254 |
 |           |           |                                    +-------------------+---------------+
 |           |           |                                    | upf1 core         | 192.168.4.10  |
 +-----------+-----------+------------------------------------+-------------------+---------------+
 
-It is assumed that the management server has the only external routable address and acts
-as a router connecting the Aether pod to the outside.
-This means that all uplink packets leaving the Aether pod needs to be masqueraded with the
-external address of the management server or the k8smgmt address if the destination
-is Aether central.
+It is assumed that the management router has the only external routable address
+and acts as a router connecting the Aether pod to the outside.
+
+This means that all uplink packets leaving the Aether pod need to be
+masqueraded with the external address of the management router or the k8smgmt
+address if the destination is Aether Central.
+
 Also, in order for downlink traffic to UE to be delivered to its destination,
-it must be forwarded to the UPF's core interface.
-This adds additional routes to the management server and L3 switch.
+it must be forwarded to the UPF's core interface.  This adds additional routes
+to the management router and L3 switch.
+
 
 .. note::
 
-  There is a work-in-progress on interface consolidation in BESS UPF,
-  which will merge `enb`, `access` and `core` into just one interface and
+  There is a work-in-progress on interface consolidation in BESS UPF, which
+  will merge ``radio``, ``access``, and ``fabric`` into only one interface and
   simplify the configuration significantly.
 
-Check Cluster Resources
------------------------
+Required Cluster Resources
+--------------------------
 
-Before proceeding with the deployment, make sure the cluster has enough resources
-to run BESS UPF by running the command below.
+Before proceeding with the deployment, make sure the cluster has sufficient
+resources to run BESS UPF by running the command below.
 
 .. code-block:: shell
 
@@ -91,15 +99,17 @@ advanced configuration.
 Configure and Deploy
 --------------------
 
-Download ``aether-app-configs`` if you don't have it already in your development machine.
+Download ``aether-app-configs`` if you don't have it already in your
+development machine.
 
 .. code-block:: shell
 
    $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
 
-Move the directory to ``apps/bess-upf/upf1`` and create a Helm values file for the new cluster as shown below.
-Don't forget to replace the IP addresses in the example configuration with the addresses of the actual cluster.
+Move the directory to ``apps/bess-upf/upf1`` and create a Helm values file for
+the new cluster as shown below.  Don't forget to replace the IP addresses in
+the example configuration with the addresses of the actual cluster.
 
 .. code-block:: yaml
 
@@ -128,8 +138,8 @@ Don't forget to replace the IP addresses in the example configuration with the a
      #      dnn: "internet" # should match the one configured in ROC
 
 
-Update ``fleet.yaml`` in the same directory to let Fleet use the custom configuration when deploying
-BESS UPF to the new cluster.
+Update ``fleet.yaml`` in the same directory to let Fleet use the custom
+configuration when deploying BESS UPF to the new cluster.
 
 .. code-block:: yaml
 

@@ -63,7 +63,7 @@ following information needs to be added to `NetBox
      * MGMT 800
      * FAB 801
 
-   If you have multiple deployments at a site using the same management server,
+   If you have multiple deployments at a site using the same management router,
    add additional VLANs incremented by 10 for the MGMT/FAB - for example, you
    can create the VLANs for development server as follows:
 
@@ -78,8 +78,8 @@ following information needs to be added to `NetBox
    The DNS A records for each IP address start with the name of the Device, and end with
    the Prefix description.
 
-   For example, if we have a management server named ``mgmtserver`` in **Prefix**
-   ``prod1.menlo.aetherproject.net``, and the management server's DNS name will be
+   For example, if we have a management router named ``mgmtserver`` in **Prefix**
+   ``prod1.menlo.aetherproject.net``, and the management router's DNS name will be
    ``mgmtserver.prod1.menlo.aetherproject.net``.
 
    Here is an example using the ``10.0.0.0/22`` block. Let's name our deployment
@@ -126,7 +126,7 @@ following information needs to be added to `NetBox
 
         * This is used to configure the correct routes, DNS, and TFTP servers
           provided by DHCP to the equipment that is connected to the fabric
-          leaf switch that the management server (which provides those
+          leaf switch that the management router (which provides those
           services) is not connected to.
 
    Additionally, these edge prefixes are used for Kubernetes but don't need to
@@ -167,7 +167,7 @@ following information needs to be added to `NetBox
    See `Rackmount of Equipment`_ below for guidance on how equipment should be
    mounted in the Rack.
 
-9. Add **Service** to the management server:
+9. Add **Service** to the management router:
 
     * name: ``dns``
       protocol: UDP
@@ -192,7 +192,7 @@ following information needs to be added to `NetBox
 
     These are needed for two cases of the Pronto deployment:
 
-     1. On the Management Server, there should bet (at least) two VLAN
+     1. On the management router, there should bet (at least) two VLAN
         interfaces created attached to the ``eno2`` network port, which
         are used to provide connectivity to the management plane and fabric.
         These interfaces should be named ``<name of vlan><vlan ID>``, so the
@@ -207,12 +207,12 @@ following information needs to be added to `NetBox
 12. Create **IP addresses** for the physical and virtual interfaces.  These should
     have the Tenant and VRF set.
 
-    The Management Server should always have the first IP address in each
+    The management router should always have the first IP address in each
     range, and they should be incremental, in this order. Examples are given as
     if there was a single instance of each device - adding additional devices
     would increment the later IP addresses.
 
-      * Management Server
+      * management router
 
           * ``eno1`` - site provided public IP address, or blank if DHCP
             provided
@@ -301,7 +301,7 @@ ensure proper airflow. Please follow these guidelines:
   through the rack from front (switch) to back (server).  Empty rack spaces
   should be reserved for this purpose.
 
-- The short-depth management switches and management servers should be mounted
+- The short-depth management switches and management routers should be mounted
   on the rear of the rack.  They don't generate an appreciable amount of heat,
   so the airflow direction isn't a significant factor in racking them.
 

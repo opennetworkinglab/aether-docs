@@ -99,6 +99,7 @@ controlplane
 coverages
 cpu
 daisyd
+datacenter
 datapath
 dataplane
 dbuf

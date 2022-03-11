@@ -45,27 +45,29 @@ First, download ``aether-app-configs`` if you don't have it already in your deve
 
 .. code-block:: shell
 
-   $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-app-configs"
 
 Configure ``ue-dns``
 """"""""""""""""""""
 
-For UE-DNS, it is required to create a Helm values file for the new cluster.
-You'll need cluster domain and ``kube-dns`` ClusterIP. Both can be found in
-``aether-pod-configs/production/cluster_map.tfvars``.
-Be sure to replace ``[ ]`` in the example configuration below to the actual cluster values.
+For UE-DNS, it is required to create a Helm value override file for the new
+cluster.  To do this, you'll need the ``cluster_name`` (starts with ``ace-``),
+``cluster_domain`` and ``kube_dns_cluster_ip``, all of which can be found in
+``aether-pod-configs/[ release train ]/cluster_map.tfvars``.
+
+Be sure to replace ``[ ]`` in the example configuration below to the actual
+edge name and cluster values.
 
 .. code-block:: yaml
 
-   $ cd $WORKDIR/aether-app-configs/ace-<cluster group>/infra/coredns
-   $ mkdir overlays/prd-ace-test
-   $ vi overlays/prd-ace-test/values.yaml
+   $ cd aether-app-configs/aether-[ environment ]/infra/coredns/overlays
+   $ mkdir [ cluster_name ]
+   $ vi [ cluster_name ]/values.yaml
    # SPDX-FileCopyrightText: 2022-present Open Networking Foundation <info@opennetworking.org>
 
    serviceType: ClusterIP
    service:
-     clusterIP: [next address of the kube-dns ip]
+     clusterIP: [ next IP address after kube_dns_cluster_ip ]
    servers:
      - zones:
          - zone: .
@@ -92,12 +94,12 @@ Be sure to replace ``[ ]`` in the example configuration below to the actual clus
          - name: errors
          - name: rewrite continue
            configBlock: |-
-             name regex (.*)\.aetherproject.net {1}.svc.[cluster domain]
-             answer name (.*)\.svc\.[cluster domain] {1}.aetherproject.net
+             name regex (.*)\.aetherproject.net {1}.svc.[ cluster_domain ]
+             answer name (.*)\.svc\.[ cluster_domain ] {1}.aetherproject.net
          - name: forward
-           parameters: . [kube-dns ip]
+           parameters: . [ kube_dns_cluster_ip ]
            configBlock: |-
-             except kube-system.svc.[cluster domain] aether-sdcore.svc.[cluster domain] tost.svc.[cluster domain]
+             except kube-system.svc.[ cluster_domain ] aether-sdcore.svc.[cluster domain] tost.svc.[ cluster_domain ]
          - name: cache
            parameters: 30
 
@@ -107,26 +109,25 @@ you just created when deploying UE-DNS to the cluster.
 
 .. code-block:: yaml
 
-   $ cd $WORKDIR/aether-app-configs/ace-<cluster group>/infra/coredns
+   $ cd aether-app-configs/aether-[ environment ]/infra/coredns
    $ vi fleet.yaml
    # add following block at the end
-   - name: prd-ace-test
+   - name: [ cluster_name ]
      clusterSelector:
        matchLabels:
-         management.cattle.io/cluster-display-name: ace-test
+         management.cattle.io/cluster-display-name: [ cluster_name ]
      helm:
        valuesFiles:
-         - overlays/prd-ace-test/values.yaml
+         - overlays/[ cluster_name ]/values.yaml
 
 
 Submit your changes.
 
 .. code-block:: shell
 
-   $ cd $WORKDIR/aether-app-configs
    $ git status
    $ git add .
-   $ git commit -m "Add test ACE application configs"
+   $ git commit -m "Add [ cluster_name ] ACE application configs"
    $ git review
 
 Now, it's ready to deploy K8S.
@@ -139,7 +140,6 @@ your development machine.
 
 .. code-block:: shell
 
-   $ cd $WORKDIR
    $ git clone "ssh://[username]@gerrit.opencord.org:29418/aether-pod-configs"
 
 .. attention::
@@ -155,33 +155,32 @@ and switches to the cluster.
 .. code-block:: shell
 
    # Create ace_cofig.yaml file if you haven't yet
-   $ cd $WORKDIR/aether-pod-configs/tools
+   $ cd aether-pod-configs/tools
    $ cp ace_config.yaml.example ace_config.yaml
    $ vi ace_config.yaml
    # Set all values
 
    $ make runtime
-   Created ../production/ace-test/provider.tf
-   Created ../production/ace-test/cluster.tf
-   Created ../production/ace-test/rke-bare-metal.tf
-   Created ../production/ace-test/addon-manifests.yml.tpl
-   Created ../production/ace-test/project.tf
-   Created ../production/ace-test/backend.tf
-   Created ../production/ace-test/cluster_val.tfvars
+   Created ../production/[ cluster_name ]/provider.tf
+   Created ../production/[ cluster_name ]/cluster.tf
+   Created ../production/[ cluster_name ]/rke-bare-metal.tf
+   Created ../production/[ cluster_name ]/addon-manifests.yml.tpl
+   Created ../production/[ cluster_name ]/project.tf
+   Created ../production/[ cluster_name ]/backend.tf
+   Created ../production/[ cluster_name ]/cluster_val.tfvars
 
 .. attention::
 
-  If the cluster has an even number of compute nodes, edit **cluster_val.tfvars**
-  file so that only the odd number of nodes have **etcd** and **controlplane**
+  If the cluster has an even number of compute nodes, edit ``cluster_val.tfvars``
+  file so that only the odd number of nodes have ``etcd`` and ``controlplane``
   roles.
 
 Create a review request.
 
 .. code-block:: shell
 
-   $ cd $WORKDIR/aether-pod-configs
    $ git add .
-   $ git commit -m "Add test ACE runtime configs"
+   $ git commit -m "Add [ cluster_name ] ACE runtime configs"
    $ git review
 
 Once your review request is accepted and merged, Aether CI/CD system starts to deploy K8S.
@@ -211,7 +210,7 @@ After confirming the K8S cluster is ready, disable the deployment job.
 
 .. code-block:: diff
 
-   $ cd $WORKDIR/aether-ci-management
+   $ cd aether-ci-management
    $ vi jjb/repos/cd-pipeline-terraform.yaml
 
    # Add jobs for the new cluster
@@ -222,10 +221,10 @@ After confirming the K8S cluster is ready, disable the deployment job.
           - 'cd-pipeline-terraform-postmerge-cluster':
               cluster: 'ace-eks'
           - 'cd-pipeline-terraform-premerge-cluster':
-              cluster: 'ace-test'
+              cluster: '[ cluster_name ]'
    -          disable-job: false
           - 'cd-pipeline-terraform-postmerge-cluster':
-              cluster: 'ace-test'
+              cluster: '[ cluster_name ]'
    -          disable-job: false
 
 Submit your change and wait for the job is updated.

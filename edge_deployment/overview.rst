@@ -54,7 +54,7 @@ via VPN to the 4G and 5G core in Aether Central for managing subscriber
 information.
 
 The edge site must provide internet access to the Aether edge, specifically the
-Management Server. The traffic required is:
+Management Router. The traffic required is:
 
 * VPN connection (ESP protocol, Ports UDP/500 and UDP/4500) to Aether Central
 
@@ -66,22 +66,23 @@ Management Server. The traffic required is:
 The open ports can be restricted to specific internet addresses which are used
 for Aether.
 
-The Management Server needs to have an IP address assigned to it, which can be either:
+The Management Router needs to have an IP address assigned to it, which can be
+either:
 
 * A public static IP address
 
 * Behind NAT with port forwarding with the ports listed above forwarded to the
-  Management Server
+  Management Router
 
-In either case, the Management Server's IP address should be assigned using
+In either case, the Management Router's IP address should be assigned using
 a reserved DHCP if possible, which eases the installation process.
 
 BESS-based Network Topology
 ---------------------------
 
 The :doc:`Software-only BESS UPF </edge_deployment/bess_upf_deployment>`, is
-supported for production use in the Aether 1.5 release.  This UPF can be used
-for deployments that do not have P4 switching hardware.
+supported for production as of the Aether 1.5 and later releases.  This UPF can
+be used for deployments that do not have P4 switching hardware.
 
 .. image:: images/edge_mgmt_only.svg
    :alt: BESS network topology
@@ -91,63 +92,81 @@ for deployments that do not have P4 switching hardware.
 deployed using Kubernetes. In production it requires an SR-IOV capable network
 card, and specific K8s CNIs to be used.
 
-The Management Server and Switch must be configured with multiple VLANs and
+The Management Router and Switch must be configured with multiple VLANs and
 subnets with routing required for the BESS UPF.
 
 P4-based Network Topology
 -------------------------
 
-.. note::
+The P4-based SD-Fabric UPF is an advanced feature and has graduated to
+production use in the Aether 2.0 release.  It requires one or more
+P4-capable switches using the Tofino chipset.
 
-  The P4-based SD-Fabric UPF is an advanced feature and is of beta quality in
-  the Aether 1.5 release.  It requires one or more P4-capable switches using
-  the Tofino chipset.
+Single or multi-switch topologies can be used as described in the
+:ref:`SD-Fabric Specifications for Topology <sdfabric:specification:topology>`.
+The following topologies are actively being tested as a part of Aether:
 
-If only a single P4 switch is used, the :doc:`Simple
-<trellis:supported-topology>` topology can be used, but provides no network
+If only a single P4 switch is used, the **Single Switch** topology can be used, but provides no network
 redundancy:
 
 .. image:: images/edge_single.svg
    :alt: Single Switch Topology
 
-If another switch is added, the "Paired Leaves" (aka :doc:`Paired Switches
-<trellis:supported-topology>`) topology can be used, which can tolerate the
-loss of a leaf switch and still retain connections for all dual-homed devices.
-Single homed devices on the failed leaf would lose their connections (the
-single-homed server is shown for reference, and not required). If HA is needed
-for single-homed devices, one option would be to deploying multiple of those
-devices in a way that provides that redundancy - for example, multiple eNBs
-where some are connected to each leaf and have overlapping radio coverage:
+If another switch is added, the **Paired Leaves** (aka "Single Leaf Pair")
+topology can be used, which can tolerate the loss of a leaf switch and still
+retain connections for all dual-homed devices.  Single homed devices on the
+failed leaf would lose their connections (the single-homed server is shown for
+reference, and not required). If HA is needed for single-homed devices, one
+option would be to deploying multiple of those devices in a way that provides
+that redundancy - for example, multiple eNBs where some are connected to each
+leaf and have overlapping radio coverage:
 
 .. image:: images/edge_paired_leaves.svg
    :alt: Paired Leaves Topology
 
-For larger deployments, a 2x2 fabric can be configured (aka :doc:`Single-Stage
-Leaf-Spine <trellis:supported-topology>`), which provide Spine redundancy, but
-does not support dual-homing of devices.
+All SD-Fabric P4-based topologies can support running both the BESS UPF and P4
+UPF on the same hardware at the same time within an edge deployment.
 
-.. image:: images/edge_2x2.svg
-   :alt: 2x2 Fabric Topology
+Connectivity Alternatives
+-------------------------
 
-Other topologies as described in the :doc:`Trellis Documentation
-<trellis:supported-topology>` can possibly be used, but are not actively being
-tested at this time.
+The diagrams above show logical topologies, but depending on the site strategy,
+alternative topologies may be desirable.  The below diagrams use the "Single
+Switch" topology, but could be applied to any of the Aether equipment
+topologies given above.
 
-Additionally, the P4-based topologies can support running both the BESS UPF and
-P4 UPF on the same hardware at the same time if desired (for testing, or
-simultaneous 4G/5G support).
+One example would be to place the rackmount equipment in a datacenter
+environment away from the radio hardware and use existing networking equipment
+to route from the radios back to the Aether edge hardware. Also shown in this
+example is using a PoE switch to power the radios.
+
+.. image:: images/edge_routed_radios.svg
+   :alt: Edge with routed radios
+
+Another example would be to use the management switch as the main network
+connection point, and possibly use it to PoE power the radios as well:
+
+.. image:: images/edge_mgmtswitch_primary.svg
+   :alt: Edge with mgmtswitch as primary connection point
+
+Note that these topologies may require additional configuration in the
+switching and routing equipment, including the equipment outside of the Aether
+edge.
 
 Hardware Descriptions
 ---------------------
 
 Fabric Switch
 """""""""""""
-See :ref:`Switch Hardware Selection <sdfabric:deployment:switch hardware selection>`
+
+See the :ref:`SD-Fabric Switch Hardware Selection Documentation
+<sdfabric:deployment:switch hardware selection>`.
 
 Compute Server
 """"""""""""""
 
-These servers run Kubernetes, Aether connectivity apps, and edge applications.
+The Compute Servers run Kubernetes, Aether connectivity apps, and edge
+applications.
 
 Minimum hardware specifications:
 
@@ -169,15 +188,14 @@ Optional but highly recommended:
 * Lights out management support, with either a shared or separate NIC and
   support for HTML5 console access.
 
-Management Server
+Management Router
 """""""""""""""""
 
-One management server is required, which must have at least two 1GbE network
-ports, and runs a variety of network services to bootstrap and support the
+One Management Router is required - this is a standard server which must have
+at least two 1GbE network ports, and performs network tasks such as running a
+VPN connection to Aether Central, performing NAT for the management network,
+as well as running a variety of network services to bootstrap and support the
 edge.
-
-In current Aether deployments, the Management Server also functions as a router
-and VPN gateway back to Aether Central.
 
 Minimum hardware specifications:
 
@@ -212,7 +230,7 @@ Minimum requirements:
 * 8x 1GbE Copper Ethernet ports (adjust to provide a sufficient number for
   every copper 1GbE port in the system)
 
-* 2x 10GbE SFP+ or 40GbE QSFP interfaces (only required if management server
+* 2x 10GbE SFP+ or 40GbE QSFP interfaces (only required if management router
   does not have a network card with these ports)
 
 * Managed via SSH or web interface
@@ -221,7 +239,6 @@ Minimum requirements:
 
 * Capable supporting VLANs on each port, with both tagged and untagged traffic
   sharing a port.
-
 
 Optional:
 
@@ -247,7 +264,6 @@ purpose successfully.
 Alternatively, the Fabric's 10GbE SFP+ could be connected to another switch
 (possibly the Management Switch) which would adapt the speed difference, and
 provide PoE+ power, and power control for remote manageability.
-
 
 Testing Hardware
 ----------------
@@ -303,7 +319,7 @@ The following is the minimum BoM required to run Aether with the BESS UPF.
 Quantity     Type                  Purpose
 ============ ===================== ===============================================
 1            Management Switch     Must be Layer 2/3 capable for BESS VLANs
-1            Management Server
+1            Management Router
 1-3          Compute Servers       Recommended at least 3 for Kubernetes HA
 1 (or more)  eNB
 1x #eNB      PoE+ Injector         Required unless using a PoE+ Switch
@@ -318,7 +334,7 @@ Quantity     Type                  Description/Use
 ============ ===================== ===============================================
 1            P4 Fabric Switch
 1            Management Switch     Must be Layer 2/3 capable
-1            Management Server     At least 1x 40GbE QSFP ports recommended
+1            Management Router     At least 1x 40GbE QSFP ports recommended
 1-3          Compute Servers       Recommended at least 3 for Kubernetes HA
 2x #Server   40GbE QSFP DAC cable  Between Compute, Management, and Fabric Switch
 1            QSFP to 4x SFP+ DAC   Split cable between Fabric and eNB
@@ -337,7 +353,7 @@ Quantity     Type                  Description/Use
 ============ ===================== ===============================================
 2            P4 Fabric Switch
 1            Management Switch     Must be Layer 2/3 capable
-1            Management Server     2x 40GbE QSFP ports recommended
+1            Management Router     2x 40GbE QSFP ports recommended
 3            Compute Servers
 2            100GbE QSFP DAC cable Between Fabric switches
 2x #Server   40GbE QSFP DAC cable  Between Compute, Management, and Fabric Switch
@@ -348,25 +364,3 @@ Quantity     Type                  Description/Use
 1x #eNB      PoE+ Injector         Required unless using a PoE+ Switch
 Sufficient   Cat6 Network Cabling  Between all equipment
 ============ ===================== ===============================================
-
-
-P4 UPF 2x2 Leaf Spine Fabric BoM
-""""""""""""""""""""""""""""""""
-
-============ ===================== ===============================================
-Quantity     Type                  Description/Use
-============ ===================== ===============================================
-4            P4 Fabric Switch
-1            Management Switch     Must be Layer 2/3 capable
-1            Management Server     2x 40GbE QSFP ports recommended
-3            Compute Servers
-8            100GbE QSFP DAC cable Between Fabric switches
-2x #Server   40GbE QSFP DAC cable  Between Compute, Management, and Fabric Switch
-1 (or more)  QSFP to 4x SFP+ DAC   Split cable between Fabric and eNB
-1 (or more)  eNB
-1x #eNB      10GbE to 1GbE Media   Required unless using switch to convert from
-             converter             fabric to eNB
-1x #eNB      PoE+ Injector         Required unless using a PoE+ Switch
-Sufficient   Cat6 Network Cabling  Between all equipment
-============ ===================== ===============================================
-

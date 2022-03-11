@@ -407,10 +407,12 @@ Verification
 ------------
 
 Fabric connectivity should be fully ready at this point.
-We should verify that **all servers**, including compute nodes and the management server,
-have an IP address and are **able to reach each other via fabric interface** before continuing the next step.
+We should verify that **all servers**, including compute nodes and the
+management router, have an IP address and are **able to reach each other via
+fabric interface** before continuing the next step.
 
-This can be simply done by running a **ping** command from one server to another server's fabric IP.
+This can be simply done by running a **ping** command from one server to
+another server's fabric IP.
 
 
 Troubleshooting

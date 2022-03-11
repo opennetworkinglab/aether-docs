@@ -6,7 +6,7 @@ Fabric Switch Bootstrap
 =======================
 
 The installation of the ONL OS image on the fabric switches uses the DHCP and
-HTTP server set up on the management server.
+HTTP server set up on the management router.
 
 The default image is downloaded during that installation process by the
 ``onieboot`` role. Make changes to that role and rerun the management playbook

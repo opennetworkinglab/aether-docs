@@ -243,7 +243,7 @@ Verify VPN connection
 ---------------------
 
 You can verify the VPN connections by checking
-the routing table from the management server and trying to ping to one of the
+the routing table from the management router and trying to ping to one of the
 central cluster VMs.
 
 Be sure there are two tunnel interfaces, ``gcp_tunnel1`` and ``gcp_tunnel2``,

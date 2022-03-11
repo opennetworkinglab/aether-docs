@@ -13,7 +13,7 @@ Unable to access a system
 """""""""""""""""""""""""
 
 If it's a system behind another system (ex: the compute nodes behind a
-management server) and you're trying to interactively login to it, make sure
+management router) and you're trying to interactively login to it, make sure
 that you've enabled SSH Agent Forwarding in your ``~/.ssh/config`` file::
 
   Host mgmtserver1.prod.site.aetherproject.net

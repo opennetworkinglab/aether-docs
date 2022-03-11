@@ -5,10 +5,10 @@
 Server Bootstrap
 ================
 
-Management Server Bootstrap
+Management Router Bootstrap
 """""""""""""""""""""""""""
 
-The management server is bootstrapped into a customized version of the standard
+The Management Router is bootstrapped into a customized version of the standard
 Ubuntu 18.04 OS installer.
 
 The `iPXE boot firmware <https://ipxe.org/>`_. is used to start this process
@@ -54,21 +54,21 @@ Creating a bootable USB drive
 
   You may need to use `sudo` for this.
 
-Boot and Image Management Server
+Boot and Image management router
 ''''''''''''''''''''''''''''''''
 
 1. Connect a USB keyboard and VGA monitor to the management node.  Put the USB
    Key in one of the management node's USB ports (port 2 or 3):
 
    .. image:: images/mgmtsrv-000.png
-       :alt: Management Server Ports
+       :alt: management router Ports
        :scale: 50%
 
 2. Turn on the management node, and press the F11 key as it starts to get into
    the Boot Menu:
 
    .. image:: images/mgmtsrv-001.png
-       :alt: Management Server Boot Menu
+       :alt: management router Boot Menu
        :scale: 50%
 
 3. Select the USB key (in this case "PNY USB 2.0", your options may vary) and press return. You should see iPXE load:
@@ -112,11 +112,11 @@ Boot and Image Management Server
        :scale: 50%
 
 
-Management Server Configuration
+management router Configuration
 '''''''''''''''''''''''''''''''
 
-Once the OS is installed on the management server, Ansible is used to remotely
-install software on the management server.
+Once the OS is installed on the management router, Ansible is used to remotely
+install software on the management router.
 
 To checkout the ONF ansible repo and enter the virtualenv with the tooling::
 
@@ -138,7 +138,7 @@ the NetBox instance.  List the IP Prefixes used by the site in the
 ``ip_prefixes`` list.
 
 Next, run the ``scripts/edgeconfig.py`` to generate a host variables file in
-``inventory/host_vars/<device name>.yaml`` for the management server and other
+``inventory/host_vars/<device name>.yaml`` for the management router and other
 compute servers.::
 
   python scripts/edgeconfig.py inventory/staging-netbox.yml
@@ -155,10 +155,10 @@ is via the Fabric router address in the connected leaf range.
 Using the ``inventory/example-aether.ini`` as a template, create an
 :doc:`ansible inventory <ansible:user_guide/intro_inventory>` file for the
 site. Change the device names, IP addresses, and ``onfadmin`` password to match
-the ones for this site.  The management server's configuration is in the
+the ones for this site.  The management router's configuration is in the
 ``[aethermgmt]`` and corresponding ``[aethermgmt:vars]`` section.
 
-Then, to configure a management server, run::
+Then, to configure a management router, run::
 
   ansible-playbook -i inventory/sitename.ini playbooks/aethermgmt-playbook.yml
 
@@ -175,7 +175,7 @@ This installs software with the following functionality:
 Compute Server Bootstrap
 """"""""""""""""""""""""
 
-Once the management server has finished installation, it will be set to offer
+Once the management router has finished installation, it will be set to offer
 the same iPXE bootstrap file to the computer.
 
 Each node will be booted, and when iPXE loads select the ``Ubuntu 18.04
@@ -202,18 +202,18 @@ network cards like the 40GbE ones used in compute servers aren't listed.
 To prepare the compute nodes, software must be installed on them.  As they
 can't be accessed directly from your local system, a :ref:`jump host
 <ansible:use_ssh_jump_hosts>` configuration is added, so the SSH connection
-goes through the management server to the compute systems behind it. Doing this
+goes through the management router to the compute systems behind it. Doing this
 requires a few steps:
 
 First, configure SSH to use Agent forwarding - create or edit your
 ``~/.ssh/config`` file and add the following lines::
 
-  Host <management server IP>
+  Host <management router IP>
     ForwardAgent yes
 
-Then try to login to the management server, then the compute node::
+Then try to login to the management router, then the compute node::
 
-  $ ssh onfadmin@<management server IP>
+  $ ssh onfadmin@<management router IP>
   Welcome to Ubuntu 18.04.5 LTS (GNU/Linux 5.4.0-54-generic x86_64)
   ...
   onfadmin@mgmtserver1:~$ ssh onfadmin@10.0.0.138
