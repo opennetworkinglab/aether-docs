@@ -199,9 +199,9 @@ Limitations and Known Issues
    Additionally, only 1 slice can currently use a P4 UPF. The next
    release of Aether will remove both limitations.
 
-* This transaction history page on the operations portal is not
-  currently enabled; It will be available shortly after the first
-  2.0 release.
+*  The transaction history page on the operations portal is not
+   currently enabled; It will be available shortly after the first
+   2.0 release.
 
 *  The Sim-Card model deviates from the ID convention used by the other
    models, using the field “sim-id” instead of “sim-card-id”.
@@ -211,6 +211,10 @@ Limitations and Known Issues
 
 *  When running the ROC GUI in the Firefox browser, it is possible to enter
    non-numeric characters in to numeric fields.
+
+*  Application filtering is not available for some combinations of 5G UEs and
+   5G gNBs. For 5G slices, it is recommended that default behavior be set to
+   ALLOW-ALL and application filtering rules not be added at this time.
 
 Component Versions
 ------------------
@@ -223,19 +227,19 @@ ROC:
 
 * onos-operator: 0.5.1
 
-* aether-roc-umbrella: 2.0.42
+* aether-roc-umbrella: 2.0.43
 
 :doc:`SD-Core 1.1 <sdcore:release/1.1>`
 
-* sdcore-helm-chart: 0.10.13 (Umbrella Helm Chart)
+* sdcore-helm-chart: 0.10.16 (Umbrella Helm Chart)
 
-   * Omec-control-plane : 0.10.9
+   * Omec-control-plane : 0.10.11
 
    * Omec-sub-provision : 0.4.5
 
-   * 5g-control-plane : 0.6.17
+   * 5g-control-plane : 0.6.19
 
-   * 5g-ran-sim: 0.4.10
+   * 5g-ran-sim: 0.4.11
 
 UPF: bess-upf: 0.0.5
 
