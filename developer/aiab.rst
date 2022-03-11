@@ -40,39 +40,14 @@ To initialize the AiaB environment, first clone the following repository::
 If you are going to install AiaB using published Helm charts, you can proceed to the
 next section.
 
-If you wish to install SD-CORE from local Helm charts, clone these additional repositories::
+If you wish to install from local Helm charts, clone these additional repositories::
 
     mkdir -p ~/cord
     cd ~/cord
     git clone "https://gerrit.opencord.org:29418/sdcore-helm-charts"
-    git clone "https://gerrit.opencord.org:29418/aether-helm-charts"
-
-If you wish to install the ROC from local Helm charts, clone this::
-
-    mkdir -p ~/cord
-    cd ~/cord
     git clone "https://gerrit.opencord.org:29418/roc-helm-charts"
 
 Now change to *~/aether-in-a-box* directory.
-
-Set up Authentication Tokens
-----------------------------
-
-Edit the file *configs/authentication*.
-
-Fill out REGISTRY_USERNAME and REGISTRY_CLI_SECRET as follows:
-
-* Log into the `Aether Harbor Registry <https://registry.aetherproject.org>`_ using your Crowd credentials
-* Select *User Profile* from the drop-down menu in the upper right corner
-* For REGISTRY_USERNAME, use the *Username* in your profile
-* Copy the *CLI secret* to the clipboard and paste to REGISTRY_CLI_SECRET
-
-If you have already set up AiaB but you used incorrect credentials, first clean up AiaB as described
-in the `Cleanup`_ section, and also run::
-
-    kubectl -n omec delete secret aether.registry
-
-Then edit *configs/authentication* and re-build AiaB.
 
 Installing the ROC
 ------------------
@@ -95,9 +70,9 @@ to the command, e.g.,::
 
     CHARTS=latest make roc-4g-models
 
-To install the Aether 1.6 release, add *CHARTS=release-1.6*::
+To install the Aether 2.0 release, add *CHARTS=release-2.0*::
 
-    CHARTS=release-1.6 make roc-4g-models
+    CHARTS=release-2.0 make roc-4g-models
 
 The ROC has successfully initialized when you see output like this::
 
@@ -106,7 +81,7 @@ The ROC has successfully initialized when you see output like this::
     until kubectl -n aether-roc exec pod/onos-cli-5b947f8f6-4r5nm -- \
         curl -s -f -L -X PATCH "http://aether-roc-api:8181/aether-roc-api" \
         --header 'Content-Type: application/json' \
-        --data-raw "$(cat /root/aether-in-a-box//roc-5g-models-v4.json)"; do sleep 5; done
+        --data-raw "$(cat /root/aether-in-a-box//roc-5g-models.json)"; do sleep 5; done
     command terminated with exit code 22
     command terminated with exit code 22
     command terminated with exit code 22
@@ -131,9 +106,9 @@ to the command, e.g.,::
 
     CHARTS=latest make test
 
-To install the Aether 1.6 release, add *CHARTS=release-1.6*::
+To install the Aether 2.0 release, add *CHARTS=release-2.0*::
 
-    CHARTS=release-1.6 make test
+    CHARTS=release-2.0 make test
 
 Start the 5G SD-CORE
 --------------------
@@ -152,9 +127,9 @@ to the command, e.g.,::
 
     CHARTS=latest make 5g-test
 
-To install the Aether 1.6 release, add *CHARTS=release-1.6*::
+To install the Aether 2.0 release, add *CHARTS=release-2.0*::
 
-    CHARTS=release-1.6 make 5gc
+    CHARTS=release-2.0 make 5gc
 
 NOTE: The *5g-test* target is not supported in Aether-1.6, but you can use the *5gc* target
 to build the 5G core.
@@ -221,16 +196,6 @@ If you suspect a problem, first verify that all pods are in Running state::
 
     kubectl -n omec get pods
     kubectl -n aether-roc get pods
-
-Pods in ImagePullBackOff State
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-If the pods are stuck in ImagePullBackOff state, then it's likely an issue with credentials.  To verify this,
-run *kubectl describe* on a pod in that state, for example::
-
-    kubectl -n omec describe pod gnbsim-0
-
-Look in the *Events* section for more information about why the image pull failed.  If you see *unauthorized to
-access repository* then it's probably a credentials issue; see `Set up Authentication Tokens`_ above.
 
 4G Test Fails
 ^^^^^^^^^^^^^
