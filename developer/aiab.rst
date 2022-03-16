@@ -35,7 +35,7 @@ Clone Repositories
 To initialize the AiaB environment, first clone the following repository::
 
     cd ~
-    git clone "https://gerrit.opencord.org:29418/aether-in-a-box"
+    git clone "https://gerrit.opencord.org/aether-in-a-box"
 
 If you are going to install AiaB using published Helm charts, you can proceed to the
 next section.
@@ -44,8 +44,8 @@ If you wish to install from local Helm charts, clone these additional repositori
 
     mkdir -p ~/cord
     cd ~/cord
-    git clone "https://gerrit.opencord.org:29418/sdcore-helm-charts"
-    git clone "https://gerrit.opencord.org:29418/roc-helm-charts"
+    git clone "https://gerrit.opencord.org/sdcore-helm-charts"
+    git clone "https://gerrit.opencord.org/roc-helm-charts"
 
 Now change to *~/aether-in-a-box* directory.
 
