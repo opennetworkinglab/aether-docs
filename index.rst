@@ -11,15 +11,16 @@ Getting Started with Aether
 
 Here are some useful places to start with Aether:
 
-* Read the most recent :doc:`Release Notes </release/1.5>`.
+* Setup an Aether software development environment with :doc:`Aether-in-a-Box </developer/aiab>`.
+
+* For a PoC deployment, bring up an :doc:`Aether-in-a-Box on Real Radios <developer/aiabhw>`.
+
+* Learn about how to :doc:`configure Aether using the ROC </operations/gui>`.
 
 * Learn the requirements of hosting an :doc:`Aether Connected Edge
   </edge_deployment/overview>`.
 
-* Learn about the :doc:`Aether Managemnt Platform </amp/roc>`.
-
-* Setup an Aether software development environment with :doc:`Aether-in-a-Box
-  </developer/aiab>`.
+* Read the most recent :doc:`Release Notes </release/2.0>`.
 
 Aether Architecture and Components
 ----------------------------------
@@ -54,7 +55,30 @@ can be found on the `ONF Wiki
 
 .. toctree::
    :maxdepth: 3
-   :caption: Edge Deployment
+   :caption: Aether Quick Start
+   :hidden:
+   :glob:
+
+   developer/aiab
+   developer/aiabhw
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Operations
+   :hidden:
+   :glob:
+
+   operations/gui
+   operations/subscriber
+   operations/application
+   operations/slice
+   operations/metering
+   operations/monitor
+   operations/procedures
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Production Edge Deployment
    :hidden:
    :glob:
 
@@ -85,17 +109,12 @@ can be found on the `ONF Wiki
 
 .. toctree::
    :maxdepth: 3
-   :caption: Operations
+   :caption: ROC Development
    :hidden:
    :glob:
 
-   operations/gui
-   operations/subscriber
-   operations/application
-   operations/slice
-   operations/metering
-   operations/monitor
-   operations/procedures
+   developer/roc
+   developer/roc-api
 
 .. toctree::
    :maxdepth: 3
@@ -107,16 +126,6 @@ can be found on the `ONF Wiki
    testing/aether-roc-tests
    testing/system-tests
    testing/acceptance_specification
-
-.. toctree::
-   :maxdepth: 3
-   :caption: Aether Developer Notes
-   :hidden:
-   :glob:
-
-   developer/aiab
-   developer/roc
-   developer/roc-api
 
 .. toctree::
    :maxdepth: 2

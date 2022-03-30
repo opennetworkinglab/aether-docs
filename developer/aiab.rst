@@ -1,7 +1,7 @@
 .. vim: syntax=rst
 
-Setting Up Aether-in-a-Box
-==========================
+Aether-in-a-Box for Developers
+==============================
 
 Aether-in-a-Box (AiaB) provides an easy way to deploy Aether's SD-CORE and ROC
 components, and then run basic tests to validate the installation.

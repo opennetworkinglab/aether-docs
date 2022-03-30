@@ -41,7 +41,9 @@ Netbox
 ONF
 ONL
 ONOS
+OPc
 PFCP
+PoC
 PoE
 QoS
 ROC
