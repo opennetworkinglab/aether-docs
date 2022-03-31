@@ -216,8 +216,8 @@ Limitations and Known Issues
    5G gNBs. For 5G slices, it is recommended that default behavior be set to
    ALLOW-ALL and application filtering rules not be added at this time.
 
-Component Versions
-------------------
+Aether 2.0.0 Component Versions
+-------------------------------
 
 ROC:
 
@@ -255,3 +255,110 @@ Hardware and Vendor Dependencies:
 
 * T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
 
+Aether 2.0.1 Release
+====================
+
+Minor release to fix SD-Core issues.
+
+Aether 2.0.1 Component Versions
+-------------------------------
+
+ROC:
+
+* atomix-controller: 0.6.9
+
+* atomix-raft-storage: 0.1.25
+
+* onos-operator: 0.5.1
+
+* aether-roc-umbrella: 2.0.43
+
+:doc:`SD-Core 1.1.1 <sdcore:release/1.1>`
+
+* sdcore-helm-chart: 0.10.18 (Umbrella Helm Chart)
+
+   * Omec-control-plane : 0.10.12
+
+   * Omec-sub-provision : 0.4.5
+
+   * 5g-control-plane : 0.6.20
+
+   * 5g-ran-sim: 0.4.12
+
+UPF: bess-upf: 0.0.5
+
+:doc:`SD-Fabric 1.1 <sdfabric:release/1.1.0>`
+
+* sdfabric: 1.1.0
+
+Hardware and Vendor Dependencies:
+
+* Sercomm eNB: Firmware version 3922
+
+* Radisys 5G-SA RAN stack: TRILLIUM_5GNR_NXP_GNB_AIO_QCOM_SUB6_WITH_DPDK_BIN_REL_2.4.3
+
+* T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
+
+
+Aether 2.0.2 Release
+====================
+
+Minor release to fix ROC and GUI related issues.
+
+* Fetching of intermediate lists within the configuration tree, for example Applications, is now supported.
+
+* Subscriber-Proxy now supports deletes / shrinking of IMSI ranges.
+
+* Fixed a bug where sdcore-adapter would fail to propagate a deleted device-group or slice to the core.
+
+* Improvements to logging in sdcore-adapter, and a REST endpoint to dynamically change log levels.
+
+* An endpoint has been added to the aether-roc-api that allows fetching of IP addresses for devices.
+
+* GUI: Added the ability to remove SIM Cards from Devices.
+
+* GUI: Fixed a bug where IP-Domains were not loaded properly in Device-Group edit page.
+
+* GUI: Display a reason why the Application select box might be empty in a Slice.
+
+* GUI: Transaction list is now populated.
+
+
+Aether 2.0.2 Component Versions
+-------------------------------
+
+ROC:
+
+* atomix-controller: 0.6.9
+
+* atomix-raft-storage: 0.1.25
+
+* onos-operator: 0.5.1
+
+* aether-roc-umbrella: 2.0.46
+
+:doc:`SD-Core 1.1.1 <sdcore:release/1.1>`
+
+* sdcore-helm-chart: 0.10.18 (Umbrella Helm Chart)
+
+   * Omec-control-plane : 0.10.12
+
+   * Omec-sub-provision : 0.4.5
+
+   * 5g-control-plane : 0.6.20
+
+   * 5g-ran-sim: 0.4.12
+
+UPF: bess-upf: 0.0.5
+
+:doc:`SD-Fabric 1.1 <sdfabric:release/1.1.0>`
+
+* sdfabric: 1.1.0
+
+Hardware and Vendor Dependencies:
+
+* Sercomm eNB: Firmware version 3922
+
+* Radisys 5G-SA RAN stack: TRILLIUM_5GNR_NXP_GNB_AIO_QCOM_SUB6_WITH_DPDK_BIN_REL_2.4.3
+
+* T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
