@@ -61,6 +61,7 @@ can be found on the `ONF Wiki
 
    developer/aiab
    developer/aiabhw
+   developer/contributing.rst
 
 .. toctree::
    :maxdepth: 3

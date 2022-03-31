@@ -30,6 +30,7 @@ IaC
 IaaC
 Istio
 Jenkins
+Jira
 Keycloak
 KinD
 Kubernetes
@@ -93,6 +94,7 @@ charactersGroup
 charlieb
 chipset
 clusterRole
+codebase
 config
 configMapGenerator
 configmap
