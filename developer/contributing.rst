@@ -160,9 +160,35 @@ have a discussion.
 Current Core Contributors
 """""""""""""""""""""""""
 
+Aether-Roc-Api:
+
+* ``Pushp Raj``
+
+Chronos Exporter:
+
+* ``Pushp Raj``
+
+Subscriber Proxy:
+
+* ``Amit Wankhede``
+* ``Pushp Raj``
+
+Prom-Label-Proxy:
+
+* ``Amit Wankhede``
+
 All of the codebase:
 
-* Name...
+* ``Shad Ansari``
+* ``Scott Baker``
+* ``Andy Bavier``
+* ``Hung-Wei Chiu``
+* ``Sean Condon``
+* ``Kevin Marquardsen``
+* ``Hyunsun Moon``
+* ``Don Newton``
+* ``Matteo Scandolo``
+* ``Zack Williams``
 
 Community Guidelines
 --------------------

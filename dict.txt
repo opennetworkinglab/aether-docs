@@ -8,6 +8,7 @@ BMv
 BMv2
 BoM
 CLI
+Chronos
 Cloudlab
 Cratchit
 DNS
