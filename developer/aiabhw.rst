@@ -70,10 +70,10 @@ IMSIs between 315010999912301 and 315010999912303::
       sequenceNumber: 135
 
 Determine which is the interface that has L3 connectivity to the
-eNodeB -- this will be *DATA_IFACE* in the configuration later.  If
+eNodeB -- this will be ``DATA_IFACE`` in the configuration later.  If
 the eNodeB will also be connected to the local network, then this is just the
 server’s primary interface.  If the eNodeB will be connected via an
-isolated L2/L3 network segment, then *DATA_IFACE* refers to the server
+isolated L2/L3 network segment, then ``DATA_IFACE`` refers to the server
 interface on that network.   Remember this interface for later.
 
 Option 1: Configure Aether with ROC
@@ -83,26 +83,26 @@ The Aether ROC provides a GUI and API for dynamically configuring
 Aether.  If you don’t wish to use the ROC to configure AiaB, you
 can skip to the next section.
 
-Install AiaB as follows (specifying *DATA_IFACE* from above)::
+Install AiaB as follows (specifying ``DATA_IFACE`` from above)::
 
     ENABLE_OAISIM=false DATA_IFACE=<iface> CHARTS=latest make roc-4g-models 4g-core
 
 Next, use the ROC to add information about your SIM cards.
 The ROC GUI  is available at `http://<server-ip>:31194`.
 
-Choose *Configuration > Site* from the drop-down at top right and edit
-the “AiaB site”.  Change the following values and click “Update”:
+Choose ``Configuration > Site`` from the drop-down at top right and edit
+the ``AiaB site``.  Change the following values and click ``Update``:
 
 * MCC: 315
 * MNC: 010
 
-Choose *Sim Cards* from the drop-down at top right.  Edit the
+Choose ``Sim Cards`` from the drop-down at top right.  Edit the
 existing entries to reflect the SIM cards you are adding to devices
-by replacing their IMSI values.  Click “Update” after each edit.
+by replacing their IMSI values.  Click ``Update`` after each edit.
 If you want to connect more than two devices, consult the `ROC
 documentation <https://docs.aetherproject.org/master/operations/subscriber.html#configure-connectivity-service-for-a-new-device>`_.
 
-Finally, click the Basket icon at top right and click the “Commit” button.
+Finally, click the Basket icon at top right and click the ``Commit`` button.
 
 Now jump to the `Verifying the AiaB installation`_ section.
 
@@ -128,7 +128,7 @@ Also add the IMSIs of your devices under ``imsis``, for example::
         - "315010999912302"
         - "315010999912303"
 
-Install AiaB as follows (specifying *DATA_IFACE* from above)::
+Install AiaB as follows (specifying ``DATA_IFACE`` from above)::
 
     ENABLE_OAISIM=false DATA_IFACE=<iface> CHARTS=latest make 4g-core
 
@@ -136,10 +136,10 @@ Verifying the AiaB installation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Installing AiaB will take about 20 minutes with a fast Internet
-connection.  If you see any errors / timeouts, try running the `make`
+connection.  If you see any errors / timeouts, try running the ``make``
 command again.  The build will finish with a message:
 “Your MME IP address is… ”  This is just the IP address assigned to
-the *DATA_IFACE*.   Remember this for the eNodeB setup.
+the ``DATA_IFACE``.   Remember this for the eNodeB setup.
 
 When the install is complete, check that the 4G SD-CORE is running
 as follows::
@@ -187,13 +187,13 @@ normal operation.  Connect the eNodeB WAN port to the local network.
 
 Connect the eNodeB LAN port to a free Ethernet port on a Linux machine
 (say, a laptop) that will be used for the initial configuration of
-the eNodeB.  On that machine run `dhclient` on the interface corresponding
+the eNodeB.  On that machine run ``dhclient`` on the interface corresponding
 to the Ethernet port, for example::
 
     sudo dhclient eth1
 
 The interface should receive an IP address from the Sercomm eNodeB on
-the 11.11.11.0/24 subnet.  Check this using `ifconfig`::
+the 11.11.11.0/24 subnet.  Check this using ``ifconfig``::
 
     $ ifconfig eth1
     eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -212,10 +212,10 @@ this using ping::
 
 To access the Sercomm eNodeB admin page, you can run a Web browser on
 the laptop and direct it to `https://11.11.11.188`. Login to the admin
-interface as user: *sc_femto* and password: *scHt3pp*.
+interface as user: ``sc_femto`` and password: ``scHt3pp``.
 
 Click the ``NetWork set`` menu at the top. In the first section
-“IP Address”, set *Connect type: DHCP* (assuming this is supported on
+``IP Address``, set *Connect type: DHCP* (assuming this is supported on
 your local network, otherwise set up a static IP address).
 Click the blue ``Save`` button at the bottom.
 
@@ -258,7 +258,7 @@ Add this info on the blank line:
 * GatewayIPAddress: <Use MME IP address from AiaB installation>
 * Interface: Device.IP.Interface.1.
 
-Then click the “Add” button at the far right.
+Then click the ``Add`` button at the far right.
 
 Finally click the ``FAPService`` menu and then go to the ``FAPControl``
 tab.  Check the box next to ``AdminState`` in the first section and
