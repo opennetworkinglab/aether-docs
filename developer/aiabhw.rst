@@ -286,8 +286,8 @@ devices to the network.
 Connecting Devices
 ------------------
 
-Is there already a document on how to configure different devices
-to work with an Aether SIM card?
+Documenting how to configure different types of devices to work
+with Aether is work-in-progress.
 
 Reinstalling AiaB
 -----------------
