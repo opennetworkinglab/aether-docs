@@ -129,10 +129,7 @@ to the command, e.g.,::
 
 To install the Aether 2.0 release, add *CHARTS=release-2.0*::
 
-    CHARTS=release-2.0 make 5gc
-
-NOTE: The *5g-test* target is not supported in Aether-1.6, but you can use the *5gc* target
-to build the 5G core.
+    CHARTS=release-2.0 make 5g-test
 
 To change the behavior of the test run by gNBSim, change the contents of *gnb.conf*
 in *sd-core-5g-values.yaml*.  Consult the
