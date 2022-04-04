@@ -1,7 +1,7 @@
 .. vim: syntax=rst
 
-Aether-in-a-Box on Hardware Radios (4G)
-=======================================
+Aether-in-a-Box on Hardware Radios
+==================================
 
 This document describes how to set up an Aether-in-a-Box (AiaB) with
 a Sercomm eNodeB and connect real devices (e.g., 4G phones).  This
@@ -14,9 +14,11 @@ To create this setup you will need the following equipment:
   * At least 4 CPUs and 12GB RAM
   * Internet connection
 
-* Sercomm CBRS LTE small cell eNodeB
+* 4G or 5G small cell eNodeB
 
-  * Firmware version 3918 or newer.  For instructions on how to update the firmware see `here <https://docs.aetherproject.org/master/edge_deployment/enb_installation.html#upgrade-firmware>`_.
+  * Example: Sercomm CBRS LTE small cell eNodeB
+
+    * Firmware version 3918 or newer.  For instructions on how to update the firmware see `here <https://docs.aetherproject.org/master/edge_deployment/enb_installation.html#upgrade-firmware>`_.
 
 * SIM card writer and blank SIM cards
 

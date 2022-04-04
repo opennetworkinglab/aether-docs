@@ -12,6 +12,56 @@ equipment will differ depending on the characteristics of each edge.
 This document provides several hardware deployment options and explains the
 differences between them.
 
+For assistance in setting up a production deployment of Aether,
+please contact Timon Sloane at timon@opennetworking.org.
+
+Aether Central
+--------------
+
+A production deployment of Aether typically has a single set of centralized control
+components, informally referred to as ``Aether Central`` together with one or more
+edge sites. Aether Central is often deployed in the cloud.
+
+|MULTIEDGE|
+
+Edge and Central can be further expanded to show their internal architecture:
+
+|ARCHITECTURE|
+
+The architecture shown is but one potential deployment of Aether Central, leveraging
+the following subsystems:
+
+* Rancher, to handle deployment of Kubernetes as well as to manage the lifecycle of
+  Kubernetes-based components. Rancher RKE or RKE2 are potential Kubernetes
+  deployments.
+
+* EFK Stack and Prometheus stack for Logging and Monitoring.
+
+* Cloud storage using a cloud storage mechanism, such as cloud volumes provided
+  by Google, as well as a Velero, a backup mechanism to handle backup and restore
+  of the cloud volumes.
+
+* Ubuntu and Docker as the underlying operating system and containerization
+  solution.
+
+* Keycloak and LDAP, as an authentication mechanism for the Aether GUI.
+
+* Netbox, to inventory equipment and describe relationships between equipment.
+
+* Helm and Docker repositories for holding helm charts and images.
+
+* Gerrit and Jenkins, to support the CI/CD pipeline.
+
+An example CI/CD pipeline is depicted below:
+
+|CICD|
+
+The example CI/CD pipeline uses Jenkins as an automation tool to perform the
+necessary acceptance testing of incoming patches, as well as to carry out
+post-merge operations. The desired deployment state is described in GitOps
+repos contained in Gerrit, and Fleet and Terraform are used to automate the
+deployment.
+
 Deployment Options
 ------------------
 
@@ -364,3 +414,15 @@ Quantity     Type                  Description/Use
 1x #eNB      PoE+ Injector         Required unless using a PoE+ Switch
 Sufficient   Cat6 Network Cabling  Between all equipment
 ============ ===================== ===============================================
+
+.. |MULTIEDGE| image:: images/aether-multi-edge.svg
+    :width: 1000
+    :alt: Aether Central and Edge Deployment
+
+.. |ARCHITECTURE| image:: images/aether-central-architecture.svg
+    :width: 1500
+    :alt: Aether Central and Edge Architecture
+
+.. |CICD| image:: images/aether-CICD.svg
+    :width: 1500
+    :alt: Aether Central and Edge Architecture

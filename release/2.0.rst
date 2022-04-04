@@ -216,8 +216,13 @@ Limitations and Known Issues
    5G gNBs. For 5G slices, it is recommended that default behavior be set to
    ALLOW-ALL and application filtering rules not be added at this time.
 
+Aether 2.0.0 Release
+--------------------
+
+Aether 2.0.0 is the base release of the 2.0 branch.
+
 Aether 2.0.0 Component Versions
--------------------------------
+"""""""""""""""""""""""""""""""
 
 ROC:
 
@@ -256,12 +261,12 @@ Hardware and Vendor Dependencies:
 * T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
 
 Aether 2.0.1 Release
-====================
+--------------------
 
 Minor release to fix SD-Core issues.
 
 Aether 2.0.1 Component Versions
--------------------------------
+"""""""""""""""""""""""""""""""
 
 ROC:
 
@@ -301,7 +306,7 @@ Hardware and Vendor Dependencies:
 
 
 Aether 2.0.2 Release
-====================
+--------------------
 
 Minor release to fix ROC and GUI related issues.
 
@@ -325,7 +330,7 @@ Minor release to fix ROC and GUI related issues.
 
 
 Aether 2.0.2 Component Versions
--------------------------------
+"""""""""""""""""""""""""""""""
 
 ROC:
 
@@ -351,9 +356,9 @@ ROC:
 
 UPF: bess-upf: 0.0.5
 
-:doc:`SD-Fabric 1.1 <sdfabric:release/1.1.0>`
+:doc:`SD-Fabric 1.1 <sdfabric:release/1.1.1>`
 
-* sdfabric: 1.1.0
+* sdfabric: 1.1.1
 
 Hardware and Vendor Dependencies:
 
