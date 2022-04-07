@@ -5,20 +5,57 @@
 Site Planning
 =============
 
-Planning an edge site generally happens in three phases:
+This document primarily describes how Aether Edges are designed and implemented
+when Aether is deployed using a managed service model, and exists primarily as
+a reference for ONF Staff.
 
-1. A BoM of equipment is defined, then purchased.
+Planning an edge site generally happens in these phases:
 
-2. The equipment is delivered and inventoried. This usually is done by the edge
+1. Connectivity requirements and Edge network integration details are
+   confirmed, to allow for the site to be bootstrapped and connected to Aether
+   Central.
+
+2. A BoM of equipment is defined, then purchased.
+
+3. The equipment is delivered and inventoried. This usually is done by the edge
    site, and involves collecting information like the serial numbers, MAC
    addresses and other details about the specific pieces of equipment being
    installed.
 
-3. ONF Staff enters this information into Netbox, which is used to generate
+4. ONF Staff enters this information into Netbox, which is used to generate
    configuration for the edge site and document the configuration.
 
-This document describes the 3rd phase, and exists primarily as a reference for
-ONF Staff.
+Edge Connectivity
+-----------------
+
+Aether is a managed service, and Aether Edges require a constant connection
+via VPN to the 4G and 5G core in Aether Central for managing subscriber
+information.
+
+The edge site must provide internet access to the Aether edge, specifically the
+Management Router. The traffic required is:
+
+* VPN connection (ESP protocol, Ports UDP/500 and UDP/4500) to Aether Central
+
+* SSH (TCP/22). used for installation, troubleshooting, and updating the site.
+
+* General outgoing internet access used for installation of software and other
+  components from ONF and public (Ubuntu) software repositories.
+
+The open ports can be restricted to specific internet addresses which are used
+for Aether.
+
+The Management Router needs to have an IP address assigned to it, which can be
+either:
+
+* A public static IP address
+
+* Behind NAT with port forwarding with the ports listed above forwarded to the
+  Management Router
+
+In either case, the Management Router's IP address should be assigned using
+a reserved DHCP if possible, which eases the installation process.
+
 
 Site Design in Netbox
 ---------------------

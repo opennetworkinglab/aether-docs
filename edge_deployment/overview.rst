@@ -96,61 +96,15 @@ for example, fabric switch connections can be made with two cables, and
 configured to tolerate the failure or replacement of one cable or NIC port,
 which is recommended especially for inter-switch links.
 
-Edge Connectivity
------------------
 
-Aether's is a managed service, and Aether Edges require a constant connection
-via VPN to the 4G and 5G core in Aether Central for managing subscriber
-information.
-
-The edge site must provide internet access to the Aether edge, specifically the
-Management Router. The traffic required is:
-
-* VPN connection (ESP protocol, Ports UDP/500 and UDP/4500) to Aether Central
-
-* SSH (TCP/22). used for installation, troubleshooting, and updating the site.
-
-* General outgoing internet access used for installation of software and other
-  components from ONF and public (Ubuntu) software repositories.
-
-The open ports can be restricted to specific internet addresses which are used
-for Aether.
-
-The Management Router needs to have an IP address assigned to it, which can be
-either:
-
-* A public static IP address
-
-* Behind NAT with port forwarding with the ports listed above forwarded to the
-  Management Router
-
-In either case, the Management Router's IP address should be assigned using
-a reserved DHCP if possible, which eases the installation process.
-
-BESS-based Network Topology
----------------------------
-
-The :doc:`Software-only BESS UPF </edge_deployment/bess_upf_deployment>`, is
-supported for production as of the Aether 1.5 and later releases.  This UPF can
-be used for deployments that do not have P4 switching hardware.
-
-.. image:: images/edge_mgmt_only.svg
-   :alt: BESS network topology
-
-
-`BESS <https://github.com/NetSys/bess>`_ runs on an x86 compute server, and is
-deployed using Kubernetes. In production it requires an SR-IOV capable network
-card, and specific K8s CNIs to be used.
-
-The Management Router and Switch must be configured with multiple VLANs and
-subnets with routing required for the BESS UPF.
-
-P4-based Network Topology
--------------------------
+SD-Fabric Network Topology
+--------------------------
 
 The P4-based SD-Fabric UPF is an advanced feature and has graduated to
-production use in the Aether 2.0 release.  It requires one or more
-P4-capable switches using the Tofino chipset.
+production use in the Aether 2.0 release.  It requires one or more P4-capable
+switches using the Tofino chipset. This topology can run both the P4-based UPF
+on switching hardware as well as the software-based BESS UPF on compute
+servers.
 
 Single or multi-switch topologies can be used as described in the
 :ref:`SD-Fabric Specifications for Topology <sdfabric:specification:topology>`.
@@ -177,6 +131,28 @@ leaf and have overlapping radio coverage:
 All SD-Fabric P4-based topologies can support running both the BESS UPF and P4
 UPF on the same hardware at the same time within an edge deployment.
 
+
+Software-only UPF Network Topology
+----------------------------------
+
+If a P4-based switch is not available, the software-based BESS UPF can be used
+on compute hardware. The :doc:`Software-only BESS UPF
+</edge_deployment/bess_upf_deployment>`, is supported for production as of the
+Aether 1.5 and later releases.
+
+.. image:: images/edge_mgmt_only.svg
+   :alt: BESS network topology
+
+
+`BESS <https://github.com/NetSys/bess>`_ runs on an x86 compute server, and is
+deployed using Kubernetes. In production it requires an SR-IOV capable network
+card configured with virtual function (VF) interfaces in the base OS, and
+specific K8s CNIs to be used to use VFs within the container.
+
+Additionally the Management Router and Switch must be configured with multiple
+VLANs and subnets with routing required for the BESS UPF.
+
+
 Connectivity Alternatives
 -------------------------
 
@@ -202,6 +178,7 @@ connection point, and possibly use it to PoE power the radios as well:
 Note that these topologies may require additional configuration in the
 switching and routing equipment, including the equipment outside of the Aether
 edge.
+
 
 Hardware Descriptions
 ---------------------
