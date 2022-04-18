@@ -176,6 +176,28 @@ as follows::
 
 You should see all pods in Running status.
 
+The UPF pod connects to the ``DATA_IFACE`` specified above using macvlan networks called
+``core`` and ``access``.  Next, check that these have been successfully created, e.g. using
+``ifconfig``::
+
+    $ ifconfig core
+    core: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.250.1  netmask 255.255.255.0  broadcast 192.168.250.255
+        ether 16:9d:c1:0f:19:3a  txqueuelen 1000  (Ethernet)
+        RX packets 513797  bytes 48400525 (48.4 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 102996  bytes 26530538 (26.5 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+    $ ifconfig access
+    access: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.252.1  netmask 255.255.255.0  broadcast 192.168.252.255
+        ether 7a:9f:38:c0:18:15  txqueuelen 1000  (Ethernet)
+        RX packets 558162  bytes 64064410 (64.0 MB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 99553  bytes 16646682 (16.6 MB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
 Sercomm eNodeB setup
 --------------------
 
@@ -291,12 +313,26 @@ Connecting Devices
 Documenting how to configure different types of devices to work
 with Aether is work-in-progress.
 
-Reinstalling AiaB
------------------
+Troubleshooting
+---------------
 
-A current limitation of AiaB is that if the host machine reboots,
-AiaB needs to be reinstalled.  We plan to fix this in the future so
-that the AiaB configuration will persist across reboots.  In the
-meantime, to reinstall AiaB on a machine where it was previously
-installed, run `make clean` and then start at the `Server setup`_
-section above.
+AiaB connects macvlan networks to ``DATA_IFACE`` so that the UPF can communicate on the network.
+To do this it assumes that the *systemd-networkd* service is installed and running, ``DATA_IFACE``
+is under its control, and the systemd-networkd configuration file for ``DATA_IFACE`` ends with
+``<DATA_IFACE>.network``, where ``<DATA_IFACE>`` stands for the actual interface name.  It
+tries to find this configuration file by looking in the standard paths.  If it fails you'll see
+a message like::
+
+    FATAL: Could not find systemd-networkd config for interface foobar, exiting now!
+    make: *** [Makefile:112: /users/acb/aether-in-a-box//build/milestones/interface-check] Error 1
+
+In this case, you can specify a ``DATA_IFACE_PATH=<path to the config file>`` argument to ``make``
+so that AiaB can find the systemd-networkd configuration file for ``DATA_IFACE``.
+
+Restarting the AiaB Server
+--------------------------
+
+AiaB should come up in a mostly working state if the AiaB server is rebooted.  If any pods are
+stuck in an Error or CrashLoopBackoff state they can be restarted using ``kubectl delete pod``.
+It might also be necessary to power cycle the Sercomm eNodeB in order to get it to reconnect to
+the SD-CORE.

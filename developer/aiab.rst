@@ -49,6 +49,17 @@ If you wish to install from local Helm charts, clone these additional repositori
 
 Now change to *~/aether-in-a-box* directory.
 
+RKE2 vs. Kubespray Install
+--------------------------
+
+The AiaB installer will bring up Kubernetes on the server where it is run.  By default it
+uses `RKE2 <https://docs.rke2.io>`_ as the Kubernetes platform.  However, older versions of AiaB
+used `Kubespray <https://kubernetes.io/docs/setup/production-environment/tools/kubespray/>`_
+and that is still an option.  To switch to Kubespray as the Kubernetes platform, edit the
+Makefile and replace *rke2* with *kubespray* on this line::
+
+    K8S_INSTALL := rke2
+
 Installing the ROC
 ------------------
 
@@ -169,6 +180,8 @@ with the ROC.  You could run these commands::
     CHARTS=latest make 5g-test         # Install 5G SD-CORE and run gNB Sim test
     make reset-5g-test
     make roc-clean
+
+To completely remove AiaB by tearing down the Kubernetes cluster, run *make clean*.
 
 Developer Loop
 --------------

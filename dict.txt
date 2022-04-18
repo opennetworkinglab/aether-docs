@@ -35,6 +35,7 @@ Jira
 Keycloak
 KinD
 Kubernetes
+Kubespray
 LTE
 Mbps
 Menlo
@@ -164,6 +165,7 @@ localhost
 loopback
 macOS
 macroENB
+macvlan
 mainboard
 makefile
 menlo
@@ -180,6 +182,7 @@ namespace
 natively
 nd
 netcfg
+networkd
 ng
 ng40
 nginx
@@ -244,6 +247,7 @@ subcomponent
 subnet
 subnets
 sudo
+systemd
 tAC
 tcp
 telegraf
