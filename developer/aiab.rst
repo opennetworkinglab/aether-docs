@@ -228,3 +228,30 @@ You should see that a device group and slice has been pushed::
 
 Then tail the *config4g-0* log and make sure that the configuration has been successfully pushed to all
 SD-CORE components.
+
+5G Test Fails
+^^^^^^^^^^^^^
+
+If the 5G test fails (*make 5g-test*) then you will see output like this::
+
+    2022-04-21T17:59:12Z [INFO][GNBSIM][Summary] Profile Name: profile2 , Profile Type: pdusessest
+    2022-04-21T17:59:12Z [INFO][GNBSIM][Summary] Ue's Passed: 2 , Ue's Failed: 3
+    2022-04-21T17:59:12Z [INFO][GNBSIM][Summary] Profile Errors:
+    2022-04-21T17:59:12Z [ERRO][GNBSIM][Summary] imsi:imsi-208930100007492, procedure:REGISTRATION-PROCEDURE, error:triggering event:REGESTRATION-REQUEST-EVENT, expected event:AUTHENTICATION-REQUEST-EVENT, received event:REGESTRATION-REJECT-EVENT
+    2022-04-21T17:59:12Z [ERRO][GNBSIM][Summary] imsi:imsi-208930100007493, procedure:REGISTRATION-PROCEDURE, error:triggering event:REGESTRATION-REQUEST-EVENT, expected event:AUTHENTICATION-REQUEST-EVENT, received event:REGESTRATION-REJECT-EVENT
+    2022-04-21T17:59:12Z [ERRO][GNBSIM][Summary] imsi:imsi-208930100007494, procedure:REGISTRATION-PROCEDURE, error:triggering event:REGESTRATION-REQUEST-EVENT, expected event:AUTHENTICATION-REQUEST-EVENT, received event:REGESTRATION-REJECT-EVENT
+    2022-04-21T17:59:12Z [INFO][GNBSIM][Summary] Simulation Result: FAIL
+
+In this case check whether the *webui* pod has restarted... this can happen if it times out waiting
+for the database to come up::
+
+    $ kubectl -n omec get pod -l app=webui
+    NAME                     READY   STATUS    RESTARTS        AGE
+    webui-6b9c957565-zjqls   1/1     Running   1 (6m55s ago)   7m56s
+
+If the output shows any restarts, then restart the *simapp* pod to cause it to re-push its subscriber state::
+
+    $ kubectl -n omec delete pod -l app=simapp
+    pod "simapp-6c49b87c96-hpf82" deleted
+
+Re-run the 5G test, it should now pass.
