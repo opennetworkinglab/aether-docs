@@ -146,6 +146,7 @@ hss
 hssdb
 iPXE
 iface
+imei
 incrementing
 ip
 jitter
@@ -235,6 +236,7 @@ scalable
 sd
 sdcore
 sdfabric
+seattle
 simapp
 smf
 smgmt

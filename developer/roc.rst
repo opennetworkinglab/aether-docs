@@ -35,13 +35,13 @@ Atomix and onos-operator must be installed::
    helm repo update
 
    # install atomix
-   export ATOMIX_CONTROLLER_VERSION=0.6.8
+   export ATOMIX_CONTROLLER_VERSION=0.6.9
    helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
-   export ATOMIX_RAFT_VERSION=0.1.16
+   export ATOMIX_RAFT_VERSION=0.1.26
    helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
 
    # install the onos operator
-   ONOS_OPERATOR_VERSION=0.5.1
+   ONOS_OPERATOR_VERSION=0.5.3
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
 .. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
@@ -75,10 +75,14 @@ Atomix and onos-operator must be installed::
      - 0.6.8
      - 0.1.16
      - 0.5.1
+   * - 2.1.8-
+     - 0.6.9
+     - 0.1.26
+     - 0.5.3
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
-*onos-operator-config*, and *onos-operator-topo*.
+*onos-operator-app*, and *onos-operator-topo*.
 Execute these commands::
 
    helm -n kube-system list
@@ -91,15 +95,7 @@ Create a values-override.yaml
 You’ll want to override several of the defaults in the ROC helm charts::
 
    cat > values-override.yaml <<EOF
-   import:
-     onos-gui:
-       enabled: true
-
-   onos-gui:
-     ingress:
-       enabled: false
-
-   aether-roc-gui-v2:
+   aether-roc-gui-v2-1:
      ingress:
        enabled: false
    EOF
@@ -125,17 +121,23 @@ Posting the mega-patch
 
 The ROC usually comes up in a blank state -- there are no Enterprises, UEs, or other artifacts present in it.
 The mega-patch is an example patch that populates the ROC with some sample enterprises, UEs, slices, etc.
+
 Execute the following::
 
    # launch a port-forward for the API
    # this will continue to run in the background
+
    kubectl -n micro-onos port-forward service/aether-roc-api   --address 0.0.0.0 8181:8181 &
+
+   curl http://localhost:8181/targets
+   # It should show a list of the configure enterprises: [{"name":"defaultent"},{"name":"acme"},{"name":"starbucks"}
 
    git clone https://github.com/onosproject/aether-roc-api.git
 
    # execute the mega-patch (it will post via CURL to localhost:8181)
    bash ~/path/to/aether-roc-api/examples/MEGA_Patch_20.curl
 
+.. note:: To configure Aether-In-a-Box - no port-forward is necessary - use the URL *http://<hostname>:31194/aether-roc-api/*
 
 You may wish to customize the mega patch.
 
@@ -144,7 +146,7 @@ For example, by default the patch configures the ``sdcore-adapter`` to push to
 
 You could configure it to push to a live aether-in-a-box core by doing something like this::
 
-   sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch_20.curl
+   sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch_21.curl
 
    #apply the patch
    ./MEGA_Patch_20.curl
@@ -162,6 +164,57 @@ as Slice and you will see a list of slices.
 
    |ROCGUI|
 
+Adding new Enterprises
+----------------------
+
+Enterprises are stored in `onos-topo` outside of `onos-config` are are usually only created by system administrators
+during the onboarding of new customers (tenants) on Aether.
+
+There is currently no way of adding new Enterprises through the ROC GUI or the ROC API - it can be
+done in the 2 ways in the following sections.
+
+Enterprises are specified as Entities using CRDs, and the `onos-operator` ensures that these are created
+as `entitites` inside `onos-topo`.
+
+To check that the current list of enterprises (as CRDs), the following command may be used::
+
+   kubectl -n micro-onos get entities
+
+and to check that the `onos-operator` does indeed take effect, the ROC API endpoint `/targets` can be used to list the
+`enterprises`.
+
+Another option is to use the `onos-cli` pod to query `onos-topo` directly::
+
+    kubectl -n micro-onos exec deployment/onos-cli -- onos topo get entities -v
+
+Adding new Enterprises through Helm Chart
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To have an entity added at **start up of the cluster** it can be added through the Helm Chart in the `values.yaml`
+under `enterprises`. e.g.::
+
+   enterprises:
+   - id: starbucks
+     name: Starbucks Enterprise
+     lat: 52.5150
+     long: 13.3885
+
+This will load the `enterprise` as an Entity CRD through the `onos-operator`.
+
+Adding new Enterprises through `onos-topo`
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+New `enterprises` can be added to a live running system through the `onos-topo` command line (bypassing
+the `onos-operator`). For example::
+
+    kubectl -n micro-onos exec deployment/onos-cli -- \
+    onos topo create entity new-enterprise \
+    -a onos.topo.Configurable='{"address”:”sdcore-adapter-v2-1:5150”,”version”:”2.1.x”,”type”:”aether”}' \
+    -a onos.topo.TLSOptions='{"insecure":true}' \
+    -a onos.topo.Asset='{"name”:”New Enterprise”}' \
+    -a onos.topo.MastershipState='{}' \
+    -k aether
+
 Uninstalling the ``aether-roc-umbrella`` Helm chart
 ---------------------------------------------------
 
@@ -174,6 +227,9 @@ not getting cleaned up. The following may be useful::
 
     # fix stuck finalizers in operator CRDs
     kubectl -n micro-onos patch entities connectivity-service-v2 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities starbucks --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities acme-v2 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
+    kubectl -n micro-onos patch entities defult-ent --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch entities plproxy-amp --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch entities plproxy-acc --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
     kubectl -n micro-onos patch kind plproxy --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
@@ -186,6 +242,10 @@ Useful port forwards
 Port forwarding is often necessary to allow access to ports inside of Kubernetes pods that use ClusterIP addressing.
 Note that you typically need to leave a port-forward running (you can put it in the background).
 Also, If you redeploy the ROC and/or if a pod crashes then you might have to restart a port-forward.
+
+.. note:: With Aether-In-a-Box no port-forward is necessary - the GUI can be accessed
+    at ``http://<hostname>:31194`` and the API at ``http://<hostname>:31194/aether-roc-api/``
+
 The following port-forwards may be useful::
 
    # aether-roc-api
@@ -194,7 +254,7 @@ The following port-forwards may be useful::
 
    # aether-roc-gui
 
-   kubectl -n micro-onos port-forward service/aether-roc-gui-v2 --address 0.0.0.0 8183:80
+   kubectl -n micro-onos port-forward service/aether-roc-gui-v2-1 --address 0.0.0.0 8183:80
 
    # grafana
 
@@ -217,7 +277,7 @@ Deploying using custom images
 Custom images may be used by editing the values-override.yaml file.
 For example, to deploy a custom ``sdcore-adapter``::
 
-   sdcore-adapter-v2:
+   sdcore-adapter-v2-1:
      prometheusEnabled: false
    image:
      repository: my-private-repo/sdcore-adapter
@@ -246,14 +306,14 @@ plugins it loads, and optionally override the image for onos-config as well. For
         tag: mytag
         repository: mydockeraccount/onos-config
       modelPlugins:
-        - name: aether-2
-          image: mydockeraccount/aether-2.0.x:mytag
-          endpoint: localhost
-          port: 5152
-        - name: aether-4
-          image: mydockeraccount/aether-4.x:mytag
-          endpoint: localhost
-          port: 5153
+      - name: aether-2
+        image: onosproject/aether-2.0.x:2.0.3-aether-2.0.x
+        endpoint: localhost
+        port: 5152
+      - name: aether-2-1
+        image: onosproject/aether-2.1.x:2.1.3-aether-2.1.x
+        endpoint: localhost
+        port: 5153
 
 In the above example, the onos-config image will be pulled from `mydockeraccount`, and it will install
 two plugins for v2 and v4 models, from that same docker account.
@@ -268,7 +328,7 @@ The names may change from deployment to deployment, so start by getting a list o
 
 Then you can inspect a specific pod/container::
 
-   kubectl -n micro-onos logs deployment/sdcore-adapter-v2
+   kubectl -n micro-onos logs deployment/sdcore-adapter-v2-1
 
 .. _securing_roc:
 
@@ -287,7 +347,7 @@ specifying an OpenID Connect (OIDC) issuer like::
     helm -n micro-onos install aether-roc-umbrella aether/aether-roc-umbrella \
         --set onos-config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set aether-roc-api.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
-        --set aether-roc-gui-v2.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
+        --set aether-roc-gui-v2-1.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set prom-label-proxy-acc.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set prom-label-proxy-amp.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master
 
