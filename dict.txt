@@ -19,6 +19,7 @@ Downlink
 Epyc
 Flintstone
 Fudd
+GTP
 GbE
 GiB
 GitOps
@@ -34,6 +35,8 @@ Jenkins
 Jira
 Keycloak
 KinD
+Krew
+Ksniff
 Kubernetes
 Kubespray
 LTE
@@ -45,6 +48,7 @@ ONF
 ONL
 ONOS
 OPc
+PDN
 PFCP
 PoC
 PoE
@@ -109,6 +113,7 @@ datacenter
 datapath
 dataplane
 dbuf
+decapsulates
 degister
 deregister
 deregistration
@@ -252,6 +257,7 @@ sudo
 systemd
 tAC
 tcp
+tcpdump
 telegraf
 tfvars
 topo
