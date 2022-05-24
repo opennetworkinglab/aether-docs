@@ -313,6 +313,26 @@ Connecting Devices
 Documenting how to configure different types of devices to work
 with Aether is work-in-progress.
 
+Enable Monitoring
+-----------------
+
+To easily monitor your AiaB deployment, you can run the following command to
+deploy the Prometheus/Grafana monitoring stack on your AiaB server::
+
+    make monitoring-4g
+
+After this step, Grafana is available at `http://<server-ip>:30950`.  You will see a number of system dashboards
+for monitoring Kubernetes, as well as a simple AiaB dashboard that enables inspection of the local Aether state.
+
+.. figure:: images/4g-aiab-grafana-dashboard.png
+    :align: center
+    :width: 100 %
+
+    *4G Grafana AiaB Dashboard*
+
+The dashboard shows whether the eNodeB is connected to the core, how many active UEs there are, and the
+uplink (Tx Bitrate) and downlink (Rx Bitrate) throughput at the UPF.
+
 Troubleshooting
 ---------------
 

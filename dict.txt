@@ -70,6 +70,7 @@ Telekom
 Terraform
 TestVectors
 Tofino
+Tx
 UE
 UPF
 VOLTHA
