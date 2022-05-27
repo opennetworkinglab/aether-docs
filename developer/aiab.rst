@@ -58,7 +58,12 @@ used `Kubespray <https://kubernetes.io/docs/setup/production-environment/tools/k
 and that is still an option.  To switch to Kubespray as the Kubernetes platform, edit the
 Makefile and replace *rke2* with *kubespray* on this line::
 
-    K8S_INSTALL := rke2
+    K8S_INSTALL ?= rke2
+
+You may wish to use Kubespray instead of RKE2 if you want to use locally-built images with AiaB
+(e.g., if you are developing SD-CORE services).  The reason is that RKE2 uses containerd instead of
+Docker and so cannot access images in the local Docker registry.  More details can be found in
+the **Developer Loop** section below.
 
 Installing the ROC
 ------------------
@@ -296,6 +301,25 @@ by editing `~/aether-in-a-box/sd-core-5g-values.yaml`, for example::
 To upgrade a running 5G SD-CORE with the new image, or to deploy the 5G SD-CORE with the image::
 
     make reset-5g-test; make 5g-test
+
+Note that RKE2 (the default Kubernetes installer) is based on containerd rather than Docker.
+Containerd has its own local image registry that is separate from the local Docker Registry.  With RKE2,
+if you have used `docker build` to build a local image, it is only in the Docker registry and so is not
+available to run in AiaB without some additional steps.  An easy workaround
+is to use `docker push` to push the image to a remote repository (e.g., Docker Hub) and then modify your
+Helm values file to pull in that remote image.  Another option is to save the local Docker image
+into a file and push the file to the containerd registry like this::
+
+    docker save -o /tmp/lte-uesoftmodem.tar omecproject/lte-uesoftmodem:1.1.0
+    sudo /var/lib/rancher/rke2/bin/ctr --address /run/k3s/containerd/containerd.sock --namespace k8s.io \
+        images import /tmp/lte-uesoftmodem.tar
+
+The above commands save the local Docker image `omecproject/lte-uesoftmodem:1.1.0` in a tarball, and then upload
+the tarball into the containerd registry where it is available for use by RKE2.
+
+If you know that you are going to be using AiaB to test locally-built images, probably the easiest thing to do is to
+use the Kubespray installer.  If you have already installed using RKE2 and you want to switch to Kubespray, first
+run `make clean` before following the steps in the **RKE2 vs. Kubespray Install** section above.
 
 Troubleshooting / Known Issues
 ------------------------------

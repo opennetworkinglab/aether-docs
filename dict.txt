@@ -106,6 +106,7 @@ config
 configMapGenerator
 configmap
 configs
+containerd
 controlplane
 coverages
 cpu
