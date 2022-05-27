@@ -49,6 +49,8 @@ If you wish to install from local Helm charts, clone these additional repositori
 
 Now change to *~/aether-in-a-box* directory.
 
+.. _rke2-vs-kubespray-install:
+
 RKE2 vs. Kubespray Install
 --------------------------
 
@@ -63,7 +65,7 @@ Makefile and replace *rke2* with *kubespray* on this line::
 You may wish to use Kubespray instead of RKE2 if you want to use locally-built images with AiaB
 (e.g., if you are developing SD-CORE services).  The reason is that RKE2 uses containerd instead of
 Docker and so cannot access images in the local Docker registry.  More details can be found in
-the **Developer Loop** section below.
+the :ref:`developer-loop` section below.
 
 Installing the ROC
 ------------------
@@ -286,6 +288,8 @@ with the ROC.  You could run these commands::
 
 To completely remove AiaB by tearing down the Kubernetes cluster, run *make clean*.
 
+.. _developer-loop:
+
 Developer Loop
 --------------
 
@@ -319,7 +323,7 @@ the tarball into the containerd registry where it is available for use by RKE2.
 
 If you know that you are going to be using AiaB to test locally-built images, probably the easiest thing to do is to
 use the Kubespray installer.  If you have already installed using RKE2 and you want to switch to Kubespray, first
-run `make clean` before following the steps in the **RKE2 vs. Kubespray Install** section above.
+run `make clean` before following the steps in the :ref:`rke2-vs-kubespray-install` section above.
 
 Troubleshooting / Known Issues
 ------------------------------
