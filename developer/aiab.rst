@@ -319,7 +319,8 @@ into a file and push the file to the containerd registry like this::
         images import /tmp/lte-uesoftmodem.tar
 
 The above commands save the local Docker image `omecproject/lte-uesoftmodem:1.1.0` in a tarball, and then upload
-the tarball into the containerd registry where it is available for use by RKE2.
+the tarball into the containerd registry where it is available for use by RKE2.  Of course you should replace
+`omecproject/lte-uesoftmodem:1.1.0` with the name of your image.
 
 If you know that you are going to be using AiaB to test locally-built images, probably the easiest thing to do is to
 use the Kubespray installer.  If you have already installed using RKE2 and you want to switch to Kubespray, first
