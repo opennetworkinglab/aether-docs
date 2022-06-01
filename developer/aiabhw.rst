@@ -333,6 +333,14 @@ for monitoring Kubernetes, as well as a simple AiaB dashboard that enables inspe
 The dashboard shows whether the eNodeB is connected to the core, how many active UEs there are, and the
 uplink (Tx Bitrate) and downlink (Rx Bitrate) throughput at the UPF.
 
+To create a new dashboard for Aether, you can login to Grafana as user `admin` with password `prom-operator`.
+You can also modify an existing dashboard by making a copy of the dashboard and editing that.  Note that any
+dashboard changes will be lost if Grafana is restarted; if you want to make your dashboard more permanent, you can
+save its JSON to a file, add the file to directory `aether-in-a-box/resources/4g-monitoring`, and edit
+`kustomization.yaml` in that directory to add the file to the ConfigMapGenerator block.  After these
+steps, re-running `make monitoring-4g` should install the dashboard in a ConfigMap and Grafana should
+automatically load it.
+
 Troubleshooting
 ---------------
 
