@@ -49,7 +49,7 @@ The server will run Aether-in-a-Box.  The eNodeB will connect to the server over
 Perform these steps to prepare the server for the AiaB install:
 
 * Connect the server to the local network
-* Perform a clean install of Ubuntu 18.04 on the server
+* Perform a clean install of Ubuntu 18.04 or Ubuntu 20.04 on the server
 * Set up password-less sudo for the user that will install Aether-in-a-Box
 
 After the steps above have been completed, install Aether-in-a-Box as follows::
