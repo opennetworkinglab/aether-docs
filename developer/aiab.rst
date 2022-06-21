@@ -23,7 +23,7 @@ AiaB offers a great deal of flexibility regarding which Helm chart versions to i
 
 AiaB can be run on a bare metal machine or VM.  System prerequisites:
 
-* Ubuntu 18.04 or Ubuntu 20.04 clean install
+* Ubuntu 18.04 clean install (18.04 is a requirement of OAISIM which is used to test 4G Aether)
 * Kernel 4.15 or later
 * Haswell CPU or newer
 * At least 4 CPUs and 12GB RAM
