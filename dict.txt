@@ -40,6 +40,7 @@ Ksniff
 Kubernetes
 Kubespray
 LTE
+ManagementServer
 Mbps
 Menlo
 Mininet
@@ -131,6 +132,7 @@ eNB
 eNBID
 eNBs
 eNodeB
+eNodeBD
 elmerf
 enb
 etcd
@@ -277,6 +279,7 @@ untagged
 upf
 uplink
 uptime
+url
 virtualenv
 vpn
 webhooks

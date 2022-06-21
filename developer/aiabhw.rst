@@ -196,8 +196,8 @@ The UPF pod connects to the ``DATA_IFACE`` specified above using macvlan network
         TX packets 99553  bytes 16646682 (16.6 MB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
-Sercomm eNodeB setup
---------------------
+Manual Sercomm eNodeB setup
+---------------------------
 
 The instructions in this section describe a basic configuration of
 the eNodeB.  For a more comprehensive guide to
@@ -304,6 +304,39 @@ addresses into the box to the right and click ``Run``:
 
 If all of these are working, then you are ready to try to connect
 devices to the network.
+
+Automated Sercomm eNodeB Setup (experimental)
+---------------------------------------------
+
+The eNodeB service is used to provide the automatic configuration of the eNodeB device.
+It can be installed by the following command::
+
+    make enodebd
+
+The eNodeBD service will listen on port *31005* and you need to configure the management url of eNodeB device
+to make eNodeB connect to the eNodeBD service.
+By default, the eNodeBD service will configure the eNodeB with the pre-defined configuration, but you can also add
+the customized configuration per serial number in the ``magma_config/serial_number/`` directory. For the example
+configuration, please duplicate ``acs_common.yaml`` and rename it as the ``{serial_number}.yaml``.
+
+The automated setup via eNodeBD won't configure the static route to UPF service, please follow
+the UPF route setup step describes in **Manual Sercomm eNodeB setup** to add the static route.
+
+Configuration and Validation
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+To configure the Sercomm eNodeB be managed by eNodeBD service, access the TR098 configuration page::
+
+    https://<enodeb_ip_address>/TR098_DevFeature.htm
+
+The configuring path is: TR098 > MgmtServer > Device.ManagementServer.URL
+
+After you fill in the AiaB IP with eNodeBD service port as URL into the field, you need to restart the device.
+And you will be able to see the eNodeBD log by the following command (the pod name may be different)::
+
+    kubectl -n aether-apps logs aether-enodebd-b46897745-fj5qj -f
+
+Also, you can install the monitoring dashboard to view the eNodeB status on Grafana.
 
 Connecting Devices
 ------------------
