@@ -29,13 +29,39 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
 * At least 4 CPUs and 12GB RAM
 * Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
 
+**Note:** AiaB changes the host server by adding systemd-networkd configuration files to the
+host's network configuration.  Systemd-networkd is the default networking configuration tool for Ubuntu, but if your
+server or VM uses a different method it may not be fully compatible with AiaB.
+
+Ubuntu Environment
+------------------
+
+AiaB has been tested in the following environments:
+
+* Bare metal (on `CloudLab <https://cloudlab.us>`_ Wisconsin cluster, `small-lan` profile running `UBUNTU 18.04` OS image)
+* AWS VM (official Ubuntu 18.04 image on `t2.xlarge` instance)
+* VirtualBox VM running `bento/ubuntu-18.04` `Vagrant <https://www.vagrantup.com>`_ box on Intel Mac
+* VM created using `Multipass <https://multipass.run>`_ on Intel Mac
+
+The `Multipass <https://multipass.run>`_ tool by Canonical provides an easy way to create a compatible
+environment for playing with AiaB on Linux, Mac, or Windows.  After installing Multipass on your development
+machine, you can bring up a VM as follows::
+
+    multipass launch 18.04 --cpus 4 --disk 50G --mem 12G --name aiab
+    multipass shell aiab
+    sudo apt update
+    sudo apt install -y make
+
+AiaB can be installed behind a proxy.  To do so you will need to set the standard Linux environment variables
+`http_proxy`, `https_proxy`, and `no_proxy` appropriately, and prepend `PROXY_ENABLED=true` to the
+`make` commands in this document.
+
 Clone Repositories
 ------------------
 
-To initialize the AiaB environment, first clone the following repository::
+To initialize the AiaB environment, first clone the following repository in your home directory::
 
-    cd ~
-    git clone "https://gerrit.opencord.org/aether-in-a-box"
+    cd; git clone "https://gerrit.opencord.org/aether-in-a-box"
 
 If you are going to install AiaB using published Helm charts, you can proceed to the
 next section.
