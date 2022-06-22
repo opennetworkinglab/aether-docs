@@ -286,6 +286,10 @@ in the *aether-roc* namespace.
 
 The ROC GUI is available on port 31194 on the host running AiaB.
 
+See the :ref:`instructions here <developer/aiabhw:Enable Monitoring>` to deploy a basic monitoring stack to AiaB.
+This could be useful if you wish to use AiaB as an environment for prototyping Prometheus exporters or
+Grafana dashboards for Aether.
+
 Cleanup
 -------
 
