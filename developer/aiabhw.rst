@@ -16,9 +16,7 @@ To create this setup you will need the following equipment:
 
 * 4G or 5G small cell eNodeB
 
-  * Example: Sercomm CBRS LTE small cell eNodeB
-
-    * Firmware version 3918 or newer.  For instructions on how to update the firmware see `here <https://docs.aetherproject.org/master/edge_deployment/enb_installation.html#upgrade-firmware>`_.
+  * Example: :ref:`Sercomm CBRS LTE small cell eNodeB <edge_deployment/overview:eNB Radio>`
 
 * SIM card writer and blank SIM cards
 
@@ -101,8 +99,8 @@ the ``AiaB site``.  Change the following values and click ``Update``:
 Choose ``Sim Cards`` from the drop-down at top right.  Edit the
 existing entries to reflect the SIM cards you are adding to devices
 by replacing their IMSI values.  Click ``Update`` after each edit.
-If you want to connect more than two devices, consult the `ROC
-documentation <https://docs.aetherproject.org/master/operations/subscriber.html#configure-connectivity-service-for-a-new-device>`_.
+If you want to connect more than two devices, consult the :ref:`ROC
+documentation <operations/subscriber:Configure Connectivity Service for a new Device>`.
 
 Finally, click the Basket icon at top right and click the ``Commit`` button.
 
@@ -311,7 +309,23 @@ Connecting Devices
 ------------------
 
 Documenting how to configure different types of devices to work
-with Aether is work-in-progress.
+with Aether is work-in-progress, but here are some basic guidelines.
+
+The values of IMSI, OPc, and Transport Key you have configured on your SIM cards
+must be entered into the ``subscribers`` block under ``omec-sub-provision`` in the
+``sd-core-4g-values.yaml`` file.  If you are not using the ROC, the IMSIs must also be
+added under ``device-groups``, and the relevant device group added under ``network-slices``.
+If you are using the ROC, then your devices must be configured there and the associated
+device group added to a slice.  In either case it is necessary to configure the basic info
+under ``subscribers``.
+
+Be aware that not all phones support the CBRS frequency bands.  AiaB is known to work
+with recent iPhones (11 and greater) and Google Pixel phones (4 and up).  CBRS may also be
+supported by recent phones from Samsung, LG Electronics and Motorola Mobility, but these have
+not been tested with AiaB.  If you successfully test a phone on AiaB, please post details on
+Slack so we can add it to the list.
+
+The APN to configure on your phone is ``internet``.
 
 Enable Monitoring
 -----------------
@@ -364,3 +378,17 @@ AiaB should come up in a mostly working state if the AiaB server is rebooted.  I
 stuck in an Error or CrashLoopBackoff state they can be restarted using ``kubectl delete pod``.
 It might also be necessary to power cycle the Sercomm eNodeB in order to get it to reconnect to
 the SD-CORE.
+
+Getting Help
+------------
+
+Please introduce yourself and post your questions to the `#aether-dev` channel on the ONF Community Slack.
+Details about how to join this channel can be found on the `ONF Wiki <https://wiki.opennetworking.org/display/COM/Aether>`_.
+In your introduction please state your institution and position, and describe why you are interested in Aether
+and what is your end goal.
+
+If you need help debugging your setup, please give as much detail as possible about
+your environment: the OS version you have installed, are you running on bare metal or in a VM,
+how much CPU and memory does your server have, are you installing behind a proxy, and so on.  Also list the steps
+you have performed so far, and post any error messages you have received.  These details will aid the community
+to understand where you are and how to help you make progress.

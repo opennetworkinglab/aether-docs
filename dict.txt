@@ -153,6 +153,7 @@ hostname
 hss
 hssdb
 iPXE
+iPhones
 iface
 imei
 incrementing
