@@ -331,6 +331,9 @@ To configure the Sercomm eNodeB be managed by eNodeBD service, access the TR098 
 
 The configuring path is: TR098 > MgmtServer > Device.ManagementServer.URL
 
+1. Check the EnableCWMP option to enable the management function.
+2. Fill the eNodeBD URL into Device.ManagementServer.URL field.
+
 After you fill in the AiaB IP with eNodeBD service port as URL into the field, you need to restart the device.
 And you will be able to see the eNodeBD log by the following command (the pod name may be different)::
 
