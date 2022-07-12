@@ -20,8 +20,16 @@ To create this setup you will need the following equipment:
 
 * SIM card writer and blank SIM cards
 
-We assume that the server and the eNodeB are connected to the same
-LAN, and the LAN also provides external Internet connectivity.
+**IMPORTANT**: AiaB is for simple deployment scenarios and so makes some simplifying assumptions:
+
+* AiaB assumes that the server and the eNodeB are connected to the **same LAN** and
+  share the **same IP subnet**; in other words they can reach each other in a single hop and
+  there is no IP router between them.  This simplifies communication between the eNodeB and the UPF,
+  which is running inside a container and has a private IP address that is not necessarily routable
+  on the local network.
+* AiaB also assumes that the AiaB server's network is configured
+  using *systemd-networkd*, which is the default for Ubuntu, and copies some files into `/etc/systemd/network`;
+  the reason for this is to enable persistence of AiaB's networking configuration across server reboots.
 
 Preparation
 -----------
@@ -48,6 +56,8 @@ Perform these steps to prepare the server for the AiaB install:
 
 * Connect the server to the local network
 * Perform a clean install of Ubuntu 18.04 or Ubuntu 20.04 on the server
+* Verify that systemd-networkd is being used to configure networking
+  (e.g., run ``systemctl status systemd-networkd.service``)
 * Set up password-less sudo for the user that will install Aether-in-a-Box
 
 After the steps above have been completed, install Aether-in-a-Box as follows::
@@ -229,23 +239,45 @@ the last two network interfaces below inside the UPF's `bessd` container::
         inet6 fe80::4cac:69ff:fe31:a388/64 scope link
         valid_lft forever preferred_lft forever
 
-The ``access`` interface inside the UPF has an IP address of 192.168.252.3; this is the destination IP address
+In other words, there are interfaces named ``access`` and ``core`` **both inside and outside** the UPF.  All four
+are MACVLAN interfaces
+bridged with DATA_IFACE.  There are two subnets on this bridge: the two ``access`` interfaces are on 192.168.252.0/24
+and the two ``core`` interfaces are on 192.168.250.0/24.  It is helpful to think of two links, called
+``access`` and ``core``, connecting the AiaB host and UPF.  AiaB sets up IP routes on the AiaB host and inside the UPF
+to forward packets into and out of the UPF as explained below.
+
+The ``access`` interface **inside the UPF** has an IP address of 192.168.252.3; this is the destination IP address
 of GTP-encapsulated data plane packets from the eNodeB.  In order for these packets to actually find their way
-to the UPF, they must arrive on the DATA_IFACE interface and then be forwarded to the ``access`` interface.
+to the UPF, they must arrive on the DATA_IFACE interface and then be forwarded on the ``access`` interface
+**outside the UPF**.
 The next section describes how to configure a static route on the eNodeB in order to send the GTP packets to
 DATA_IFACE.  Forwarding the packets to the ``access`` interface is done by the following kernel route on the
-AiaB host::
+AiaB host (which should be present if your AiaB installation was successful)::
 
     $ route -n | grep "Iface\|access"
     Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
     192.168.252.0   0.0.0.0         255.255.255.0   U     0      0        0 access
 
-The high-level behavior of the UPF is to forward packets from ``access`` to ``core`` and vice-versa, while
+The high-level behavior of the UPF is to forward packets between its ``access`` to ``core`` interfaces, while
 at the same time removing/adding GTP encapsulation on the ``access`` side.  Upstream packets
 arriving on the ``access`` side from a UE have their GTP headers removed and the raw IP packets are
-forwarded to the ``core`` interface.  These packets undergo source NAT in the kernel and are sent to the IP destination
+forwarded to the ``core`` interface.  The routes inside the UPF's `bessd` container will look something
+like this::
+
+    $ kubectl -n omec exec -ti upf-0 -c bessd -- ip route
+    default via 169.254.1.1 dev eth0
+    default via 192.168.250.1 dev core metric 110
+    128.105.144.0/22 via 192.168.252.1 dev access
+    128.105.145.141 via 169.254.1.1 dev eth0
+    169.254.1.1 dev eth0 scope link
+    192.168.250.0/24 dev core proto kernel scope link src 192.168.250.3
+    192.168.252.0/24 dev access proto kernel scope link src 192.168.252.3
+
+The default route via 192.168.250.1 is directing upstream packets to the Internet via the ``core`` interface,
+with a next hop of the ``core`` interface **outside the UPF**.
+These packets undergo source NAT in the kernel (also configured by AiaB) and are sent to the IP destination
 in the packet.  The return (downstream) packets undergo reverse NAT and now have a destination IP address of the UE.
-They are forwarded by the kernel to the ``core`` interface by these rules::
+They are forwarded by the kernel to the ``core`` interface by these rules on the AiaB host::
 
     $ route -n | grep "Iface\|core"
     Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
@@ -253,10 +285,17 @@ They are forwarded by the kernel to the ``core`` interface by these rules::
     192.168.250.0   0.0.0.0         255.255.255.0   U     0      0        0 core
 
 The first rule above matches packets to the UEs (on 172.250.0.0/16 subnet).  The next hop for these
-packets is the ``core`` IP address inside the UPF.  The second rule says that next hop address is
-reachable on the ``core`` interface.  As a result the downstream packets arrive in the UPF, where they
-are GTP-encapsulated, forwarded to ``access``, and arrive at the eNodeB.
+packets is the ``core`` IP address **inside the UPF**.  The second rule says that next hop address is
+reachable on the ``core`` interface **outside the UPF**.  As a result the downstream packets arrive in the
+UPF where they
+are GTP-encapsulated with the IP address of the eNodeB.  Inside the UPF these packets will match a route
+like this one (see above; 128.105.144.0/22 in this case is the DATA_IFACE subnet)::
 
+     128.105.144.0/22 via 192.168.252.1 dev access
+
+These packets are forwarded to the ``access`` interface **outside the UPF** and out DATA_IFACE to the eNodeB.
+Recall that AiaB assumes that the eNodeB is on the same subnet as DATA_IFACE, so in this case it also has an
+IP address in the 128.105.144.0/22 range.
 
 Manual Sercomm eNodeB setup
 ---------------------------
@@ -499,14 +538,24 @@ run ``tcpdump`` on (1) DATA_IFACE to ensure that the data plane packets are arri
 are forwarded upstream.
 
 If the upstream packets don't make it to DATA_IFACE, you probably need to add the static route
-on the eNodeB so packets to the UPF have a next hop of DATA_IFACE.
+on the eNodeB so packets to the UPF have a next hop of DATA_IFACE.  You can see these upstream
+packets by running::
+
+    tcpdump -i <data-iface> -n udp port 2152
 
 If they don't make it to ``access`` you should check that the kernel routing table is forwarding
-a packet with destination 192.158.252.3 to the ``access`` interface.
+a packet with destination 192.158.252.3 to the ``access`` interface.  You can see them by running::
+
+    tcpdump -i access -n udp port 2152
 
 If they don't make it to ``core`` then they are being dropped by the UPF for some reason.  This
 may be a configuration issue with the state loaded in the ROC / SD-CORE -- the UPF is being told
-to discard these packets for some reason.
+to discard these packets.  You should check that the device's IMSI is part of a slice and that
+the slice's policy settings allow traffic to that destination.  You can view them via the following::
+
+    tcpdump -i core -n net 172.250.0.0/16
+
+That command will capture all packets to/from the UE subnet.
 
 If you cannot figure out the issue, see `Getting Help`_.
 
