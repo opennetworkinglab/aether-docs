@@ -196,6 +196,68 @@ The UPF pod connects to the ``DATA_IFACE`` specified above using macvlan network
         TX packets 99553  bytes 16646682 (16.6 MB)
         TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
 
+Understanding AiaB networking
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Why does AiaB create the ``core`` and ``access`` interfaces?  These are necessary to enable
+the UPF to exchange packets with the eNodeB (access) and Internet (core); they correspond to
+the last two network interfaces below inside the UPF container::
+
+    # ip addr
+    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+        inet 127.0.0.1/8 scope host lo
+        valid_lft forever preferred_lft forever
+        inet6 ::1/128 scope host
+        valid_lft forever preferred_lft forever
+    3: eth0@if30: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UP group default
+        link/ether 8a:e2:64:10:4e:be brd ff:ff:ff:ff:ff:ff link-netnsid 0
+        inet 192.168.84.19/32 scope global eth0
+        valid_lft forever preferred_lft forever
+        inet6 fe80::88e2:64ff:fe10:4ebe/64 scope link
+        valid_lft forever preferred_lft forever
+    4: access@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+        link/ether 82:b4:ea:00:50:3e brd ff:ff:ff:ff:ff:ff link-netnsid 0
+        inet 192.168.252.3/24 brd 192.168.252.255 scope global access
+        valid_lft forever preferred_lft forever
+        inet6 fe80::80b4:eaff:fe00:503e/64 scope link
+        valid_lft forever preferred_lft forever
+    5: core@if2: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default
+        link/ether 4e:ac:69:31:a3:88 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+        inet 192.168.250.3/24 brd 192.168.250.255 scope global core
+        valid_lft forever preferred_lft forever
+        inet6 fe80::4cac:69ff:fe31:a388/64 scope link
+        valid_lft forever preferred_lft forever
+
+The ``access`` interface inside the UPF has an IP address of 192.168.252.3; this is the destination IP address
+of GTP-encapsulated data plane packets from the eNodeB.  In order for these packets to actually find their way
+to the UPF, they must arrive on the DATA_IFACE interface and then be forwarded to the ``access`` interface.
+The next section describes how to configure a static route on the eNodeB in order to send the GTP packets to
+DATA_IFACE.  Forwarding the packets to the ``access`` interface is done by the following kernel route on the
+AiaB host::
+
+    $ route -n | grep "Iface\|access"
+    Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+    192.168.252.0   0.0.0.0         255.255.255.0   U     0      0        0 access
+
+The high-level behavior of the UPF is to forward packets from ``access`` to ``core`` and vice-versa, while
+at the same time removing/adding GTP encapsulation on the ``access`` side.  Upstream packets
+arriving on the ``access`` side from a UE have their GTP headers removed and the raw IP packets are
+forwarded to the ``core`` interface.  These packets undergo source NAT in the kernel and are sent to the IP destination
+in the packet.  The return (downstream) packets undergo reverse NAT and now have a destination IP address of the UE.
+They are forwarded by the kernel to the ``core`` interface by these rules::
+
+    $ route -n | grep "Iface\|core"
+    Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+    172.250.0.0     192.168.250.3   255.255.0.0     UG    0      0        0 core
+    192.168.250.0   0.0.0.0         255.255.255.0   U     0      0        0 core
+
+The first rule above matches packets to the UEs (on 172.250.0.0/16 subnet).  The next hop for these
+packets is the ``core`` IP address inside the UPF.  The second rule says that next hop address is
+reachable on the ``core`` interface.  As a result the downstream packets arrive in the UPF, where they
+are GTP-encapsulated, forwarded to ``access``, and arrive at the eNodeB.
+
+
 Manual Sercomm eNodeB setup
 ---------------------------
 
@@ -394,6 +456,9 @@ automatically load it.
 Troubleshooting
 ---------------
 
+"make" fails immediately
+^^^^^^^^^^^^^^^^^^^^^^^^
+
 AiaB connects macvlan networks to ``DATA_IFACE`` so that the UPF can communicate on the network.
 To do this it assumes that the *systemd-networkd* service is installed and running, ``DATA_IFACE``
 is under its control, and the systemd-networkd configuration file for ``DATA_IFACE`` ends with
@@ -405,7 +470,45 @@ a message like::
     make: *** [Makefile:112: /users/acb/aether-in-a-box//build/milestones/interface-check] Error 1
 
 In this case, you can specify a ``DATA_IFACE_PATH=<path to the config file>`` argument to ``make``
-so that AiaB can find the systemd-networkd configuration file for ``DATA_IFACE``.
+so that AiaB can find the systemd-networkd configuration file for ``DATA_IFACE``.  It's also possible
+that your system does not use systemd-networkd to configure network interfaces (more likely if you
+are running in a VM), in which case AiaB is currently not able to install in your setup.  You
+can check that systemd-networkd is installed and running as follows::
+
+    $ systemctl status systemd-networkd.service
+    ● systemd-networkd.service - Network Service
+        Loaded: loaded (/lib/systemd/system/systemd-networkd.service; disabled; vendor preset: enabled)
+        Active: active (running) since Tue 2022-07-12 13:42:18 CDT; 2h 26min ago
+    TriggeredBy: ● systemd-networkd.socket
+        Docs: man:systemd-networkd.service(8)
+    Main PID: 13777 (systemd-network)
+        Status: "Processing requests..."
+        Tasks: 1 (limit: 193212)
+        Memory: 6.4M
+        CGroup: /system.slice/systemd-networkd.service
+                └─13777 /lib/systemd/systemd-networkd
+
+Data plane is not working
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The first step is to read `Understanding AiaB networking`_, which gives a high level picture
+of the AiaB data plane and how the pieces fit together.  In order to debug the problem you will
+need to figure out where data plane packets from the eNodeB are dropped.  One way to do this is to
+run ``tcpdump`` on (1) DATA_IFACE to ensure that the data plane packets are arriving, (2) the
+``access`` interface to see that they make it to the UPF, and (3) the ``core`` to check that they
+are forwarded upstream.
+
+If the upstream packets don't make it to DATA_IFACE, you probably need to add the static route
+on the eNodeB so packets to the UPF have a next hop of DATA_IFACE.
+
+If they don't make it to ``access`` you should check that the kernel routing table is forwarding
+a packet with destination 192.158.252.3 to the ``access`` interface.
+
+If they don't make it to ``core`` then they are being dropped by the UPF for some reason.  This
+may be a configuration issue with the state loaded in the ROC / SD-CORE -- the UPF is being told
+to discard these packets for some reason.
+
+If you cannot figure out the issue, see `Getting Help`_.
 
 Restarting the AiaB Server
 --------------------------

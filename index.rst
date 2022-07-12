@@ -40,7 +40,7 @@ at these sites:
 
 * SD-RAN
 
-  * `SD-RAN Website <https://opennetworking.org/sd-ran/>`_
+  * `SD-RAN Website <https://opennetworking.org/open-ran/>`_
   * :doc:`SD-RAN Documentation <sdran:index>`
 
 More information about mobile networks and 5G can be found in the :doc:`5G
