@@ -201,9 +201,9 @@ Understanding AiaB networking
 
 Why does AiaB create the ``core`` and ``access`` interfaces?  These are necessary to enable
 the UPF to exchange packets with the eNodeB (access) and Internet (core); they correspond to
-the last two network interfaces below inside the UPF container::
+the last two network interfaces below inside the UPF's `bessd` container::
 
-    # ip addr
+    $ kubectl -n omec exec -ti upf-0 bessd -- ip addr
     1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
         link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
         inet 127.0.0.1/8 scope host lo
