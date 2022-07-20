@@ -29,7 +29,7 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
 * At least 4 CPUs and 12GB RAM
 * Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
 
-**IMPORTANT:**:
+**IMPORTANT:**
 
 * Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.
 * AiaB changes the host server by adding systemd-networkd configuration files to the
