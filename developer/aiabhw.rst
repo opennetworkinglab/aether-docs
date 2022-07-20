@@ -31,6 +31,8 @@ To create this setup you will need the following equipment:
   using *systemd-networkd*, which is the default for Ubuntu, and copies some files into `/etc/systemd/network`;
   the reason for this is to enable persistence of AiaB's networking configuration across server reboots.
 
+**NOTE: Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.**
+
 Preparation
 -----------
 
@@ -494,6 +496,8 @@ automatically load it.
 
 Troubleshooting
 ---------------
+
+**NOTE: Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.**
 
 "make" fails immediately
 ^^^^^^^^^^^^^^^^^^^^^^^^

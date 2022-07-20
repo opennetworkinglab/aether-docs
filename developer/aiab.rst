@@ -14,6 +14,8 @@ manage the production Aether; it can be deployed to test the integration between
 ROC and SD-CORE.  If the ROC is not deployed, a simple tool called SimApp
 is used to configure the required state in SD-CORE for testing core functionality.
 
+**NOTE: Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.**
+
 Helm charts are the primary method of installing the SD-CORE and ROC resources.
 AiaB offers a great deal of flexibility regarding which Helm chart versions to install:
 
@@ -358,6 +360,8 @@ run `make clean` before following the steps in the :ref:`rke2-vs-kubespray-insta
 
 Troubleshooting / Known Issues
 ------------------------------
+
+**NOTE: Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.**
 
 If you suspect a problem, first verify that all pods are in Running state::
 
