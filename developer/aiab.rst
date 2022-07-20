@@ -14,8 +14,6 @@ manage the production Aether; it can be deployed to test the integration between
 ROC and SD-CORE.  If the ROC is not deployed, a simple tool called SimApp
 is used to configure the required state in SD-CORE for testing core functionality.
 
-**NOTE: Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.**
-
 Helm charts are the primary method of installing the SD-CORE and ROC resources.
 AiaB offers a great deal of flexibility regarding which Helm chart versions to install:
 
@@ -31,9 +29,12 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
 * At least 4 CPUs and 12GB RAM
 * Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
 
-**Note:** AiaB changes the host server by adding systemd-networkd configuration files to the
-host's network configuration.  Systemd-networkd is the default networking configuration tool for Ubuntu, but if your
-server or VM uses a different method it may not be fully compatible with AiaB.
+**IMPORTANT:**:
+
+* Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.
+* AiaB changes the host server by adding systemd-networkd configuration files to the
+  host's network configuration.  Systemd-networkd is the default networking configuration tool for Ubuntu, but if your
+  server or VM uses a different method it may not be fully compatible with AiaB.
 
 Ubuntu Environment
 ------------------

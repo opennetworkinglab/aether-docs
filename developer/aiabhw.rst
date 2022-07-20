@@ -4,9 +4,12 @@ Aether-in-a-Box on Hardware Radios
 ==================================
 
 This document describes how to set up an Aether-in-a-Box (AiaB) with
-a Sercomm eNodeB and connect real devices (e.g., 4G phones).  This
-setup is suitable for laboratory experiments and proof-of-concept deployments.
-To create this setup you will need the following equipment:
+a Sercomm eNodeB and connect real devices (e.g., 4G phones).  It assumes that
+you are already familiar with running AiaB with emulated eNodeB/UE.  AiaB on Hardware
+Radios is suitable for laboratory experiments and proof-of-concept deployments.
+Its goals are to demonstrate how to configure a real eNodeB to work with Aether,
+and to provide an easy-to-install environment where Aether's features can be
+explored with real devices.  To create this setup you will need the following equipment:
 
 * Server for running AiaB (SD-CORE / UPF / ROC)
 
@@ -22,16 +25,19 @@ To create this setup you will need the following equipment:
 
 **IMPORTANT**: AiaB is for simple deployment scenarios and so makes some simplifying assumptions:
 
+* AiaB assumes either 4G or 5G SD-CORE is deployed.  Running both 4G and 5G SD-CORE simultaneously in AiaB
+  is currently not supported.  However, running both 4G and 5G SD-CORE simultaneously is supported by Aether.
+* Performance and scalability are not goals.  AiaB does not support I/O acceleration (e.g., with SR-IOV).  However,
+  performance and scalability are goals of the Aether project.
 * AiaB assumes that the server and the eNodeB are connected to the **same LAN** and
   share the **same IP subnet**; in other words they can reach each other in a single hop and
   there is no IP router between them.  This simplifies communication between the eNodeB and the UPF,
   which is running inside a container and has a private IP address that is not necessarily routable
-  on the local network.
+  on the local network.  However, this is not a requirement for all Aether deployments.
 * AiaB also assumes that the AiaB server's network is configured
   using *systemd-networkd*, which is the default for Ubuntu, and copies some files into `/etc/systemd/network`;
   the reason for this is to enable persistence of AiaB's networking configuration across server reboots.
-
-**NOTE: Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.**
+  This configuration method is specific to AiaB.
 
 Preparation
 -----------
