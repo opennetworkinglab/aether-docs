@@ -64,19 +64,20 @@ Clone Repositories
 
 To initialize the AiaB environment, first clone the following repository in your home directory::
 
-    cd; git clone "https://gerrit.opencord.org/aether-in-a-box"
+    cd ~
+    git clone "https://gerrit.opencord.org/aether-in-a-box"
+    cd ~/aether-in-a-box
 
-If you are going to install AiaB using published Helm charts, you can proceed to the
-next section.
+**Note**: Most users will install AiaB using *published Helm charts* (e.g., `CHARTS=latest`,
+`CHARTS=release-2.0`) and can proceed to the next section.  However, if you need to change the Helm
+charts themselves, clone these additional repositories to work with the *local Helm charts*::
 
-If you wish to install from local Helm charts, clone these additional repositories::
-
+    # Skip this step unless you are developing / changing the Helm charts
     mkdir -p ~/cord
     cd ~/cord
     git clone "https://gerrit.opencord.org/sdcore-helm-charts"
     git clone "https://gerrit.opencord.org/roc-helm-charts"
-
-Now change to *~/aether-in-a-box* directory.
+    cd ~/aether-in-a-box
 
 .. _rke2-vs-kubespray-install:
 
