@@ -193,15 +193,12 @@ It passes UE's attach request to MME via S1AP interface to be identified and aut
 MME sends the session request to SPGW to create the GTP tunnel and request the default bearer. SPGW sends back the UPF
 address to establish the connectivity (GTP tunnel) to the DN through the user plane.
 
-When the AiaB is up, by configuring the routing table you
-can route traffic to arbitrary destinations through the AiaB user plane::
+When the AiaB is up, you can explicitly specify the *oip1* interface within the command to send
+data over the 4G datapath.  Examples::
 
-    ip route add <Destination-Network-Address> dev oip1
-
-Or you can explicitly specify the *oip1* interface within the command, such as::
-
-    curl --interface oip1 google.com
+    curl --interface oip1 http://ipv4.download.thinkbroadband.com/5MB.zip --output /dev/null
     ping -I oip1 google.com
+    iperf3 -c la.speedtest.clouvider.net -p 5204 -B 172.250.255.254
 
 AiaB deploys a router pod in the "default" namespace with four interfaces: *ran-gw* for the radio network,
 *access-gw* for access network, *core-gw* for core network, and *eth0* for the external network.
