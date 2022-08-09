@@ -90,7 +90,7 @@ IMSIs between 315010999912301 and 315010999912303::
 Determine which is the interface that has L3 connectivity to the
 eNodeB -- this will be ``DATA_IFACE`` in the configuration later.  If
 the eNodeB will also be connected to the local network, then this is just the
-server’s primary interface.  If the eNodeB will be connected via an
+server's primary interface.  If the eNodeB will be connected via an
 isolated L2/L3 network segment, then ``DATA_IFACE`` refers to the server
 interface on that network.   Remember this interface for later.
 
@@ -98,7 +98,7 @@ Option 1: Configure Aether with ROC
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Aether ROC provides a GUI and API for dynamically configuring
-Aether.  If you don’t wish to use the ROC to configure AiaB, you
+Aether.  If you don't wish to use the ROC to configure AiaB, you
 can skip to the next section.
 
 Install AiaB as follows (specifying ``DATA_IFACE`` from above)::

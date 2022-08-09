@@ -27,14 +27,16 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
 * Kernel 4.15 or later
 * Haswell CPU or newer
 * At least 4 CPUs and 12GB RAM
-* Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
+* Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited
+  to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
 
 **IMPORTANT:**
 
 * Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.
 * AiaB changes the host server by adding systemd-networkd configuration files to the
-  host's network configuration.  Systemd-networkd is the default networking configuration tool for Ubuntu, but if your
-  server or VM uses a different method it may not be fully compatible with AiaB.
+  host's network configuration.  Systemd-networkd is the default networking configuration
+  tool for Ubuntu, but if your server or VM uses a different method it may not be fully
+  compatible with AiaB.
 
 Ubuntu Environment
 ------------------
@@ -55,9 +57,20 @@ machine, you can bring up a VM as follows::
     sudo apt update
     sudo apt install -y make
 
-AiaB can be installed behind a proxy.  To do so you will need to set the standard Linux environment variables
-`http_proxy`, `https_proxy`, and `no_proxy` appropriately, and prepend `PROXY_ENABLED=true` to the
-`make` commands in this document.
+Proxy Settings (Conditional)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+AiaB can also be installed behind a proxy.  To do so you will need to set the standard Linux environment variables
+`http_proxy`, `https_proxy`, and `no_proxy` appropriately, and i) prepend `PROXY_ENABLED=true` to the
+`make` commands in this document or ii) export `PROXY_ENABLED=true` as follows::
+
+    make {arg} PROXY_ENABLED=true
+
+or::
+
+    export PROXY_ENABLED=true
+
+The latter option can be included in the `.bashrc` file to make it permanent.
 
 Clone Repositories
 ------------------
@@ -158,8 +171,6 @@ To install the Aether 2.0 release, add *CHARTS=release-2.0*::
 
     CHARTS=release-2.0 make test
 
-Getting Started with 4G AiaB
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 4G SD-CORE deploys the following core components to provide mobile connectivity:
 
 * SPGW (Serving/PDN Gateway): Combined Serving Gateway and Packet Data Network (PDN) Gateway
@@ -203,56 +214,13 @@ And the incoming packets follow as::
     (NAT,eth0) router (core-gw) ----> (core) upf-0 (access) ==GTP==> (access-gw) router (ran-gw)
     ==GTP==> (enb) enb-0 (oip1)
 
-**Notes:** In the above notations, network interfaces within each pod are shown in parenthesis.
+**Note:** In the above notations, network interfaces within each pod are shown in parenthesis.
 The IP packets sent/received between the UE and external host via the user plane are GTP-encapsulated
 and tunneled between the eNB and UPF.
 
-Ksniff
-~~~~~~
-Ksniff is a Kubernetes-integrated packet sniffer shipped as a kubectl plugin.
-Ksniff uses tcpdump and Wireshark (Wireshark 3.x) to capture traffic on a specific pod within the cluster.
-After installing Ksniff using Krew and Wireshark, by running the following command
-you can see the communications between the components. Ksniff uses kubectl to upload
-the tcpdump binary into the target container (e.g. mme, upf, ...), and redirects the output to Wireshark::
-
-    kubectl ksniff -n omec mme-0
-
-You can see the packets sent/received between the core components from the moment an
-UE initiates the attach procedure through eNB until
-the dedicated bearer (uplink and downlink) has been established (see figure below).
-After the bearer has been established, traffic sent from UE's interface (*oip1*) will go through the eNB and UPF.
-
-.. figure:: images/wireshark-4g.png
-   :width: 80 %
-   :align: center
-
-   *Wireshark output of ksniff on mme pod*
-
-Using Ksniff on the router pod you can see all the packets exchanged between the UE and external hosts
-(e.g. ping an external host from the UE interface)::
-
-   kubectl ksniff -n default router
-
-.. figure:: images/4g-ue-ping.png
-    :width: 80 %
-    :align: center
-
-    *Data Flow from UE to an external host through the User Plane (filtered on UE's IP address)*
-
-Looking at the packet's details, the first and second packets are from *enb* to *router*
-and then to *upf* in a GTP tunnel. And the third packet is sent from *router* to the external network via NAT.
-The rest are the reply packets from the external host to the UE.
-
-By default, Ksniff runs *tcpdump* on all interfaces (i.e. *-i any*). To retrieve more details
-of packets (e.g. ethernet header information) on a specific interface,
-you can explicitly specify the interface along with options (e.g. *-e*). e.g.::
-
-    kubectl sniff -n default router -i access-gw -f "-e"
-
 For more information, please visit the links below:
 
-* `Ksniff <https://github.com/eldadru/ksniff>`_
-* `3gpp Spec <https://www.etsi.org/deliver/etsi_ts/136100_136199/136101/14.05.00_60/ts_136101v140500p.pdf>`_
+* `3GPP TS 36.101 <https://www.etsi.org/deliver/etsi_ts/136100_136199/136101/14.05.00_60/ts_136101v140500p.pdf>`_
 * `4G LTE Concepts and Call Flow <https://www.udemy.com/course/4g-lte-evolved-packet-core-deep-dive-and-call-flows/>`_
 
 
@@ -280,6 +248,53 @@ To install the Aether 2.0 release, add *CHARTS=release-2.0*::
 To change the behavior of the test run by gNBSim, change the contents of *gnb.conf*
 in *sd-core-5g-values.yaml*.  Consult the
 `gNBSim documentation <https://docs.sd-core.opennetworking.org/master/developer/gnbsim.html>`_ for more information.
+
+Packet Capture
+--------------
+
+`Ksniff <https://github.com/eldadru/ksniff>`_ is a Kubernetes-integrated packet sniffer shipped as a kubectl plugin.
+Ksniff uses tcpdump and Wireshark (Wireshark 3.x) to capture traffic on a specific pod within the cluster.
+After installing Ksniff using Krew and Wireshark, by running the following command
+you can see the communications between the components. Ksniff uses kubectl to upload
+the tcpdump binary into the target container (e.g. mme, amf, upf, ...), and redirects the output to Wireshark::
+
+    kubectl sniff -n omec mme-0
+
+**Note**: To collect packets using Wireshark, the (virtual) machine where Ksniff/Wireshark is running needs
+to have a Desktop environment installed for Wireshark to run. Also, note that the desktop machine running
+Ksniff/Wireshark doesn't need to be the same machine as the one running AiaB.
+
+You can see the packets sent/received between the core components from the moment an
+UE initiates the attach procedure through eNB until
+the dedicated bearer (uplink and downlink) has been established (see figure below).
+After the bearer has been established, traffic sent from UE's interface (*oip1*) will go through the eNB and UPF.
+
+.. figure:: images/wireshark-4g.png
+   :width: 80 %
+   :align: center
+
+   *Wireshark output of ksniff on mme pod*
+
+Using Ksniff on the router pod you can see all the packets exchanged between the UE and external hosts
+(e.g. ping an external host from the UE interface)::
+
+   kubectl sniff -n default router
+
+.. figure:: images/4g-ue-ping.png
+    :width: 80 %
+    :align: center
+
+    *Data Flow from UE to an external host through the User Plane (filtered on UE's IP address)*
+
+Looking at the packet's details, the first and second packets are from *enb* to *router*
+and then to *upf* in a GTP tunnel. And the third packet is sent from *router* to the external network via NAT.
+The rest are the reply packets from the external host to the UE.
+
+By default, Ksniff runs *tcpdump* on all interfaces (i.e. *-i any*). To retrieve more details
+of packets (e.g. ethernet header information) on a specific interface,
+you can explicitly specify the interface along with options (e.g. *-e*). e.g.::
+
+    kubectl sniff -n default router -i access-gw -f "-e"
 
 Exploring AiaB
 --------------
