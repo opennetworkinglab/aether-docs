@@ -29,6 +29,8 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
 * At least 4 CPUs and 12GB RAM
 * Ability to run "sudo" without a password.  Due to this requirement, AiaB is most suited
   to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
+* No firewall running on the AiaB host.  For example, `sudo ufw status` should show `inactive`,
+  and `sudo iptables -L` and `sudo nft list` should show a blank configuration.
 
 **IMPORTANT:**
 

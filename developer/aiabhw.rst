@@ -13,9 +13,12 @@ explored with real devices.  To create this setup you will need the following eq
 
 * Server for running AiaB (SD-CORE / UPF / ROC)
 
+  * Ubuntu 18.04 or 20.04 clean install
   * Haswell CPU family or newer
   * At least 4 CPUs and 12GB RAM
   * Internet connection
+  * Ability to run "sudo" without a password
+  * No firewall running on the AiaB host
 
 * 4G or 5G small cell eNodeB
 
