@@ -432,3 +432,26 @@ If the output shows any restarts, then restart the *simapp* pod to cause it to r
     pod "simapp-6c49b87c96-hpf82" deleted
 
 Re-run the 5G test, it should now pass.
+
+Proxy Issues
+^^^^^^^^^^^^
+
+When working with AiaB behind a proxy, it may be possible to experience certain issues
+due to security policies. That is, the proxy may block a domain (e.g., opencord.org)
+and you may see messages like these ones when trying to clone or get a copy of aether-in-a-box::
+
+    ubuntu18:~$ git clone https://gerrit.opencord.org/aether-in-a-box
+    Cloning into 'aether-in-a-box'...
+    fatal: unable to access 'https://gerrit.opencord.org/aether-in-a-box/': server certificate verification failed. CAfile: /etc/ssl/certs/ca-certificates.crt CRLfile: none
+
+or::
+
+    ubuntu18:~$ wget https://gerrit.opencord.org/plugins/gitiles/aether-in-a-box/+archive/refs/heads/master.tar.gz
+    --2022-06-01 13:13:42--  https://gerrit.opencord.org/plugins/gitiles/aether-in-a-box/+archive/refs/heads/master.tar.gz
+    Resolving proxy.company-xyz.com (proxy.company-xyz.com)... w.x.y.z
+    Connecting to proxy.company-xyz.com (proxy.company-xyz.com)|w.x.y.z|:#... connected.
+    ERROR: cannot verify gerrit.opencord.org's certificate, issued by 'emailAddress=proxy-team@company-xyz.com,... ,C=US':
+     Self-signed certificate encountered.
+
+To address this issue, you need to talk to your company's proxy admins and request to
+unblock (re-classify) the opencord.org domain

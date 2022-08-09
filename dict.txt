@@ -154,6 +154,7 @@ hoc
 hostname
 hss
 hssdb
+iOS
 iPXE
 iPhones
 iface
