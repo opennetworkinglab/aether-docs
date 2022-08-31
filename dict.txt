@@ -80,12 +80,14 @@ Velero
 Wireshark
 YAML
 aether
+aiab
 alicea
 allocatable
 amf
 analytics
 ansible
 api
+aren't
 arp
 atomix
 ausf
@@ -125,6 +127,7 @@ dev
 differentiator
 disaggregated
 dl
+dockerhub
 doesn
 downlink
 dropdown
@@ -137,6 +140,7 @@ elmerf
 enb
 etcd
 ethernet
+externalIP
 fredf
 func
 gNB
@@ -161,6 +165,7 @@ iface
 imei
 incrementing
 ip
+isn't
 jitter
 jjb
 json
@@ -202,6 +207,7 @@ nginx
 nrf
 nssf
 omec
+omecproject
 onboarding
 onlab
 onos
@@ -250,6 +256,7 @@ sd
 sdcore
 sdfabric
 seattle
+shouldn't
 simapp
 smf
 smgmt
@@ -267,6 +274,7 @@ tAC
 tcp
 tcpdump
 telegraf
+testOpt
 tfvars
 topo
 topologies

@@ -13,7 +13,9 @@ Here are some useful places to start with Aether:
 
 * Setup an Aether software development environment with :doc:`Aether-in-a-Box </developer/aiab>`.
 
-* For a PoC deployment, bring up an :doc:`Aether-in-a-Box on Real Radios <developer/aiabhw>`.
+* For a PoC deployment, bring up an :doc:`Aether-in-a-Box on 4G Real Radios <developer/aiabhw>`.
+
+* For a PoC deployment, bring up an :doc:`Aether-in-a-Box on 5G Real Radios <developer/aiabhw5g>`.
 
 * Learn about how to :doc:`configure Aether using the ROC </operations/gui>`.
 
@@ -61,6 +63,8 @@ can be found on the `ONF Wiki
 
    developer/aiab
    developer/aiabhw
+   developer/aiabhw5g
+   developer/troubleshooting
    developer/contributing.rst
 
 .. toctree::

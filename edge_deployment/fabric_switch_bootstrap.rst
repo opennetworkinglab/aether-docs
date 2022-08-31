@@ -21,7 +21,7 @@ NetBox.
 
 Installing Open Network Linux
 -----------------------------
-See :ref:`Provision Switches <sdfabric:deployment:step 1: provision switches>`
+See :ref:`Provision Switches <sdfabric:deployment_guide>`
 to learn about how to enter ONIE Rescue mode and install Open Network Linux on the switches.
 
 Please return here and continue the rest of the step once you finish ONL installation.
