@@ -61,9 +61,11 @@ machine, you can bring up a VM as follows::
 Proxy Settings (Conditional)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-AiaB can also be installed behind a proxy.  To do so you will need to set the standard Linux environment variables
-`http_proxy`, `https_proxy`, and `no_proxy` appropriately, and i) prepend `PROXY_ENABLED=true` to the
-`make` commands in this document or ii) export `PROXY_ENABLED=true` as follows::
+AiaB can also be installed behind a proxy.  To do so you will need to set the
+standard Linux environment variables `http_proxy`, `https_proxy`, `no_proxy`,
+`HTTP_PROXY`, `HTTPS_PROXY` and `NO_PROXY` appropriately, and i) prepend
+`PROXY_ENABLED=true` to the `make` commands in this document or
+ii) export `PROXY_ENABLED=true` as follows::
 
     make {arg} PROXY_ENABLED=true
 
