@@ -351,7 +351,7 @@ specifying an OpenID Connect (OIDC) issuer like::
         --set prom-label-proxy-acc.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master \
         --set prom-label-proxy-amp.config.openidc.issuer=https://keycloak-dev.onlab.us/auth/realms/master
 
-The choice of OIDC issuer in this case is the **development** Keycloak server at https://keycloak-dev.onlab.us
+The choice of OIDC issuer in this case is the **development** Keycloak server at keycloak-dev.onlab.us
 
 Its LDAP server is populated with 7 different users in the 2 example enterprises - *starbucks* and *acme*.
 
