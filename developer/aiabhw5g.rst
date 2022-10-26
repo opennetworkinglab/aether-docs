@@ -303,6 +303,12 @@ These packets are forwarded to the ``access`` interface **outside the UPF** and 
 Recall that AiaB assumes that the eNodeB is on the same subnet as DATA_IFACE, so in this case it also has an
 IP address in the 128.105.144.0/22 range.
 
+Note that If you are not finding ``access`` and ``core`` interfaces on **outside the UPF**, following commands
+can be used to create these two interfaces manually::
+
+     $ ip link add core link <DATA_IFACE> type macvlan mode bridge 192.168.250.3
+     $ ip link add access link <DATA_IFACE> type macvlan mode bridge 192.168.252.3
+
 gNodeB setup
 ------------
 

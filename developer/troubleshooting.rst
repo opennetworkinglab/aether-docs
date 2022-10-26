@@ -208,6 +208,11 @@ a packet with destination 192.158.252.3 to the ``access`` interface.  You can se
 
     tcpdump -i access -n udp port 2152
 
+In case packets are not forwarded from ``DATA_IFACE``  to ``acccess`` interface, the following command
+can be used to forward the traffic which is destined to 192.168.252.3::
+
+    iptables -A FORWARD -d 192.168.252.3 -i <data-iface> -o access -j ACCEPT
+
 If they don't make it to ``core`` then they are being dropped by the UPF for some reason.  This
 may be a configuration issue with the state loaded in the ROC / SD-CORE -- the UPF is being told
 to discard these packets.  You should check that the device's IMSI is part of a slice and that
