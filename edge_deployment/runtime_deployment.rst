@@ -149,7 +149,7 @@ your development machine.
    finish ``cluster_map.tfvars`` update first before proceeding.
 
 Run the following commands to automatically generate Terraform configurations needed to
-create a new cluster in `Rancher <https://rancher.aetherproject.org>`_ and add the servers
+create a new cluster in Rancher and add the servers
 and switches to the cluster.
 
 .. code-block:: shell
@@ -184,7 +184,7 @@ Create a review request.
    $ git review
 
 Once your review request is accepted and merged, Aether CI/CD system starts to deploy K8S.
-Wait until the cluster status changes to **Active** in `Rancher <https://rancher.aetherproject.org>`_.
+Wait until the cluster status changes to **Active** in Rancher.
 It normally takes 10 - 15 minutes depending on the speed of the container images
 download at the edge.
 

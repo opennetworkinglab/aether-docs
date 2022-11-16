@@ -167,3 +167,7 @@ Submit your changes.
 
 Go to Fleet dashboard and wait until the cluster status becomes **Active**.
 It can take up to 1 min for Fleet to fetch the configuration updates.
+
+.. note::
+
+  Refer to `BESS UPF Installation Guide <https://docs.google.com/document/d/1-BT7XqVsL7ffBlD7aweYaScKDQH7Gv5tHKt-sJGuf6c/edit#>`_ guide for more details
