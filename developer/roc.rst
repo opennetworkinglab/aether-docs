@@ -35,50 +35,67 @@ Atomix and onos-operator must be installed::
    helm repo update
 
    # install atomix
-   export ATOMIX_CONTROLLER_VERSION=0.6.9
-   helm -n kube-system install atomix-controller atomix/atomix-controller --version $ATOMIX_CONTROLLER_VERSION
-   export ATOMIX_RAFT_VERSION=0.1.26
-   helm -n kube-system install atomix-raft-storage atomix/atomix-raft-storage --version $ATOMIX_RAFT_VERSION
+   export ATOMIX_RUNTIME_VERSION=0.1.8
+   helm -n kube-system install atomix-runtime atomix/atomix-runtime --version $ATOMIX_RUNTIME_VERSION
 
    # install the onos operator
-   ONOS_OPERATOR_VERSION=0.5.3
+   ONOS_OPERATOR_VERSION=0.5.6
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
 .. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
-    shown above are correct for the 1.4.42- versions of the *aether-roc-umbrella*.
+    shown above are correct for the 2.1.32- versions of the *aether-roc-umbrella*.
 
 .. list-table:: ROC support component version matrix
-   :widths: 40 20 20 20
+   :widths: 40 20 20 20 20
    :header-rows: 1
 
    * - ROC Version
      - Atomix Controller
      - Atomix Raft
+     - Atomix Runtime
      - Onos Operator
    * - 1.2.25-1.2.45
      - 0.6.7
      - 0.1.8
+     - n/a
      - 0.4.8
    * - 1.3.0-1.3.10
      - 0.6.8
      - 0.1.9
+     - n/a
      - 0.4.10
    * - 1.3.11-,1.4.0-
      - 0.6.8
      - 0.1.14
+     - n/a
      - 0.4.12
    * - 1.4.42-
      - 0.6.8
      - 0.1.15
+     - n/a
      - 0.4.14
    * - 2.0.29-
      - 0.6.8
      - 0.1.16
+     - n/a
      - 0.5.1
    * - 2.1.8-
      - 0.6.9
      - 0.1.26
+     - n/a
      - 0.5.3
+   * - 2.1.32-
+     - n/a
+     - n/a
+     - 0.1.8
+     - 0.5.6
+
+.. note::
+    Changing between atomix and operators in a cluster may cause problems if there are changes in the definition of
+    the CRDs that they include. To fully ensure a clean installation the CRDs should be deleted manually AFTER deleting
+    the old version of atomix or Onos Operator.
+
+    Use `kubectl get crds | grep atomix` and `kubectl get crds | grep onos` to see the CRDs present.
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller*, *atomix-raft-storage-controller*,
@@ -213,7 +230,7 @@ the `onos-operator`). For example::
     -a onos.topo.TLSOptions='{"insecure":true}' \
     -a onos.topo.Asset='{"name”:”New Enterprise”}' \
     -a onos.topo.MastershipState='{}' \
-    -k aether
+    -k enterprise
 
 Uninstalling the ``aether-roc-umbrella`` Helm chart
 ---------------------------------------------------
@@ -221,20 +238,6 @@ Uninstalling the ``aether-roc-umbrella`` Helm chart
 To tear things back down, usually as part of a developer loop prior to redeploying again, do the following::
 
    helm -n micro-onos del aether-roc-umbrella
-
-If the uninstall hangs or if a subsequent reinstall hangs, it could be an issue with some of the CRDs
-not getting cleaned up. The following may be useful::
-
-    # fix stuck finalizers in operator CRDs
-    kubectl -n micro-onos patch entities connectivity-service-v2 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch entities starbucks --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch entities acme-v2 --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch entities defult-ent --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch entities plproxy-amp --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch entities plproxy-acc --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch kind plproxy --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]' && \
-    kubectl -n micro-onos patch kind aether --type json --patch='[ { "op": "remove", "path": "/metadata/finalizers" } ]'
-
 
 Useful port forwards
 --------------------
@@ -259,12 +262,6 @@ The following port-forwards may be useful::
    # grafana
 
    kubectl -n micro-onos port-forward service/aether-roc-umbrella-grafana --address 0.0.0.0 8187:80
-
-``aether-roc-api`` and ``aether-roc-gui`` are in our experience the most useful two port-forwards.
-
-``aether-roc-api`` is useful to be able to POST REST API requests.
-
-``aether-roc-gui`` is useful to be able to interactively browse the current configuration.
 
 .. note:: Internally the ``aether-roc-gui`` operates a Reverse Proxy on the ``aether-roc-api``. This
     means that if you have done a ``port-forward`` to ``aether-roc-gui`` say on port ``8183`` there's no
