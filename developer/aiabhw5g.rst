@@ -363,7 +363,32 @@ The APN to configure on your phone is ``internet``.
 Enable Monitoring
 -----------------
 
-Support for monitoring dashboard is work in progress for 5G
+To easily monitor your AiaB deployment, you can run the following command to
+deploy the Prometheus/Grafana monitoring stack on your AiaB server::
+
+    make monitoring-5g
+
+After this step, Grafana is available at `http://<server-ip>:30950`.  You will see a number of system dashboards
+for monitoring Kubernetes, as well as a simple AiaB_5g dashboard that enables inspection of the local Aether state.
+
+.. figure:: images/5g-aiab-grafana-dashboard.png
+    :align: center
+    :width: 100 %
+
+    *5G Grafana AiaB Dashboard*
+
+The dashboard shows whether the gNodeB and UPF are connected to the core, how many active UEs there are,
+including UE's IMSI and Slice information, and the uplink (Tx Bitrate) and downlink (Rx Bitrate) throughput at the UPF.
+SMF and AMF service metrics work is in progress and shall be available soon.
+
+To create a new dashboard for Aether, you can login to Grafana as user `admin` with password `prom-operator`.
+You can also modify an existing dashboard by making a copy of the dashboard and editing that.  Note that any
+dashboard changes will be lost if Grafana is restarted; if you want to make your dashboard more permanent, you can
+save its JSON to a file, add the file to directory `aether-in-a-box/resources/5g-monitoring`, and edit
+`kustomization.yaml` in that directory to add the file to the ConfigMapGenerator block.  After these
+steps, re-running `make monitoring-5g` should install the dashboard in a ConfigMap and Grafana should
+automatically load it.
+
 
 Troubleshooting
 ---------------
