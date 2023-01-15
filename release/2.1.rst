@@ -264,3 +264,4 @@ Hardware and Vendor Dependencies:
 
 * T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
 
+* Mobile: MOTO G 5G (2022)
