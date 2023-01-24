@@ -186,6 +186,85 @@ can check that systemd-networkd is installed and running as follows::
         CGroup: /system.slice/systemd-networkd.service
                 └─13777 /lib/systemd/systemd-networkd
 
+
+.. _AiaB_fails_too_many_files_open:
+
+AiaB fails during deployment of SD-Core network
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When running AiaB in Ubuntu 22.04, AiaB installation fails during the deployment of the SD-Core with
+an error message as shown below::
+
+    ...
+    ...
+    Update Complete. ⎈Happy Helming!⎈
+    NODE_IP=10.80.51.4 DATA_IFACE=data RAN_SUBNET=192.168.251.0/24 ENABLE_GNBSIM=true envsubst < /home/ubuntu/aether-in-a-box//sd-core-5g-values.yaml | \
+    helm upgrade --create-namespace --install --wait  \
+            --namespace omec \
+            --values - \
+            sd-core \
+            aether/sd-core
+    Release "sd-core" does not exist. Installing it now.
+    coalesce.go:175: warning: skipped value for kafka.config: Not a table.
+    Error: timed out waiting for the condition
+    make: *** [Makefile:336: /home/ubuntu/aether-in-a-box//build/milestones/5g-core] Error 1
+
+To get more details about the issue, you can execute the following command to see what pod(s) have issues::
+
+    $ kubectl -n omec get pods
+    NAME                          READY   STATUS             RESTARTS         AGE
+    amf-6dd746b9cd-2mk2j          0/1     CrashLoopBackOff   13 (24s ago)     42m
+    ausf-6dbb7655c7-4pkmp         1/1     Running            0                42m
+    gnbsim-0                      1/1     Running            0                42m
+    metricfunc-7864fb8b7c-srf2l   1/1     Running            3 (41m ago)      42m
+    mongodb-0                     1/1     Running            0                42m
+    mongodb-1                     1/1     Running            0                41m
+    mongodb-arbiter-0             1/1     Running            0                42m
+    nrf-57c79d9f65-fs9qj          1/1     Running            0                42m
+    nssf-5b85b8978d-q8dz5         1/1     Running            0                42m
+    pcf-758d7cfb48-wjfxf          1/1     Running            0                42m
+    sd-core-kafka-0               1/1     Running            0                42m
+    sd-core-zookeeper-0           1/1     Running            0                42m
+    simapp-6cccd6f787-sd52q       0/1     Error              13 (5m14s ago)   42m
+    smf-ff667d5b8-sw5vf           1/1     Running            0                42m
+    udm-768b9987b4-cqvbg          1/1     Running            0                42m
+    udr-8566897d45-n8cbz          1/1     Running            0                42m
+    upf-0                         5/5     Running            0                42m
+    webui-5894ffd49d-bdwf4        1/1     Running            0                42m
+
+As shown above, there are problems with the AMF and SIMAPP pods and to see the specifics of the
+problem, the user can see the logs as shown below::
+
+    $ kubectl -n omec logs amf-6dd746b9cd-2mk2j
+    ...
+    ...
+    } (resolver returned new addresses)
+    2023/01/24 17:24:56 INFO: [core] [Channel #1] Channel switches to new LB policy "pick_first"
+    2023/01/24 17:24:56 INFO: [core] [Channel #1 SubChannel #2] Subchannel created
+    2023/01/24 17:24:56 too many open files
+
+As the message shows, the problem is due to "too many open files". To resolve this issue, the user
+can increase the maximum number of available watches and the maximum number of inotify instances
+(e.g., 10x). To do so, first, see the current maximum numbers::
+
+    $ sysctl fs.inotify.max_user_instances
+    fs.inotify.max_user_instances = 128
+    $ sysctl fs.inotify.max_user_watches
+    fs.inotify.max_user_watches = 1048576
+
+Then, increase these values by executing::
+
+    sudo sysctl fs.inotify.max_user_instances=1280
+    sudo sysctl fs.inotify.max_user_watches=10485760
+
+The above setting gets reset to their original values when the machine is rebooted. You can make
+this change permanent by creating an override file::
+
+    sudo nano /etc/sysctl.d/90-override.conf
+    fs.inotify.max_user_instances=1280
+    fs.inotify.max_user_watches=10485760
+
+
 Data plane is not working
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 

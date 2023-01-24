@@ -21,9 +21,10 @@ AiaB offers a great deal of flexibility regarding which Helm chart versions to i
 * Latest published charts (for deploying a development version of Aether)
 * Specified versions of charts (for deploying a specific Aether release)
 
-AiaB can be run on a bare metal machine or VM.  System prerequisites:
+AiaB can be run on a bare metal machine or VM. System prerequisites:
 
-* Ubuntu 18.04 clean install (18.04 is a requirement of OAISIM which is used to test 4G Aether)
+* AiaB 4G: Ubuntu 18.04 clean install (18.04 is a requirement of OAISIM which is used to test 4G Aether)
+* AiaB 5G: Ubuntu 18.04, 20.04, 22.04 [#]_
 * Kernel 4.15 or later
 * Haswell CPU or newer
 * At least 4 CPUs and 12GB RAM
@@ -31,6 +32,12 @@ AiaB can be run on a bare metal machine or VM.  System prerequisites:
   to disposable environments like a VM or a `CloudLab <https://cloudlab.us>`_ machine.
 * No firewall running on the AiaB host.  For example, `sudo ufw status` should show `inactive`,
   and `sudo iptables -L` and `sudo nft list` should show a blank configuration.
+
+.. [#] AiaB requires to increase the maximum number of available watches and the maximum number of
+    inotify instances in Ubuntu 22.04. Otherwise, there will be a "time out" error due to "Too many
+    files open". Some users have also reported to see this issue when using Ubuntu 20.04. :ref:`AiaB
+    fails too many files open <developer/troubleshooting:AiaB fails during deployment of SD-Core network>`
+    provides more details on how to address this issue.
 
 .. note::
   * Running both 4G and 5G SD-CORE simultaneously in AiaB is currently not supported.
