@@ -1,0 +1,189 @@
+Aether 2.1 Release
+==================
+
+Aether Highlights
+-----------------
+
+This release of Aether picks up new internal modeling and scalability enhancements.
+The release has been primarily validated in the Aether-in-a-Box configuration,
+but the basis for this release has seen fairly broad use in various configurations.
+
+As with 2.0, both 4G and 5G deployments are supported. The 5G User Plane Function (UPF)
+can be deployed with both compute-based software, as well as the P4-based
+hardware-accelerated UPF. Aether maintains backward compatibility with 4G, and
+both 4G and 5G slices may make use of both software and hardware based UPFs.
+P4 hardware and BESS software UPFs can be deployed side-by-side in a hybrid deployment.
+
+Features & Improvements
+-----------------------
+
+New 5G features
+"""""""""""""""
+
+This release of Aether incorporates
+`SD-Core 1.2 <https://docs.sd-core.opennetworking.org/sdcore-1.2/release/1.2.html>`__, which is the first
+version of SD-Core focused on support for Cloud Native 5G Network Functions. All new functionality in this release
+contributes to support of 5G Network functionality,  including integration with 5G gNB small
+cells from Sercomm; 5G small cell hardware from T&W running 5G-SA RAN stack from Radisys;
+5G slices with Application filtering; and a policy framework that supports QoS at multiple
+levels - subscribers, applications and slices. For more details, please refer to the
+`SD-Core 1.2 <https://docs.sd-core.opennetworking.org/sdcore-1.2/release/1.2.html>`__ Release notes.
+
+SD-Fabric Integration
+"""""""""""""""""""""
+
+For this release, configurations incorporating SD-Fabric, and the P4 UPF have NOT been re-validated
+(as this release has only been validated on Aether-in-a-Box). Users can continue to deploy these
+configurations but should exercise caution to ensure the capabilities continue to operate as expected.
+For more details, please refer to the `SD-Fabric 1.2 <https://docs.sd-fabric.org/sdfabric-1.2/release/1.2.0.html>`__
+Release notes.
+
+Configuration Model Improvement
+"""""""""""""""""""""""""""""""
+
+The Configuration model of ROC has been upgraded in Aether 2.1 so that the “site”, “application”,
+“traffic-class”, and “template”  are now at the highest level in the model. The connectivity-service
+4g/5g is now an attribute of slice.
+
+This change greatly simplifies the ROC API - for example the URL to retrieve a site is now:
+
+* ``aether/v2.1.x/aiab-enterprise/site/mysite``
+
+where previously the equivalent would have been:
+
+* ``aether/v2.0.x/connectivity-service-v2/enterprises/enterprise/aiab-enterprise/site/mysite``
+
+The configuration of the “enterprise” is handled now in onos-topo as an Entity. New enterprises can be
+added with the ``entities.topo.onosproject.org`` CRD, and will subsequently be created in onos-topo by
+the onos-operator. The ROC GUI remains unchanged, as it has absorbed these model changes into its internal functions.
+
+
+Configuration System Improvements
+"""""""""""""""""""""""""""""""""
+
+Aether’s ROC configuration system internals were redesigned and reimplemented to address various
+instability issues and incorporate new patterns and architectures. The controllers at the core of onos-config
+were `redesigned in
+TLA+ <https://github.com/onosproject/onos-tlaplus/blob/master/Config/Config.pdf>`__ – a machine-checked formal
+specification language – to develop a more stable and viable
+architecture long-term, and the controllers were reimplemented according to the new design. On the northbound,
+new gNMI extensions make onos-config’s handling of gNMI Set and Get requests configurable with support for various
+consistency strategies when propagating changes to gNMI targets. On the southbound, support was added for handling
+non-persistent targets (recovering target configuration after restarts). For additional information, please see the
+`README
+file <https://github.com/onosproject/onos-config/blob/master/docs/README.md>`__ for the configuration system.
+
+Support for complex validation rules
+""""""""""""""""""""""""""""""""""""
+
+Aether support for complex validation rules (“guardrails”) has been added to prevent misconfiguration of the system.
+These guardrails are specified using Aether’s yang modeling language, allowing new rules to be modified
+easily as needed.
+
+Aether Testing
+--------------
+
+Aether uses automated testing based on Jenkins and Robot Framework. The
+tests performed are described below.
+
+Aether-in-a-Box Deployment Tests:
+
+* https://jenkins.aetherproject.org/view/aiab-test/
+
+SD-Core Tests (manual testing):
+
+* 4G
+
+   * Functional coverage: attach, detach, dataplane traffic, handover,
+     TAU, paging, error scenarios, failure/restart of network
+     functions
+
+* 5G
+
+   * Functional Coverage: register, deregister, dataplane traffic
+     scenarios, handover, TAU, DDN, few error scenarios, few
+     failure/restart of network functions, application filtering,
+     QoS
+
+ROC:
+
+* Functional API
+
+ * Related Jenkins jobs
+
+   * https://jenkins.aetherproject.org/view/ROC%20System%20Tests/
+
+Documentation
+-------------
+
+Aether documentation is available at
+`docs.aetherproject.org <http://docs.aetherproject.org>`__.
+
+Limitations and Known Issues
+----------------------------
+
+*  The P4 UPF does not support Slice MBR, which requires leaving out the
+   `configuration endpoint` configuration for P4 UPFs.
+   Additionally, only 1 slice can currently use a P4 UPF. The next
+   release of Aether will remove both limitations.
+
+*  IMSIs should not be removed from Simapp. They may be added at any
+   time.
+
+*  When running the ROC GUI in the Firefox browser, it is possible to enter
+   non-numeric characters in to numeric fields.
+
+*  Application filtering is not available for some combinations of 5G UEs and
+   5G gNBs. For 5G slices, it is recommended that default behavior be set to
+   ALLOW-ALL and application filtering rules not be added at this time.
+
+* Kubespray is no longer supported for Aether-in-a-Box deployments due to software component incompatibilities.
+
+* An intermittent issue was observed where a UE may not be issued an IP address.This was observed on a few
+  occasions during the 2.1 release, but root cause has been determined. It continues to be under investigation.
+
+Aether 2.1.0 Release
+--------------------
+
+Aether 2.1.0 is the base release of the 2.1 branch.
+
+Aether 2.1.0 Component Versions
+"""""""""""""""""""""""""""""""
+
+ROC:
+
+* atomix-runtime: 0.1.9
+
+* onos-operator: 0.5.6
+
+* aether-roc-umbrella: 2.1.33
+
+`SD-Core 1.2.1: <https://docs.sd-core.opennetworking.org/sdcore-1.2/release/1.2.html>`__
+
+* sdcore-helm-chart: 0.12.5 (Umbrella Helm Chart)
+
+   * Omec-control-plane : 0.12.0
+
+   * Omec-sub-provision : 0.6.0
+
+   * 5g-control-plane : 0.8.8
+
+   * 5g-ran-sim: 0.6.5
+
+UPF: bess-upf: 0.1.0
+
+`SD-Fabric 1.2: <https://docs.sd-fabric.org/sdfabric-1.2/release/1.2.0.html>`__
+
+* sdfabric: 1.2.0
+
+Hardware and Vendor Dependencies:
+
+* Sercomm eNB: Firmware version 3922
+
+* gNB using T&W hardware with Radisys software:
+
+  * Radisys 5G-SA RAN stack: TRILLIUM_5GNR_NXP_GNB_AIO_QCOM_SUB6_WITH_DPDK_BIN_REL_2.4.3
+
+  * T&W gNB: 5G Sub-6GHz Small Cell (N78, 8GB DDR, With housing), Model SDQ001-RU (N78)
+
+* Mobile UE for 5G testing: MOTO G 5G (2022), Google Pixel 4
