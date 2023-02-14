@@ -160,15 +160,15 @@ ROC:
 
 `SD-Core 1.2.1: <https://docs.sd-core.opennetworking.org/sdcore-1.2/release/1.2.html>`__
 
-* sdcore-helm-chart: 0.12.5 (Umbrella Helm Chart)
+* sdcore-helm-chart: 0.11.16 (Umbrella Helm Chart)
 
-   * Omec-control-plane : 0.12.0
+   * Omec-control-plane : 0.11.2
 
-   * Omec-sub-provision : 0.6.0
+   * Omec-sub-provision : 0.5.3
 
-   * 5g-control-plane : 0.8.8
+   * 5g-control-plane : 0.7.17
 
-   * 5g-ran-sim: 0.6.5
+   * 5g-ran-sim: 0.5.9
 
 UPF: bess-upf: 0.1.0
 
