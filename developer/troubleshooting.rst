@@ -261,9 +261,11 @@ The above setting gets reset to their original values when the machine is reboot
 this change permanent by creating an override file::
 
     sudo nano /etc/sysctl.d/90-override.conf
-    fs.inotify.max_user_instances=1280
-    fs.inotify.max_user_watches=10485760
+        fs.inotify.max_user_instances=1280
+        fs.inotify.max_user_watches=10485760
+    sudo sysctl --system
 
+The last command is to load the changes without having to reboot the machine
 
 Data plane is not working
 ^^^^^^^^^^^^^^^^^^^^^^^^^
