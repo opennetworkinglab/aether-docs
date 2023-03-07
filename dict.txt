@@ -198,6 +198,7 @@ nVME
 nameserver
 nameservers
 namespace
+namespaces
 natively
 nd
 netcfg
