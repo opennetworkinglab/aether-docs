@@ -63,8 +63,8 @@ The 2U servers have:
 
 - 4x 1GbE copper network ports
 
-1x Management Switch: `HP/Aruba 2540 Series JL356A
-<https://www.arubanetworks.com/products/switches/access/2540-series/>`_.
+1x Management Switch: `HP/Aruba 2540 Series JL356A`
+*https://www.arubanetworks.com/assets/ds/DS_2540SwitchSeries.pdf*.
 
 1x Management Server: `Supermicro 5019D-FTN4
 <https://www.supermicro.com/en/Aplus/system/Embedded/AS-5019D-FTN4.cfm>`_,
