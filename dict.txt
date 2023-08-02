@@ -10,6 +10,7 @@ Chronos
 Cloudlab
 Cratchit
 DNS
+Davie
 Deutsche
 Dex
 Dockerfile
@@ -27,6 +28,7 @@ IPMI
 IPv
 IaC
 IaaC
+IoT
 Istio
 Jenkins
 Jira
@@ -36,8 +38,10 @@ Ksniff
 Kubernetes
 Kubespray
 LTE
+Makefiles
 ManagementServer
 Mbps
+Microservices
 Mininet
 Multipass
 Netbox
@@ -48,10 +52,13 @@ PDN
 PoC
 PoE
 QoS
+RIC
 Radisys
 Raspbian
+RiaB
 Sercomm
 Speedtest
+Sunay
 Supermicro
 SupportedTAs
 TFTP
@@ -61,6 +68,7 @@ Telekom
 Terraform
 TestVectors
 Tofino
+Toolset
 Tx
 UE
 VOLTHA
@@ -129,11 +137,13 @@ enb
 etcd
 ethernet
 externalIP
+femto
 fredf
 func
 gNB
 gNBSim
 gNBs
+gNBsim
 gNMI
 gNodeB
 gRPC
@@ -146,6 +156,7 @@ hoc
 hostname
 hss
 hssdb
+https
 iOS
 iPXE
 iPhones
@@ -153,6 +164,7 @@ iface
 imei
 incrementing
 inotify
+instantiation
 ip
 isn't
 jitter
@@ -178,10 +190,12 @@ makefile
 menlo
 mgmt
 microservice
+microservices
 misconfiguration
 mixedGroup
 mme
 mongodb
+nRT
 nVME
 nameserver
 nameservers
@@ -204,6 +218,7 @@ onos
 onosproject
 opencord
 orchestrator
+parameterizing
 patchset
 patchsets
 pcap
@@ -236,6 +251,7 @@ renderer
 repo
 repos
 repository
+roadmap
 roc
 routable
 rscript
@@ -257,6 +273,8 @@ splitter
 starbucks
 stateful
 subcomponent
+subdirectories
+submodules
 subnet
 subnets
 sudo
@@ -268,6 +286,8 @@ telegraf
 test
 testOpt
 tfvars
+toolchain
+toolset
 topo
 topologies
 tost
@@ -289,6 +309,7 @@ webserver
 webui
 workspace
 workspaces
+xApps
 yaml
 ztp
 µONOS

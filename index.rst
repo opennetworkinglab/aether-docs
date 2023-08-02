@@ -11,18 +11,16 @@ Getting Started with Aether
 
 Here are some useful places to start with Aether:
 
+* Deploy and operate Aether on your own cluster with :doc:`Aether OnRamp </onramp/overview>`.
+
 * Setup an Aether software development environment with :doc:`Aether-in-a-Box </developer/aiab>`.
-
-* For a PoC deployment, bring up an :doc:`Aether-in-a-Box on 4G Real Radios <developer/aiabhw>`.
-
-* For a PoC deployment, bring up an :doc:`Aether-in-a-Box on 5G Real Radios <developer/aiabhw5g>`.
 
 * Learn about how to :doc:`configure Aether using the ROC </operations/gui>`.
 
 * Learn the requirements of hosting an :doc:`Aether Connected Edge
   </edge_deployment/overview>`.
 
-* Read the most recent :doc:`Release Notes </release/2.0>`.
+* Read the most recent :doc:`Release Notes </release/2.1>`.
 
 Aether Architecture and Components
 ----------------------------------
@@ -45,8 +43,8 @@ at these sites:
   * `SD-RAN Website <https://opennetworking.org/open-ran/>`_
   * :doc:`SD-RAN Documentation <sdran:index>`
 
-More information about mobile networks and 5G can be found in the :doc:`5G
-Mobile Networks: A Systems Approach <sysapproach5g:intro>` book.
+More information about 5G and Aether's architecture can be found in
+the :doc:`Private 5G: A Systems Approach <sysapproach5g:index>` book.
 
 Community
 ---------
@@ -57,7 +55,24 @@ can be found on the `ONF Wiki
 
 .. toctree::
    :maxdepth: 3
-   :caption: Aether Quick Start
+   :caption: Aether OnRamp
+   :hidden:
+   :glob:
+
+   onramp/overview
+   onramp/directory
+   onramp/start
+   onramp/inspect
+   onramp/scale
+   onramp/network
+   onramp/gnbsim
+   onramp/gnb
+   onramp/roc
+   onramp/enb
+
+.. toctree::
+   :maxdepth: 3
+   :caption: Aether-in-a-Box
    :hidden:
    :glob:
 

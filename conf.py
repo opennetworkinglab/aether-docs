@@ -115,6 +115,13 @@ exclude_patterns = [
         'venv-docs',
 ]
 
+# Enable numbered figures
+numfig = True
+numfig_format = {
+    'figure': 'Figure %s.',
+    'table':  'Table %s.'
+    }
+
 # The name of the Pygments (syntax highlighting) style to use.
 pygments_style = None
 
@@ -259,6 +266,7 @@ linkcheck_ignore = [
     r'https://www.fs.com/.*',
     r'https://velero.io/.*',
     r'https://cloud.google.com/.*',
+    r'https://ark.intel.com/.*',
 ]
 
 linkcheck_timeout = 3
