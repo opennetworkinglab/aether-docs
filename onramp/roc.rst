@@ -7,13 +7,14 @@ at runtime. This stage brings up that API/GUI, as implemented by the
 physical gNB we connected to Aether in the previous section.
 
 This stage focuses on the abstractions that the ROC layers on top of
-the SD-Core. These abstractions are described in :doc:`Section 6.4
-<sysapproach5g:cloud>` and include *Device Groups* and
-*Slices*. (The full set of model definitions can be found in `GitHub
+the SD-Core. These abstractions are described in `Section 6.4
+<https://5g.systemsapproach.org/cloud.html#connectivity-api>`__ and
+include *Device Groups* and *Slices*. (The full set of model
+definitions can be found in `GitHub
 <https://github.com/onosproject/aether-models>`__.)  Initial settings
 of these ROC-managed parameters are recorded in
-``deps/amp/roles/roc-load/templates/radio-5g-models.json``. We use
-these values to load the ROC database, saving us from a laborious GUI
+``deps/amp/roles/roc-load/templates/radio-5g-models.json``. We use these
+values to load the ROC database, saving us from a laborious GUI
 session.
 
 Somewhat confusingly, the *Device-Group* and *Slice* information is
@@ -107,3 +108,13 @@ and adding a new device group.
 Finally, if you do make a set of updates, select the ``Basket`` icon
 at top right when you are done, and click the ``Commit`` button. This
 causes the set of changes to be committed as a single transaction.
+
+A more complete User's Guide for the ROC is available online, although
+be aware that our OnRamp-based deployment has not yet enabled the
+secure login feature.
+
+.. _reading_roc:
+.. admonition:: Further Reading
+
+    `Aether Operations
+    <https://docs.aetherproject.org/master/operations/gui.html>`__.

@@ -106,15 +106,14 @@ chapter of our companion Edge Cloud Operations book.
 OnRamp Repos
 ~~~~~~~~~~~~~~~~~~~
 
-The deployment artifacts listed above are, of course, meant to be
-deployed as an operational cloud service. This process, sometimes
+The process to deploy the artifacts listed above, sometimes
 referred to as GitOps, manages the *Continuous Deployment (CD)* half
 of the CI/CD pipeline. OnRamp's approach to GitOps uses a different
 mechanism than the one the ONF ops team originally used to manage its
 multi-site deployment of Aether.  The latter approach has a large
-startup cost, which has proven difficult for others to replicate. (It
-also locks you into deployment toolchain that may or may not be
-appropriate for your situation.)
+startup cost, which has proven difficult to replicate. (It also locks
+you into deployment toolchain that may or may not be appropriate for
+your situation.)
 
 In its place, OnRamp adopts minimal Ansible tooling. This makes it
 easier to take ownership of the configuration parameters that define

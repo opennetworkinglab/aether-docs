@@ -68,7 +68,6 @@ can be found on the `ONF Wiki
    onramp/gnbsim
    onramp/gnb
    onramp/roc
-   onramp/enb
 
 .. toctree::
    :maxdepth: 3

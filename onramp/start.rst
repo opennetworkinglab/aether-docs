@@ -7,7 +7,7 @@ cluster, and runs an emulated 5G workload against the 5G Core. It
 assumes a low-end server that meets the following requirements:
 
 * Haswell CPU (or newer), with at least 4 CPUs and 12GB RAM.
-* Clean install of Ubuntu 18.04, 20.04, or 22.04, with 4.15 (or later) kernel.
+* Clean install of Ubuntu 20.04 or 22.04, with 4.15 (or later) kernel.
 
 For example, something like an Intel NUC is more than enough to get
 started.
@@ -31,34 +31,18 @@ launch a suitable VM instance by typing:
 Prep Environment
 ~~~~~~~~~~~~~~~~~~~~~
 
-To install Aether OnRamp, you must be able able to run `sudo` without
-a password, and there should be no firewall running on the server,
-which you can verify as follows:
+To install Aether OnRamp, you must be able able to run ``sudo`` without
+a password, and there should be no firewall running on the server. You can
+verify this is the case by executing the following, which should
+report ``Status: inactive``:
 
 .. code-block::
 
    $ sudo ufw status
-   $ sudo iptables -L
-   $ sudo nft list
+   Status: inactive
 
-The first command should report inactive, and the second two commands
-should return blank configurations.
-
-Because the install process fetches artifacts from the Internet, if you
-are behind a proxy you will need to set the standard Linux environment
-variables: `http_proxy`, `https_proxy`, `no_proxy`, `HTTP_PROXY`,
-`HTTPS_PROXY` and `NO_PROXY` with the appropriate values. You also
-need to export `PROXY_ENABLED=true` by typing the following:
-
-.. code-block::
-
-   $ export PROXY_ENABLED=true
-
-This variable can also be set in your ``~/.bashrc`` file to make it
-permanent.
-
-Finally, OnRamp depends on Ansible, which you can install on your
-server as follows:
+OnRamp depends on Ansible, which you can install on your server as
+follows:
 
 .. code-block::
 
@@ -117,7 +101,6 @@ four things to note:
    included with OnRamp is simplified to run everything on a single
    server (the one you've cloned the repo onto), with additional lines
    you may eventually need for a multi-node cluster commented out.
-
 
 Set Target Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -296,7 +279,8 @@ to ``kube-system``), with output similar to the following:
    webui-5894ffd49d-gg2jh       1/1     Running            0             6m13s
 
 You will recognize Kubernetes pods that correspond to many of the
-microservices discussed is :doc:`Chapter 5 <sysapproach5g:core>`. For example,
+microservices discussed is `Chapter 5
+<https://5g.systemsapproach.org/core.html>`__. For example,
 ``amf-5887bbf6c5-pc9g2`` implements the AMF. Note that for historical
 reasons, the Aether Core is called ``omec`` instead of ``sd-core``.
 
