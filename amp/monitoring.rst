@@ -2,8 +2,8 @@
    SPDX-FileCopyrightText: © 2021 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-Monitoring and Alert Infrastructure
-===================================
+Monitoring and Alert Development
+================================
 
 Aether leverages `Prometheus <https://prometheus.io/docs/introduction/overview/>`_ to collect
 and store platform and service metrics, `Grafana <https://grafana.com/docs/grafana/latest/getting-started/>`_

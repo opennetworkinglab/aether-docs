@@ -2,8 +2,8 @@
 
 .. _roc-developer-guide:
 
-Aether ROC Developer Guide
-==========================
+ROC Development
+===============
 
 Background / Development Environment
 ------------------------------------

@@ -2,8 +2,8 @@
 
 .. _aiab_troubleshooting:
 
-Aether-in-a-Box FAQs and Troubleshooting
-========================================
+Troubleshooting Aether-in-a-Box
+===============================
 
 FAQs
 ----

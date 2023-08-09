@@ -106,10 +106,10 @@ Set Target Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The Quick Start deployment described in this section requires that you
-modify two parameters to reflect the specifics of your target
+modify two sets of parameters to reflect the specifics of your target
 deployment.
 
-The first is in file ``host.ini``, where you will need to give the IP
+The first set is in file ``host.ini``, where you will need to give the IP
 address and login credentials for the server you are working on. At
 this stage, we assume the server you downloaded OnRamp onto is the
 same server you will be installing Aether on.
@@ -125,7 +125,7 @@ of passwords, then ``ansible_password=aether`` needs to be replaced
 with ``ansible_ssh_private_key_file=~/.ssh/id_rsa`` (or wherever
 your private key can be found).
 
-The second parameter is in ``vars/main.yml``, where the **two** lines
+The second set of parameters is in ``vars/main.yml``, where the **two** lines
 currently reading
 
 .. code-block::
@@ -133,7 +133,15 @@ currently reading
    data_iface: ens18
 
 need to be edited to replace ``ens18`` with the device interface for
-you server. You can learn the interface using the Linux ``ip``
+you server, and the line specifying the IP address of the Core's AMF
+needs to be edited to reflect your server's IP address:
+
+.. code-block::
+
+   amf:
+      ip: "172.16.41.103"
+
+You can learn your server's IP address and interface using the Linux ``ip``
 command:
 
 .. code-block::
@@ -314,26 +322,42 @@ Docker container running the test. You can access that file by typing:
 
    $ docker exec -it gnbsim-1 cat summary.log
 
-If successful, the last lines of the output should look like the
-following:
+If successful, the output should look like the following:
 
 .. code-block::
 
-   ...
-   2023-04-20T20:21:36Z [INFO][GNBSIM][Profile][profile2] ExecuteProfile ended
-   2023-04-20T20:21:36Z [INFO][GNBSIM][Summary] Profile Name: profile2 , Profile Type: pdusessest
-   2023-04-20T20:21:36Z [INFO][GNBSIM][Summary] UEs Passed: 5 , UEs Failed: 0
-   2023-04-20T20:21:36Z [INFO][GNBSIM][Summary] Profile Status: PASS
+   2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] Profile Name: profile2 , Profile Type: pdusessest
+   2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] UEs Passed: 3 , UEs Failed: 0
+   2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] Profile Status: PASS
 
 This particular test, which runs the cryptically named ``pdusessest``
-profile, emulates five UEs, each of which: (1) registers with the
+profile, emulates three UEs, each of which: (1) registers with the
 Core, (2) initiates a user plane session, and (3) sends a minimal data
-packet over that session. If you are interested in the config file
-that controls the test, including the option of enabling other
-profiles, take a look at
+packet over that session. In addition to displaying the summary
+results, you can also open a shell in the ``gnbsim-1`` container,
+where you can view the full trace of every run of the emulation, each
+of which has been saved in a timestamped file:
+
+.. code-block::
+
+   $ docker exec -it gnbsim-1 bash
+   bash-5.1# ls
+   gnbsim                          gnbsim1-20230809T125702.config  summary.log
+   gnbsim.log                      gnbsim1-20230809T125702.log
+   bash-5.1# more gnbsim1-20230809T125702.log
+   2023-08-09T19:57:05Z [INFO][GNBSIM][App] App Name: GNBSIM
+   2023-08-09T19:57:05Z [INFO][GNBSIM][App] Setting log level to: info
+   2023-08-09T19:57:05Z [INFO][GNBSIM][GNodeB][gnb1] GNodeB IP:  GNodeB Port: 9487
+   2023-08-09T19:57:05Z [INFO][GNBSIM][GNodeB][UserPlaneTransport] User Plane transport listening on: 172.20.0.2:2152
+   2023-08-09T19:57:05Z [INFO][GNBSIM][GNodeB] Current range selector value: 63
+   2023-08-09T19:57:05Z [INFO][GNBSIM][GNodeB] Current ID range start: 1056964608 end: 1073741823
+   2023-08-09T19:57:05Z [INFO][GNBSIM][GNodeB][ControlPlaneTransport] Connected to AMF, AMF IP: 10.76.28.113 AMF Port: 38412
+   ...
+
+If you are interested in the config file that controls the test,
+including the option of enabling other profiles, take a look at
 ``deps/gnbsim/config/gnbsim-default.yaml``. We return to the issue of
 customizing gNBsim in a later section.
-
 
 Clean Up
 ~~~~~~~~~~~~~~~~~

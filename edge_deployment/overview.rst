@@ -5,15 +5,14 @@
 Overview
 ========
 
-There are many ways to deploy Aether, depending on the requirements of the edge
-site. The Reliability, Availability, and Serviceability (RAS) of each set of
-equipment will differ depending on the characteristics of each edge.
+There are multiple ways to deploy Aether. This guide documents how ONF
+deployed and operated a multi-site configuration of Aether as part of
+the Pronto project. If you are interested in a minimal deployment of
+Aether suitable for development (e.g., in a VM on your laptop), see
+the guide for :doc:`Aether-in-a-Box </developer/aiab>`. If you are
+interested in deploying Aether on your own edge cluster, see the guide
+for :doc:`Aether OnRamp </onramp/overview>`.
 
-This document provides several hardware deployment options and explains the
-differences between them.
-
-For assistance in setting up a production deployment of Aether,
-please contact Timon Sloane at timon@opennetworking.org.
 
 Aether Central
 --------------
@@ -64,19 +63,6 @@ deployment.
 
 Deployment Options
 ------------------
-
-Development Environments
-""""""""""""""""""""""""
-
-For users looking for a development or fully software-simulated environment,
-there is ``Aether-in-a-Box (AiaB)`` - instructions for running this can be
-found in the :doc:`Setting Up Aether-in-a-Box </developer/aiab>`.  AiaB
-is only suitable for testing and developing software, and can't connect to
-physical hardware, but is a good choice for learning about the different
-software components within Aether.
-
-Production Environments
-"""""""""""""""""""""""
 
 Deploying Aether on hardware is required for both production deployments and
 hardware testing.  Before deploying Aether, a detailed plan including the

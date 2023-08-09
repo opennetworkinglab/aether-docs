@@ -205,10 +205,6 @@ in the *aether-roc* namespace.
 
 The ROC GUI is available on port 31194 on the host running AiaB.
 
-See the :ref:`instructions here <developer/aiabhw:Enable Monitoring>` to deploy a basic monitoring stack to AiaB.
-This could be useful if you wish to use AiaB as an environment for prototyping Prometheus exporters or
-Grafana dashboards for Aether.
-
 Cleanup 4G AIAB
 ^^^^^^^^^^^^^^^
 
@@ -384,7 +380,7 @@ SD-CORE components.
 
 
 .. note::
-  For more troubleshooting FAQs, please refer here :ref:`Troubleshooting guide <developer/troubleshooting:Aether-in-a-Box FAQs and Troubleshooting>`
+  Please refer to the Troubleshooting section for more details.
 
 Installing the 5G AIAB
 ----------------------
@@ -466,10 +462,6 @@ The SD-CORE services, UPF, and simulated edge devices run in the *omec* namespac
 in the *aether-roc* namespace.
 
 The ROC GUI is available on port 31194 on the host running AiaB.
-
-See the :ref:`instructions here <developer/aiabhw:Enable Monitoring>` to deploy a basic monitoring stack to AiaB.
-This could be useful if you wish to use AiaB as an environment for prototyping Prometheus exporters or
-Grafana dashboards for Aether.
 
 
 Cleanup 5G AIAB
@@ -650,7 +642,7 @@ If the output shows any restarts, then restart the *simapp* pod to cause it to r
 Re-run the 5G test, it should now pass.
 
 .. note::
-  For more troubleshooting FAQs, please refer here :ref:`Troubleshooting guide <developer/troubleshooting:Aether-in-a-Box FAQs and Troubleshooting>`
+  Please refer to the Troubleshooting section for more details.
 
 Packet Capture
 --------------

@@ -312,10 +312,9 @@ following information needs to be added to `NetBox
 15. Add Cables between physical interfaces on the devices
 
     The topology needs to match the logical diagram presented in the
-    :ref:`Production Environments <edge_deployment/overview:Production
-    Environments>`.  Note that many of the management interfaces need to be
-    located either on the MGMT or ADMIN VLANs, and the management switch is
-    used to provide that separation.
+    Overview section.  Note that many of the management interfaces
+    need to be located either on the MGMT or ADMIN VLANs, and the
+    management switch is used to provide that separation.
 
 Rackmount of Equipment
 ----------------------

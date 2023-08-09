@@ -76,14 +76,15 @@ can be found on the `ONF Wiki
    :glob:
 
    developer/aiab
-   developer/aiabhw
-   developer/aiabhw5g
    developer/troubleshooting
+   developer/roc
+   amp/monitoring
    developer/contributing.rst
+
 
 .. toctree::
    :maxdepth: 3
-   :caption: Operations
+   :caption: Runtime Operations
    :hidden:
    :glob:
 
@@ -93,11 +94,10 @@ can be found on the `ONF Wiki
    operations/slice
    operations/metering
    operations/monitor
-   operations/procedures
 
 .. toctree::
    :maxdepth: 3
-   :caption: Production Edge Deployment
+   :caption: Production Deployment
    :hidden:
    :glob:
 
@@ -115,25 +115,6 @@ can be found on the `ONF Wiki
    edge_deployment/site_remove
    edge_deployment/troubleshooting
    edge_deployment/pronto
-
-.. toctree::
-   :maxdepth: 3
-   :caption: Aether Management Platform
-   :hidden:
-   :glob:
-
-   amp/roc
-   amp/subproxy
-   amp/monitoring
-
-.. toctree::
-   :maxdepth: 3
-   :caption: ROC Development
-   :hidden:
-   :glob:
-
-   developer/roc
-   developer/roc-api
 
 .. toctree::
    :maxdepth: 3
