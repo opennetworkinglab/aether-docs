@@ -15,9 +15,9 @@ Here are some useful places to start with Aether:
 
 * Setup an Aether software development environment with :doc:`Aether-in-a-Box </developer/aiab>`.
 
-* Learn about how to :doc:`configure Aether using the ROC </operations/gui>`.
+* Learn about how to :doc:`operate Aether using the ROC </operations/gui>`.
 
-* Learn the requirements of hosting an :doc:`Aether Connected Edge
+* Learn the requirements for a  :doc:`Production Deployment of Aether
   </edge_deployment/overview>`.
 
 * Read the most recent :doc:`Release Notes </release/2.1>`.

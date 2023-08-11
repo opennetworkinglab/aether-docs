@@ -454,6 +454,61 @@ To change the behavior of the test run by gNBSim, change the contents of *gnb.co
 in *sd-core-5g-values.yaml*.  Consult the
 `gNBSim documentation <https://docs.sd-core.opennetworking.org/master/developer/gnbsim.html>`_ for more information.
 
+Deploying Additional UPF(s)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+There may be cases where the user wants/needs to deploy additional UPS(s) and
+to facilitate this a "target" was added to the Makefile::
+
+    CHARTS=latest make 5g-upf
+
+The above command has to be executed after the SD Core network has been
+deployed as follows::
+
+    ENABLE_GNBSIM=false DATA_IFACE=<iface> CHARTS=latest make 5g-core
+
+where ``<iface>`` is the network interface connecting the AiaB server
+to the local L2/L3 network. If not, you will receive a message saying::
+
+    Deploy '5g-core' before adding additional UPF(s)
+    make: *** [Makefile:359: 5g-upf] Error 1
+
+Every time the above command is executed, a new UPF is deployed in a new
+namespace, where the namespace has the following format: "upf-#", where
+"#" is an increasing value that starts with "1". In other words, the first
+time the "5g-upf" target is executed, a new UPF is deployed and its namespace
+is "upf-1", the next time it gets executed, another UPF is deployed and its
+name space is "upf-2", and so on.
+
+The "5g-upf" target also takes care of the networking configuration for the
+UPF. That is, it will assign IP addresses for the UPF's Core and Access
+interfaces in an ascending way, where the first additional UPF will get
+"IP_ID = 4", second additional UPF will get "IP_ID = 5", and so on::
+
+    access:
+      iface: ${DATA_IFACE}
+      ip: 192.168.252.${IP_ID}/24
+    core:
+      iface: ${DATA_IFACE}
+      ip: 192.168.250.${IP_ID}/24
+
+In addition to this, it will also insert a route in the "router", where
+"IP_UE_ID = 249" for the 1st additional UPF, and "IP_UE_ID" will keep
+decreasing by 1 for every additional UPF::
+
+    kubectl -n default exec -ti router -- ip route add 172.$(IP_UE_ID).0.0/16 via 192.168.250.$(IP_ID)
+
+There is also the option to remove ALL additional UPF(s) by executing the "make
+upf-clean" command. It will also delete the "upf-#" namespaces and remove
+the routing entries from the router. When the 5G core is removed through "make
+reset-5g-test", it will also remove ALL additional UPF(s).
+
+.. note::
+
+    The "CHARTS=latest make 5g-upf" command ONLY deploys additional UPFs
+    with their own connectivity. It does NOT create slices.
+
+
 Exploring 5G AIAB
 ^^^^^^^^^^^^^^^^^
 
@@ -603,6 +658,7 @@ To install the 5G SD-CORE from the local charts::
 
 .. note::
   * Helm chart changes can not be done when CHARTS option is used. If you need to change helm chart then you should use local helm charts
+
 
 Troubleshooting 5G Issues
 ^^^^^^^^^^^^^^^^^^^^^^^^^

@@ -327,11 +327,11 @@ If successful, the output should look like the following:
 .. code-block::
 
    2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] Profile Name: profile2 , Profile Type: pdusessest
-   2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] UEs Passed: 3 , UEs Failed: 0
+   2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] UEs Passed: 5 , UEs Failed: 0
    2023-08-09T19:57:09Z [INFO][GNBSIM][Summary] Profile Status: PASS
 
 This particular test, which runs the cryptically named ``pdusessest``
-profile, emulates three UEs, each of which: (1) registers with the
+profile, emulates five UEs, each of which: (1) registers with the
 Core, (2) initiates a user plane session, and (3) sends a minimal data
 packet over that session. In addition to displaying the summary
 results, you can also open a shell in the ``gnbsim-1`` container,
@@ -357,7 +357,38 @@ of which has been saved in a timestamped file:
 If you are interested in the config file that controls the test,
 including the option of enabling other profiles, take a look at
 ``deps/gnbsim/config/gnbsim-default.yaml``. We return to the issue of
-customizing gNBsim in a later section.
+customizing gNBsim in a later section, but for now there are some
+simple modifications you can try. For example, the following code
+block defines a set of parameters for ``pdusessest`` (also known as
+``profile2``):
+
+.. code-block::
+
+    - profileType: pdusessest         # UE Initiated Session
+    profileName: profile2
+    enable: true
+    gnbName: gnb1
+    execInParallel: false
+    startImsi: 208930100007487
+    ueCount: 5
+    defaultAs: "192.168.250.1"
+    perUserTimeout: 100
+    plmnId:
+       mcc: 208
+       mnc: 93
+    dataPktCount: 5
+    opc: "981d464c7c52eb6e5036234984ad0bcf"
+    key: "5122250214c33e723a5dd523fc145fc0"
+    sequenceNumber: "16f3b3f70fc2"
+
+You can edit ``ueCount`` to change the number of UEs included in the
+emulation (currently limited to 100) and you can set
+``execInParallel`` to ``true`` to emulate those UEs connecting to the
+Core in parallel (rather than serially). You can also change the
+amount of information gNBsim outputs by modifying ``logLevel`` in the
+``logger`` block at the end of the file.  For any changes you make,
+just rerun ``make aether-gnbsim-run`` to see the effects; you do not
+need to reinstall gNBsim.
 
 Clean Up
 ~~~~~~~~~~~~~~~~~
