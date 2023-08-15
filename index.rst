@@ -1,57 +1,12 @@
-Aether Documentation
-====================
+.. include:: intro.rst
 
-Aether is an ONF's 5G/LTE Connected Edge Platform-as-a-Service.  More
-information about Aether can be found at the `ONF website
-<https://opennetworking.org/aether/>`_.
+.. toctree::
+   :maxdepth: 3
+   :caption: Aether Documentation
+   :hidden:
+   :glob:
 
-
-Getting Started with Aether
----------------------------
-
-Here are some useful places to start with Aether:
-
-* Deploy and operate Aether on your own cluster with :doc:`Aether OnRamp </onramp/overview>`.
-
-* Setup an Aether software development environment with :doc:`Aether-in-a-Box </developer/aiab>`.
-
-* Learn about how to :doc:`operate Aether using the ROC </operations/gui>`.
-
-* Learn the requirements for a  :doc:`Production Deployment of Aether
-  </edge_deployment/overview>`.
-
-* Read the most recent :doc:`Release Notes </release/2.1>`.
-
-Aether Architecture and Components
-----------------------------------
-
-Aether uses components from several ONF projects. More information can be found
-at these sites:
-
-* SD-Core
-
-  * `SD-Core Website <https://opennetworking.org/sd-core/>`_
-  * :doc:`SD-Core Documentation <sdcore:index>`
-
-* SD-Fabric
-
-  * `SD-Fabric Website <https://opennetworking.org/sd-fabric/>`_
-  * :doc:`SD-Fabric Documentation <sdfabric:index>`
-
-* SD-RAN
-
-  * `SD-RAN Website <https://opennetworking.org/open-ran/>`_
-  * :doc:`SD-RAN Documentation <sdran:index>`
-
-More information about 5G and Aether's architecture can be found in
-the :doc:`Private 5G: A Systems Approach <sysapproach5g:index>` book.
-
-Community
----------
-
-Information about participating in the Aether community and development process
-can be found on the `ONF Wiki
-<https://wiki.opennetworking.org/display/COM/Aether>`_.
+   intro
 
 .. toctree::
    :maxdepth: 3
@@ -97,7 +52,7 @@ can be found on the `ONF Wiki
 
 .. toctree::
    :maxdepth: 3
-   :caption: Production Deployment
+   :caption: Edge Deployment
    :hidden:
    :glob:
 

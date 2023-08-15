@@ -5,14 +5,24 @@
 Overview
 ========
 
-There are multiple ways to deploy Aether. This guide documents how ONF
-deployed and operated a multi-site configuration of Aether as part of
-the Pronto project. If you are interested in a minimal deployment of
-Aether suitable for development (e.g., in a VM on your laptop), see
-the guide for :doc:`Aether-in-a-Box </developer/aiab>`. If you are
-interested in deploying Aether on your own edge cluster, see the guide
-for :doc:`Aether OnRamp </onramp/overview>`.
+There are multiple ways to deploy Aether.  If you are interested in a
+minimal deployment of Aether suitable for running on your laptop, see
+the guide for :doc:`Aether-in-a-Box </developer/aiab>`.  If you are
+interested in deploying Aether on your own edge cluster(s), see the
+guide for :doc:`Aether OnRamp </onramp/overview>`.
 
+This guide documents how ONF deployed and operated a multi-site
+configuration of Aether as part of the Pronto project.\ [#]_ That
+deployment is being deprecated in favor of users bringing up their own
+Aether sites using :doc:`OnRamp </onramp/overview>`, but we include it here
+because it highlights many of the challenges facing a production
+deployment of Aether as a managed cloud service. Those challenges
+motivate many of the operational mechanisms still available in Aether,
+but now packaged for others to apply to their deployments.
+
+.. [#] The Pronto deployment also included edge clusters built on top
+        of an SDN-controlled and fully programmable switching fabric,
+        which is no longer supported in Aether.
 
 Aether Central
 --------------
