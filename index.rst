@@ -15,7 +15,6 @@
    :glob:
 
    onramp/overview
-   onramp/directory
    onramp/start
    onramp/inspect
    onramp/scale
