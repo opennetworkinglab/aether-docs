@@ -18,7 +18,7 @@ the Aether architecture can be found in a companion book:
 Getting Started with Aether
 ---------------------------
 
-There are two primary ways to get started with Aether:
+There are two ways to get started with Aether:
 
 * Deploy and operate Aether on your own cluster with :doc:`Aether OnRamp </onramp/overview>`.
 
@@ -28,12 +28,30 @@ Other Aether guides included on this site include:
 
 * Learn how to :doc:`operate Aether using the ROC </operations/gui>`.
 
-* Learn about the original :doc:`edge deployment of Aether
-  </edge_deployment/overview>`.
-
 * Learn how Aether is :doc:`tested </testing/about_system_tests>`.
 
 * Read the most recent :doc:`Release Notes </release/2.1>`.
+
+Note that Aether was originally deployed as a centrally-manged,
+ONF-operated cloud service, with the expectation that organizations
+would participate in Aether by connecting their site to this
+operational deployment of Aether.\ [#]_ That deployment is now being
+deprecated in favor of users bringing up their own Aether sites using
+:doc:`OnRamp </onramp/overview>`, but the guide describing how to
+connect an edge site to Aether (still available in `Version 2.1 of the
+Aether Docs
+<https://docs.aetherproject.org/aether-2.1/edge_deployment/overview.html>`__)
+is useful because it highlights many of the operational challenges
+facing a production deployment of Aether as a managed cloud service.
+Those challenges motivate many of the operational mechanisms still
+available in Aether, but now packaged for others to apply to their
+deployments.
+
+.. [#] The original Aether service supported the Pronto research
+       project, with edge clusters built on top of an SDN-controlled
+       and fully programmable switching fabric.  That fabric is no
+       longer included in Aether OnRamp.
+
 
 Aether Components
 ------------------------
@@ -46,15 +64,15 @@ these projects can be found at the following sites:
   * `SD-Core Website <https://opennetworking.org/sd-core/>`_
   * :doc:`SD-Core Documentation <sdcore:index>`
 
-* SD-Fabric
-
-  * `SD-Fabric Website <https://opennetworking.org/sd-fabric/>`_
-  * :doc:`SD-Fabric Documentation <sdfabric:index>`
-
 * SD-RAN
 
   * `SD-RAN Website <https://opennetworking.org/open-ran/>`_
   * :doc:`SD-RAN Documentation <sdran:index>`
+
+* SD-Fabric
+
+  * `SD-Fabric Website <https://opennetworking.org/sd-fabric/>`_
+  * :doc:`SD-Fabric Documentation <sdfabric:index>`
 
 More information about 5G and Aether's architecture can be found in
 the :doc:`Private 5G: A Systems Approach <sysapproach5g:index>` book.

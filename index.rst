@@ -52,27 +52,6 @@
 
 .. toctree::
    :maxdepth: 3
-   :caption: Edge Deployment
-   :hidden:
-   :glob:
-
-   edge_deployment/overview
-   edge_deployment/site_planning
-   edge_deployment/management_net_bootstrap
-   edge_deployment/server_bootstrap
-   edge_deployment/fabric_switch_bootstrap
-   edge_deployment/vpn_bootstrap
-   edge_deployment/runtime_deployment
-   edge_deployment/bess_upf_deployment
-   edge_deployment/sdfabric_deployment
-   edge_deployment/connectivity_service_update
-   edge_deployment/enb_installation
-   edge_deployment/site_remove
-   edge_deployment/troubleshooting
-   edge_deployment/pronto
-
-.. toctree::
-   :maxdepth: 3
    :caption: Aether Test Automation
    :hidden:
    :glob:
