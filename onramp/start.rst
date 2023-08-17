@@ -52,6 +52,25 @@ follows:
    $ pipx ensurepath
    $ sudo apt-get install sshpass
 
+Once installed, displaying the Ansible version number should result in
+output similar to the following:
+
+.. code-block::
+
+   $ ansible --version
+   ansible [core 2.11.12]
+     config file = None
+     configured module search path = ['/home/foo/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+     ansible python module location = /home/foo/.local/lib/python3.6/site-packages/ansible
+     ansible collection location = /home/foo/.ansible/collections:/usr/share/ansible/collections
+     executable location = /home/foo/.local/bin/ansible
+     python version = 3.6.9 (default, Mar 10 2023, 16:46:00) [GCC 8.4.0]
+     jinja version = 3.0.3
+     libyaml = True
+
+Note that your fresh install of Ubuntu may be missing other packages
+(e.g., ``git``, ``curl``, ``make``), but you will be prompted to
+install them as step through the Quick Start sequence.
 
 Download Aether OnRamp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -97,7 +116,7 @@ four things to note:
 
 4. File ``hosts.ini`` (host inventory) is Ansible's way of specifying
    the set of servers (physical or virtual) that Ansible targets with
-   various installation playbooks. The default version of ``host.ini``
+   various installation playbooks. The default version of ``hosts.ini``
    included with OnRamp is simplified to run everything on a single
    server (the one you've cloned the repo onto), with additional lines
    you may eventually need for a multi-node cluster commented out.
@@ -109,7 +128,7 @@ The Quick Start deployment described in this section requires that you
 modify two sets of parameters to reflect the specifics of your target
 deployment.
 
-The first set is in file ``host.ini``, where you will need to give the IP
+The first set is in file ``hosts.ini``, where you will need to give the IP
 address and login credentials for the server you are working on. At
 this stage, we assume the server you downloaded OnRamp onto is the
 same server you will be installing Aether on.
@@ -218,6 +237,11 @@ target server. Do this by typing:
 
    $ make aether-k8s-install
 
+Note that the Ansible playbooks triggered by this (and other) make
+targets will output red results from time-to-time (indicating an
+exception or failure), but as long as Ansible keeps progressing
+through the playbook, such output can be safely ignored.
+
 Once the playbook completes, executing ``kubectl`` will show the
 ``kube-system`` namespace running, with output looking something like
 the following:
@@ -286,7 +310,14 @@ to ``kube-system``), with output similar to the following:
    upf-0                        5/5     Running            0             6m13s
    webui-5894ffd49d-gg2jh       1/1     Running            0             6m13s
 
-You will recognize Kubernetes pods that correspond to many of the
+If you see problematic pods that are not getting into the ``Running``
+state, a re-install usually corrects the problem. Type:
+
+.. code-block::
+
+   make aether-resetcore
+
+Once running, you will recognize pods that correspond to many of the
 microservices discussed is `Chapter 5
 <https://5g.systemsapproach.org/core.html>`__. For example,
 ``amf-5887bbf6c5-pc9g2`` implements the AMF. Note that for historical

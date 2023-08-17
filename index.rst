@@ -51,7 +51,7 @@
 
 .. toctree::
    :maxdepth: 3
-   :caption: Aether Test Automation
+   :caption: Test Automation
    :hidden:
    :glob:
 

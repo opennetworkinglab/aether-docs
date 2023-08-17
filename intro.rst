@@ -1,10 +1,10 @@
 Introduction
 ==============
 
-Aether is an open source 5G edge cloud connectivity service that
-supports enterprise deployments of Private 5G. Information about the
-Aether project can be found on the ONF website, and an introduction to
-the Aether architecture can be found in a companion book:
+Aether is an open source 5G edge cloud platform that supports
+enterprise deployments of Private 5G. Information about the Aether
+project can be found on the ONF website, and an introduction to the
+Aether architecture can be found in a companion book:
 
 .. _reading_private5g:
 .. admonition:: Further Reading
@@ -26,26 +26,25 @@ There are two ways to get started with Aether:
 
 Other Aether guides included on this site include:
 
-* Learn how to :doc:`operate Aether using the ROC </operations/gui>`.
+* :doc:`Runtime Operations </operations/gui>`: Learn how
+  to operate Aether's 5G connectivity service.
 
-* Learn how Aether is :doc:`tested </testing/about_system_tests>`.
-
-* Read the most recent :doc:`Release Notes </release/2.1>`.
+* :doc:`tested </testing/about_system_tests>`: Learn how Aether
+  components are tested.
 
 Note that Aether was originally deployed as a centrally-manged,
 ONF-operated cloud service, with the expectation that organizations
 would participate in Aether by connecting their site to this
-operational deployment of Aether.\ [#]_ That deployment is now being
-deprecated in favor of users bringing up their own Aether sites using
-:doc:`OnRamp </onramp/overview>`, but the guide describing how to
-connect an edge site to Aether (still available in `Version 2.1 of the
-Aether Docs
+operational deployment.\ [#]_ That service is now being deprecated in
+favor of users bringing up their own Aether sites using :doc:`OnRamp
+</onramp/overview>`, but the guide describing how to connect an edge
+site to Aether (still available in `Version 2.1 of the Aether Docs
 <https://docs.aetherproject.org/aether-2.1/edge_deployment/overview.html>`__)
 is useful because it highlights many of the operational challenges
 facing a production deployment of Aether as a managed cloud service.
-Those challenges motivate many of the operational mechanisms still
-available in Aether, but now packaged for others to apply to their
-deployments.
+Those challenges motivate many of the operational mechanisms available
+in the Aether platform today, but now packaged for others to apply to
+their deployments.
 
 .. [#] The original Aether service supported the Pronto research
        project, with edge clusters built on top of an SDN-controlled
