@@ -68,9 +68,9 @@ output similar to the following:
      jinja version = 3.0.3
      libyaml = True
 
-Note that your fresh install of Ubuntu may be missing other packages
-(e.g., ``git``, ``curl``, ``make``), but you will be prompted to
-install them as step through the Quick Start sequence.
+Note that a fresh install of Ubuntu may be missing other packages that
+you need (e.g., ``git``, ``curl``, ``make``), but you will be prompted
+to install them as you step through the Quick Start sequence.
 
 Download Aether OnRamp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

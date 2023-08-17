@@ -29,7 +29,7 @@ Other Aether guides included on this site include:
 * :doc:`Runtime Operations </operations/gui>`: Learn how
   to operate Aether's 5G connectivity service.
 
-* :doc:`tested </testing/about_system_tests>`: Learn how Aether
+* :doc:`Test Automation </testing/about_system_tests>`: Learn how Aether
   components are tested.
 
 Note that Aether was originally deployed as a centrally-manged,
