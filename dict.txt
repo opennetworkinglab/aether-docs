@@ -51,6 +51,7 @@ OPc
 PDN
 PoC
 PoE
+Proxmox
 QoS
 RIC
 Radisys
