@@ -34,17 +34,16 @@ Other Aether guides included on this site include:
 
 Note that Aether was originally deployed as a centrally-manged,
 ONF-operated cloud service, with the expectation that organizations
-would participate in Aether by connecting their site to this
+would participate in Aether by connecting their edge site to this
 operational deployment.\ [#]_ That service is now being deprecated in
 favor of users bringing up their own Aether sites using :doc:`OnRamp
-</onramp/overview>`, but the guide describing how to connect an edge
-site to Aether (still available in `Version 2.1 of the Aether Docs
-<https://docs.aetherproject.org/aether-2.1/edge_deployment/overview.html>`__)
-is useful because it highlights many of the operational challenges
-facing a production deployment of Aether as a managed cloud service.
-Those challenges motivate many of the operational mechanisms available
-in the Aether platform today, but now packaged for others to apply to
-their deployments.
+</onramp/overview>`. If you are looking for the original guide
+describing how to connect a site to Aether, it is still available in
+`Version 2.1 of the Aether Docs
+<https://docs.aetherproject.org/aether-2.1/edge_deployment/overview.html>`__.
+The operational issues described in that guide motivate many of the
+mechanisms available in the Aether platform today, but now refactored
+for others to apply to their deployments.
 
 .. [#] The original Aether service supported the Pronto research
        project, with edge clusters built on top of an SDN-controlled
