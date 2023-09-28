@@ -267,6 +267,7 @@ linkcheck_ignore = [
     r'https://velero.io/.*',
     r'https://cloud.google.com/.*',
     r'https://ark.intel.com/.*',
+    r'https://wiki.onosproject.org/.*',
 ]
 
 linkcheck_timeout = 3

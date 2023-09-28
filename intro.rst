@@ -20,9 +20,11 @@ Getting Started with Aether
 
 There are two ways to get started with Aether:
 
-* Deploy and operate Aether on your own cluster with :doc:`Aether OnRamp </onramp/overview>`.
+* Deploy and operate Aether on your own servers (including `5G small cell
+  <https://opennetworking.org/products/moso-canopy-5g-indoor-small-cell/>`__)
+  with :doc:`Aether OnRamp </onramp/overview>`.
 
-* Setup an Aether software development environment with :doc:`Aether-in-a-Box </developer/aiab>`.
+* Setup an Aether software development environment on your laptop with :doc:`Aether-in-a-Box </developer/aiab>`.
 
 Other Aether guides included on this site include:
 
@@ -37,13 +39,7 @@ ONF-operated cloud service, with the expectation that organizations
 would participate in Aether by connecting their edge site to this
 operational deployment.\ [#]_ That service is now being deprecated in
 favor of users bringing up their own Aether sites using :doc:`OnRamp
-</onramp/overview>`. If you are looking for the original guide
-describing how to connect a site to Aether, it is still available in
-`Version 2.1 of the Aether Docs
-<https://docs.aetherproject.org/aether-2.1/edge_deployment/overview.html>`__.
-The operational issues described in that guide motivate many of the
-mechanisms available in the Aether platform today, but now refactored
-for others to apply to their deployments.
+</onramp/overview>`.
 
 .. [#] The original Aether service supported the Pronto research
        project, with edge clusters built on top of an SDN-controlled
