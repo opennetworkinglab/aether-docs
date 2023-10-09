@@ -22,6 +22,7 @@
    onramp/gnbsim
    onramp/gnb
    onramp/roc
+   onramp/blueprints
 
 .. toctree::
    :maxdepth: 3

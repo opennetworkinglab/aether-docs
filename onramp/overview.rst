@@ -14,13 +14,14 @@ to:
 Aether OnRamp begins with a *Quick Start* deployment similar to
 `Aether-in-a-Box (AiaB)
 <https://docs.aetherproject.org/master/developer/aiab.html>`__, but
-then goes on to prescribe a sequence of steps a user can follow to
-deploy increasingly complex configurations. These include both
-emulated and physical RANs, culminating in an operational Aether
-cluster capable of running 24/7 and supporting live 5G workloads.
-(OnRamp also supports a 4G version of Aether connected to one or more
-physical eNBs, but we postpone a discussion of that capability until a
-later section. Everything else in this guide assumes 5G.)
+then goes on to prescribe a sequence of steps users can follow to
+deploy increasingly complex configurations. OnRamp refers to each such
+configuration as a *blueprint*, and the set supports both emulated and
+physical RANs, along with the runtime machinery needed to operate an
+Aether cluster supporting live 5G workloads.  (OnRamp also defines a
+4G blueprint that can be used to connected one or more physical eNBs,
+but we postpone a discussion of that capability until a later
+section. Everything else in this guide assumes 5G.)
 
 .. include:: directory.rst
 

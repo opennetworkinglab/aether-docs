@@ -152,6 +152,7 @@ gNodeB
 gRPC
 gandalfg
 gerrit
+glommed
 gnbsim
 gui
 gw
@@ -277,6 +278,7 @@ starbucks
 stateful
 subcomponent
 subdirectories
+submodule
 submodules
 subnet
 subnets
@@ -298,6 +300,7 @@ udm
 udp
 udr
 ul
+uncomment
 unsuffixed
 untagged
 upf
