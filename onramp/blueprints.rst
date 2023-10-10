@@ -22,13 +22,13 @@ Ansible components:
   and Playbooks required to deploy a new component.
 
 * (Optional) New Roles, Playbooks, and Templates, checked to existing
-  repos/submodules, customize existing components so they integrate with
+  repos/submodules, customize existing components for integration with
   the new blueprint. To support blueprint independence, these elements
   are intentionally kept "narrow", rather than glommed onto an
   existing element.
 
-* A Jenkins job, added to the set of OnRamp integration tests, runs
-  daily to verify that the blueprint does not regress.
+* A Jenkins job, added to the set of OnRamp integration tests,
+  verifies that the blueprint does not regress.
 
 By standardizing the process for adding new blueprints to OnRamp, the
 goal is to encourage the community to contribute (and maintain) new
@@ -80,17 +80,14 @@ target servers, and deploy the base system (as in previous sections):
 .. code-block::
 
    $ make k8s-install
-   $ make 5gc-core-install
    $ make roc-install
    $ make roc-load
+   $ make 5gc-core-install
    $ make gnbsim-install
 
 You can also optionally install the monitoring subsystem. Note that
-we're installing ROC after the core (and ``main.yml`` has
-``core.standalone: "true"``), but this only effects how SD-Core is
-configured when it is first deployed. Once both are running, any
-additional updates loaded into ROC are automatically applied to
-SD-Core.
+because ``main.yml`` sets ``core.standalone: "false"``), any models
+loaded into ROC are automatically applied to SD-Core.
 
 At this point you are ready to bring up additional UPFs and bind them
 to specific slices and devices. This involves first editing the
