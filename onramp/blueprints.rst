@@ -32,8 +32,14 @@ Ansible components:
 
 By standardizing the process for adding new blueprints to OnRamp, the
 goal is to encourage the community to contribute (and maintain) new
-Aether configurations and deployment scenarios. The rest of this
+Aether configurations and deployment scenarios.\ [#]_ The rest of this
 section documents community-contributed blueprints to-date.
+
+.. [#] Not all possible configurations of Aether require a
+       blueprint. There are other ways to add variability, for
+       example, by documenting simple ways to modify an existing
+       blueprint.  Disabling ``core.standalone`` and selecting an
+       alternative ``core.values_file`` are two common examples.
 
 Multiple UPFs
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -86,7 +92,7 @@ target servers, and deploy the base system (as in previous sections):
    $ make gnbsim-install
 
 You can also optionally install the monitoring subsystem. Note that
-because ``main.yml`` sets ``core.standalone: "false"``), any models
+because ``main.yml`` sets ``core.standalone: "false"``, any models
 loaded into ROC are automatically applied to SD-Core.
 
 At this point you are ready to bring up additional UPFs and bind them
