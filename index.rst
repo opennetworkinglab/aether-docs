@@ -26,14 +26,13 @@
 
 .. toctree::
    :maxdepth: 3
-   :caption: Aether-in-a-Box
+   :caption: Developing for Aether
    :hidden:
    :glob:
 
    developer/aiab
-   developer/troubleshooting
    developer/roc
-   amp/monitoring
+   developer/monitoring
    developer/contributing.rst
 
 

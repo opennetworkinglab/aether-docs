@@ -18,15 +18,17 @@ Aether architecture can be found in a companion book:
 Getting Started with Aether
 ---------------------------
 
-There are two ways to get started with Aether:
+:doc:`Aether OnRamp </onramp/overview>` is now the recommended way to
+get started with Aether. It defines a step-by-step procedure for
+deploying and operating Aether on your own hardware, including support
+for `5G small cell
+<https://opennetworking.org/products/moso-canopy-5g-indoor-small-cell/>`__
+radios.
 
-* Deploy and operate Aether on your own servers (including `5G small cell
-  <https://opennetworking.org/products/moso-canopy-5g-indoor-small-cell/>`__)
-  with :doc:`Aether OnRamp </onramp/overview>`.
+Other Aether guides available on this site include:
 
-* Setup an Aether software development environment on your laptop with :doc:`Aether-in-a-Box </developer/aiab>`.
-
-Other Aether guides included on this site include:
+* :doc:`Developing for Aether </developer/aiab>`: Learn how to
+  contribute back to Aether.
 
 * :doc:`Runtime Operations </operations/gui>`: Learn how
   to operate Aether's 5G connectivity service.

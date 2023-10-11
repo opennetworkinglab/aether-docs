@@ -5,21 +5,14 @@
 ROC Development
 ===============
 
-Background / Development Environment
-------------------------------------
+This document assumes familiarity with Kubernetes and Helm, and that a
+Kubernetes/Helm development environment has already been deployed in
+the developer’s work environment (for example, using a mechanism like
+KinD or kubeadm).
 
-This document assumes familiarity with Kubernetes and Helm, and that a Kubernetes/Helm development
-environment has already been deployed in the developer’s work environment.
-
-This development environment can use any of a number of potential mechanisms -- including KinD, kubeadm, etc.
-
-The Aether-in-a-Box script is one potential way to setup a development environment, but not the only way.
-As an alternative to the developer’s local machine, a remote environment can be set up, for example on
-cloud infrastructure such as Cloudlab.
-
-.. note:: When ROC is deployed it is unsecured by default, with no Authentication or Authorization.
+.. note:: By default, ROC is deployed without security enabled, with no Authentication or Authorization.
     To secure ROC so that the Authentication and Authorization can be tested, follow the Securing ROC
-    guide below :ref:`securing_roc`
+    section below :ref:`securing_roc`.
 
 Installing Prerequisites
 ------------------------
@@ -42,7 +35,7 @@ Atomix and onos-operator must be installed::
    ONOS_OPERATOR_VERSION=0.5.6
    helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
 
-.. note:: The ROC is sensitive to the versions of Atomix and onos-operator installed. The values
+.. note:: ROC is sensitive to the versions of Atomix and onos-operator installed. The values
     shown above are correct for the 2.1.36- versions of the *aether-roc-umbrella*.
 
 .. list-table:: ROC support component version matrix
@@ -104,12 +97,13 @@ Atomix and onos-operator must be installed::
      - 1.1.2
      - 0.5.6
 
-.. note::
-    Changing between atomix and operators in a cluster may cause problems if there are changes in the definition of
-    the CRDs that they include. To fully ensure a clean installation the CRDs should be deleted manually AFTER deleting
-    the old version of atomix or Onos Operator.
+.. note:: Changing between atomix and operators in a cluster may cause problems
+    if there are changes in the definition of the CRDs that they
+    include. To fully ensure a clean installation the CRDs should be
+    deleted manually AFTER deleting the old version of atomix or ONOS
+    Operator.
 
-    Use `kubectl get crds | grep atomix` and `kubectl get crds | grep onos` to see the CRDs present.
+Use `kubectl get crds | grep atomix` and `kubectl get crds | grep onos` to see the CRDs present.
 
 Verify that these services were installed properly.
 You should see pods for *atomix-controller(s)*
@@ -137,11 +131,13 @@ Add the necessary helm repositories::
 
 .. _posting-the-mega-patch:
 
-Posting the mega-patch
+Posting the Mega-Patch
 ----------------------
 
-The ROC usually comes up in a blank state -- there are no Enterprises, UEs, or other artifacts present in it.
-The mega-patch is an example patch that populates the ROC with some sample enterprises, UEs, slices, etc.
+The ROC usually comes up in a blank state; there are no Enterprises,
+UEs, or other artifacts present in it.  The Mega-Patch is an example
+patch that populates the ROC with some sample enterprises, UEs,
+slices, etc.
 
 Execute the following::
 
@@ -158,61 +154,63 @@ Execute the following::
    # execute the mega-patch (it will post via CURL to localhost:8181)
    bash ~/path/to/aether-roc-api/examples/MEGA_Patch_20.curl
 
-.. note:: To configure Aether-In-a-Box - no port-forward is necessary - use the URL *http://<hostname>:31194/aether-roc-api/*
+.. note:: No port-forwarding is necessary to configure Aether
+          OnRamp. Use URL *http://<hostname>:31194/aether-roc-api/*.
 
-You may wish to customize the mega patch.
-
-For example, by default the patch configures the ``sdcore-adapter`` to push to
-``sdcore-test-dummy``.
-
-You could configure it to push to a live aether-in-a-box core by doing something like this::
+You may wish to customize the mega patch. For example, by default the
+patch configures the ``sdcore-adapter`` to push to
+``sdcore-test-dummy``.  You could instead configure it to push to a
+live instantiation of Aether by doing something like this::
 
    sed -i 's^http://aether-roc-umbrella-sdcore-test-dummy/v1/config/5g^http://webui.omec.svc.cluster.local:9089/config^g' MEGA_Patch_21.curl
 
    #apply the patch
    ./MEGA_Patch_20.curl
 
-(Note that if your Aether-in-a-Box was installed on a different machine that port-forwarding may be necessary)
+Note that if Aether is installed on a different machine, then port-forwarding may be necessary.
 
+Expected CURL output from a successful Mega-Patch post will be a UUID.
 
-Expected CURL output from a successful mega-patch post will be a UUID.
-
-You can also verify that the mega-patch was successful by going into the
+You can also verify that the Mega-Patch was successful by going into the
 ``aether-roc-gui`` in a browser (see the section on useful port-forwards
-below). The GUI may open to a dashboard that is unpopulated -- you can use the
+below). The GUI may open to a dashboard that is unpopulated. You can use the
 dropdown menu (upper-right hand corner of the screen) to select an object such
 as Slice and you will see a list of slices.
 
    |ROCGUI|
 
-Adding new Enterprises
+Adding New Enterprises
 ----------------------
 
-Enterprises are stored in `onos-topo` outside of `onos-config` are are usually only created by system administrators
-during the onboarding of new customers (tenants) on Aether.
+Enterprises are stored in `onos-topo` outside of `onos-config` are are
+usually only created by system administrators during the onboarding of
+new customers (tenants) on Aether.
 
-There is currently no way of adding new Enterprises through the ROC GUI or the ROC API - it can be
-done in the 2 ways in the following sections.
+There is currently no way of adding new Enterprises through the ROC
+GUI or the ROC API. It can be done in the two ways described in the
+following sections.
 
-Enterprises are specified as Entities using CRDs, and the `onos-operator` ensures that these are created
-as `entitites` inside `onos-topo`.
+Enterprises are specified as Entities using CRDs, and the
+`onos-operator` ensures that these are created as `entitites` inside
+`onos-topo`.
 
 To check that the current list of enterprises (as CRDs), the following command may be used::
 
    kubectl -n aether get entities
 
-and to check that the `onos-operator` does indeed take effect, the ROC API endpoint `/targets` can be used to list the
-`enterprises`.
+and to check that the `onos-operator` does indeed take effect, the ROC
+API endpoint `/targets` can be used to list the `enterprises`.
 
 Another option is to use the `onos-cli` pod to query `onos-topo` directly::
 
     kubectl -n aether exec deployment/onos-cli -- onos topo get entities -v
 
-Adding new Enterprises through Helm Chart
+Adding New Enterprises Through Helm Chart
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-To have an entity added at **start up of the cluster** it can be added through the Helm Chart in the `values.yaml`
-under `enterprises`. e.g.::
+To have an entity added at **start up of the cluster** it can be added
+through the Helm Chart in the `values.yaml` under
+`enterprises`. e.g.::
 
    enterprises:
    - id: starbucks
@@ -222,11 +220,12 @@ under `enterprises`. e.g.::
 
 This will load the `enterprise` as an Entity CRD through the `onos-operator`.
 
-Adding new Enterprises through `onos-topo`
+Adding New Enterprises Through `onos-topo`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-New `enterprises` can be added to a live running system through the `onos-topo` command line (bypassing
-the `onos-operator`). For example::
+New `enterprises` can be added to a live running system through the
+`onos-topo` command line (bypassing the `onos-operator`). For
+example::
 
     kubectl -n aether exec deployment/onos-cli -- \
     onos topo create entity new-enterprise \
@@ -236,22 +235,26 @@ the `onos-operator`). For example::
     -a onos.topo.MastershipState='{}' \
     -k enterprise
 
-Uninstalling the ``aether-roc-umbrella`` Helm chart
+Uninstalling the ``aether-roc-umbrella`` Helm Chart
 ---------------------------------------------------
 
-To tear things back down, usually as part of a developer loop prior to redeploying again, do the following::
+To tear things back down, usually as part of a developer loop prior to
+redeploying again, do the following::
 
    helm -n aether del aether-roc-umbrella
 
-Useful port forwards
+Useful Port Forwards
 --------------------
 
-Port forwarding is often necessary to allow access to ports inside of Kubernetes pods that use ClusterIP addressing.
-Note that you typically need to leave a port-forward running (you can put it in the background).
-Also, If you redeploy the ROC and/or if a pod crashes then you might have to restart a port-forward.
+Port forwarding is often necessary to allow access to ports inside of
+Kubernetes pods that use ClusterIP addressing.  Note that you
+typically need to leave a port-forward running (you can put it in the
+background).  Also, If you redeploy the ROC and/or if a pod crashes
+then you might have to restart a port-forward.
 
-.. note:: With Aether-In-a-Box no port-forward is necessary - the GUI can be accessed
-    at ``http://<hostname>:31194`` and the API at ``http://<hostname>:31194/aether-roc-api/``
+.. note:: No port-forward is necessary with OnRamp. The GUI
+    can be accessed at ``http://<hostname>:31194`` and the API at
+    ``http://<hostname>:31194/aether-roc-api/``.
 
 The following port-forwards may be useful::
 
@@ -267,13 +270,14 @@ The following port-forwards may be useful::
 
    kubectl -n aether port-forward service/aether-roc-umbrella-grafana --address 0.0.0.0 8187:80
 
-.. note:: Internally the ``aether-roc-gui`` operates a Reverse Proxy on the ``aether-roc-api``. This
-    means that if you have done a ``port-forward`` to ``aether-roc-gui`` say on port ``8183`` there's no
-    need to do another on the ``aether-roc-api`` instead you can access the API on
-    ``http://localhost:8183/aether-roc-api``
+.. note:: Internally, the ``aether-roc-gui`` operates a Reverse Proxy
+    on the ``aether-roc-api``. This means that if you have done a
+    ``port-forward`` to ``aether-roc-gui``, say on port ``8183``,
+    there's no need to do another on the ``aether-roc-api``. Instead,
+    you can access the API on ``http://localhost:8183/aether-roc-api``.
 
-Deploying using custom images
------------------------------
+Deploying Custom Images
+--------------------------
 
 Custom images may be used by editing the values-override.yaml file.
 For example, to deploy a custom ``sdcore-adapter``::
@@ -285,22 +289,23 @@ For example, to deploy a custom ``sdcore-adapter``::
      tag: my-tag
      pullPolicy: Always
 
-The above example assumes you have published a docker images at ``my-private-repo/sdcore-adapter:my-tag``.
-My particular workflow is to deploy a local-docker registry and push my images to that.
-Please do not publish ONF images to a public repository unless the image is intended to be public.
-Several ONF repositories are private, and therefore their docker artifacts should also be private.
+The above example assumes you have published a docker images at
+``my-private-repo/sdcore-adapter:my-tag``.  One possible workflow is
+to deploy a local-docker registry and push images to that.
 
-There are alternatives to using a private docker repository.
-For example, if you are using kubeadm, then you may be able to simply tag the image locally.
-If you’re using KinD, then you can push a local image to into the kind cluster::
+There are alternatives to using a private docker repository.  For
+example, if you are using kubeadm, then you may be able to simply tag
+the image locally.  If you’re using KinD, then you can push a local
+image to into the kind cluster::
 
    kind load docker-image sdcore-adapter:my-tag
 
-Developing using a custom onos-config
+Developing with a Custom onos-config
 -------------------------------------
 
-The onos-config helm chart is responsible for loading model plugins at runtime. You can override which
-plugins it loads, and optionally override the image for onos-config as well. For example::
+The onos-config Helm Chart is responsible for loading model plugins at
+runtime. You can override which plugins it loads, and optionally
+override the image for onos-config as well. For example::
 
     onos-config:
       image:
@@ -316,14 +321,16 @@ plugins it loads, and optionally override the image for onos-config as well. For
         endpoint: localhost
         port: 5153
 
-In the above example, the onos-config image will be pulled from `mydockeraccount`, and it will install
-two plugins for v2 and v4 models, from that same docker account.
+In the above example, the onos-config image will be pulled from
+`mydockeraccount`, and it will install two plugins for v2 and v4
+models, from that same docker account.
 
-Inspecting logs
+Inspecting Logs
 ---------------
 
-Most of the relevant Kubernetes pods are in the aether namespace.
-The names may change from deployment to deployment, so start by getting a list of pods::
+Most of the relevant Kubernetes pods are in the aether namespace.  The
+names may change from deployment to deployment, so start by getting a
+list of pods::
 
    kubectl -n aether get pods
 
@@ -339,46 +346,30 @@ Securing ROC
 Running your own Keycloak Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. note:: Unfortunately there is no longer a central keycloak server for development as there was
-    at `keycloak-dev.onlab.us`, so you must run your own own Keycloak server inside of Kubernetes.
+.. note:: There is no longer a central keycloak server
+    for development as there was at `keycloak-dev.onlab.us`, so you
+    must run your own own Keycloak server inside of Kubernetes.
 
 See `Keycloak README.md <https://gerrit.opencord.org/plugins/gitiles/roc-helm-charts/+/refs/heads/master/keycloak/>`_ for details.
 
-It has the following users by default.
+When running it should be available at
+*http://localhost:8080/realms/master/.well-known/openid-configuration*.
 
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| User             | login    | AetherROCAdmin  | EnterpriseAdmin | starbucks | acme | defaultent | aiab-enterprise |
-+==================+==========+=================+=================+===========+======+============+=================+
-| Alice Admin      | alicea   |        ✓        |                 |           |      |            |                 |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| Bob Cratchit     | bobc     |                 |                 |           |      |            |                 |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| Charlie Brown    | charlieb |                 |                 |           |      |            |                 |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| Daisy Duke       | daisyd   |                 |         ✓       |      ✓    |      |            |        ✓        |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| Elmer Fudd       | elmerf   |                 |                 |      ✓    |      |            |        ✓        |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| Fred Flintstone  | fredf    |                 |         ✓       |           |   ✓  |      ✓     |                 |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
-| Gandalf The Grey | gandalfg |                 |                 |           |   ✓  |      ✓     |                 |
-+------------------+----------+-----------------+-----------------+-----------+------+------------+-----------------+
+.. note:: You can access the Keycloak management page from
+    *http://localhost:8080/admin* but you must login as
+    `admin`. Because of the SSO feature of Keycloak this will affect
+    your Aether ROC GUI login too.  To login as two separate users at
+    the same time, use a private browser window for one.
 
+.. note:: Services inside the cluster (e.g. onos-config) should set
+    the issuer to *https://keycloak/realms/master* on port 80, while
+    the aether-roc-gui should use `http://localhost:8080/realms/master`.
 
-When running it should be available at *http://localhost:8080/realms/master/.well-known/openid-configuration*.
+Enabling Security
+^^^^^^^^^^^^^^^^^^^^^
 
-.. note:: You can access the Keycloak management page from *http://localhost:8080/admin* but you must
-    login as `admin`. Because of the SSO feature of Keycloak this will affect your Aether ROC GUI login too.
-    To login as 2 separate users at the same time, use a private browser window for one.
-
-.. note:: Services inside the cluster (e.g. onos-config) should set the issuer to *https://keycloak/realms/master*
-    on port 80, while the aether-roc-gui should use `http://localhost:8080/realms/master`
-
-Enabling security in the cluster
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode can be enabled by
-specifying an OpenID Connect (OIDC) issuer like::
+When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode
+can be enabled by specifying an OpenID Connect (OIDC) issuer; for example::
 
     helm -n aether install aether-roc-umbrella aether/aether-roc-umbrella \
         --set onos-config.openidc.issuer=http://keycloak/realms/master \
@@ -389,48 +380,48 @@ specifying an OpenID Connect (OIDC) issuer like::
         --set prom-label-proxy-acc.config.openidc.issuer=http://keycloak/realms/master \
         --set prom-label-proxy-amp.config.openidc.issuer=http://keycloak/realms/master
 
-The choice of OIDC issuer in this case is the **local** Keycloak server at *http://keycloak* inside the `aether` namespace.
-
-
-As any OIDC server can work with ROC you can alternately use ``dex-ldap-umbrella``
-(`deprecated <https://github.com/onosproject/onos-helm-charts/tree/master/dex-ldap-umbrella>`_).
+The choice of OIDC issuer in this case is the **local** Keycloak
+server at *http://keycloak* inside the `aether` namespace.
 
 Production Environment
 ^^^^^^^^^^^^^^^^^^^^^^
-In a production environment, the public Aether Keycloak (with its LDAP server populated with real Aether users and groups) should be used.
-See `public keycloak <https://keycloak.opennetworking.org/auth/realms/master/.well-known/openid-configuration>`_ for more details.
+
+In a production environment, the public Aether Keycloak (with its LDAP
+server populated with real Aether users and groups) should be used.
+See `public keycloak
+<https://keycloak.opennetworking.org/auth/realms/master/.well-known/openid-configuration>`_
+for more details.
 
 .. note:: Your RBAC access to ROC will be limited by the groups you belong to in its LDAP store.
 
 Role Based Access Control
 ^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When secured, access to the configuration in ROC is limited by the **groups** that a user belongs to.
+When secured, access to the configuration in ROC is limited by the
+**groups** that a user belongs to.
 
 * **AetherROCAdmin** - users in this group have full read **and** write access to all configuration.
 * *<enterprise>* - users in a group the lowercase name of an enterprise, will have **read** access to that enterprise.
 * **EnterpriseAdmin** - users in this group will have read **and** write access the enterprise they belong to.
 
-    For example in *keycloak-389-umbrella* the user *Daisy Duke* belongs to *starbucks* **and**
-    *EnterpriseAdmin* and so has read **and** write access to items linked with *starbucks* enterprise.
-
-    By comparison the user *Elmer Fudd* belongs only to *starbucks* group and so has only **read** access to items
-    linked with the *starbucks* enterprise.
 
 Requests to a Secure System
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-When configuration is retrieved or updated  through *aether-config*, a Bearer Token in the
-form of a JSON Web Token (JWT) issued by the selected OIDC Issuer server must accompany
-the request as an Authorization Header.
+When configuration is retrieved or updated through *aether-config*, a
+Bearer Token in the form of a JSON Web Token (JWT) issued by the
+selected OIDC Issuer server must accompany the request as an
+Authorization Header.
 
-This applies to both the REST interface of ``aether-roc-api`` **and** the *gnmi* interface of
-``aether-config``.
+This applies to both the REST interface of ``aether-roc-api`` **and**
+the *gnmi* interface of ``aether-config``.
 
-In the Aether ROC, a Bearer Token can be generated by logging in and selecting API Key from the
-menu. This pops up a window with a copy button, where the key can be copied.
+In the Aether ROC, a Bearer Token can be generated by logging in and
+selecting API Key from the menu. This pops up a window with a copy
+button, where the key can be copied.
 
-Alternatively with Keycloak a Token may be requested programmatically through the Keycloak API::
+Alternatively with Keycloak a Token may be requested programmatically
+through the Keycloak API::
 
     curl --location --request POST 'http://localhost:8080/realms/master/protocol/openid-connect/token' \
     --header 'Content-Type: application/x-www-form-urlencoded' \
@@ -515,7 +506,7 @@ OIDC issuer (Keycloak server), and that Auth is enabled.
 ROC Data Model Conventions and Requirements
 -------------------------------------------
 
-The MEGA-Patch described above will bring up a fully compliant sample data model.
+The Mega-Patch described above will bring up a fully compliant sample data model.
 However, it may be useful to bring up your own data model, customized to a different
 site of sites. This subsection documents conventions and requirements for the Aether
 modeling within the ROC.
@@ -525,32 +516,6 @@ The ROC models must be configured with the following:
 * A default enterprise with the id `defaultent`.
 * A default site with the id `defaultent-defaultsite`.
   This site should be within the `defaultent` enterprise.
-  This site is used by ``subscriber-proxy`` to place detected SIM Cards that cannot
-  be matched to an existing site.
-
-Some exercises to get familiar
-------------------------------
-
-1. Deploy the ROC and POST the mega-patch, go into the ``aether-roc-gui`` and click
-   through the Slice, DeviceGroup, and other objects to see that they were
-   created as expected.
-
-2. Examine the log of the ``sdcore-adapter-v2`` container.  It should be
-   attempting to push the mega-patch’s changes.  If you don’t have a core
-   available, it may be failing the push, but you should see the attempts.
-
-3. Change an object in the GUI.  Watch the ``sdcore-adapter-v2`` log file and
-   see that the adapter attempts to push the change.
-
-4. Try POSTing a change via the API.  Observe the ``sdcore-adapter-v2`` log
-   file and see that the adapter attempts to push the change.
-
-5. Deploy a 5G Aether-in-a-Box (See :doc:`Setting Up Aether-in-a-Box
-   <aiab>`), modify the mega-patch to specify the URL for the Aether-in-a-Box
-   ``webui`` container, POST the mega-patch, and observe that the changes were
-   correctly pushed via the ``sdcore-adapter-v2`` into the ``sd-core``’s
-   ``webui`` container (``webui`` container log will show configuration as it
-   is received)
 
 .. |ROCGUI| image:: images/rocgui.png
     :width: 945
