@@ -14,8 +14,7 @@ Ansible components:
   servers required by the blueprint.
 
 * A set of Make targets, defined in a submodule and imported into
-  OnRamp's global Makefile, provides a means to install (``make
-  blueprint-install``) and uninstall (``make blueprint-uninstall``)
+  OnRamp's global Makefile, provides commands to install and uninstall
   the blueprint.
 
 * (Optional) A new ``aether-blueprint`` repo defines the Ansible Roles
@@ -28,12 +27,13 @@ Ansible components:
   existing element.
 
 * A Jenkins job, added to the set of OnRamp integration tests,
-  verifies that the blueprint does not regress.
+  verifies that the blueprint successfully deploys Aether.
 
-By standardizing the process for adding new blueprints to OnRamp, the
-goal is to encourage the community to contribute (and maintain) new
-Aether configurations and deployment scenarios.\ [#]_ The rest of this
-section documents community-contributed blueprints to-date.
+The goal of establishing a well-defined procedure for adding new
+blueprints to OnRamp is to encourage the community to contribute (and
+maintain) new Aether configurations and deployment scenarios.\ [#]_
+The rest of this section documents community-contributed blueprints
+to-date.
 
 .. [#] Not all possible configurations of Aether require a
        blueprint. There are other ways to add variability, for
@@ -47,9 +47,9 @@ Multiple UPFs
 The base version of SD-Core includes a single UPF, running in the same
 Kubernetes namespace as the Core's control plane. This blueprint adds
 the ability to bring up multiple UPFs (each in a different namespace),
-and uses ROC to establish the *UPF -to-Slice-to-Device* bindings
-required to activate end-to-end traffic through each UPF. The
-resulting deployment is then verified using gNBsim.
+and uses ROC to establish the *UPF-to-Slice-to-Device* bindings
+required to activate end-to-end user traffic. The resulting deployment
+is then verified using gNBsim.
 
 The Multi-UPF blueprint includes the following:
 
@@ -58,7 +58,8 @@ The Multi-UPF blueprint includes the following:
 
 * Inventory file ``hosts.ini`` is identical to that used in the
   Emulated RAN section. Minimally, SD-Core runs on one server and
-  gNBsim runs on a second server.
+  gNBsim runs on a second server. (The Quick Start deployment, with
+  both SD-Core and gNBsim running in the same server, also works.)
 
 * New make targets, ``5gc-upf-install`` and ``5gc-upf-uninstall``, to
   be executed after the standard SD-Core installation. The blueprint
@@ -119,12 +120,12 @@ to specific slices and devices. This involves first editing the
          #      core:   "192.168.250.7/24"
          #   ue_ip_pool: "172.247.0.0/16"
 
-As shown above, one additional UPF is enabled (beyond the one that
-already came up as part of SD-Core, denoted ``upf-0``), with the spec
-for yet another UPF commented out.  In this example configuration,
-each UPF is assigned a subnet on the ``access`` and ``core`` bridges,
-along with an IP address pool for UEs to be served by that UPF.  Once
-done with the edits, launch the new UPF(s) by typing:
+As shown above, one additional UPF is enabled (beyond ``upf-0`` that
+already came up as part of SD-Core), with the spec for yet another UPF
+commented out.  In this example configuration, each UPF is assigned a
+subnet on the ``access`` and ``core`` bridges, along with the IP
+address pool for UEs that the UPF serves.  Once done with the edits,
+launch the new UPF(s) by typing:
 
 .. code-block::
 
