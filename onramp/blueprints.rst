@@ -74,6 +74,13 @@ The Multi-UPF blueprint includes the following:
   this blueprint is demonstrated using gNBsim, the assumed base models
   are given by ``roc-5g-models.json``.)
 
+* Two nightly integration tests that validate the Multi-UPF blueprint
+  can be viewed on Jenkins (assuming you are a registered user):
+  `single-server test
+  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_QuickStart_Multi-UPF/>`__,
+  `two-server test
+  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_2servers_Multi-UPF/>`__.
+
 To use Multi-UPF, first copy the vars file to ``main.yml``:
 
 .. code-block::
@@ -165,4 +172,93 @@ the emulation, type:
 
    $ make gnbsim-simulator-run
 
+SD-RAN
+~~~~~~~~~~~~~~~~~~~~~~
+
+This blueprint runs SD-Core and SD-RAN in tandem, with RANSIM
+emulating various RAN elements. (The OnRamp roadmap includes plans to
+couple SD-RAN with other virtual and physical RAN elements, but RANSIM
+is currently the only option.)
+
+The SD-RAN blueprint includes the following:
+
+* Global vars file ``vars/main-sdran.yml`` gives the overall
+  blueprint specification.
+
+* Inventory file ``hosts.ini`` is identical to that used in the Quick
+  Start deployment, with both SD-RAN and Sd-Core co-located on a
+  single server.
+
+* New make targets, ``aether-sdran-install`` and
+  ``aether-sdran-uninstall``, to be executed after the standard
+  SD-Core installation.
+
+* A new submodule ``deps/sdran`` (corresponding to repo
+  ``aether-sdran``) defines the Ansible Roles and Playbooks required
+  to deploy SD-RAN.
+
+* A nightly integration test that validates the SD-RAN blueprint can
+  be viewed on `Jenkins
+  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_QuickStart_SDRAN/>`__
+  (assuming you are a registered user).
+
+To use SD-RAN, first copy the vars file to ``main.yml``:
+
+.. code-block::
+
+   $ cd vars
+   $ cp main-sdran.yml main.yml
+
+Then edit ``hosts.ini`` and ``vars/main.yml`` to match your local
+target servers, and deploy the base system (as in previous sections),
+followed by SD-RAN:
+
+.. code-block::
+
+   $ make aether-k8s-install
+   $ make aether-5gc-install
+   $ make aether-sdran-install
+
+Use ``kubectl`` to validate that the SD-RAN workload is running, which
+should result in output similar to the following:
+
+.. code-block::
+
+   $ kubectl get pods -n sdran
+   NAME                             READY   STATUS    RESTARTS   AGE
+   onos-a1t-68c59fb46-8mnng         2/2     Running   0          3m12s
+   onos-cli-c7d5b54b4-cddhr         1/1     Running   0          3m12s
+   onos-config-5786dbc85c-rffv7     3/3     Running   0          3m12s
+   onos-e2t-5798f554b7-jgv27        2/2     Running   0          3m12s
+   onos-kpimon-555c9fdb5c-cgl5b     2/2     Running   0          3m12s
+   onos-topo-6b59c97579-pf5fm       2/2     Running   0          3m12s
+   onos-uenib-6f65dc66b4-b78zp      2/2     Running   0          3m12s
+   ran-simulator-5d9465df55-p8b9z   1/1     Running   0          3m12s
+   sd-ran-consensus-0               1/1     Running   0          3m12s
+   sd-ran-consensus-1               1/1     Running   0          3m12s
+   sd-ran-consensus-2               1/1     Running   0          3m12s
+
+Note that the SD-RAN workload includes RANSIM as one of its pods;
+there is no separate "run simulator" step as is the case with gNBsim.
+To validate that the emulation ran correctly, query the ONOS CLI as
+follows:
+
+Check ``onos-kpimon`` to see if 6 cells are present:
+
+.. code-block::
+
+   $ kubectl exec -it deployment/onos-cli -n sdran -- onos kpimon list metrics
+
+Check ``ran-simulator`` to see if 10 UEs and 6 cells are present:
+
+.. code-block::
+
+   $ kubectl exec -it deployment/onos-cli -n sdran -- onos ransim get cells
+   $ kubectl exec -it deployment/onos-cli -n sdran -- onos ransim get ues
+
+Check ``onos-topo`` to see if ``E2Cell`` is present:
+
+.. code-block::
+
+   $ kubectl exec -it deployment/onos-cli-n sdran -- onos topo get entity -v
 
