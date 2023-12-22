@@ -262,3 +262,66 @@ Check ``onos-topo`` to see if ``E2Cell`` is present:
 
    $ kubectl exec -it deployment/onos-cli-n sdran -- onos topo get entity -v
 
+UERANSIM
+~~~~~~~~~~~~~~~~~~~~~~
+
+This blueprint runs UERANSIM in place of gNBsim, providing a second
+way to direct workload at SD-Core. Of particular note, UERANSIM runs
+``iperf3``, making it possible to measure UPF throughput. (In
+contrast, gNBsim primarily stresses the Core's Control Plane.)
+
+The UERANSIM blueprint includes the following:
+
+* Global vars file ``vars/main-ueransim.yml`` gives the overall
+  blueprint specification.
+
+* Inventory file ``hosts.ini`` is identical to that used in the
+  Emulated RAN section. Minimally, SD-Core runs on one server and
+  UERANSIM runs on a second server. (The Quick Start deployment, with
+  both SD-Core and UERANSIM running in the same server, also works.)
+
+* New make targets, ``aether-ueransim-install`` and
+  ``aether-ueransim-uninstall``, to be executed after the standard
+  SD-Core installation.
+
+* A new submodule ``deps/ueransim`` (corresponding to repo
+  ``aether-ueransim``) defines the Ansible Roles and Playbooks
+  required to deploy UERANSIM. It also contains configuration files
+  for the emulator.
+
+* Two nightly integration tests that validate the UERANSIM blueprint
+  can be viewed on Jenkins (assuming you are a registered user):
+  `single-server test
+  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnramp_Quickstart_20.04_UERANSIM//>`__,
+  `two-server test
+  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_2servers_20.04_default-charts_UERANSIM/>`__.
+
+
+To use UERANSIM, first copy the vars file to ``main.yml``:
+
+.. code-block::
+
+   $ cd vars
+   $ cp main-ueransim.yml main.yml
+
+Then edit ``hosts.ini`` and ``vars/main.yml`` to match your local
+target servers, and deploy the base system (as in previous sections),
+followed by UERANSIM:
+
+.. code-block::
+
+   $ make k8s-install
+   $ make 5gc-install
+   $ make ueransim-install
+   $ make ueransim-run
+
+The final step actually starts the emulator. UERANSIM is configured
+according to the specification given in
+``deps/ueransim/config/ueransim-default.yml``, where just like gNBsim,
+it is possible to launch one or more UERANSIM containers on multiple
+servers by editing the ``servers`` block of the ``ueransim`` section
+of ``vars/main-ueransim.yml``.
+
+
+
+
