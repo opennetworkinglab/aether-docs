@@ -252,7 +252,7 @@ follow:
     :align: center
 
     Management dashboard on the Sercomm gNB, showing the dropdown
-    ``Settings`` menu overlayed on the ``NR Cell Configuration`` page
+    ``Settings`` menu overlaid on the ``NR Cell Configuration`` page
     (which shows default radio settings).
 
 
