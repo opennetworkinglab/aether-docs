@@ -1,7 +1,7 @@
 .. SPDX-FileCopyrightText: 2021 Open Networking Foundation <info@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-![publish action](https://github.com/opennetworkinglab/aether-docs/actions/workflows/publish-docs.yml/badge.svg)
+.. |publish action| image:: https://github.com/opennetworkinglab/aether-docs/actions/workflows/publish-docs.yml/badge.svg
 
 Aether Docs
 ===========
