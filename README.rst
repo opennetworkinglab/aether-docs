@@ -1,8 +1,6 @@
 .. SPDX-FileCopyrightText: 2021 Open Networking Foundation <info@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-.. |publish action| image:: https://github.com/opennetworkinglab/aether-docs/actions/workflows/publish-docs.yml/badge.svg
-
 Aether Docs
 ===========
 
@@ -11,12 +9,9 @@ This site contains Sphinx format documentation for the Aether project.
 Writing Documentation
 ---------------------
 
-Docs are generated using :doc:`Sphinx <sphinx:usage/index>` using the
-:doc:`reStructuredText <sphinx:usage/restructuredtext/basics>` syntax.
-reStructuredText syntax references can be found here:
-
-* :doc:`Sphinx reStructuredText Primer <sphinx:usage/restructuredtext/basics>`
-* `rst cheat sheet <https://github.com/ralsina/rst-cheatsheet/blob/master/rst-cheatsheet.rst>`_
+Docs are generated using `Sphinx <https://www.sphinx-doc.org/en/master/usage/>`_ using the
+`reStructuredText <https://www.sphinx-doc.org/en/master/usage/restructuredtext/>`_ syntax.
+A cheat sheet for reStructuredText can be found `here <https://github.com/ralsina/rst-cheatsheet/blob/master/rst-cheatsheet.rst>`_.
 
 Building Documentation
 --------------------------
@@ -30,13 +25,12 @@ the spelling checker to function properly.
 Run ``make html`` to generate html documentation in ``_build/html``.
 
 There is also a test target, ``make test``, which will run all the following
-checks - this is what Jenkins does on patchset validation, so:
+checks. This is what happens to validate a patchset validation.
 
 * ``make lint``: Check the formatting of documentation using `doc8
   <https://github.com/PyCQA/doc8>`_.
 
-* ``make license``: Verifies licensing is correct using :ref:`REUSE
-  <policies/licensing:REUSE License Tool>`
+* ``make license``: Verifies licensing is correct.
 
 * ``make spelling``: Checks spelling on all documentation. If there are
   additional words that are correctly spelled but not in the dictionary
