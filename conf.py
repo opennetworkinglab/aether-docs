@@ -108,7 +108,7 @@ exclude_patterns = [
         '*/LICENSE.md',
         '*/vendor',
         '.DS_Store',
-        'README',
+        'README*',
         'Thumbs.db',
         '_build',
         'requirements.txt',
