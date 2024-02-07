@@ -23,6 +23,6 @@ jobs:
       - name: Run rsync script
         run: |
           chmod +x ./.github/scripts/rsync.sh
-          ./.github/scripts/rsync.sh ${{ secrets.SSH_LOGIN_USERNAME }} ${{ secrets.REMOTE_SERVER_IP }} ${{ secrets.SSH_PORT }} ${{ github.workspace }}/_build/multiversion rsync_test ${{ github.workspace }}/id_rsa
+          ./.github/scripts/rsync.sh ${{ secrets.SSH_LOGIN_USERNAME }} ${{ secrets.REMOTE_SERVER_IP }} ${{ secrets.SSH_PORT }} ${{ github.workspace }}/_build/multiversion/master /srv/sites/docs.aetherproject.org/master ${{ github.workspace }}/id_rsa
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
