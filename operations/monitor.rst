@@ -7,6 +7,10 @@ Monitoring using the GUI
 
 This section documents features built-in to the GUI for monitoring.
 
+.. note:: This section is included because monitoring icons are
+  visible in the GUI, but the monitoring feature is not
+  currently supported.
+
 .. _monitor_device_group:
 
 Monitoring a DeviceGroup
@@ -16,7 +20,7 @@ The performance of a Device Group can be monitored in many ways, by clicking its
 
 * From the *Slice Monitor* page, which shows all DeviceGroup's belonging to an Slice.
 * From the DeviceGroup List Page - click the |monitor| icon for the DeviceGroup.
-* When editing an existing DeviceGroup - in the Edit page, the |monitor| is next to the *id*
+* When editing an existing DeviceGroup - in the Edit page, the |monitor| is next to the *id*.
 
 The *monitor* page itself shows:
 

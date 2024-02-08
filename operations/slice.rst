@@ -8,47 +8,35 @@ Slice Management
 A **Slice** is a unit of network access for a set of UEs with a defined set of
 QOS parameters. The following properties are important to the definition of a slice:
 
-* an **Enterprise** and **Site**
+* An **Enterprise** and **Site**. Slices always exist within a site
+  and an individual slice never spans more than one site.
 
-    Slices always exist within a site and an individual slice never spans more than one site.
+* One or more **Filter** (Application). See :ref:`application` for
+  more information on application filtering.
 
-* one or more **Filter** (Application)
+* One or more **DeviceGroup**. See :ref:`subscriber_device_management`
+  for more information on DeviceGroups.
 
-    See :ref:`application` for more information on application filtering.
+* A User Plane Function (**UPF**). UPFs are provisioned by Aether
+  Operations.
 
-* one or more **DeviceGroup**
+* **SD** (slice differentiator) and **SST** (slice/service
+  type). These are assigned by Aether Operations.
 
-    See :ref:`subscriber_device_management` for more information on DeviceGroups.
+* **Default Behavior** (for Application Filtering). The default
+  behavior is used when no application filtering rules match.
 
-* a User Plane Function (**UPF**)
+* **Uplink** and **Downlink** maximum bitrate (data rate in
+   bps). Slice MBRs are the aggregate of all traffic within the slice
+   and may represent the traffic of multiple devices.  For more
+   information, see :ref:`metering`.
 
-    UPFs are provisioned by Aether Operations.
-
-* **SD** (slice differentiator) and  **SST** (slice/service type)
-
-    These are assigned by Aether Operations.
-
-* **Default Behavior** (for Application Filtering)
-
-   The default behavior is used when no application filtering rules match.
-
-* **Uplink** and **Downlink** maximum bitrate (data rate in bps)
-
-   Slice MBRs are the aggregate
-   of all traffic within the slice and may represent the traffic of multiple devices.
-   For more information, see :ref:`metering`.
-
-Provisioning a new Slice
+Provisioning a New Slice
 ------------------------
 
-.. note::
-    This section refers to a fully installed ROC GUI, properly secured and with Enterprises, Connectivity Services
-    Applications, and Sites already configured by a ROC Administrator. The examples shown below are taken from an example
-    configuration shipped with the ROC - the "MEGA Patch" (see :ref:`posting-the-mega-patch`)
-
-This procedure assumes you have already set up one or more DeviceGroups, containing
-configuration for a number of UEs. Follow the procedure in :ref:`configure_device_group`
-to configure DeviceGroups.
+This procedure assumes you have already set up one or more
+DeviceGroups, containing configuration for a number of UEs. Follow the
+procedure in :ref:`configure_device_group` to configure DeviceGroups.
 
 To add a new Slice, click the **Add** button in the Slice List View.
 
@@ -59,12 +47,12 @@ In the resulting Slice edit page:
 #. Enter a Slice ID (this must be unique across the whole system).
 #. Enter a Display Name (optional).
 #. Enter a Description (optional).
-#. Choose an Enterprise (may already have been selected)
-#. Choose a Site
-#. Choose a template
+#. Choose an Enterprise (may already have been selected).
+#. Choose a Site.
+#. Choose a Template.
 
-    * this will copy over values from that template, which may be edited individually at this create stage
-    * they will not be editable afterwards.
+    * This will copy over values from that template, which may be edited individually at this create stage.
+    * They will not be editable afterwards.
 #. Accept the Default Behavior, SD and SST or change them.
 #. Accept the Maximum Bitrate (MBR) Uplink and Downlink values or change them.
 #. Choose a *UPF* from the drop down list.
@@ -84,7 +72,7 @@ Click on the "Update" to add these changes to the *Basket*.
 
 Click the **Commit** in the *Basket View* to commit the changes. See :ref:`committing`.
 
-Editing an existing Slice
+Editing an Existing Slice
 -------------------------
 When editing an existing Slice, it will not be possible to change:
 
@@ -93,7 +81,7 @@ When editing an existing Slice, it will not be possible to change:
 
 Existing *Filters* or *DeviceGroups* can be removed by clicking the *trash can* icon next to it.
 
-Alternatively existing *Filters* or *DeviceGroups* can be *disabled/disallowed* by clicking the slider
+Alternatively, existing *Filters* or *DeviceGroups* can be *disabled/disallowed* by clicking the slider
 next to it. This will have the same effect as disabling it.
 
 .. note:: The *DeviceGroup* or *Filter* and *UPF* here are *references*. If the underlying object is modified, then
