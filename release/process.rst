@@ -7,7 +7,7 @@ Prerequisites
 Aether makes the following assumptions about the components are included in a
 release:
 
-Git tags
+Git Tags
 """"""""
 
 Code receives Git tags as a part of the CI process
@@ -25,7 +25,7 @@ Code receives Git tags as a part of the CI process
   * You can't re-release or "fix" a version that has problem - make a new
     version with fixes in it.
 
-Docker container images
+Docker Container Images
 """""""""""""""""""""""
 
 All docker images are tagged based on their git tags.
@@ -41,7 +41,7 @@ All docker images are tagged based on their git tags.
 
     * Increases repeatability of the process, and prevents human accidents.
 
-Helm charts
+Helm Charts
 """""""""""
 
 * Each chart may only contain references to released, SemVer tagged container images
@@ -57,7 +57,7 @@ All Helm charts are checked that the containers they use have a SemVer version
 tag
 
 A branch is created on the Helm charts repo, with the abbreviated name of the
-release - for example **aether-1.5**.
+release - for example **aether-2.1**.
 
 To allow for future patches to go into the repo in a way that does not conflict
 with the version branch, each component repo's **VERSION** file should have it's
@@ -70,10 +70,10 @@ requires that every new chart version be unique and unsuffixed SemVer is a
 more consistent release numbering pattern.
 
 Finally, the ``aether-helm-charts`` repo overall **VERSION** should also be incremented
-to the next minor version (1.6.0-dev) on the **master** branch, so all 1.5.x
-releases of the overall charts repo will happen on the **aether-1.5** branch.
+to the next minor version (2.2.0-dev) on the **master** branch, so all 2.1.x
+releases of the overall charts repo will happen on the **aether-2.1** branch.
 
-Creating releases on the 1.5.x branch
+Creating Releases on the 2.1.x Branch
 """""""""""""""""""""""""""""""""""""
 
 If a fix is needed only to the helm charts:
@@ -81,23 +81,23 @@ If a fix is needed only to the helm charts:
 1. Make the fix on the master branch of aether-helm-charts (assuming that it is
    required in both places).
 
-2. After the master tests pass, manually cherry-pick the fix to the **aether-1.5**
+2. After the master tests pass, manually cherry-pick the fix to the **aether-2.1**
    branch (the Chart version would be different, requiring the manual step).
 
-3. Cherry-picked patchsets on that branch will be checked by the **aether-1.5**
+3. Cherry-picked patchsets on that branch will be checked by the **aether-2.1**
    branch of tests.
 
-4. When it passes, submitting the change will make a new 1.5.x release
+4. When it passes, submitting the change will make a new 2.1.x release
 
 5. Update the documentation to reflect the chart changes, a description of the
-   changes m, and increment the tag on the docs from 1.5.n to 1.5.n+1, to
+   changes m, and increment the tag on the docs from 2.1.n to 2.1.n+1, to
    reflect the patch change.
 
 6. If all the charts are updated and working correctly, create a new charts
-   point release by increasing the 1.5.n **VERSION** file in the
+   point release by increasing the 2.1.n **VERSION** file in the
    aether-helm-charts repo.  This should be the same as the version in the
    documentation.  Immediately make another patch that returns the
-   ``aether-helm-charts`` **VERSION** to 1.5.n+1-dev, so that development
+   ``aether-helm-charts`` **VERSION** to 2.1.n+1-dev, so that development
    patches can continue on that branch.
 
 If a fix is needed to the components/containers that are included by the helm charts:
@@ -105,13 +105,13 @@ If a fix is needed to the components/containers that are included by the helm ch
 1. Develop a fix to the issue on the master branch, get it approved after
    passing master tests.
 
-2. If it doesn't exist, create an **aether-1.5** branch on the component repo,
-   starting at the commit where the **VERSION** of the component used in 1.5 was
+2. If it doesn't exist, create an **aether-2.1** branch on the component repo,
+   starting at the commit where the **VERSION** of the component used in 2.1 was
    created - this is known as "lazy branching".
 
 
-3. Manually cherry-pick to the **aether-1.5** branch of the component, incrementing
-   the patch version, and test with the **aether-1.5** version of
+3. Manually cherry-pick to the **aether-2.1** branch of the component, incrementing
+   the patch version, and test with the **aether-2.1** version of
    aether-system-tests and helm charts.
 
 4. Update helm charts and go through the helm chart update process above

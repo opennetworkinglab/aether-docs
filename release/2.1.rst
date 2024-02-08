@@ -1,6 +1,10 @@
 Aether 2.1 Release
 ==================
 
+.. note:: Aether 2.1 is being deprecated. Its Guide is archived
+  `here <https://docs.aetherproject.org/aether-2.1/index.html>`__.
+
+
 Aether Highlights
 -----------------
 

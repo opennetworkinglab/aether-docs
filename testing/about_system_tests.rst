@@ -9,7 +9,7 @@ The Aether Project is transitioning to a new automated testing regime,
 consistent with its transition from being a managed service to being
 a platform anyone can deploy. Information about the previous framework
 can be found in the `Version 2.1 Guide
-<https://docs.aetherproject.org/aether-2.1/testing/about_system_tests.html>`__,
+<https://docs.aetherproject.org/aether-2.1/testing/about_system_tests.html>`__.
 
 The major changes include:
 

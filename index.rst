@@ -66,6 +66,6 @@
    :hidden:
    :glob:
 
-   release/1*
-   release/2*
+   release/2.0.rst
+   release/2.1.rst
    release/process.rst
