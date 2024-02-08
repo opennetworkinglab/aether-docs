@@ -27,9 +27,10 @@ QOS parameters. The following properties are important to the definition of a sl
   behavior is used when no application filtering rules match.
 
 * **Uplink** and **Downlink** maximum bitrate (data rate in
-   bps). Slice MBRs are the aggregate of all traffic within the slice
-   and may represent the traffic of multiple devices.  For more
-   information, see :ref:`metering`.
+  bps). Slice MBRs are the aggregate of all traffic within the slice
+  and may represent the traffic of multiple devices.  For more
+  information, see :ref:`metering`.
+
 
 Provisioning a New Slice
 ------------------------
