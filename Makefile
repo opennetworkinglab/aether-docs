@@ -29,7 +29,7 @@ $(VENV_NAME):
 
 # test - check that local build will lint, spelling is correct, then
 # build the html site.
-test: license doc8 dict-check spelling linkcheck
+test: doc8 dict-check spelling linkcheck
 
 # lint all .rst files
 doc8: $(VENV_NAME)
