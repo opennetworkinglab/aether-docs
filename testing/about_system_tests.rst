@@ -5,44 +5,23 @@
 About
 =====
 
-The goal and objective of Aether test automation is to build a framework that
-provides highly scalable and low maintenance code which will help cover various
-categories of tests.  Framework includes libraries and tools that allows both
-component level and integration level tests. Robot Framework will be used for
-covering integration tests. Component level test coverage have been
-accomplished by leveraging the existing test frameworks that were developed in
-their respective projects. Component level tests include tests for SD-Fabric, PDP,
-SD-CORE areas. For detailed information on component tests, please see their
-respective documentation pages.
+The Aether Project is transitioning to a new automated testing regime,
+consistent with its transition from being a managed service to being
+a platform anyone can deploy. Information about the previous framework
+can be found in the `Version 2.1 Guide
+<https://docs.aetherproject.org/aether-2.1/testing/about_system_tests.html>`__,
 
-Test Frameworks
----------------
+The major changes include:
 
-The following diagram outlines each Aether core component, followed by an online
-of the test frameworks used:
+* Adopting gNBsim (in place of NG40) as the primary test engine for SD-Core.
+* Developing new integration tests for a range of configuration options.
+* Dropping support for SD-Fabric tests.
 
-.. image:: images/aether-overview-diagram.png
-  :width: 600
-  :alt: Aether Overview Diagram
+For detailed information on component-level tests, please see their
+respective Guides:
 
-.. list-table:: Test Frameworks
-  :widths: 5 3
-  :header-rows: 1
+* :doc:`SD-Core Documentation <sdcore:index>`
+* :doc:`SD-RAN Documentation <sdran:index>`
 
-  * - Aether Core Component
-    - Test Framework
-  * - SD-Core
-    - `Robot Framework <https://robotframework.org/>`_, `NG40/NG4T <https://www.ng4t.com/>`_
-  * - SD-Fabric
-    - `TestON <https://github.com/opennetworkinglab/OnosSystemTest/tree/master/TestON>`_
-  * - ROC
-    - `Robot Framework <https://robotframework.org/>`_, `Selenium <https://selenium-python.readthedocs.io/>`_
-  * - SD-RAN
-    - `Robot Framework <https://robotframework.org/>`_
-
-Test Automation
----------------
-
-`Jenkins <https://www.jenkins.io/>`_ is the primary automation server that is
-used to help trigger our automated tests. All Aether Jenkins jobs are
-created and run on the Aether Jenkins instance.
+More information about interface testing is include in the :doc:`API
+Tests Section </testing/aether-roc-tests>` of this Guide.

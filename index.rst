@@ -56,9 +56,9 @@
    :glob:
 
    testing/about_system_tests
+   testing/integration_tests
    testing/aether-roc-tests
-   testing/system-tests
-   testing/acceptance_specification
+
 
 .. toctree::
    :maxdepth: 2

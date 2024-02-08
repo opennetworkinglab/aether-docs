@@ -36,10 +36,10 @@ Other Aether guides available on this site include:
 * :doc:`Test Automation </testing/about_system_tests>`: Learn how Aether
   components are tested.
 
-Note that Aether was originally deployed as a centrally-manged,
+Note that Aether was originally deployed as a centrally-managed,
 ONF-operated cloud service, with the expectation that organizations
 would participate in Aether by connecting their edge site to this
-operational deployment.\ [#]_ That service is now being deprecated in
+operational deployment.\ [#]_ That service has now been deprecated in
 favor of users bringing up their own Aether sites using :doc:`OnRamp
 </onramp/overview>`.
 
@@ -52,23 +52,12 @@ favor of users bringing up their own Aether sites using :doc:`OnRamp
 Aether Components
 ------------------------
 
-Aether uses components from several ONF projects. Information about
-these projects can be found at the following sites:
+Aether builds on two main subsystems: SD-Core (a cloud native Mobile
+Core) and SD-RAN (an O-RAN compliant, software-based RAN).
+Additional documentation for each is available at:
 
-* SD-Core
-
-  * `SD-Core Website <https://opennetworking.org/sd-core/>`_
-  * :doc:`SD-Core Documentation <sdcore:index>`
-
-* SD-RAN
-
-  * `SD-RAN Website <https://opennetworking.org/open-ran/>`_
-  * :doc:`SD-RAN Documentation <sdran:index>`
-
-* SD-Fabric
-
-  * `SD-Fabric Website <https://opennetworking.org/sd-fabric/>`_
-  * :doc:`SD-Fabric Documentation <sdfabric:index>`
+* :doc:`SD-Core Documentation <sdcore:index>`
+* :doc:`SD-RAN Documentation <sdran:index>`
 
 More information about 5G and Aether's architecture can be found in
 the :doc:`Private 5G: A Systems Approach <sysapproach5g:index>` book.

@@ -1,9 +1,9 @@
-ROC Testing
+API Tests
 ===========
 
-The REST API and the GUI of the Aether ROC is tested utilizing the Robot Framework.
-The tests are located inside the aether-system-tests repository and they are run nightly using
-a Jenkins job.
+The REST API and GUI of Aether is tested with the Robot Framework.
+The tests are located inside the ``aether-system-tests`` repository
+and they are run nightly using a Jenkins job.
 
 Development Prerequisites
 -------------------------
@@ -24,7 +24,7 @@ Finally, the ROC GUI tests are running on the Firefox browser, so it is
 necessary to have the Firefox browser and the Firefox web driver
 (``geckodriver``) installed on the system in order to run these tests.
 
-Running the ROC API tests
+Running the ROC API Tests
 -------------------------
 Follow the steps below to access the ROC API:
 
@@ -110,7 +110,7 @@ Each test file corresponds to one of the Aether 2.0.0 models.
 
 This will generate test reports and logs in the ``results`` directory.
 
-Running the ROC GUI tests
+Running the ROC GUI Tests
 -------------------------
 
 We test the ROC GUI by installing the ROC with keycloak-dev.onlab.us.
