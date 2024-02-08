@@ -4,6 +4,7 @@ Anthos
 BMC
 BMv
 BMv2
+Bavier
 BoM
 CLI
 Chronos
