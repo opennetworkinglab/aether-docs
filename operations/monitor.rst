@@ -2,14 +2,14 @@
    SPDX-FileCopyrightText: © 2020 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-Monitoring using the GUI
-========================
+Built-In Monitoring
+====================
 
 This section documents features built-in to the GUI for monitoring.
 
-.. note:: This section is included because monitoring icons are
-  visible in the GUI, but the monitoring feature is not
-  currently supported.
+.. note:: Although monitoring icons remain visible in the GUI, the
+  integrated monitoring feature is not currently supported. Use the
+  Prometheus/Grafana monitoring subsystem instead.
 
 .. _monitor_device_group:
 

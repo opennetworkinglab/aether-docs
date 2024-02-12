@@ -33,19 +33,20 @@ Source code for Aether and all of its subsystems can be found in
 the following repositories:
 
 * Gerrit repository for the CORD Project
-  (https://gerrit.opencord.org): Microservices for AMP, plus source
-  for the jobs that implement the CI/CD pipeline.
+  (https://gerrit.opencord.org): Helm Charts for ROC and JJB
+  specifications for the jobs that implement the CI pipeline.
 
 * GitHub repository for the OMEC Project
   (https://github.com/omec-project): Microservices for SD-Core, plus
   the emulator (gNBsim) that subjects SD-Core to RAN workloads.
 
 * GitHub repository for the ONOS Project
-  (https://github.com/onosproject): Microservices for SD-Fabric and
-  SD-RAN, plus the YANG models used to generate the Aether API.
+  (https://github.com/onosproject): Microservices for SD-RAN and ROC,
+  plus the YANG models used to generate the Aether API.
 
-* GitHub repository for the Stratum Project
-  (https://github.com/stratum): On-switch components of SD-Fabric.
+* GitHub repository for the ONF
+  (https://github.com/opennetworkinglab): OnRamp Documentation and
+  Ansible playbooks for deploying Aether.
 
 For Gerrit, you can either browse Gerrit (select the `master` branch)
 or clone the corresponding *<repo-name>* by typing:
@@ -100,8 +101,6 @@ files for all the Helm Charts:
  | ROC: https://gerrit.opencord.org/plugins/gitiles/roc-helm-charts
  | SD-RAN: https://github.com/onosproject/sdran-helm-charts
  | SD-Core: https://gerrit.opencord.org/plugins/gitiles/sdcore-helm-charts
- | SD-Fabric (Servers): https://github.com/onosproject/onos-helm-charts
- | SD-Fabric (Switches): https://github.com/stratum/stratum-helm-charts
 
 The QA tests run against code checked into these source repos can be
 found here:
