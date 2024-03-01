@@ -22,6 +22,7 @@
    onramp/gnbsim
    onramp/gnb
    onramp/roc
+   onramp/devel
    onramp/blueprints
 
 .. toctree::
