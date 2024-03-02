@@ -4,7 +4,7 @@ Development Support
 OnRamp's primary goal is to support users that want to deploy
 officially released versions of Aether on local hardware, but it also
 provides a way for users that want to develop new features to deploy
-and test those changes. To this end, this section describes how to
+and test them. To this end, this section describes how to
 configure OnRamp to include locally modified components.
 
 At a low level, development is a component-specific task, and users
