@@ -20,7 +20,7 @@ are referred to documentation for the respective subsystems:
 * To develop Monitoring Dashboards, see :doc:`Monitoring & Alert Development </developer/monitoring>`.
 
 At a high level, OnRamp provides a means to deploy developmental
-versions of Aether than include local modifications to the standard
+versions of Aether that include local modifications to the standard
 components. These modifications range from coarse-grain (i.e.,
 replacing the Helm Chart for an entire subsystem), to fine-grain
 (i.e., replacing the container image for an individual microservice).
