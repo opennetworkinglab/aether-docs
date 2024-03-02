@@ -23,7 +23,7 @@ At a high level, OnRamp provides a means to deploy developmental
 versions of Aether that include local modifications to the standard
 components. These modifications range from coarse-grain (i.e.,
 replacing the Helm Chart for an entire subsystem), to fine-grain
-(i.e., replacing the container image for an individual microservice).
+(i.e., replacing the container image (source code) for an individual microservice).
 The following uses SD-Core as a specific example to illustrate how
 this is done. The same approach can be applied to other subsystems.
 
