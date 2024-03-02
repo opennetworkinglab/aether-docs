@@ -5,7 +5,8 @@ OnRamp's primary goal is to support users that want to deploy
 officially released versions of Aether on local hardware, but it also
 provides a way for users that want to develop new features to deploy
 and test them. To this end, this section describes how to
-configure OnRamp to include locally modified components.
+configure OnRamp to use locally modified components, such as
+Helm Charts, Docker images, 5GC's source code.
 
 At a low level, development is a component-specific task, and users
 are referred to documentation for the respective subsystems:
