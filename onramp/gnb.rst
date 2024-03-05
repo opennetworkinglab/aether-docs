@@ -342,60 +342,53 @@ follow:
   address. Then set the default gateway to the IP address of your
   Aether server.
 
-Run Diagnostics
-~~~~~~~~~~~~~~~~~
+Deployment Milestones
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Successfully connecting a UE to the Internet is not a straightforward
-exercise. It involves configuring the UE, gNB, and SD-Core software in
-a consistent way; establishing SCTP-based control plane (N2) and
-GTP-based user plane (N3) connections between the base station and
-Mobile Core; and traversing multiple IP subnets along the end-to-end
-path.
+Successfully connecting a UE to the Internet involves configuring the
+UE, gNB, and SD-Core in a consistent way, and doing so for both the
+control and user planes. This section identifies the key milestones
+along the way, and how to use the available diagnostic tools to verify
+that you are making progress. (As a reminder, the available tools
+include running ``ping`` and ``traceroute`` from all three components,
+capturing packet traces on the Aether server, viewing the monitoring
+dashboard, and viewing the gNB Status panel).
 
-The UE and gNB provide limited diagnostic tools. For example, it's
-possible to run ``ping`` and ``traceroute`` from both. You can also
-run the ``ksniff`` tool described in the Networking section, but the
-most helpful packet traces you can capture are shown in the following
-commands. You can run these on the Aether server, where we use our
-example ``ens18`` interface for illustrative purposes:
+* **Milestone 1:  Bring up SD-Core.** Success can be verified by using
+  ``kubectl`` to observer the status of Kubernetes pods, and by noting
+  that the monitoring dashboard reports *UPF Up*. And as noted earlier
+  in this section, we recommend running gNBsim on a second server to
+  verify that you have a working network path between the gNB and the
+  Core before attempting to do the same with a physical gNB.
 
-.. code-block::
+* **Milestone 2:  Connect gNB to the Internet.** Configuring the gNB to
+  treat the Aether server as its default router (and configuring that
+  server to forward IP packets) is the recommended way to provide the
+  gNB with Internet connectivity. Such connectivity is needed when
+  your deployment depends on Internet services like NTP, and it can be
+  verified by running ``ping`` or ``traceroute`` to those services
+  from the gNB.
 
-   $ sudo tcpdump -i any sctp -w sctp-test.pcap
-   $ sudo tcpdump -i ens18 port 2152 -w gtp-outside.pcap
-   $ sudo tcpdump -i access port 2152 -w gtp-inside.pcap
-   $ sudo tcpdump -i core net 172.250.0.0/16 -w n6-inside.pcap
-   $ sudo tcpdump -i ens18 net 172.250.0.0/16 -w n6-outside.pcap
+* **Milestone 3: Connect gNB to the AMF.** The gNB will automatically
+  try to establish control plane connectivity to the configured AMF,
+  and once successful, the dashboard will indicate *NR Ready*. The
+  Aether monitoring dashboard will also show *gNodeB Up*.
 
-The first trace, saved in file ``sctp.pcap``, captures SCTP packets
-sent to establish the control path between the base station and the
-Mobile Core (i.e., N2 messages). Toggling "Mobile Data" on the UE,
-for example by turning Airplane Mode off and on, will generate the
-relevant control plane traffic.
+* **Milestone 4:  Connect gNB to the UPF.** Until we try to establish
+  end-to-end connectivity from the UE (see the next Milestone), the
+  best indicator of user plane connectivity between the gNB and UPF
+  can be shown by successfully running ``ping 192.168.252.3`` on the
+  gNB.
 
-The second and third traces, saved in files ``gtp-outside.pcap`` and
-``gtp-inside.pcap``, respectively, capture GTP packets (tunneled
-through port ``2152`` ) on the RAN side of the UPF. Setting the
-interface to ``ens18`` corresponds to "outside" the UPF and setting
-the interface to ``access`` corresponds to "inside" the UPF.  Running
-``ping`` from the UE will generate the relevant user plane (N3) traffic.
+* **Milestone 5:  Establish UE Connectivity.** Getting *5G bars* on
+  the UE, followed by the ability to access Internet content, is the
+  ultimate demonstration of success. To help diagnose problems, run
+  the packet captures described in the Verify Network section.
 
-Similarly, the fourth and fifth traces, saved in files
-``n6-inside.pcap`` and ``n6-outside.pcap``, respectively, capture IP
-packets on the Internet side of the UPF (which is known as the **N6**
-interface in 3GPP). In these two tests, ``net 172.250.0.0/16``
-corresponds to the IP addresses assigned to UEs by the SMF. Running
-``ping`` from the UE will generate the relevant user plane traffic.
+One reason for calling out this sequence of milestones is that they
+establish a baseline that makes it easier for the community to help
+troubleshoot a deployment.
 
-If the ``gtp-outside.pcap`` has packets and the ``gtp-inside.pcap``
-is empty (no packets captured), you may run the following commands
-to make sure packets are forwarded from the ``ens18`` interface
-to the ``access`` interface and vice versa:
-
-.. code-block::
-
-   $ sudo iptables -A FORWARD -i ens18 -o access -j ACCEPT
-   $ sudo iptables -A FORWARD -i access -o ens18 -j ACCEPT
 
 Support for eNBs
 ~~~~~~~~~~~~~~~~~~
