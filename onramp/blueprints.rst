@@ -26,6 +26,9 @@ Ansible components:
   are intentionally kept "narrow", rather than glommed onto an
   existing element.
 
+* (Optional) Any additional hardware (beyond the Ansible-managed
+  Aether servers) required to support the blueprint.
+
 * A Jenkins job, added to the set of OnRamp integration tests,
   verifies that the blueprint successfully deploys Aether.
 
