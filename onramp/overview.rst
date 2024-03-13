@@ -30,5 +30,5 @@ interested in participating in that effort is encouraged to join the
 discussion on Slack in the `ONF Community Workspace
 <https://onf-community.slack.com/>`__. A roadmap for the work that
 needs to be done can be found in the `Aether OnRamp Wiki
-<https://github.com/opennetworkinglab/aether-onramp/wiki>`__.
+<https://wiki.aetherproject.org/display/HOME/Aether+OnRamp>`__.
 

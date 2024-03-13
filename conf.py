@@ -269,6 +269,7 @@ linkcheck_ignore = [
     r'https://ark.intel.com/.*',
     r'https://wiki.onosproject.org/.*',
     r'https://wiki.opennetworking.org/.*',
+    r'https://wiki.aetherproject.org/.*',
     r'https://docs.sd-core.opennetworking.org/.*',
 ]
 

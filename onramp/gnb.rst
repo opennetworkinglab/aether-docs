@@ -31,7 +31,7 @@ options are likely to be different in other countries.
   <https://onf-community.slack.com/>`__, with summaries of different
   combinations people have tried reported in the OnRamp
   `Troubleshooting Wiki Page
-  <https://github.com/opennetworkinglab/aether-onramp/wiki/Troubleshooting>`__.
+  <https://wiki.aetherproject.org/display/HOME/Troubleshooting>`__.
 
 This blueprint assumes you start with a variant of ``vars/main.yml``
 customized for running physical 5G radios. This is easy to do:

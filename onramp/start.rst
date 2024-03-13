@@ -349,7 +349,7 @@ reasons, the Aether Core is called ``omec`` instead of ``sd-core``.
   directory`` task in the ``router`` role, it indicates that
   *systemd-networkd* is not configured as expected. Check the OnRamp
   `Troubleshooting Wiki Page
-  <https://github.com/opennetworkinglab/aether-onramp/wiki/Troubleshooting>`__
+  <https://wiki.aetherproject.org/display/HOME/Troubleshooting>`__
   for possible workarounds.
 
 If you are interested in seeing the details about how SD-Core is
