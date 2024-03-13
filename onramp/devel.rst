@@ -69,9 +69,37 @@ in your account on Docker Hub with tag ``myversion:foo``, then set the
       tags:
         amf: myversion:foo
 
-Finally, a new Make target streamlines the process of frequently
-re-installing the Kubernetes pods that implement the Core:
+A new Make target streamlines the process of frequently re-installing
+the Kubernetes pods that implement the Core:
 
 .. code-block::
 
   $ make 5gc-core-reset
+
+If you are also modifying gNBsim in concert with changes to SD-Core,
+then note that the former is not deployed on Kubernetes, and so there
+is no Helm Chart or values override file. Instead, you simply need to
+modify the ``image`` variable in the ``gnbsim`` section of
+``vars/main.yml`` to reference your locally built image:
+
+.. code-block::
+
+  gnbsim:
+    docker:
+      container:
+        image: omecproject/5gc-gnbsim:main-PR_88-cc0d21b
+
+For convenience, the following Make target restarts the container,
+which pulls in the new image.
+
+.. code-block::
+
+  $ make gnbsim-reset
+
+Keep in mind that you can also rerun gNBsim with the *same* container,
+but loading the latest gNBsim config file, by typing:
+
+.. code-block::
+
+  $ make aether-gnbsim-run
+
