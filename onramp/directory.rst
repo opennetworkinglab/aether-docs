@@ -18,7 +18,8 @@ up to speed on the rest of the system.
   useful when you find yourself trying to troubleshoot a problem in a
   later section. For example, isolating a problem with a physical gNB
   is easier if you know that connectivity to the AMF and UPF works
-  correctly, which the *Emulated RAN* section helps to establish.
+  correctly, which the :doc:`Emulated RAN </onramp/gnbsim>` section
+  helps to establish.
 
   Our second hint is to join the ``#aether-onramp`` channel of the
   `ONF Workspace <https://onf-community.slack.com/>`__ on Slack, where

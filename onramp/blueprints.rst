@@ -60,9 +60,10 @@ The Multi-UPF blueprint includes the following:
   blueprint specification.
 
 * Inventory file ``hosts.ini`` is identical to that used in the
-  Emulated RAN section. Minimally, SD-Core runs on one server and
-  gNBsim runs on a second server. (The Quick Start deployment, with
-  both SD-Core and gNBsim running in the same server, also works.)
+  :doc:`Emulated RAN </onramp/gnbsim>` section.  Minimally,
+  SD-Core runs on one server and gNBsim runs on a second server.
+  (The Quick Start deployment, with both SD-Core and gNBsim running
+  in the same server, also works.)
 
 * New make targets, ``5gc-upf-install`` and ``5gc-upf-uninstall``, to
   be executed after the standard SD-Core installation. The blueprint
@@ -279,7 +280,8 @@ The UERANSIM blueprint includes the following:
   blueprint specification.
 
 * Inventory file ``hosts.ini`` is identical to that used in the
-  Emulated RAN section. Minimally, SD-Core runs on one server and
+  :doc:`Emulated RAN </onramp/gnbsim>` section
+  Minimally, SD-Core runs on one server and
   UERANSIM runs on a second server. (The Quick Start deployment, with
   both SD-Core and UERANSIM running in the same server, also works.)
 

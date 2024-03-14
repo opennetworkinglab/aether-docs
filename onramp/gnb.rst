@@ -187,9 +187,9 @@ entered here is purposely minimal; it's just enough to bring up and
 debug the installation. Over the lifetime of a running system,
 information about *Device Groups* and *Slices* (and the other
 abstractions they build upon) should be entered via the ROC, as
-described the section on Runtime Control. When you get to that point,
-Ansible variable ``standalone`` in ``vars/main.yml`` (which
-corresponds to the override value assigned to
+described in the :doc:`Runtime Control </onramp/roc>` section. When
+you get to that point, Ansible variable ``standalone`` in
+``vars/main.yml`` (which corresponds to the override value assigned to
 ``provision-network-slice`` in ``radio-5g-values.yaml``) should be set
 to ``false``. Doing so causes the ``device-groups`` and
 ``network-slices`` blocks of ``radio-5g-values.yaml`` to be
@@ -307,18 +307,18 @@ follow:
    page of the management dashboard should confirm that control
    interface is established.
 
-9. **Connect to Aether User Plane.** As described in an earlier
-   section, the Aether User Plane (UPF) is running at IP address
-   ``192.168.252.3``. Connecting to that address requires installing a
-   route to subnet ``192.168.252.0/24``. How you install this route is
-   device and site-dependent. If the small cell provides a means to
-   install static routes, then a route to destination
-   ``192.168.252.0/24`` via gateway ``10.76.28.113`` (the server
-   hosting Aether) will work. If the small cell does not allow static
-   routes (as is the case for the SERCOMM gNB), then ``10.76.28.113``
-   can be installed as the default gateway, but doing so requires that
-   your server also be configured to forward IP packets on to the
-   Internet.
+9. **Connect to Aether User Plane.** As described in the :doc:`Verify
+   Network </onramp/network>` section, the Aether User Plane (UPF) is
+   running at IP address ``192.168.252.3``. Connecting to that address
+   requires installing a route to subnet ``192.168.252.0/24``. How you
+   install this route is device and site-dependent. If the small cell
+   provides a means to install static routes, then a route to
+   destination ``192.168.252.0/24`` via gateway ``10.76.28.113`` (the
+   server hosting Aether) will work. If the small cell does not allow
+   static routes (as is the case for the SERCOMM gNB), then
+   ``10.76.28.113`` can be installed as the default gateway, but doing
+   so requires that your server also be configured to forward IP
+   packets on to the Internet.
 
 .. admonition:: Troubleshooting Hint
 
@@ -380,10 +380,11 @@ dashboard, and viewing the gNB Status panel).
   can be shown by successfully running ``ping 192.168.252.3`` on the
   gNB.
 
-* **Milestone 5:  Establish UE Connectivity.** Getting *5G bars* on
-  the UE, followed by the ability to access Internet content, is the
-  ultimate demonstration of success. To help diagnose problems, run
-  the packet captures described in the Verify Network section.
+* **Milestone 5: Establish UE Connectivity.** Getting *5G bars* on the
+  UE, followed by the ability to access Internet content, is the
+  ultimate demonstration of success. To help diagnose problems,
+  capture the packet traces described in the :doc:`Verify Network
+  </onramp/network>` section.
 
 One reason for calling out this sequence of milestones is that they
 establish a baseline that makes it easier for the community to help
