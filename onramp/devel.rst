@@ -56,18 +56,18 @@ To substitute a locally built container image, edit the corresponding
 block in the values override file that you have configured in
 ``vars/main.yml``; e.g.,
 ``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``.  For example,
-if you have published an alternative version of the AMF microservice
-in your account on Docker Hub with tag ``myversion:foo``, then set the
-``images`` block of 5G control plane section accordingly:
+if you want to deploy the AMF image with tag ``my-amf:version-foo``
+from the container registry of your personal GitLab account, then set
+the ``images`` block of 5G control plane section accordingly:
 
 .. code-block::
 
   5g-control-plane:
     enable5G: true
     images:
-      repository: "hub.docker.com/myregistry/"
+      repository: "registry.gitlab.com"
       tags:
-        amf: myversion:foo
+        amf: my-account/my-amf:version-foo
 
 A new Make target streamlines the process of frequently re-installing
 the Kubernetes pods that implement the Core:
