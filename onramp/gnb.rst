@@ -355,7 +355,7 @@ capturing packet traces on the Aether server, viewing the monitoring
 dashboard, and viewing the gNB Status panel).
 
 * **Milestone 1:  Bring up SD-Core.** Success can be verified by using
-  ``kubectl`` to observer the status of Kubernetes pods, and by noting
+  ``kubectl`` to observe the status of Kubernetes pods, and by noting
   that the monitoring dashboard reports *UPF Up*. And as noted earlier
   in this section, we recommend running gNBsim on a second server to
   verify that you have a working network path between the gNB and the
@@ -389,56 +389,3 @@ dashboard, and viewing the gNB Status panel).
 One reason for calling out this sequence of milestones is that they
 establish a baseline that makes it easier for the community to help
 troubleshoot a deployment.
-
-
-Support for eNBs
-~~~~~~~~~~~~~~~~~~
-
-Aether OnRamp is geared towards 5G, but it does support physical eNBs,
-including 4G-based versions of both SD-Core and AMP. It does not
-support an emulated 4G RAN. The 4G blueprint uses all the same Ansible
-machinery outlined in earlier sections, but starts with a variant of
-``vars/main.yml`` customized for running physical 4G radios:
-
-.. code-block::
-
-   $ cd vars
-   $ cp main-eNB.yml main.yml
-
-Assuming that starting point, the following outlines the key
-differences from the 5G case:
-
-1. There is a 4G-specific repo, which you can find in ``deps/4gc``.
-
-2. The ``core`` section of ``vars/main.yml`` specifies a 4G-specific values file:
-
-   ``values_file: "deps/4gc/roles/core/templates/radio-4g-values.yaml"``
-
-3. The ``amp`` section of ``vars/main.yml`` specifies that 4G-specific
-   models and dashboards get loaded into the ROC and Monitoring
-   services, respectively:
-
-   ``roc_models: "deps/amp/roles/roc-load/templates/roc-4g-models.json"``
-
-   ``monitor_dashboard:  "deps/amp/roles/monitor-load/templates/4g-monitor"``
-
-4. You need to edit two files with details for the 4G SIM cards you
-   use. One is the 4G-specific values file used to configure SD-Core:
-
-   ``deps/4gc/roles/core/templates/radio-4g-values.yaml``
-
-   The other is the 4G-specific Models file used to bootstrap ROC:
-
-   ``deps/amp/roles/roc-load/templates/radio-4g-models.json``
-
-5. There are 4G-specific Make targets for SD-Core (e.g., ``make
-   aether-4gc-install`` and ``make aether-4gc-uninstall``), but the
-   Make targets for AMP (e.g., ``make aether-amp-install`` and ``make
-   aether-amp-uninstall``) work unchanged in both 4G and 5G.
-
-The Quick Start and Emulated RAN (gNBsim) deployments are for 5G only,
-but revisiting the other sections—substituting the above for their 5G
-counterparts—serves as a guide for deploying a 4G version of Aether.
-Note that the network is configured in exactly the same way for both
-4G and 5G. This is because SD-Core's implementation of the UPF is used
-in both cases.
