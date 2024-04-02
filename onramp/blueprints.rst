@@ -279,25 +279,37 @@ The UERANSIM blueprint includes the following:
 * Global vars file ``vars/main-ueransim.yml`` gives the overall
   blueprint specification.
 
-* Inventory file ``hosts.ini`` is identical to that used in the
-  :doc:`Emulated RAN </onramp/gnbsim>` section
-  Minimally, SD-Core runs on one server and
-  UERANSIM runs on a second server. (The Quick Start deployment, with
-  both SD-Core and UERANSIM running in the same server, also works.)
+* Inventory file ``hosts.ini`` needs to be modified to identify the
+  server that is to run UERANSIM. Currently, a second server is
+  needed, as UERANSIM and SD-Core cannot be deployed on the same
+  server. As an example, ``hosts.ini`` might look like this:
 
-* New make targets, ``aether-ueransim-install`` and
-  ``aether-ueransim-uninstall``, to be executed after the standard
-  SD-Core installation.
+.. code-block::
+
+   [all]
+   node1  ansible_host=10.76.28.113 ansible_user=aether ansible_password=aether ansible_sudo_pass=aether
+   node2  ansible_host=10.76.28.115 ansible_user=aether ansible_password=aether ansible_sudo_pass=aether
+
+   [master_nodes]
+   node1
+
+   [worker_nodes]
+   node2
+
+   [ueransim_nodes]
+   node2
+
+* New make targets, ``aether-ueransim-install``,
+  ``aether-ueransim-run``, and ``aether-ueransim-uninstall``, to be
+  executed after the standard SD-Core installation.
 
 * A new submodule ``deps/ueransim`` (corresponding to repo
   ``aether-ueransim``) defines the Ansible Roles and Playbooks
   required to deploy UERANSIM. It also contains configuration files
   for the emulator.
 
-* Two nightly integration tests that validate the UERANSIM blueprint
+* A nightly integration test that validate the UERANSIM blueprint
   can be viewed on Jenkins (assuming you are a registered user):
-  `single-server test
-  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnramp_Quickstart_20.04_UERANSIM//>`__,
   `two-server test
   <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_2servers_20.04_default-charts_UERANSIM/>`__.
 
@@ -315,17 +327,19 @@ followed by UERANSIM:
 
 .. code-block::
 
-   $ make k8s-install
-   $ make 5gc-install
-   $ make ueransim-install
-   $ make ueransim-run
+   $ make aether-k8s-install
+   $ make aether-5gc-install
+   $ make aether-ueransim-install
+   $ make aether-ueransim-run
 
-The final step actually starts the emulator. UERANSIM is configured
-according to the specification given in
-``deps/ueransim/config/ueransim-default.yml``, where just like gNBsim,
-it is possible to launch one or more UERANSIM containers on multiple
-servers by editing the ``servers`` block of the ``ueransim`` section
-of ``vars/main-ueransim.yml``.
+The final step actually starts UERANSIM, configured according to the
+specification given in files ``custom-gnb.yaml`` and
+``custom-ue.yaml`` located in ``deps/ueransim/config``. Make target
+``aether-ueransim-run`` can be run multiple times, where doing so
+reflects any recent edits to the config files. More information about
+UERANSIM can be found on `GitHub
+<https://github.com/aligungr/UERANSIM>`__, including how to set up the
+config files.
 
 
 Physical eNBs
