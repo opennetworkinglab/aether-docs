@@ -350,13 +350,13 @@ section of ``vars/main.yml`` to replace:
 
 .. code-block::
 
-   $ values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
+   values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
 
 with
 
 .. code-block::
 
-   $ values_file: "deps/5gc/roles/core/templates/sdcore-5g_af_perf.yaml"
+   values_file: "deps/5gc/roles/core/templates/sdcore-5g_af_perf.yaml"
 
 You will also need need to restart the Core by typing ``make
 aether-core-reset``, and then rerun UERANSIM to see the effect.
