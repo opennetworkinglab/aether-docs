@@ -60,14 +60,14 @@ follows:
 
 .. code-block::
 
-   $ sudo apt install sshpass python3-venv pipx make
+   $ sudo apt install sshpass python3-venv pipx make git
    $ pipx install --include-deps ansible
    $ pipx ensurepath
    $ source ~/.bashrc
 
 Once installed, displaying the Ansible version number should result in
 output similar to the following on Ubuntu 20.04. (Ubuntu 22.04 will
-show ``ansible [core 2.16.2]``.)
+show ``ansible [core 2.16.4]``.)
 
 .. code-block::
 
@@ -82,10 +82,6 @@ show ``ansible [core 2.16.2]``.)
      jinja version = 3.1.3
      libyaml = True
 
-
-Note that a fresh install of Ubuntu may be missing other packages that
-you need (e.g., ``git``, ``curl``, ``make``), but you will be prompted
-to install them as you step through the Quick Start sequence.
 
 Download Aether OnRamp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
