@@ -332,7 +332,7 @@ followed by UERANSIM:
    $ make aether-ueransim-install
    $ make aether-ueransim-run
 
-The final step actually starts UERANSIM, configured according to the
+The last step actually starts UERANSIM, configured according to the
 specification given in files ``custom-gnb.yaml`` and
 ``custom-ue.yaml`` located in ``deps/ueransim/config``. Make target
 ``aether-ueransim-run`` can be run multiple times, where doing so
@@ -340,6 +340,27 @@ reflects any recent edits to the config files. More information about
 UERANSIM can be found on `GitHub
 <https://github.com/aligungr/UERANSIM>`__, including how to set up the
 config files.
+
+Finally, since the main value of UERANSIM is to measure user plane
+throughput, you may want to play with the UPF's Quality-of-Service
+parameters. For example,
+``deps/5gc/roles/core/templates/sdcore-5g_af_perf.yaml`` raises
+the bandwidth rate limit. To try this setting, edit the ``core``
+section of ``vars/main.yml`` to replace:
+
+.. code-block::
+
+   $ values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
+
+with
+
+.. code-block::
+
+   $ values_file: "deps/5gc/roles/core/templates/sdcore-5g_af_perf.yaml"
+
+You will also need need to restart the Core by typing ``make
+aether-core-reset``, and then rerun UERANSIM to see the effect.
+
 
 
 Physical eNBs
