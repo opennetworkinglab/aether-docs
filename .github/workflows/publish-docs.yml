@@ -17,10 +17,13 @@ jobs:
       - name: Validate reST source
         run: make test
       - name: Build docs
-        run: make multiversion
-      - name: List built files
+        run: make html
+      - name: Hack to deal with multiversion
         run: |
-          ls ${{ github.workspace }}/_build/multiversion/*
+          mkdir ${{ github.workspace }}/_build/multiversion/
+          mkdir ${{ github.workspace }}/_build/multiversion/master
+          cp -R ${{ github.workspace }}/_build/html/* ${{ github.workspace }}/_build/multiversion/master
+          ls ${{ github.workspace }}/_build/multiversion/master
 
       - name: Prep private key
         run: |
