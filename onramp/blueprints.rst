@@ -293,9 +293,6 @@ The UERANSIM blueprint includes the following:
    [master_nodes]
    node1
 
-   [worker_nodes]
-   node2
-
    [ueransim_nodes]
    node2
 
