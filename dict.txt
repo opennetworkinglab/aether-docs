@@ -172,6 +172,7 @@ inotify
 instantiation
 ip
 isn't
+iteratively
 jitter
 jjb
 json
@@ -289,6 +290,7 @@ tAC
 tcp
 tcpdump
 telegraf
+templating
 test
 testOpt
 tfvars

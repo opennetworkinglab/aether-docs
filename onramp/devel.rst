@@ -27,6 +27,9 @@ replacing the Helm Chart for an entire subsystem), to fine-grain
 The following uses SD-Core as a specific example to illustrate how
 this is done. The same approach can be applied to other subsystems.
 
+Local Helm Charts
+~~~~~~~~~~~~~~~~~~~~
+
 To substitute a local Helm Chart—for example, one located in directory
 ``/home/ubuntu/aether/sdcore-helm-charts/sdcore-helm-charts`` on the
 server where you run the OnRamp ``make`` targets—edit the ``helm``
@@ -51,6 +54,15 @@ with
 Note that variable ``core.helm.local_charts`` is a boolean, not the
 string ``"true"``. And in this example, we have declared our new chart
 to be version ``0.13.2`` instead of ``0.12.8``.
+
+Local Container Images
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Being able to modify a Helm Chart makes it possible to substitute
+alternative container images for all the microservices identified in
+the Helm Chart. But it is also possible to substitute just a single
+container image without having to touch the Helm Chart. This is done
+as follows.
 
 To substitute a locally built container image, edit the corresponding
 block in the values override file that you have configured in
@@ -103,3 +115,72 @@ but loading the latest gNBsim config file, by typing:
 
   $ make aether-gnbsim-run
 
+Directly Invoking Helm
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Finally, it is possible to directly invoke Helm without engaging
+OnRamp's Ansible playbooks. In this scenario, a developer might use
+OnRamp to initially set up Aether (e.g., to deploy Kubernetes on a set
+of nodes, install the routes and virtual bridges needed to
+interconnect the components, and bring up an initial set of pods), but
+then iteratively update the pods running on that cluster by executing
+``helm``.  This can be the basis for an efficient development loop for
+users with an in-depth understanding of Helm and Kubernetes.
+
+To see how this might work, it is helpful to look at an example
+installation playbook, and see how key tasks map onto a corresponding
+``helm`` commands. We'll use
+``deps/5gc/roles/core/tasks/install.yml``, which installs the 5G core,
+as an example. Consider the following two blocks from the playbook
+(each block corresponds to an Ansible task):
+
+.. code-block::
+
+  - name: add aether chart repo
+    kubernetes.core.helm_repository:
+      name: aether
+      repo_url: "https://charts.aetherproject.org"
+    when: inventory_hostname in groups['master_nodes']
+
+  - name: deploy aether 5gc
+    kubernetes.core.helm:
+      update_repo_cache: true
+      name: sd-core
+      release_namespace: omec
+      create_namespace: true
+      chart_ref: "{{ core.helm.chart_ref }}"
+      chart_version: "{{ core.helm.chart_version }}"
+      values_files:
+        - /tmp/sdcore-5g-values.yaml
+      wait: true
+      wait_timeout: "2m30s"
+      force: true
+    when: inventory_hostname in groups['master_nodes']
+
+These two tasks correspond to the following three ``helm`` commands:
+
+.. code-block::
+
+   $ helm repo add aether https://charts.aetherproject.org
+   $ helm repo update
+   $ helm upgrade --create-namespace \
+                            --install \
+                            --version $CHART_VERSION \
+                            --wait \
+                            --namespace omec \
+                            --values $VALUES_FILE \
+                            sd-core
+
+The correspondence between task parameters and command arguments is
+straightforward, keeping in mind that both approaches take advantage
+of variables (as defined in ``vars/main.yml`` for the Ansible tasks,
+and corresponding to shell variables ``CHART_VERSION`` and
+``VALUES_FILE`` in our example command sequence). The ``when`` line in
+the two tasks indicates that the task is to be run on the
+``master_nodes`` in your ``hosts.ini`` file; that node is where you
+would directly call ``helm``.
+
+Finally, you will see other tasks in the OnRamp playbook. These tasks
+primarily take care of bookkeeping; automating bookkeeping tasks
+(including templating variables) is one of the main values that
+Ansible provides.
