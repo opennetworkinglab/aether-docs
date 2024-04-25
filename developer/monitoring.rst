@@ -2,7 +2,7 @@
    SPDX-FileCopyrightText: © 2021 Open Networking Foundation <support@opennetworking.org>
    SPDX-License-Identifier: Apache-2.0
 
-Monitoring and Alert Development
+Monitoring Development
 ================================
 
 Aether leverages `Prometheus <https://prometheus.io/docs/introduction/overview/>`_ to collect
@@ -71,10 +71,10 @@ An alert can be triggered in Prometheus when a component metric crosses a thresh
 then routes the alert to one or more receivers (e.g., an email address
 or Slack channel).
 
-.. note:: This section on alerts is specific to an  operational
-   instantiation of Aether that is no supported. A port of this
-   capability to Aether OnRamp (so it is available to anyone
-   that wants to operate Aether) is pending.
+.. note:: This section on alerts is specific to an operational
+   instantiation of Aether that is no longer supported. A port of this
+   capability to Aether OnRamp (so it is available to anyone that
+   wants to operate Aether) is pending.
 
 To add an alert for a component, create a
 `PrometheusRule <https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/alerting.md>`_

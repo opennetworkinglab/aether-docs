@@ -31,7 +31,6 @@
    :hidden:
    :glob:
 
-   developer/aiab
    developer/roc
    developer/monitoring
    developer/contributing.rst

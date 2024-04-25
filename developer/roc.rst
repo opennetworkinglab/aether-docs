@@ -5,129 +5,23 @@
 ROC Development
 ===============
 
-This document assumes familiarity with Kubernetes and Helm, and that a
+ROC implements Aether's runtime control API, based on the architecture
+described in Sections 6.3.3 and 6.4 of the companion :doc:`Aether book
+<sysapproach5g:index>`. (The book refers to ROC as Aether's "Service
+Orchestrator").  ROC is implemented on top of `µONOS
+<https://github.com/onosproject>`_, a microservices-based redesign of
+the original ONOS SDN Controller. Of particular note, ROC generates
+the API from a set of YANG models loaded into the `onos-config`
+microservice.
+
+This section describes how to develop and contribute to ROC. It
+assumes familiarity with Kubernetes and Helm, and that a
 Kubernetes/Helm development environment has already been deployed in
-the developer’s work environment (for example, using a mechanism like
-KinD or kubeadm).
+the developer’s work environment (for example, using OnRamp).
 
 .. note:: By default, ROC is deployed without security enabled, with no Authentication or Authorization.
     To secure ROC so that the Authentication and Authorization can be tested, follow the Securing ROC
     section below :ref:`securing_roc`.
-
-Installing Prerequisites
-------------------------
-
-Atomix and onos-operator must be installed::
-
-   # create necessary namespaces
-   kubectl create namespace aether
-
-   # add repos
-   helm repo add atomix https://charts.atomix.io
-   helm repo add onosproject https://charts.onosproject.org
-   helm repo update
-
-   # install atomix
-   export ATOMIX_VERSION=1.1.2
-   helm -n kube-system install atomix atomix/atomix --version $ATOMIX_VERSION
-
-   # install the onos operator
-   ONOS_OPERATOR_VERSION=0.5.6
-   helm install -n kube-system onos-operator onosproject/onos-operator --version $ONOS_OPERATOR_VERSION
-
-.. note:: ROC is sensitive to the versions of Atomix and onos-operator installed. The values
-    shown above are correct for the 2.1.36- versions of the *aether-roc-umbrella*.
-
-.. list-table:: ROC support component version matrix
-   :widths: 40 20 20 20 20 20
-   :header-rows: 1
-
-   * - ROC Version
-     - atomix/atomix-controller
-     - atomix/atomix-raft
-     - atomix/atomix-runtime
-     - atomix/atomix
-     - onosproject/onos-operator
-   * - 1.2.25-1.2.45
-     - 0.6.7
-     - 0.1.8
-     - n/a
-     - n/a
-     - 0.4.8
-   * - 1.3.0-1.3.10
-     - 0.6.8
-     - 0.1.9
-     - n/a
-     - n/a
-     - 0.4.10
-   * - 1.3.11-,1.4.0-
-     - 0.6.8
-     - 0.1.14
-     - n/a
-     - n/a
-     - 0.4.12
-   * - 1.4.42-
-     - 0.6.8
-     - 0.1.15
-     - n/a
-     - n/a
-     - 0.4.14
-   * - 2.0.29-
-     - 0.6.8
-     - 0.1.16
-     - n/a
-     - n/a
-     - 0.5.1
-   * - 2.1.8-
-     - 0.6.9
-     - 0.1.26
-     - n/a
-     - n/a
-     - 0.5.3
-   * - 2.1.32-2.1.35
-     - n/a
-     - n/a
-     - 0.1.8
-     - n/a
-     - 0.5.6
-   * - 2.1.36-
-     - n/a
-     - n/a
-     - n/a
-     - 1.1.2
-     - 0.5.6
-
-.. note:: Changing between atomix and operators in a cluster may cause problems
-    if there are changes in the definition of the CRDs that they
-    include. To fully ensure a clean installation the CRDs should be
-    deleted manually AFTER deleting the old version of atomix or ONOS
-    Operator.
-
-Use `kubectl get crds | grep atomix` and `kubectl get crds | grep onos` to see the CRDs present.
-
-Verify that these services were installed properly.
-You should see pods for *atomix-controller(s)*
-*onos-operator-app*, and *onos-operator-topo*.
-Execute these commands::
-
-   helm -n kube-system list
-   kubectl -n kube-system get pods | grep -i atomix
-   kubectl -n kube-system get pods | grep -i onos
-
-
-Installing the ``aether-roc-umbrella`` Helm chart
--------------------------------------------------
-
-Add the necessary helm repositories::
-
-   helm repo add aether https://charts.aetherproject.org
-
-``aether-roc-umbrella`` will bring up the ROC and its services::
-
-   helm -n aether install aether-roc-umbrella aether/aether-roc-umbrella
-
-   kubectl wait pod -n aether --for=condition=Ready -l type=config --timeout=300s
-
 
 .. _posting-the-mega-patch:
 
@@ -157,7 +51,7 @@ Execute the following::
 .. note:: No port-forwarding is necessary to configure Aether
           OnRamp. Use URL *http://<hostname>:31194/aether-roc-api/*.
 
-You may wish to customize the mega patch. For example, by default the
+You may wish to customize the Mega-Patch. For example, by default the
 patch configures the ``sdcore-adapter`` to push to
 ``sdcore-test-dummy``.  You could instead configure it to push to a
 live instantiation of Aether by doing something like this::
@@ -182,13 +76,14 @@ as Slice and you will see a list of slices.
 Adding New Enterprises
 ----------------------
 
-Enterprises are stored in `onos-topo` outside of `onos-config` are are
-usually only created by system administrators during the onboarding of
-new customers (tenants) on Aether.
+Enterprises are stored in a second µONOS microservice, `onos-topo`,
+outside of `onos-config`. They are usually added by a system
+administrator during the onboarding of new customers (tenants) on
+Aether.
 
-There is currently no way of adding new Enterprises through the ROC
-GUI or the ROC API. It can be done in the two ways described in the
-following sections.
+There is currently no way to add new Enterprises through the ROC GUI
+or the API. Instead, it can be done in the two ways described in the
+following subsections.
 
 Enterprises are specified as Entities using CRDs, and the
 `onos-operator` ensures that these are created as `entitites` inside
@@ -205,8 +100,8 @@ Another option is to use the `onos-cli` pod to query `onos-topo` directly::
 
     kubectl -n aether exec deployment/onos-cli -- onos topo get entities -v
 
-Adding New Enterprises Through Helm Chart
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Adding New Enterprises Through Helm Charts
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To have an entity added at **start up of the cluster** it can be added
 through the Helm Chart in the `values.yaml` under
@@ -235,13 +130,6 @@ example::
     -a onos.topo.MastershipState='{}' \
     -k enterprise
 
-Uninstalling the ``aether-roc-umbrella`` Helm Chart
----------------------------------------------------
-
-To tear things back down, usually as part of a developer loop prior to
-redeploying again, do the following::
-
-   helm -n aether del aether-roc-umbrella
 
 Useful Port Forwards
 --------------------
@@ -303,9 +191,10 @@ image to into the kind cluster::
 Developing with a Custom onos-config
 -------------------------------------
 
-The onos-config Helm Chart is responsible for loading model plugins at
-runtime. You can override which plugins it loads, and optionally
-override the image for onos-config as well. For example::
+The `onos-config` Helm Chart is responsible for loading model
+plugins at runtime. You can override which plugins it loads, and
+optionally override the image for `onos-config` as well. For
+example::
 
     onos-config:
       image:
@@ -321,7 +210,7 @@ override the image for onos-config as well. For example::
         endpoint: localhost
         port: 5153
 
-In the above example, the onos-config image will be pulled from
+In the above example, the `onos-config` image will be pulled from
 `mydockeraccount`, and it will install two plugins for v2 and v4
 models, from that same docker account.
 
@@ -361,7 +250,7 @@ When running it should be available at
     your Aether ROC GUI login too.  To login as two separate users at
     the same time, use a private browser window for one.
 
-.. note:: Services inside the cluster (e.g. onos-config) should set
+.. note:: Services inside the cluster (e.g. `onos-config`) should set
     the issuer to *https://keycloak/realms/master* on port 80, while
     the aether-roc-gui should use `http://localhost:8080/realms/master`.
 

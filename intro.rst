@@ -27,7 +27,7 @@ radios.
 
 Other Aether guides available on this site include:
 
-* :doc:`Developing for Aether </developer/aiab>`: Learn how to
+* :doc:`Developing for Aether </developer/roc>`: Learn how to
   contribute back to Aether.
 
 * :doc:`Runtime Operations </operations/gui>`: Learn how

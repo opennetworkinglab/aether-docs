@@ -237,6 +237,7 @@ pfcpiface
 pre
 preconfigured
 prepend
+prereqs
 preseed
 programmatically
 protobuf

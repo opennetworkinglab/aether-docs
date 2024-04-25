@@ -15,9 +15,9 @@ are referred to documentation for the respective subsystems:
 
 * To develop SD-RAN, see the :doc:`SD-RAN Guide <sdran:index>`.
 
-* To develop ROC-based APIs, see :doc:`ROC Development </developer/roc>`.
+* To develop the ROC-based API, see :doc:`ROC Development </developer/roc>`.
 
-* To develop Monitoring Dashboards, see :doc:`Monitoring & Alert Development </developer/monitoring>`.
+* To develop Monitoring Dashboards, see :doc:`Monitoring Development </developer/monitoring>`.
 
 At a high level, OnRamp provides a means to deploy developmental
 versions of Aether that include local modifications to the standard
@@ -59,10 +59,9 @@ Local Container Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Being able to modify a Helm Chart makes it possible to substitute
-alternative container images for all the microservices identified in
-the Helm Chart. But it is also possible to substitute just a single
-container image without having to touch the Helm Chart. This is done
-as follows.
+alternative container images for any or all the microservices
+identified in the chart. But it is also possible to substitute just a
+single container image while using the standard chart.
 
 To substitute a locally built container image, edit the corresponding
 block in the values override file that you have configured in
@@ -118,14 +117,14 @@ but loading the latest gNBsim config file, by typing:
 Directly Invoking Helm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Finally, it is possible to directly invoke Helm without engaging
-OnRamp's Ansible playbooks. In this scenario, a developer might use
-OnRamp to initially set up Aether (e.g., to deploy Kubernetes on a set
-of nodes, install the routes and virtual bridges needed to
-interconnect the components, and bring up an initial set of pods), but
-then iteratively update the pods running on that cluster by executing
-``helm``.  This can be the basis for an efficient development loop for
-users with an in-depth understanding of Helm and Kubernetes.
+It is also possible to directly invoke Helm without engaging OnRamp's
+Ansible playbooks. In this scenario, a developer might use OnRamp to
+initially set up Aether (e.g., to deploy Kubernetes on a set of nodes,
+install the routes and virtual bridges needed to interconnect the
+components, and bring up an initial set of pods), but then iteratively
+update the pods running on that cluster by executing ``helm``.  This
+can be the basis for an efficient development loop for users with an
+in-depth understanding of Helm and Kubernetes.
 
 To see how this might work, it is helpful to look at an example
 installation playbook, and see how key tasks map onto a corresponding
@@ -178,9 +177,34 @@ and corresponding to shell variables ``CHART_VERSION`` and
 ``VALUES_FILE`` in our example command sequence). The ``when`` line in
 the two tasks indicates that the task is to be run on the
 ``master_nodes`` in your ``hosts.ini`` file; that node is where you
-would directly call ``helm``.
+would directly call ``helm``. Note that local charts can be used by
+also executing the following command (reusing the example path name
+from earlier in this section):
 
-Finally, you will see other tasks in the OnRamp playbook. These tasks
+.. code-block::
+
+   $ helm dep up /home/ubuntu/aether/sdcore-helm-charts/sdcore-helm-charts
+
+You will see other tasks in the OnRamp playbooks. These tasks
 primarily take care of bookkeeping; automating bookkeeping tasks
-(including templating variables) is one of the main values that
-Ansible provides.
+(including templating) is one of the main values that Ansible provides.
+
+Finally, keep in mind that in using SD-Core to illustrate how to build
+a customized modify-and-test loop, this section doesn't address some
+of the peculiarities of the other components. As one example, ROC has
+prerequisites that have to be installed before the ROC itself. These
+prereqs are identified in the ROC installation playbook, and include
+``onos-operator``, which in turn depends on ``atomix``.
+
+As another example, the ROC and monitoring services allow you to
+program new features by loading alternative "specifications" into the
+running pods (in addition to installing new container images).  This
+approach is described in the :doc:`ROC Development </developer/roc>`
+and :doc:`Monitoring Development </developer/monitoring>` sections,
+respectively, and implemented by the ``roc-load`` and ``monitor-load``
+roles found in ``deps/amp/roles``.
+
+
+
+
+
