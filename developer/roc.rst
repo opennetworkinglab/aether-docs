@@ -5,14 +5,14 @@
 ROC Development
 ===============
 
-ROC implements Aether's runtime control API, based on the architecture
-described in Sections 6.3.3 and 6.4 of the companion :doc:`Aether book
-<sysapproach5g:index>`. (The book refers to ROC as Aether's "Service
-Orchestrator").  ROC is implemented on top of `µONOS
-<https://github.com/onosproject>`_, a microservices-based redesign of
-the original ONOS SDN Controller. Of particular note, ROC generates
+ROC implements Aether's runtime control API. It is implemented on top
+of `µONOS <https://github.com/onosproject>`_, a microservice-based
+redesign of the ONOS SDN Controller. Of particular note, ROC generates
 the API from a set of YANG models loaded into the `onos-config`
-microservice.
+microservice, where `onos-config` then uses gNMI to control one or
+more back-end subsystems (e.g., SD-Core, SD-RAN) at runtime. For those
+back-end subsystems that do not support gNMI, an adapter translates the
+gNMI calls into the available interface.
 
 This section describes how to develop and contribute to ROC. It
 assumes familiarity with Kubernetes and Helm, and that a
@@ -25,15 +25,15 @@ the developer’s work environment (for example, using OnRamp).
 
 .. _posting-the-mega-patch:
 
-Posting the Mega-Patch
+Post a Mega-Patch
 ----------------------
 
 The ROC usually comes up in a blank state; there are no Enterprises,
 UEs, or other artifacts present in it.  The Mega-Patch is an example
 patch that populates the ROC with some sample enterprises, UEs,
-slices, etc.
+slices, and so on.
 
-Execute the following::
+To load the Mega-Patch, execute the following::
 
    # launch a port-forward for the API
    # this will continue to run in the background
@@ -65,42 +65,44 @@ Note that if Aether is installed on a different machine, then port-forwarding ma
 
 Expected CURL output from a successful Mega-Patch post will be a UUID.
 
-You can also verify that the Mega-Patch was successful by going into the
-``aether-roc-gui`` in a browser (see the section on useful port-forwards
-below). The GUI may open to a dashboard that is unpopulated. You can use the
-dropdown menu (upper-right hand corner of the screen) to select an object such
-as Slice and you will see a list of slices.
+You can verify that the Mega-Patch was successful by going into the
+``aether-roc-gui`` in a browser (see the section on useful
+port-forwards below). The GUI may open to a dashboard that is
+unpopulated. You can use the dropdown menu (upper-right hand corner of
+the screen) to select an object such as Slice and you will see a list
+of slices.
 
    |ROCGUI|
 
-Adding New Enterprises
+Add New Enterprises
 ----------------------
 
 Enterprises are stored in a second µONOS microservice, `onos-topo`,
-outside of `onos-config`. They are usually added by a system
+rather then `onos-config`. They are usually added by a system
 administrator during the onboarding of new customers (tenants) on
 Aether.
 
 There is currently no way to add new Enterprises through the ROC GUI
-or the API. Instead, it can be done in the two ways described in the
+or the API. Instead, this can be done in the two ways described in the
 following subsections.
 
 Enterprises are specified as Entities using CRDs, and the
 `onos-operator` ensures that these are created as `entitites` inside
 `onos-topo`.
 
-To check that the current list of enterprises (as CRDs), the following command may be used::
+To check that the current list of enterprises (as CRDs), the following
+command may be used::
 
    kubectl -n aether get entities
 
-and to check that the `onos-operator` does indeed take effect, the ROC
+To check that the `onos-operator` does indeed take effect, the ROC
 API endpoint `/targets` can be used to list the `enterprises`.
 
 Another option is to use the `onos-cli` pod to query `onos-topo` directly::
 
     kubectl -n aether exec deployment/onos-cli -- onos topo get entities -v
 
-Adding New Enterprises Through Helm Charts
+Through Helm Charts
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 To have an entity added at **start up of the cluster** it can be added
@@ -109,16 +111,16 @@ through the Helm Chart in the `values.yaml` under
 
    enterprises:
    - id: starbucks
-     name: Starbucks Enterprise
+     name: Acme Enterprise
      lat: 52.5150
      long: 13.3885
 
 This will load the `enterprise` as an Entity CRD through the `onos-operator`.
 
-Adding New Enterprises Through `onos-topo`
+Through `onos-topo`
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-New `enterprises` can be added to a live running system through the
+New `enterprises` can be added to a running system through the
 `onos-topo` command line (bypassing the `onos-operator`). For
 example::
 
@@ -137,7 +139,7 @@ Useful Port Forwards
 Port forwarding is often necessary to allow access to ports inside of
 Kubernetes pods that use ClusterIP addressing.  Note that you
 typically need to leave a port-forward running (you can put it in the
-background).  Also, If you redeploy the ROC and/or if a pod crashes
+background).  Also, if you redeploy the ROC and/or if a pod crashes,
 then you might have to restart a port-forward.
 
 .. note:: No port-forward is necessary with OnRamp. The GUI
@@ -164,7 +166,7 @@ The following port-forwards may be useful::
     there's no need to do another on the ``aether-roc-api``. Instead,
     you can access the API on ``http://localhost:8183/aether-roc-api``.
 
-Deploying Custom Images
+Deploy Custom Images
 --------------------------
 
 Custom images may be used by editing the values-override.yaml file.
@@ -177,7 +179,7 @@ For example, to deploy a custom ``sdcore-adapter``::
      tag: my-tag
      pullPolicy: Always
 
-The above example assumes you have published a docker images at
+This example assumes you have published a docker images at
 ``my-private-repo/sdcore-adapter:my-tag``.  One possible workflow is
 to deploy a local-docker registry and push images to that.
 
@@ -188,7 +190,7 @@ image to into the kind cluster::
 
    kind load docker-image sdcore-adapter:my-tag
 
-Developing with a Custom onos-config
+Customize onos-config
 -------------------------------------
 
 The `onos-config` Helm Chart is responsible for loading model
@@ -211,10 +213,10 @@ example::
         port: 5153
 
 In the above example, the `onos-config` image will be pulled from
-`mydockeraccount`, and it will install two plugins for v2 and v4
+`mydockeraccount`, and it will install two plugins for v2.0 and v2.1
 models, from that same docker account.
 
-Inspecting Logs
+Inspect Logs
 ---------------
 
 Most of the relevant Kubernetes pods are in the aether namespace.  The
@@ -229,10 +231,10 @@ Then you can inspect a specific pod/container::
 
 .. _securing_roc:
 
-Securing ROC
+Secure ROC
 ------------
 
-Running your own Keycloak Server
+Run Local Keycloak Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. note:: There is no longer a central keycloak server
@@ -254,7 +256,7 @@ When running it should be available at
     the issuer to *https://keycloak/realms/master* on port 80, while
     the aether-roc-gui should use `http://localhost:8080/realms/master`.
 
-Enabling Security
+Enable Security
 ^^^^^^^^^^^^^^^^^^^^^
 
 When deploying ROC with the ``aether-roc-umbrella`` chart, secure mode
@@ -272,16 +274,6 @@ can be enabled by specifying an OpenID Connect (OIDC) issuer; for example::
 The choice of OIDC issuer in this case is the **local** Keycloak
 server at *http://keycloak* inside the `aether` namespace.
 
-Production Environment
-^^^^^^^^^^^^^^^^^^^^^^
-
-In a production environment, the public Aether Keycloak (with its LDAP
-server populated with real Aether users and groups) should be used.
-See `public keycloak
-<https://keycloak.opennetworking.org/auth/realms/master/.well-known/openid-configuration>`_
-for more details.
-
-.. note:: Your RBAC access to ROC will be limited by the groups you belong to in its LDAP store.
 
 Role Based Access Control
 ^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -343,7 +335,7 @@ any **gnmi** call when security is enabled.
     :width: 887
     :alt: aether-config log message showing username and timestamp
 
-Accessing GUI from an external system
+Access GUI from an External System
 """""""""""""""""""""""""""""""""""""
 
 To access the ROC GUI from a computer outside the Cluster machine using *port-forwarding* then
@@ -392,18 +384,16 @@ OIDC issuer (Keycloak server), and that Auth is enabled.
     :alt: Browser Console showing correct configuration
 
 
-ROC Data Model Conventions and Requirements
--------------------------------------------
+Data Model Conventions
+-------------------------
 
-The Mega-Patch described above will bring up a fully compliant sample data model.
-However, it may be useful to bring up your own data model, customized to a different
-site of sites. This subsection documents conventions and requirements for the Aether
-modeling within the ROC.
+The Mega-Patch described earlier in this section brings up a fully
+compliant data model.  It may be useful to instead bring up your own
+data model, customized for a different set of sites. When doing so,
+the ROC models must adhere to the following conventions:
 
-The ROC models must be configured with the following:
-
-* A default enterprise with the id `defaultent`.
-* A default site with the id `defaultent-defaultsite`.
+* Include a default enterprise with the id `defaultent`.
+* Include a default site with the id `defaultent-defaultsite`.
   This site should be within the `defaultent` enterprise.
 
 .. |ROCGUI| image:: images/rocgui.png

@@ -1,8 +1,8 @@
-Contributing to Aether
+Contribute to Aether
 ======================
 
-We'd love to accept your patches and contributions to the Aether project. There are
-just a few small guidelines you need to follow.
+Users are invited to submit patches and other contributions to the
+Aether Project. There are just a few guidelines you need to follow.
 
 Contributor License Agreement
 -----------------------------
@@ -25,7 +25,7 @@ Aether follows `Google's Engineering Practices <https://google.github.io/eng-pra
 writing, submitting or reviewing code.
 Aether uses Github and gerrit to submit, review, tests and finally merge patches.
 
-Submitting Code
+Submit Code
 """""""""""""""
 
 Some additional points for developers:
@@ -40,7 +40,7 @@ Some additional points for developers:
  - Note that Aether makes use of both gerrit based workflows and Github workflows, depending on
    the component that is being worked on. Follow the section below that is appropriate.
 
-Steps to successful PRs (gerrit workflows)
+Steps to Successful PRs (gerrit workflows)
 """"""""""""""""""""""""""""""""""""""""""
 
  1. Checkout the code and prepare your patch. The workflow to make changes to the Aether code through gerrit is identical
@@ -63,7 +63,7 @@ Steps to successful PRs (gerrit workflows)
     and Core contributors can give final review approval. **All changes must get at least one
     approval**.
 
-Steps to successful PRs (Github workflows)
+Steps to Successful PRs (Github workflows)
 """"""""""""""""""""""""""""""""""""""""""
 
  1. Fork the repository to your company or personal Github account.
@@ -110,7 +110,7 @@ The benefits of being a core contributor include:
 - The ability to create branches in the main repository and merge your own code,
 - Community recognition and visibility for their contributions and expertise.
 
-Becoming a Core Contributor
+Become a Core Contributor
 """""""""""""""""""""""""""
 
 Core contributor candidates need to have a demonstrated proficiency with the

@@ -27,7 +27,7 @@
 
 .. toctree::
    :maxdepth: 3
-   :caption: Developing for Aether
+   :caption: Develop for Aether
    :hidden:
    :glob:
 
