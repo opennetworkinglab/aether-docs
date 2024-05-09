@@ -55,6 +55,11 @@ Note that variable ``core.helm.local_charts`` is a boolean, not the
 string ``"true"``. And in this example, we have declared our new chart
 to be version ``0.13.2`` instead of ``0.12.8``.
 
+Finally, while there are situations that require modifying full Helm
+charts, it is also possibly to simply substitute an alternative values
+override file for an existing chart by changing the ``core.values_file:``
+variable in ``vars/main.yml``.
+
 Local Container Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 

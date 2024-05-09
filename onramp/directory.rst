@@ -1,7 +1,7 @@
 .. Repositories
 .. ---------------
 
-Aether is a complex system, assembled from multiple components
+Aether is assembled from multiple components
 spanning several Git repositories. These include repos for different
 subsystems (e.g., AMP, SD-Core, SD-RAN), but also for different stages
 of the development pipeline (e.g., source code, deployment artifacts,
@@ -33,10 +33,6 @@ Source Repos
 Source code for Aether and all of its subsystems can be found in
 the following repositories:
 
-* Gerrit repository for the CORD Project
-  (https://gerrit.opencord.org): Helm Charts for ROC and JJB
-  specifications for the jobs that implement the CI pipeline.
-
 * GitHub repository for the OMEC Project
   (https://github.com/omec-project): Microservices for SD-Core, plus
   the emulator (gNBsim) that subjects SD-Core to RAN workloads.
@@ -48,6 +44,10 @@ the following repositories:
 * GitHub repository for the ONF
   (https://github.com/opennetworkinglab): OnRamp Documentation and
   Ansible playbooks for deploying Aether.
+
+* Gerrit repository for the CORD Project
+  (https://gerrit.opencord.org): Helm Charts for ROC and JJB
+  specifications for the jobs that implement the CI pipeline.
 
 For Gerrit, you can either browse Gerrit (select the `master` branch)
 or clone the corresponding *<repo-name>* by typing:
@@ -71,7 +71,7 @@ Artifact Repos
 
 Aether includes a *Continuous Integration (CI)* pipeline that builds
 deployment artifacts (e.g., Helm Charts, Docker Images) from the
-source code. These artifacts are stored in the following repositories:
+source code. These artifacts are stored in the following registries:
 
 Helm Charts
 
@@ -103,19 +103,16 @@ files for all the Helm Charts:
  | SD-RAN: https://github.com/onosproject/sdran-helm-charts
  | SD-Core: https://gerrit.opencord.org/plugins/gitiles/sdcore-helm-charts
 
-The QA tests run against code checked into these source repos can be
-found here:
-
- | https://gerrit.opencord.org/plugins/gitiles/aether-system-tests
-
-The specification for the CI pipeline, which invokes these QA tests,
-gates merge requests, and publishes artifacts, can be found here:
+The specification for the CI pipeline, which invokes QA tests and
+publishes artifacts, can be found here:
 
  | https://gerrit.opencord.org/plugins/gitiles/aether-ci-management
 
-For more information about Aether's CI pipeline, including its QA and
-version control strategy, we recommend the Lifecycle Management
-chapter of our companion Edge Cloud Operations book.
+The CI pipeline is being migrated from Jenkins jobs to GitHub actions.
+For more information about the original mechanism, including the
+version control strategy that is being preserved in the GitHub
+actions, we recommend the Lifecycle Management chapter of our
+companion Edge Cloud Operations book.
 
 .. _reading_cicd:
 .. admonition:: Further Reading
@@ -127,14 +124,13 @@ chapter of our companion Edge Cloud Operations book.
 OnRamp Repos
 ~~~~~~~~~~~~~~~~~~~
 
-The process to deploy the artifacts listed above, sometimes
-referred to as GitOps, manages the *Continuous Deployment (CD)* half
-of the CI/CD pipeline. OnRamp's approach to GitOps uses a different
-mechanism than the one the ONF ops team originally used to manage its
-multi-site deployment of Aether.  The latter approach has a large
-startup cost, which has proven difficult to replicate. (It also locks
-you into deployment toolchain that may or may not be appropriate for
-your situation.)
+The process to deploy the artifacts listed above manages the
+*Continuous Deployment (CD)* half of the CI/CD pipeline. OnRamp uses a
+different mechanism than the one the ONF ops team originally used to
+manage its multi-site deployment of Aether.  The latter approach has a
+large startup cost, which has proven difficult to replicate. (It also
+locks you into deployment toolchain that may or may not be appropriate
+for your situation.)
 
 In its place, OnRamp adopts minimal Ansible tooling. This makes it
 easier to take ownership of the configuration parameters that define
@@ -147,7 +143,9 @@ OnRamp repos:
  | Deploy 5G Core: https://github.com/opennetworkinglab/aether-5gc
  | Deploy 4G Core: https://github.com/opennetworkinglab/aether-4gc
  | Deploy Management Plane: https://github.com/opennetworkinglab/aether-amp
- | Deploy 5G RAN Simulator: https://github.com/opennetworkinglab/aether-gnbsim
+ | Deploy SD-RAN: https://github.com/opennetworkinglab/aether-sdran
+ | Deploy gNB Simulator: https://github.com/opennetworkinglab/aether-gnbsim
+ | Deploy UE+gNB Simulator: https://github.com/opennetworkinglab/aether-ueransim
  | Deploy Kubernetes: https://github.com/opennetworkinglab/aether-k8s
 
 It is the first repo that defines a way to integrate all of the Aether

@@ -340,25 +340,11 @@ config files.
 
 Finally, since the main value of UERANSIM is to measure user plane
 throughput, you may want to play with the UPF's Quality-of-Service
-parameters. For example,
-``deps/5gc/roles/core/templates/sdcore-5g_af_perf.yaml`` raises
-the bandwidth rate limit. To try this setting, edit the ``core``
-section of ``vars/main.yml`` to replace:
-
-.. code-block::
-
-   values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
-
-with
-
-.. code-block::
-
-   values_file: "deps/5gc/roles/core/templates/sdcore-5g_af_perf.yaml"
-
-You will also need need to restart the Core by typing ``make
-aether-core-reset``, and then rerun UERANSIM to see the effect.
-
-
+parameters. You will notice that variable ``core.values_file`` in
+``vars/main.yml`` is set to
+``deps/5gc/roles/core/templates/sdcore-5g-xput-values.yaml``.  Unlike
+the default settings used by other blueprints, this particular variant
+raises the bandwidth rate limit.
 
 Physical eNBs
 ~~~~~~~~~~~~~~~~~~

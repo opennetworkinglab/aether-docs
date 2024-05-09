@@ -11,17 +11,20 @@ to:
 * Experiment with scalable edge communication.
 * Deploy and operate Aether with live 5G traffic.
 
-Aether OnRamp begins with a *Quick Start* deployment similar to
-`Aether-in-a-Box (AiaB)
-<https://docs.aetherproject.org/master/developer/aiab.html>`__, but
-then goes on to prescribe a sequence of steps users can follow to
-deploy increasingly complex configurations. OnRamp refers to each such
-configuration as a *blueprint*, and the set supports both emulated and
-physical RANs, along with the runtime machinery needed to operate an
-Aether cluster supporting live 5G workloads.  (OnRamp also defines a
-4G blueprint that can be used to connected one or more physical eNBs,
-but we postpone a discussion of that capability until a later
-section. Everything else in this guide assumes 5G.)
+Aether OnRamp begins with a *Quick Start* recipe that deploys Aether
+in a single VM or server, but then goes on to prescribe a sequence of
+steps users can follow to deploy increasingly complex configurations.
+OnRamp refers to each such configuration as a *blueprint*, where the
+set supports both emulated and physical RANs, along with the runtime
+machinery needed to operate an Aether cluster supporting live 5G
+workloads.\ [#]_ The goal of this Guide is to help users take
+ownership of the Aether deployment process by incrementally exposing
+all the degrees-of-freedom Aether supports.
+
+.. [#] OnRamp also defines a 4G blueprint that can be used to
+       connected one or more physical eNBs, but we postpone a
+       discussion of that capability until a later section. Everything
+       else in this guide assumes 5G.
 
 .. include:: directory.rst
 
