@@ -340,11 +340,10 @@ config files.
 
 Finally, since the main value of UERANSIM is to measure user plane
 throughput, you may want to play with the UPF's Quality-of-Service
-parameters. You will notice that variable ``core.values_file`` in
-``vars/main.yml`` is set to
-``deps/5gc/roles/core/templates/sdcore-5g-xput-values.yaml``.  Unlike
-the default settings used by other blueprints, this particular variant
-raises the bandwidth rate limit.
+parameters, as defined in
+``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``. Specifically,
+see both the UE-level settings associated with ``ue-dnn-qos`` and the
+slice-level settings associated with ``slice_rate_limit_config``.
 
 Physical eNBs
 ~~~~~~~~~~~~~~~~~~
