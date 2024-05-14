@@ -42,26 +42,8 @@ the following repositories:
   plus the YANG models used to generate the Aether API.
 
 * GitHub repository for the ONF
-  (https://github.com/opennetworkinglab): OnRamp Documentation and
-  Ansible playbooks for deploying Aether.
-
-* Gerrit repository for the CORD Project
-  (https://gerrit.opencord.org): Helm Charts for ROC and JJB
-  specifications for the jobs that implement the CI pipeline.
-
-For Gerrit, you can either browse Gerrit (select the `master` branch)
-or clone the corresponding *<repo-name>* by typing:
-
-.. code-block::
-
-  $ git clone ssh://gerrit.opencord.org:29418/<repo-name>
-
-If port 29418 is blocked by your network administrator, you can try cloning
-using https instead of ssh:
-
-.. code-block::
-
-  $ git clone https://gerrit.opencord.org/<repo-name>
+  (https://github.com/opennetworkinglab): OnRamp documentation and
+  playbooks for deploying Aether.
 
 Anyone wanting to participate in Aether's ongoing development will
 want to learn how to contribute new features to these source repos.
@@ -95,24 +77,20 @@ that while Aether documentation often refers its use of "Docker
 containers," it is now more accurate to say that Aether uses
 `OCI-Compliant containers <https://opencontainers.org/>`__.
 
-The Aether CI pipeline keeps the above artifact repos in sync with the
+The Aether CI pipeline keeps these artifact repos in sync with the
 source repos listed above. Among those source repos are the source
 files for all the Helm Charts:
 
- | ROC: https://gerrit.opencord.org/plugins/gitiles/roc-helm-charts
+ | ROC: https://github.com/onosproject/roc-helm-charts
  | SD-RAN: https://github.com/onosproject/sdran-helm-charts
- | SD-Core: https://gerrit.opencord.org/plugins/gitiles/sdcore-helm-charts
+ | SD-Core: https://github.com/omec-project/sdcore-helm-charts
 
-The specification for the CI pipeline, which invokes QA tests and
-publishes artifacts, can be found here:
-
- | https://gerrit.opencord.org/plugins/gitiles/aether-ci-management
-
-The CI pipeline is being migrated from Jenkins jobs to GitHub actions.
-For more information about the original mechanism, including the
-version control strategy that is being preserved in the GitHub
-actions, we recommend the Lifecycle Management chapter of our
-companion Edge Cloud Operations book.
+The CI pipeline for each subsystem is implemented as GitHub Actions in
+the respective repos. The approach is based on an earlier version
+implemented by set of Jenkins jobs, as described in the Lifecycle
+Management chapter of a companion Edge Cloud Operations book. Of
+particular note, the current pipeline adopts the version control
+strategy of the original mechanism.
 
 .. _reading_cicd:
 .. admonition:: Further Reading
