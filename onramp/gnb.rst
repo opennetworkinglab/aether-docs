@@ -228,7 +228,7 @@ gives detailed instructions about configuring the gNB.
 .. admonition:: Further Reading
 
    `MOSO CANOPY 5G INDOOR SMALL CELL
-   <https://opennetworking.org/products/moso-canopy-5g-indoor-small-cell/>`__.
+   <https://wiki.aetherproject.org/display/HOME/Certified+Hardware>`__.
 
 .. admonition:: Troubleshooting Hint
 

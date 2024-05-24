@@ -190,7 +190,7 @@ The SD-RAN blueprint includes the following:
   blueprint specification.
 
 * Inventory file ``hosts.ini`` is identical to that used in the Quick
-  Start deployment, with both SD-RAN and Sd-Core co-located on a
+  Start deployment, with both SD-RAN and SD-Core co-located on a
   single server.
 
 * New make targets, ``aether-sdran-install`` and
