@@ -103,17 +103,9 @@ A third possible answer is that you want to scale SD-Core itself, in
 support of a scalable number of UEs. For example, providing
 predictable, low-latency support for hundreds or thousands of IoT
 devices requires horizontally scaling the AMF. OnRamp provides a way
-to experiment with exactly that possibility. If you edit the ``core``
-section of ``vars/main.yml`` to use an alternative values file (in
-place of ``sdcore-5g-values.yaml``):
-
-.. code-block::
-
-   values_file: "deps/5gc/roles/core/templates/hpa-5g-values.yaml"
-
-you can deploy SD-Core with *Horizontal Pod Autoscaling (HPA)*
-enabled. Note that HPA is an experimental feature of SD-Core; it has
-not yet been officially released and is not yet supported.
+to experiment with exactly that possibility by taking advantage of
+*Horizontal Pod Autoscaling (HPA)*. Note that scaling Aether is an
+area of active research, as documented in the Aether Wiki.
 
 .. _reading_hpa:
 .. admonition:: Further Reading
@@ -121,7 +113,7 @@ not yet been officially released and is not yet supported.
    `Horizontal Pod Autoscaling
    <https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/>`__.
 
-
+   `Aether Wiki: Research <https://wiki.aetherproject.org/display/HOME/Research>`__.
 
 
 
