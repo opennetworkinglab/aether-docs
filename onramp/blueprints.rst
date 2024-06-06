@@ -45,11 +45,11 @@ to-date.
        alternative ``core.values_file`` are two common examples.
 
 Finally, because some blueprints include features that are not
-compatible with simple configurations like *Quick Start*, it is it
-necessary to install/uninstall Aether using a set of narrow Make
-targets (e.g., ``5gc-upf-install``) rather than a single broad target
-(e.g., ``aether-5gc-install``). Such situations are documented in the
-following subsections.
+compatible with simple configurations like *Quick Start*, it is
+sometimes necessary to install/uninstall Aether using a set of narrow
+Make targets (e.g., ``5gc-upf-install``) rather than a single broad
+target (e.g., ``aether-5gc-install``). Such situations are documented
+in the following subsections.
 
 Multiple UPFs
 ~~~~~~~~~~~~~~~~~~~~~~
