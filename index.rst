@@ -35,7 +35,6 @@
    developer/monitoring
    developer/contributing.rst
 
-
 .. toctree::
    :maxdepth: 3
    :caption: Runtime Operations
