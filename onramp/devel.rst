@@ -51,14 +51,17 @@ with
     chart_ref: "/home/ubuntu/aether/sdcore-helm-charts/sdcore-helm-charts"
     chart_version: 0.13.2
 
-Note that variable ``core.helm.local_charts`` is a boolean, not the
-string ``"true"``. And in this example, we have declared our new chart
-to be version ``0.13.2`` instead of ``0.12.8``.
+Note that variable ``core.helm.local_charts`` is a boolean, and in
+this example, we have declared our new chart to be version ``0.13.2``
+instead of ``0.12.8``.
 
 Finally, while there are situations that require modifying full Helm
 charts, it is also possibly to simply substitute an alternative values
-override file for an existing chart by changing the ``core.values_file:``
-variable in ``vars/main.yml``.
+override file for an existing chart by changing the
+``core.values_file:`` variable in ``vars/main.yml``. (This is a
+standard practice when defining new blueprints, as discussed in
+:doc:`Other Blueprints </onramp/blueprints>`.
+
 
 Local Container Images
 ~~~~~~~~~~~~~~~~~~~~~~~~~
