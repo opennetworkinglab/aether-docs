@@ -405,3 +405,94 @@ but revisiting the previous sections—substituting the above for their
 Aether.  Note that the network is configured in exactly the same way
 for both 4G and 5G. This is because SD-Core's implementation of the
 UPF is used in both cases.
+
+Enable SR-IOV and DPDK
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+UPF performance can be improved by enabling SR-IOV and DPDK. This
+blueprint supports both optimizations, where the former depends on the
+server NIC(s) being SR-IOV capable. The blueprint includes the
+following:
+
+* Global vars file ``vars/main-sriov.yml`` gives the overall blueprint
+  specification.
+
+* Inventory file ``hosts.ini`` is identical to that used throughout
+  this Guide. There are no additional node groups.
+
+* New make targets, ``5gc-sriov-install`` and ``5gc-sriov-uninstall``, to
+  be executed along with the standard SD-Core installation.
+
+* New Ansible role (``sriov``) added to the ``5gc``
+  submodule.
+
+* SRIOV-specific override variables required to configure the core are
+  included in a new template:
+  ``deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml``.
+
+* Integration tests require SR-IOV capable servers, and so have not
+  yet been added to Jenkins.
+
+To use SR-IOV and DPDK, first copy the vars file to ``main.yml``:
+
+.. code-block::
+
+   $ cd vars
+   $ cp main-sriov.yml main.yml
+
+You will see the main difference in the ``upf`` block of the ``core``
+section:
+
+.. code-block::
+
+    upf:
+      ip_prefix: "192.168.252.0/24"
+      iface: "access"
+      mode: dpdk			# Options: af_packet or dpdk
+      # If mode set to 'dpdk':
+      #    - make sure at least two VF devices are created out of 'data_iface'
+      #      and these devices are attached to vfio-pci driver;
+      #    - use 'sdcore-5g-sriov-values.yaml' file for 'values_file' (above).
+
+Note the VF device requirement in ``upf`` block comments, and be sure
+that the ``core`` block points to the alternative override file:
+
+.. code-block::
+
+    values_file: "deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml"
+
+
+Guidelines for Blueprints
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Blueprints define alternate "on ramps" for using Aether. They are
+intended to provide users with different starting points, depending on
+the combination of features they are most interested in. The intent is
+also that users eventually "own" their own customized blueprint, for
+example by combining features from more than one of the set
+distributed with OnRamp. Not all such combinations are valid, and not
+all valid combinations have been been tested.  This is why there is
+not currently one uber-blueprint that satisfies all requirements.
+
+Users are encourage to contribute new blueprints to the official
+release, for example by adding one or more new features/capabilities,
+or possibly by demonstrating how to deploy a different combination of
+existing features. In addition to meeting the general definition of a
+blueprint (as introduced in the introduction to this section), we
+recommend the following guidelines.
+
+* Keep blueprints fairly narrow. One of their main values is to
+  document (in code) how a particular feature is enabled and
+  configured. Introduce new roles to keep playbooks narrow.  Introduce
+  new values files to keep each example override file narrow.
+
+* Use Ansible best-practices for defining playbooks. This means using
+  Ansible plugins rather than invoking shell scripts, whenever
+  possible.
+
+* Minimize the number of variables exposed in
+  ``vars/main-blueprint.yml``. Their main purpose is direct how
+  Ansible deploys Aether, and not to configure the individual
+  subsystems of a given deployment. The latter details are best
+  defined in a values override file, which can then be referenced by
+  ``vars/main-blueprint.yml``.
