@@ -2,14 +2,15 @@ Introduction
 ==============
 
 Aether is an open source 5G edge cloud platform that supports
-enterprise deployments of Private 5G. Information about the Aether
-project can be found on the ONF website, and an introduction to the
-Aether architecture can be found in a companion book:
+enterprise deployments of Private 5G. Information about Aether (a
+Linux Foundation project) can be found on the project website. An
+introduction to the Aether architecture can be found in a companion
+book:
 
 .. _reading_private5g:
 .. admonition:: Further Reading
 
-   `Aether: An ONF Project <https://opennetworking.org/aether/>`_.
+   `Aether Project <https://aetherproject.org>`_.
 
    L. Peterson, O. Sunay, and B. Davie. `Private 5G: A Systems
    Approach <https://5g.systemsapproach.org>`__. 2023
@@ -36,12 +37,12 @@ Other Aether guides available on this site include:
 * :doc:`Test Automation </testing/about_system_tests>`: Learn how Aether
   components are tested.
 
-Note that Aether was originally deployed as a centrally-managed,
-ONF-operated cloud service, with the expectation that organizations
-would participate in Aether by connecting their edge site to this
-operational deployment.\ [#]_ That service has now been deprecated in
-favor of users bringing up their own Aether sites using :doc:`OnRamp
-</onramp/overview>`.
+Note that Aether was originally deployed as a centrally-managed cloud
+service with a dedicated ops team. The expectation was that
+organizations would participate in Aether by connecting their edge
+site to this operational deployment.\ [#]_ That service has now been
+deprecated in favor of users bringing up their own Aether sites using
+:doc:`OnRamp </onramp/overview>`.
 
 .. [#] The original Aether service supported the Pronto research
        project, with edge clusters built on top of an SDN-controlled
@@ -66,7 +67,5 @@ Community
 ---------
 
 Information about participating in the Aether community and
-development process can be found on the `ONF Wiki
-<https://wiki.opennetworking.org/display/COM/Aether>`_.  Join the
-discussion about Aether on Slack in the `ONF Community Workspace
-<https://onf-community.slack.com/>`__.
+development process can be found on the `Aether Wiki
+<https://wiki.aetherproject.org/display/HOME/Aether+Project>`_.
