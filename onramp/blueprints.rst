@@ -421,7 +421,7 @@ following:
   this Guide. There are no additional node groups.
 
 * New make targets, ``5gc-sriov-install`` and ``5gc-sriov-uninstall``, to
-  be executed along with the standard SD-Core installation.
+  be executed along with the standard SD-Core installation (see below).
 
 * New Ansible role (``sriov``) added to the ``5gc``
   submodule.
@@ -460,6 +460,24 @@ that the ``core`` block points to the alternative override file:
 .. code-block::
 
     values_file: "deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml"
+
+Deploying this blueprint involves the invoking the following sequence
+of Make targets:
+
+.. code-block::
+
+   $ make k8s-install
+   $ make 5gc-router-install
+   $ make 5gc-sriov-install
+   $ make 5gc-core-install
+
+The ``5gc-sriov-install`` step happens after the Kubernetes cluster is
+installed, but before the Core workload is instantiated on that
+cluster.  The corresponding playbook augments Kubernetes with the
+required extensions. It has been written to do nothing unless variable
+``core.upf.mode`` is set to ``dpdk``, where OnRamp now includes the
+``5gc-sriov-install`` target as part of its default ``5gc-install``
+target.
 
 
 Guidelines for Blueprints
