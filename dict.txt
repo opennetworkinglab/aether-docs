@@ -277,6 +277,7 @@ smgmt
 spgw
 spgwc
 splitter
+srsRAN
 starbucks
 stateful
 subcomponent
