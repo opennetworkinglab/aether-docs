@@ -14,7 +14,7 @@ RAN requires the following hardware:
 * A SIM reader/writer and associated software (e.g., OYEITIMES MCR3516).
 * A set of programmable SIM cards (blank cards likely included with reader/writer).
 
-There are multiple options for each component, including both
+There are many options for each component, including both
 proprietary small cells (such as the MOSO CANOPY) and open source
 radios (such as OAI and srsRAN). This section works through the
 details of a specific end-to-end solution, where for simplicity, we
