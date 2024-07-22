@@ -14,11 +14,13 @@ RAN requires the following hardware:
 * A SIM reader/writer and associated software (e.g., OYEITIMES MCR3516).
 * A set of programmable SIM cards (blank cards likely included with reader/writer).
 
-There are multiple options for each component, but finding a
-combination that works together can be challenging. This section makes
-several recommendations based on working end-to-end systems. For
-simplicity, we pared the above list back to a single example for each
-item, but these should not be interpreted as the only possibility.
+There are multiple options for each component, including both
+proprietary small cells (such as the MOSO CANOPY) and open source
+radios (such as OAI and srsRAN). This section works through the
+details of a specific end-to-end solution, where for simplicity, we
+pare the above list back to a single example for each item.  These
+should not be interpreted as the only possibility, where :doc:`Other
+Blueprints </onramp/blueprints>` documents other options.
 
 Note also that our example relies on the availability of spectrum in
 the CBRS band, which is available in the United States. Spectrum
@@ -26,11 +28,12 @@ options are likely to be different in other countries.
 
 .. admonition:: Troubleshooting Hint
 
-  We are tracking community experience with different hardware in the
+  In addition to :doc:`Other Blueprints </onramp/blueprints>`, we are
+  tracking community experience with different hardware in the
   ``#aether-onramp`` channel of the `ONF Workspace
   <https://onf-community.slack.com/>`__, with summaries of different
-  combinations people have tried reported in the OnRamp
-  `Troubleshooting Wiki Page
+  combinations people have tried reported in the OnRamp `Troubleshooting
+  Wiki Page
   <https://wiki.aetherproject.org/display/HOME/Troubleshooting>`__.
 
 This blueprint assumes you start with a variant of ``vars/main.yml``
@@ -69,7 +72,7 @@ using.
 .. code-block::
 
    core:
-       standalone: "true"
+       standalone: true
        data_iface: ens18
        values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
        ran_subnet: ""
@@ -220,9 +223,9 @@ Once the SD-Core is up and running, we are ready to bring up the
 physical gNB. The details of how to do this depend on the specific
 device you are using, but we identify the main issues you need to
 address using SERCOMM's 5G femto cell (as distributed by MosoLabs) as
-an example. That particular device uses either the n48 or n78 band and
-is on the ONF MarketPlace, where you can also find a User's Guide that
-gives detailed instructions about configuring the gNB.
+an example. That particular device uses either the n48 or n78 band,
+where a User's Guide gives detailed instructions about configuring the
+gNB.
 
 .. _reading_sercomm:
 .. admonition:: Further Reading

@@ -216,7 +216,7 @@ physical gNBs.
 .. code-block::
 
     core:
-        standalone: "true"
+        standalone: true
         data_iface: ens18
         values_file: "config/sdcore-5g-values.yaml"
         ran_subnet: "172.20.0.0/16"
