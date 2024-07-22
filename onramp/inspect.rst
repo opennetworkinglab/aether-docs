@@ -44,7 +44,16 @@ The programmatic API underlying the Control Dashboard, which was
 introduced in `Section 6.4
 <https://5g.systemsapproach.org/cloud.html#connectivity-api>`__, can
 be accessed at ``http://10.76.28.113:31194/aether-roc-api/`` in our
-example deployment (where Aether runs on host ``10.76.28.113``).
+example deployment (where Aether runs on host ``10.76.28.113``). Note
+that if you visit that URL from a browser, OpenAPI will show you
+example GET, DELETE, and POST requests. Those examples assume the
+prefix ``http://10.76.28.113:31194/aether-roc-api/`` (not just
+``http://10.76.28.113:31194``), so for example, to GET the resource
+corresponding to ``site-1``, you would need to use the following URL:
+
+.. code-block::
+
+   http://10.76.28.113:31194/aether-roc-api/aether/v2.1.x/the-enterprise/site/site-1
 
 There is much more to say about the ROC and the Aether API, which we
 return to in the :doc:`Runtime Control </onramp/roc>` section. For
