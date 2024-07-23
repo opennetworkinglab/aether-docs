@@ -97,6 +97,35 @@ to tear it down:
 
    $ make aether-amp-uninstall
 
+Finally, while we have been using a single Make target to install
+(uninstall) AMP as a whole, there are per-component targets for both
+ROC and Monitoring if you are interested in only one or the other. For
+ROC:
+
+.. code-block::
+
+   $ make roc-install
+   $ make roc-load
+   $  ...
+   $ make roc-uninstall
+
+and for Monitoring:
+
+.. code-block::
+
+   $ make monitoring-install
+   $ make monitoring-load
+   $  ...
+   $ make monitoring-uninstall
+
+In both cases, installing the component is a two-step process: first
+the microservices that implement the component are instantiated on
+Kubernetes and then service-specific data is loaded into the running
+containers. For ROC, that data populates the models that define the
+API. For Monitoring, that data specifies the dashboard panels. In
+general, there are per-component targets for all of the Aether-wide
+(``aether-*``) targets; see the Makefile for details.
+
 View Logs
 ~~~~~~~~~~~~~~~~
 
