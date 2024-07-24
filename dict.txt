@@ -18,7 +18,7 @@ Dockerfile
 Epyc
 Flintstone
 Fudd
-GPP 
+GPP
 GTP
 GbE
 GiB
