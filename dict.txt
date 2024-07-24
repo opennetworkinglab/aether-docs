@@ -18,12 +18,12 @@ Dockerfile
 Epyc
 Flintstone
 Fudd
+GPP 
 GTP
 GbE
 GiB
 GitOps
 Github
-GPP
 Grafana
 Haswell
 IPMI
