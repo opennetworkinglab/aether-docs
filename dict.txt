@@ -18,6 +18,7 @@ Dockerfile
 Epyc
 Flintstone
 Fudd
+GPP
 GTP
 GbE
 GiB
@@ -46,6 +47,7 @@ Microservices
 Mininet
 Moto
 Multipass
+NAV
 Netbox
 ONF
 ONL

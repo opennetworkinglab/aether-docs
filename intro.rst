@@ -53,12 +53,21 @@ deprecated in favor of users bringing up their own Aether sites using
 Aether Components
 ------------------------
 
-Aether builds on two main subsystems: SD-Core (a cloud native Mobile
-Core) and SD-RAN (an O-RAN compliant, software-based RAN).
-Additional documentation for each is available at:
+Aether builds on two main subsystems: SD-Core (a 3GPP-compliant cloud
+native Mobile Core) and SD-RAN (an O-RAN compliant near Real-Time RAN
+Intelligent Controller, or nRT-RIC).  Additional documentation for each is
+available at:
 
 * :doc:`SD-Core Documentation <sdcore:index>`
 * :doc:`SD-RAN Documentation <sdran:index>`
+
+A third component, *ROC (Runtime Operational Control)*, is part of the
+Aether Management Plane. This Guide documents how operators use ROC to
+control Aether (see the NAV bar). ROC builds on µONOS (specifically
+the ``onos-config`` microservice), with additional documentation for
+developers available at:
+
+* `µONOS Documentation <https://docs.onosproject.org>`__
 
 More information about 5G and Aether's architecture can be found in
 the :doc:`Private 5G: A Systems Approach <sysapproach5g:index>` book.
