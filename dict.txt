@@ -23,6 +23,7 @@ GbE
 GiB
 GitOps
 Github
+GPP
 Grafana
 Haswell
 IPMI
@@ -46,6 +47,7 @@ Microservices
 Mininet
 Moto
 Multipass
+NAV
 Netbox
 ONF
 ONL
