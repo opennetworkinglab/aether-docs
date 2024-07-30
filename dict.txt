@@ -22,6 +22,7 @@ GPP
 GTP
 GbE
 GiB
+GigE
 GitOps
 Github
 Grafana

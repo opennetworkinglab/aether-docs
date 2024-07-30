@@ -502,11 +502,11 @@ The blueprint includes the following:
 * Inventory file ``hosts.ini`` uses label ``[oai_gnb_nodes]`` to
   denote the server(s) that host the gNB and label ``[oai_ue_nodes]``
   to denote the server(s) that host the UE. (The latter is necessary
-  only when running in simulation mode.) One common configuration is
+  only when running in simulation mode.) The expected configuration is
   to run both the gNB and UE on the same server as Kubernetes (where
-  the 5G Core runs). Another common common configuration is to
-  co-locate the gNB and UE on one server, with the 5G Core running on
-  a separate server.
+  the 5G Core runs). Another possible configuration is to co-locate
+  the gNB and UE on one server, with the 5G Core running on a separate
+  server.
 
 * New make targets, ``oai-gnb-install`` and ``oai-gnb-uninstall``, to
   be executed along with the standard SD-Core installation (see  below).
@@ -596,12 +596,13 @@ To deploy the OAI blueprint with a physical gNB and UE, first
 configure the USRP hardware as described in the `USRP Hardware Manual
 <https://files.ettus.com/manual/page_usrp_x3x0.html>`__.  Of
 particular note, you need to select whether the device is to connect
-to the Aether Core using its 1G or 10G interface, and make sure the
-OAI configuration file (corresponding to ``oai.conf_file``) sets the
-``sd_addrs`` variable to match the interface you select. You also need
-to make sure the PLMN-related values in the files specified by
-``core.values_file`` and ``oai.conf_file`` (along with the SIM cards
-you burn) are consistent. Once ready, run the following Make targets:
+to the Aether Core using its 1-GigE or 10-GigE interface, and make
+sure the OAI configuration file (corresponding to ``oai.conf_file``)
+sets the ``sd_addrs`` variable to match the interface you select. You
+also need to make sure the PLMN-related values in the files specified
+by ``core.values_file`` and ``oai.conf_file`` (along with the SIM
+cards you burn) are consistent. Once ready, run the following Make
+targets:
 
 .. code-block::
 
