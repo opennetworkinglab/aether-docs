@@ -22,6 +22,7 @@ GPP
 GTP
 GbE
 GiB
+GigE
 GitOps
 Github
 Grafana
@@ -49,6 +50,7 @@ Moto
 Multipass
 NAV
 Netbox
+OAI
 ONF
 ONL
 OPc
