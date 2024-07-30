@@ -499,19 +499,19 @@ The blueprint includes the following:
 * Global vars file ``vars/main-oai.yml`` gives the overall blueprint
   specification.
 
-* Inventory file ``hosts.ini`` is similar to that used throughout this
-  Guide, except this blueprint uses label ``[oai_gnb_nodes]`` to
+* Inventory file ``hosts.ini`` uses label ``[oai_gnb_nodes]`` to
   denote the server(s) that host the gNB and label ``[oai_ue_nodes]``
   to denote the server(s) that host the UE. (The latter is necessary
-  only when running in simulation mode.) The gNB and UE can can run on
-  the same server as Kubernetes (where the 5G Core runs), although a
-  common configuration is to co-locate the Core and gNB on one server,
-  with the simulated UE running on a separate server.
+  only when running in simulation mode.) One common configuration is
+  to run both the gNB and UE on the same server as Kubernetes (where
+  the 5G Core runs). Another common common configuration is to
+  co-locate the gNB and UE on one server, with the 5G Core running on
+  a separate server.
 
-* New make targets, ``oai-gNb-install`` and ``oai-gNb-uninstall``, to
+* New make targets, ``oai-gnb-install`` and ``oai-gnb-uninstall``, to
   be executed along with the standard SD-Core installation (see  below).
-  When running a simulated UE, targets ``oai-uEsim-start`` and
-  ``oai-uEsim-stop`` are also available.
+  When running a simulated UE, targets ``oai-uesim-start`` and
+  ``oai-uesim-stop`` are also available.
 
 * A new submodule ``deps/oai`` (corresponding to repo ``aether-oai``)
   defines the Ansible Roles and Playbooks required to deploy the OAI
@@ -552,8 +552,8 @@ section:
 
 Variable ``simulation`` is set to ``true`` by default, causing OnRamp
 to deploy the simulated UE.  When set to ``false``, the simulated UE
-is not deployed and it is instead necessary to initialize the USRP device
-and configure a physical UE.
+is not deployed and it is instead necessary to configure the USRP and
+a physical UE.
 
 Note that instead of downloading and compiling the latest OAI
 software, this blueprint pulls in the published images for both the
@@ -563,19 +563,19 @@ software, you will need to change these values accordingly. See the
 :doc:`Development Support </onramp/devel>` section for guidance.
 
 The ``network`` block of the ``oai`` section configures the necessary
-tunnels. Variable ``network.data_iface`` needs to be modified in the
-same way as in the ``core`` and ``gnbsim`` sections, as described
-throughout this Guide.
+tunnels so the gNB can connect to the Core's user and control planes.
+Variable ``network.data_iface`` needs to be modified in the same way
+as in the ``core`` and ``gnbsim`` sections of ``vars/main.yml``, as
+described throughout this Guide.
 
 The path names associated with variables ``oai.gnb.conf_file`` and
 ``oai.ue.conf_file`` are OAI-specific configuration files. The two
 given by default are for simulation mode. The template directory for
-the ``gNb`` role also includes a configuration file for the USRP X310
-when that hardware is to be deployed; edit variable
-``oai.gnb.conf_file`` to point to that file instead. If you plan to
-use some other OAI configuration file, note that the following two
-variables in the ``AMF parameters`` section need to be modified to
-work with the Aether Core:
+the ``gNb`` role also includes a configuration file for when the USRP
+X310 hardware is to be deployed; edit variable ``oai.gnb.conf_file``
+to point to that file instead. If you plan to use some other OAI
+configuration file, note that the following two variables in the ``AMF
+parameters`` section need to be modified to work with the Aether Core:
 
 .. code-block::
 
@@ -583,22 +583,35 @@ work with the Aether Core:
 
    GNB_IPV4_ADDRESS_FOR_NG_AMF  = "172.20.0.2/24";
 
-To deploy the OAI blueprint (in either mode), run the following:
+To deploy the OAI blueprint in simulation mode, run the following:
 
 .. code-block::
 
    $ make k8s-install
    $ make 5gc-install
-   $ make oai-gNb-install
+   $ make oai-gnb-install
+   $ make oai-uesim-start
 
-If in simulation mode, next run ``make oai-uEsim-start``; if not, you
-are ready to bring up the physical gNB and UE. In the latter case, you
-need to make sure the PLMN-related values in the files specified by
+To deploy the OAI blueprint with a physical gNB and UE, first
+configure the USRP hardware as described in the `USRP Hardware Manual
+<https://files.ettus.com/manual/page_usrp_x3x0.html>`__.  Of
+particular note, you need to select whether the device is to connect
+to the Aether Core using its 1G or 10G interface, and make sure the
+OAI configuration file (corresponding to ``oai.conf_file``) sets the
+``sd_addrs`` variable to match the interface you select. You also need
+to make sure the PLMN-related values in the files specified by
 ``core.values_file`` and ``oai.conf_file`` (along with the SIM cards
-you burn) are consistent. The :doc:`Physical RAN </onramp/gnb>`
-section can be helpful in debugging the setup, even though the gNB
-details are different.
+you burn) are consistent. Once ready, run the following Make targets:
 
+.. code-block::
+
+   $ make k8s-install
+   $ make 5gc-install
+   $ make oai-gnb-install
+
+The :doc:`Physical RAN </onramp/gnb>` section of this Guide can be
+helpful in debugging the end-to-end setup, even though the gNB details
+are different.
 
 Guidelines for Blueprints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
