@@ -504,7 +504,7 @@ The blueprint includes the following:
   mode) the UE. As with gNBsim, ``[oai_nodes]`` can identify the same
   server as Kubernetes (where the 5G Core runs). Another possible
   configuration is to co-locate the gNB and UE on one server, with the
-  5G Core running on a separate server. (Although not required in
+  5G Core running on a separate server. (Although not necessary in
   principle, the current playbooks require the gNB and simulated UE be
   co-located on the same server.)
 
@@ -546,9 +546,9 @@ section:
            name: rfsim5g-public
      simulation: true
      gnb:
-       conf_file: deps/aether-oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf
+       conf_file: deps/oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf
      ue:
-       conf_file: deps/aether-oai/roles/uEsimulator/templates/ue.conf
+       conf_file: deps/oai/roles/uEsimulator/templates/ue.conf
 
 Variable ``simulation`` is set to ``true`` by default, causing OnRamp
 to deploy the simulated UE.  When set to ``false``, the simulated UE
