@@ -536,8 +536,8 @@ section:
    oai:
      docker:
        container:
-         gNbimage: oaisoftwarealliance/oai-gnb:develop
-         uEimage: oaisoftwarealliance/oai-nr-ue:develop
+         gnb_image: oaisoftwarealliance/oai-gnb:develop
+         ue_image: oaisoftwarealliance/oai-nr-ue:develop
        network:
          data_iface: ens18
          name: public_net
@@ -547,6 +547,7 @@ section:
      simulation: true
      gnb:
        conf_file: deps/oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf
+       ip: "172.20.0.2"
      ue:
        conf_file: deps/oai/roles/uEsimulator/templates/ue.conf
 
@@ -557,10 +558,11 @@ a physical UE.
 
 Note that instead of downloading and compiling the latest OAI
 software, this blueprint pulls in the published images for both the
-gNB and UE, corresponding to variables ``container.gNbimage`` and
-``container.uEimage``, respectively. If you plan to modify the OAI
-software, you will need to change these values accordingly. See the
-:doc:`Development Support </onramp/devel>` section for guidance.
+gNB and UE, corresponding to variables
+``docker.container.gnb_image`` and ``docker.container.ue_image``,
+respectively. If you plan to modify the OAI software, you will need to
+change these values accordingly. See the :doc:`Development Support
+</onramp/devel>` section for guidance.
 
 The ``network`` block of the ``oai`` section configures the necessary
 tunnels so the gNB can connect to the Core's user and control planes.
@@ -568,11 +570,11 @@ Variable ``network.data_iface`` needs to be modified in the same way
 as in the ``core`` and ``gnbsim`` sections of ``vars/main.yml``, as
 described throughout this Guide.
 
-The path names associated with variables ``oai.gnb.conf_file`` and
-``oai.ue.conf_file`` are OAI-specific configuration files. The two
+The path names associated with variables ``gnb.conf_file`` and
+``ue.conf_file`` are OAI-specific configuration files. The two
 given by default are for simulation mode. The template directory for
 the ``gNb`` role also includes a configuration file for when the USRP
-X310 hardware is to be deployed; edit variable ``oai.gnb.conf_file``
+X310 hardware is to be deployed; edit variable ``gnb.conf_file``
 to point to that file instead. If you plan to use some other OAI
 configuration file, note that the following two variables in the ``AMF
 parameters`` section need to be modified to work with the Aether Core:
@@ -581,7 +583,7 @@ parameters`` section need to be modified to work with the Aether Core:
 
    amf_ip_address = ({ ipv4 = "{{ core.amf.ip }}"; });
 
-   GNB_IPV4_ADDRESS_FOR_NG_AMF  = "172.20.0.2/24";
+   GNB_IPV4_ADDRESS_FOR_NG_AMF  = "{{oai.gnb.ip}}/24";
 
 To deploy the OAI blueprint in simulation mode, run the following:
 
@@ -597,10 +599,10 @@ configure the USRP hardware as described in the `USRP Hardware Manual
 <https://files.ettus.com/manual/page_usrp_x3x0.html>`__.  Of
 particular note, you need to select whether the device is to connect
 to the Aether Core using its 1-GigE or 10-GigE interface, and make
-sure the OAI configuration file (corresponding to ``oai.conf_file``)
+sure the OAI configuration file (corresponding to ``gnb.conf_file``)
 sets the ``sd_addrs`` variable to match the interface you select. You
 also need to make sure the PLMN-related values in the files specified
-by ``core.values_file`` and ``oai.conf_file`` (along with the SIM
+by ``core.values_file`` and ``gnb.conf_file`` (along with the SIM
 cards you burn) are consistent. Once ready, run the following Make
 targets:
 
