@@ -499,14 +499,14 @@ The blueprint includes the following:
 * Global vars file ``vars/main-oai.yml`` gives the overall blueprint
   specification.
 
-* Inventory file ``hosts.ini`` uses label ``[oai_gnb_nodes]`` to
-  denote the server(s) that host the gNB and label ``[oai_ue_nodes]``
-  to denote the server(s) that host the UE. (The latter is necessary
-  only when running in simulation mode.) The expected configuration is
-  to run both the gNB and UE on the same server as Kubernetes (where
-  the 5G Core runs). Another possible configuration is to co-locate
-  the gNB and UE on one server, with the 5G Core running on a separate
-  server.
+* Inventory file ``hosts.ini`` uses label ``[oai_nodes]`` to denote
+  the server(s) that host the gNB and (when configured in simulation
+  mode) the UE. As with gNBsim, ``[oai_nodes]`` can identify the same
+  server as Kubernetes (where the 5G Core runs). Another possible
+  configuration is to co-locate the gNB and UE on one server, with the
+  5G Core running on a separate server. (Although not required in
+  principle, the current playbooks require the gNB and simulated UE be
+  co-located on the same server.)
 
 * New make targets, ``oai-gnb-install`` and ``oai-gnb-uninstall``, to
   be executed along with the standard SD-Core installation (see  below).
