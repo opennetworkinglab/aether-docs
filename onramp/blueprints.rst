@@ -506,7 +506,7 @@ The blueprint includes the following:
   configuration is to co-locate the gNB and UE on one server, with the
   5G Core running on a separate server. (Although not necessary in
   principle, the current playbooks require the gNB and simulated UE be
-  co-located on the same server.)
+  located on the same server.)
 
 * New make targets, ``oai-gnb-install`` and ``oai-gnb-uninstall``, to
   be executed along with the standard SD-Core installation (see  below).
