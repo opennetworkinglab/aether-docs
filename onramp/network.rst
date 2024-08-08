@@ -253,35 +253,35 @@ example ``ens18`` interface for illustrative purposes:
 .. code-block::
 
    $ sudo tcpdump -i any sctp -w sctp-test.pcap
-   $ sudo tcpdump -i ens18 port 2152 -w gtp-outside.pcap
-   $ sudo tcpdump -i access port 2152 -w gtp-inside.pcap
+   $ sudo tcpdump -i ens18 port 2152 -w n3-outside.pcap
+   $ sudo tcpdump -i access port 2152 -w n3-inside.pcap
    $ sudo tcpdump -i core net 172.250.0.0/16 -w n6-inside.pcap
    $ sudo tcpdump -i ens18 net 172.250.0.0/16 -w n6-outside.pcap
 
 The first trace, saved in file ``sctp.pcap``, captures SCTP packets
 sent to establish the control path between the base station and the
-Mobile Core (i.e., N2 messages). Toggling "Mobile Data" on a physical
-UE, for example by turning Airplane Mode off and on, will generate the
-relevant control plane traffic; gNBsim automatically triggers this
-activity.
+Mobile Core (over the **N2** interface). Toggling "Mobile Data" on a
+physical UE, for example by turning Airplane Mode off and on, will
+generate the relevant control plane traffic; gNBsim automatically
+triggers this activity.
 
-The second and third traces, saved in files ``gtp-outside.pcap`` and
-``gtp-inside.pcap``, respectively, capture GTP packets (tunneled
+The second and third traces, saved in files ``n3-outside.pcap`` and
+``n3-inside.pcap``, respectively, capture GTP packets (tunneled
 through port ``2152`` ) on the RAN side of the UPF. Setting the
 interface to ``ens18`` corresponds to "outside" the UPF and setting
 the interface to ``access`` corresponds to "inside" the UPF.  Running
-``ping`` from a physical UE will generate the relevant user plane (N3)
-traffic; gNBsim automatically triggers this activity.
+``ping`` from a physical UE will generate the relevant user plane traffic
+(over the **N3** interface); gNBsim automatically triggers this activity.
 
 Similarly, the fourth and fifth traces, saved in files
 ``n6-inside.pcap`` and ``n6-outside.pcap``, respectively, capture IP
-packets on the Internet side of the UPF (which is known as the **N6**
-interface in 3GPP). In these two tests, ``net 172.250.0.0/16``
-corresponds to the IP addresses assigned to UEs by the SMF. Running
-``ping`` from a physical UE will generate the relevant user plane
-traffic; gNBsim automatically triggers this activity.
+packets on the Internet side of the UPF (over the **N6** interface).
+In these two tests, ``net 172.250.0.0/16`` corresponds to the IP
+addresses assigned to UEs by the SMF. Running ``ping`` from a physical
+UE will generate the relevant user plane traffic; gNBsim automatically
+triggers this activity.
 
-If the ``gtp-outside.pcap`` has packets and the ``gtp-inside.pcap``
+If the ``n3-outside.pcap`` has packets and the ``n3-inside.pcap``
 is empty (no packets captured), you may run the following commands
 to make sure packets are forwarded from the ``ens18`` interface
 to the ``access`` interface and vice versa:

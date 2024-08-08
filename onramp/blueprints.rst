@@ -480,12 +480,12 @@ required extensions. It has been written to do nothing unless variable
 target.
 
 
-OAI gNB
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+OAI 5G RAN
+~~~~~~~~~~~~~~~~~~~~
 
 Aether can be configured to work with the open source gNB from OAI.
 The blueprint runs in either simulation mode or with physical UEs
-connecting to a software-defined radio. The following assumes
+connecting to a USRP software-defined radio. The following assumes
 familiarity with the OAI 5G RAN stack.
 
 .. _reading_oai:
@@ -518,10 +518,10 @@ The blueprint includes the following:
   gNB.
 
 * An Integration test running in simulation mode is still pending. The
-  blueprint has been tested with USRP X310, but other models should
+  blueprint has been validated with USRP X310, but other models should
   also work.
 
-To use the OAI gNB first copy the vars file to ``main.yml``:
+To use an OAI gNB, first copy the vars file to ``main.yml``:
 
 .. code-block::
 
@@ -584,6 +584,15 @@ parameters`` section need to be modified to work with the Aether Core:
    amf_ip_address = ({ ipv4 = "{{ core.amf.ip }}"; });
 
    GNB_IPV4_ADDRESS_FOR_NG_AMF  = "{{oai.gnb.ip}}/24";
+
+One other variable of note is ``ran_subnet: "172.20.0.0/16"`` in the
+``core`` block of ``vars/main.yml``. As a general rule,
+``core.ran_subnet`` is set to the empty string (``""``) whenever a
+physical gNB is on the same L2 network as the Core, but in the case of
+an OAI-based gNB, the RAN stack runs in a Macvlan-connected Docker
+container, and so the variable is set to ``"172.20.0.0/16"``.  (This
+is similar to how OnRamp configures the Core for an emulated gNB using
+gNBsim.)
 
 To deploy the OAI blueprint in simulation mode, run the following:
 

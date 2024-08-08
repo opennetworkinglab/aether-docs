@@ -35,3 +35,26 @@ discussion on Slack in the `ONF Community Workspace
 needs to be done can be found in the `Aether OnRamp Wiki
 <https://wiki.aetherproject.org/display/HOME/Aether+OnRamp>`__.
 
+How to Read This Guide
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+This guide is written to be followed sequentially, with each section
+establishing a capability that later sections build upon. This is also
+helpful when troubleshooting a setup—for example, isolating a problem
+with a physical gNB is easier if you know that connectivity to the AMF
+and UPF works correctly, which the :doc:`Emulated RAN
+</onramp/gnbsim>` section helps to establish.
+
+Once you reach the last section (:doc:`Other Blueprints
+</onramp/blueprints>`), you will have seen examples of all the
+degrees-of-freedom OnRamp supports, with the goal of preparing you to
+take ownership of your own deployment. You can do this by defining
+your own customized blueprint, and/or directly interacting with Helm
+and Kubernetes (rather than depending entirely on OnRamp's playbooks).
+
+That final :doc:`Other Blueprints </onramp/blueprints>` section then
+gives a brief synopsis of several additional OnRamp blueprints. Each
+blueprint enables a particular combination of Ansible features,
+demonstrating how those features are enabled, configured, and
+deployed. This section presumes familiarity with all of OnRamp's
+capabilities introduced in the earlier sections.

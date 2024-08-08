@@ -12,16 +12,7 @@ up to speed on the rest of the system.
 
 .. admonition:: Troubleshooting Hint
 
-  This guide includes *Troubleshooting Hints* like this one. Our first
-  hint is to recommend that the guide be followed sequentially. This
-  is because each section establishes a milestone that may prove
-  useful when you find yourself trying to troubleshoot a problem in a
-  later section. For example, isolating a problem with a physical gNB
-  is easier if you know that connectivity to the AMF and UPF works
-  correctly, which the :doc:`Emulated RAN </onramp/gnbsim>` section
-  helps to establish.
-
-  Our second hint is to join the ``#aether-onramp`` channel of the
+  Users are encouraged to join the ``#aether-onramp`` channel of the
   `ONF Workspace <https://onf-community.slack.com/>`__ on Slack, where
   questions about using OnRamp to bring up Aether are asked and
   answered. The ``Troubleshooting`` bookmark for that channel includes
@@ -59,7 +50,6 @@ Helm Charts
 
  | https://charts.aetherproject.org
  | https://charts.onosproject.org
- | https://charts.opencord.org
  | https://charts.atomix.io
  | https://sdrancharts.onosproject.org
  | https://charts.rancher.io/
