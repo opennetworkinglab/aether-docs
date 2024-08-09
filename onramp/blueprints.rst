@@ -485,8 +485,12 @@ OAI 5G RAN
 
 Aether can be configured to work with the open source gNB from OAI.
 The blueprint runs in either simulation mode or with physical UEs
-connecting to a USRP software-defined radio. The following assumes
-familiarity with the OAI 5G RAN stack.
+connecting wirelessly to a USRP software-defined radio.
+
+The following assumes familiarity with the OAI 5G RAN stack, but it is
+**not** necessary to separately install the OAI stack. OnRamp installs
+both the Aether Core and the OAI RAN, plus the networking needed to
+interconnect the two.
 
 .. _reading_oai:
 .. admonition:: Further Reading
@@ -585,14 +589,29 @@ parameters`` section need to be modified to work with the Aether Core:
 
    GNB_IPV4_ADDRESS_FOR_NG_AMF  = "{{oai.gnb.ip}}/24";
 
-One other variable of note is ``ran_subnet: "172.20.0.0/16"`` in the
-``core`` block of ``vars/main.yml``. As a general rule,
-``core.ran_subnet`` is set to the empty string (``""``) whenever a
-physical gNB is on the same L2 network as the Core, but in the case of
-an OAI-based gNB, the RAN stack runs in a Macvlan-connected Docker
-container, and so the variable is set to ``"172.20.0.0/16"``.  (This
-is similar to how OnRamp configures the Core for an emulated gNB using
-gNBsim.)
+The ``core`` section of ``vars/main.yml`` is similar to that used in
+other blueprints, with two variable settings of note. First,
+``ran_subnet`` is set to ``"172.20.0.0/16"`` and not the empty string
+(``""``). As a general rule, ``core.ran_subnet`` is set to the empty
+string whenever a physical gNB is on the same L2 network as the Core,
+but in the case of an OAI-based gNB, the RAN stack runs in a
+Macvlan-connected Docker container, and so the variable is set to
+``"172.20.0.0/16"``.  (This is similar to how OnRamp configures the
+Core for an emulated gNB using gNBsim.)
+
+Second, variable ``values_file`` is set to
+``"deps/5gc/roles/core/templates/sdcore-5g-values.yaml"`` by default,
+meaning simulated UEs uses the same PLMN and IMSI range as gNBsim.
+When deploying with physical UEs, it is necessary to replace that
+values file with one that matches the SIM cards you plan to use. One
+option is to reuse the values file also used by the :doc:`Physical RAN
+</onramp/gnb>` blueprint, meaning you would set the variable as:
+
+.. code-block::
+
+   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+
+That file should be edited, as necessary, to match your configuration.
 
 To deploy the OAI blueprint in simulation mode, run the following:
 
@@ -603,17 +622,23 @@ To deploy the OAI blueprint in simulation mode, run the following:
    $ make oai-gnb-install
    $ make oai-uesim-start
 
-To deploy the OAI blueprint with a physical gNB and UE, first
-configure the USRP hardware as described in the `USRP Hardware Manual
-<https://files.ettus.com/manual/page_usrp_x3x0.html>`__.  Of
-particular note, you need to select whether the device is to connect
-to the Aether Core using its 1-GigE or 10-GigE interface, and make
-sure the OAI configuration file (corresponding to ``gnb.conf_file``)
-sets the ``sd_addrs`` variable to match the interface you select. You
-also need to make sure the PLMN-related values in the files specified
-by ``core.values_file`` and ``gnb.conf_file`` (along with the SIM
-cards you burn) are consistent. Once ready, run the following Make
-targets:
+To deploy the OAI blueprint with a software-defined radio and physical
+UE, first configure the USRP hardware as described in the USRP Hardware
+Manual.
+
+.. _reading_usrp:
+.. admonition:: Further Reading
+
+  `USRP Hardware Manual <https://files.ettus.com/manual/page_usrp_x3x0.html>`__.
+
+Of particular note, you need to select whether the device is to
+connect to the Aether Core using its 1-GigE or 10-GigE interface, and
+make sure the OAI configuration file (corresponding to
+``gnb.conf_file``) sets the ``sd_addrs`` variable to match the
+interface you select. You also need to make sure the PLMN-related
+values in the files specified by ``core.values_file`` and
+``gnb.conf_file`` (along with the SIM cards you burn) are
+consistent. Once ready, run the following Make targets:
 
 .. code-block::
 
