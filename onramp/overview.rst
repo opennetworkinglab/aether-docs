@@ -40,9 +40,9 @@ How to Read This Guide
 
 This guide is written to be followed sequentially, with each section
 establishing a capability that later sections build upon. This is also
-helpful when troubleshooting a setup—for example, isolating a problem
-with a physical gNB is easier if you know that connectivity to the AMF
-and UPF works correctly, which the :doc:`Emulated RAN
+helpful when troubleshooting a deployment—for example, isolating a
+problem with a physical gNB is easier if you know that connectivity to
+the AMF and UPF works correctly, which the :doc:`Emulated RAN
 </onramp/gnbsim>` section helps to establish.
 
 Once you reach the last section (:doc:`Other Blueprints
@@ -53,7 +53,7 @@ your own customized blueprint, and/or directly interacting with Helm
 and Kubernetes (rather than depending entirely on OnRamp's playbooks).
 
 That final :doc:`Other Blueprints </onramp/blueprints>` section then
-gives a brief synopsis of several additional OnRamp blueprints. Each
+gives a synopsis of several additional OnRamp blueprints. Each
 blueprint enables a particular combination of Ansible features,
 demonstrating how those features are enabled, configured, and
 deployed. This section presumes familiarity with all of OnRamp's

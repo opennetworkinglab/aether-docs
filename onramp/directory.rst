@@ -112,6 +112,7 @@ OnRamp repos:
  | Deploy 4G Core: https://github.com/opennetworkinglab/aether-4gc
  | Deploy Management Plane: https://github.com/opennetworkinglab/aether-amp
  | Deploy SD-RAN: https://github.com/opennetworkinglab/aether-sdran
+ | Deploy OAI Software Radio: https://github.com/opennetworkinglab/aether-oai
  | Deploy gNB Simulator: https://github.com/opennetworkinglab/aether-gnbsim
  | Deploy UE+gNB Simulator: https://github.com/opennetworkinglab/aether-ueransim
  | Deploy Kubernetes: https://github.com/opennetworkinglab/aether-k8s
