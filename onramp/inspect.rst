@@ -113,10 +113,10 @@ and for Monitoring:
 
 .. code-block::
 
-   $ make monitoring-install
-   $ make monitoring-load
+   $ make monitor-install
+   $ make monitor-load
    $  ...
-   $ make monitoring-uninstall
+   $ make monitor-uninstall
 
 In both cases, installing the component is a two-step process: first
 the microservices that implement the component are instantiated on
