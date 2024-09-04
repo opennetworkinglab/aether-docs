@@ -149,13 +149,14 @@ launch the new UPF(s) by typing:
 
    $ make 5gc-upf-install
 
-At this point the new UPF(s) will be running (you can verify this
-using ``kubectl``), but no traffic will be directed to them until UEs
-are assigned to their IP address pool. Doing so requires loading the
-appropriate bindings into ROC, which you can do by editing the
-``roc_models`` line in ``amp`` section of ``vars/main.yml``. Comment
-out the original models file already loaded into ROC, and uncomment
-the new patch that is to be applied:
+At this point the new UPF(s) will be running in their own namespaces
+(you can verify this using ``kubectl get pods --all-namespaces``), but
+no traffic will be directed to them until UEs are assigned to their IP
+address pool. Doing so requires loading the appropriate bindings into
+ROC, which you can do by editing the ``roc_models`` line in ``amp``
+section of ``vars/main.yml``. Comment out the original models file
+already loaded into ROC, and uncomment the new patch that is to be
+applied:
 
 .. code-block::
 
