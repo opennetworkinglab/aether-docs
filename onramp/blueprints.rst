@@ -670,15 +670,14 @@ existing features. In addition to meeting the general definition of a
 blueprint (as introduced in the introduction to this section), we
 recommend the following guidelines.
 
-* Keep blueprints fairly narrow. One of their main values is to
-  document (in code) how a particular feature is enabled and
-  configured. Introduce new roles to keep playbooks narrow.  Introduce
-  new values override files (and other config files) to keep each
-  example narrow.
-
 * Use Ansible best-practices for defining playbooks. This means using
   Ansible plugins rather than invoking shell scripts, whenever
   possible.
+
+* Avoid embedding configuration parameters in Ansible playbooks.
+  Such parameters should be collected in either ``vars/main-blueprint.yml``
+  or a component-specific configuration file, depending on their
+  purpose (see next item).
 
 * Avoid exposing too many variables in
   ``vars/main-blueprint.yml``. Their main purpose is direct how
@@ -686,12 +685,19 @@ recommend the following guidelines.
   subsystems of a given deployment. The latter details are best
   defined in component-specific configuration files (e.g., values
   override files), which can then be referenced by
-  ``vars/main-blueprint.yml``. The main exception is variables
-  that enable/disable a particular feature. Two good examples are
+  ``vars/main-blueprint.yml``. The exception is variables that
+  enable/disable a particular feature. Two good examples are
   ``core.standalone`` and ``oai.simulation``.
 
-* Avoid embedding configuration parameters in Ansible playbooks.
-  Such parameters should be collected in either ``vars/main-blueprint.yml``
-  or a component-specific configuration file, depending on their
-  purpose (see previous item).
+* Keep blueprints narrow. One of their main values is to document (in
+  code) how a particular feature is enabled and configured. Introduce
+  new roles to keep playbooks narrow.  Introduce new values override
+  files (and other config files) to keep each configuration narrow.
+  Introduce new ``vars/main-blueprint.yml`` files to document how a
+  single feature is deployed. The exception is "combo" blueprints that
+  combine multiple existing features (already enabled by
+  single-feature blueprints) to deploy a comprehensive solution.
+
+
+
 
