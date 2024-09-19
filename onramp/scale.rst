@@ -12,16 +12,25 @@ to remove the Quick Start configuration by typing:
 
    $ make aether-uninstall
 
-There are two aspects of our deployment that scale independently. One
-is Aether proper: a Kubernetes cluster running the set of
-microservices that implement SD-Core and AMP (and optionally, other
-edge apps). The second is gNBsim: the emulated RAN that generates
-traffic directed at the Aether cluster. The assumption in this section
-is that there are at least two servers—one for the Aether cluster and
-one for gNBsim—with each able to scale independently. For example,
-having four servers would support a 3-node Aether cluster and a 1-node
-workload generator. This example configuration corresponds to the
-following ``hosts.ini`` file:
+Host Inventory File
+~~~~~~~~~~~~~~~~~~~~~~
+
+Adding servers to a deployment is primarily a matter of editing the
+``hosts.inv`` file, with `host groups` defined according the role each
+server is to play. We'll introduce additional host groups in later
+sections, but for starters, there are two aspects of our deployment
+that scale independently. One is Aether proper: a Kubernetes cluster
+running the set of microservices that implement SD-Core and AMP (and
+optionally, other edge apps); this corresponds to a combination of the
+``master_nodes`` and ``worker_nodes`` groups. The second is gNBsim:
+the emulated RAN that generates traffic directed at the Aether
+cluster, corresponding to the ``gnbsim_nodes`` host group.
+
+This section assumes there are at least two servers—one for the Aether
+cluster and one for gNBsim—with each able to scale independently. For
+example, having four servers would support a 3-node Aether cluster and
+a 1-node workload generator. This example configuration corresponds to
+the following ``hosts.ini`` file:
 
 .. code-block::
 
@@ -79,11 +88,39 @@ gNBs in place of gNBsim. Note that if you are primarily interested in
 the latter, you can still run Aether on a single server, and then
 connect that node to one or more physical gNBs.
 
-Finally, apart from being able able to run SD-Core and gNBsim on
-separate nodes—thereby cleanly decoupling the Core from the RAN—one
-question we have not yet answered is why you might want to scale the
-Aether cluster to multiple nodes. One answer is that you are concerned
-about availability, so want to introduce redundancy.
+Allocating CPU Cores
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Kubernetes provides a mechanism for allocating CPU cores to specific
+pods. OnRamp manages this capability in two steps.
+
+First, directory ``deps/k8s/roles/rke2/templates`` contains two files
+used to configure a Kubernetes deployment. These files are referenced
+in ``vars/main.yml`` as variables
+``k8s.rke2.config.params_file.master`` and
+``k8s.rke2.config.params_file.worker``; edit these variables should
+you elect to substitute different files. Uncomment the block
+labeled *"Param's for Exclusive CPU"* in both files to enable the
+allocation feature. You need to reinstall Kubernetes for these changes
+to take effect.
+
+Second, edit the values override file for whatever service is to be
+granted an exclusive CPU core. A typical example is to allocate a core
+to the UPF, which can be done by editing the ``omec-user-plane``
+section of ``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``,
+changing variable ``resources.enabled`` from ``false`` to
+``true``. Similar variables exist for other SD-Core pods. You need to
+reinstall the 5G Core for this change to take effect.
+
+
+Other Options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Apart from being able able to run SD-Core and gNBsim on separate
+nodes—thereby cleanly decoupling the Core from the RAN—one question we
+have not yet answered is why you might want to scale the Aether
+cluster to multiple nodes. One answer is that you are concerned about
+availability, so want to introduce redundancy.
 
 A second answer is that you want to run some other edge application,
 such as an IoT or AI/ML platform, on the Aether cluster.  Such
