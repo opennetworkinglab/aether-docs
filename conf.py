@@ -281,7 +281,6 @@ linkcheck_retries = 2
 intersphinx_mapping = {
     'ansible': ('https://docs.ansible.com/ansible/latest', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None),
-    'trellis': ('https://docs.trellisfabric.org/master', None),
     'sdcore': ('https://docs.sd-core.opennetworking.org/master', None),
     'sdran': ('https://docs.sd-ran.org/master', None),
     'sysapproach5g': ('https://5g.systemsapproach.org/', None),

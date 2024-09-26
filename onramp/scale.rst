@@ -21,7 +21,7 @@ server is to play. We'll introduce additional host groups in later
 sections, but for starters, there are two aspects of our deployment
 that scale independently. One is Aether proper: a Kubernetes cluster
 running the set of microservices that implement SD-Core and AMP (and
-optionally, other edge apps); this corresponds to a combination of the
+optionally, other edge apps). This corresponds to a combination of the
 ``master_nodes`` and ``worker_nodes`` groups. The second is gNBsim:
 the emulated RAN that generates traffic directed at the Aether
 cluster, corresponding to the ``gnbsim_nodes`` host group.
@@ -91,26 +91,27 @@ connect that node to one or more physical gNBs.
 Allocating CPU Cores
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Kubernetes provides a mechanism for allocating CPU cores to specific
-pods. OnRamp manages this capability in two steps.
+Kubernetes supports allocating CPU cores to specific pods. OnRamp
+manages this capability in two steps.
 
 First, directory ``deps/k8s/roles/rke2/templates`` contains two files
 used to configure a Kubernetes deployment. These files are referenced
 in ``vars/main.yml`` as variables
 ``k8s.rke2.config.params_file.master`` and
-``k8s.rke2.config.params_file.worker``; edit these variables should
-you elect to substitute different files. Uncomment the block
-labeled *"Param's for Exclusive CPU"* in both files to enable the
-allocation feature. You need to reinstall Kubernetes for these changes
-to take effect.
+``k8s.rke2.config.params_file.worker``. Either edit these variables to
+substitute different files that you have defined to your
+specification, or uncomment the block labeled *"Param's for Exclusive
+CPU"* in the two default files. Doing the latter enables the
+allocation feature; you also need to reinstall Kubernetes for these
+changes to take effect.
 
 Second, edit the values override file for whatever service is to be
 granted an exclusive CPU core. A typical example is to allocate a core
 to the UPF, which can be done by editing the ``omec-user-plane``
 section of ``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``,
-changing variable ``resources.enabled`` from ``false`` to
-``true``. Similar variables exist for other SD-Core pods. You need to
-reinstall the 5G Core for this change to take effect.
+changing variable ``resources.enabled`` to ``true``. Similar variables
+exist for other SD-Core pods. You need to reinstall the 5G Core for
+this change to take effect.
 
 
 Other Options
