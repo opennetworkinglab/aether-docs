@@ -485,8 +485,11 @@ OAI 5G RAN
 ~~~~~~~~~~~~~~~~~~~~
 
 Aether can be configured to work with the open source gNB from OAI.
-The blueprint runs in either simulation mode or with physical UEs
-connecting wirelessly to a USRP software-defined radio.
+The blueprint runs in either simulation mode or with a USRP
+software-defined radio connecting wirelessly to one or more
+off-the-shelf UEs. (OAI also supports USRP-based UEs, but this
+blueprint does not currently support that option; you need to deploy
+such a UE separately.)
 
 The following assumes familiarity with the OAI 5G RAN stack, but it is
 **not** necessary to separately install the OAI stack. OnRamp installs
