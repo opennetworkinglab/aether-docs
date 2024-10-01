@@ -143,8 +143,9 @@ to run gNBsim, and then type
    $ docker exec -it gnbsim-1 cat summary.log
 
 Note that container name ``gnbsim-1`` is constructed from the
-``prefix`` variable defined in the ``docker`` section of
-``vars/main.yml``, with ``-1`` indicating the first container.
+``gnbsim.docker.prefix`` variable defined in ``vars/main.yml``, with
+``-1`` indicating the first container, ``-2`` indicating the second
+container, and so on.
 
 In addition to scaling up the workload you put on the Core, you can
 also experiment with the emulation settings defined in any or all of

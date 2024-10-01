@@ -100,7 +100,8 @@ To use Multi-UPF, first copy the vars file to ``main.yml``:
    $ cp main-upf.yml main.yml
 
 Then edit ``hosts.ini`` and ``vars/main.yml`` to match your local
-target servers, and deploy the base system (as in previous sections):
+target servers, and deploy the base system (as in previous sections).
+You can also optionally install the monitoring subsystem.
 
 .. code-block::
 
@@ -110,13 +111,13 @@ target servers, and deploy the base system (as in previous sections):
    $ make 5gc-install
    $ make gnbsim-install
 
-You can also optionally install the monitoring subsystem. Note that
-because ``main.yml`` sets ``core.standalone: "false"``, any models
-loaded into ROC are automatically applied to SD-Core.
+Note that because ``main.yml`` sets ``core.standalone: "false"``, any
+models loaded into ROC are automatically applied to SD-Core.
 
 At this point you are ready to bring up additional UPFs and bind them
-to specific slices and devices. This involves first editing the
-``upf`` block in the ``core`` section of ``vars/main.yml``:
+to specific slices and devices. An example configuration that brings
+up second UPF is included in the ``upf`` block in the ``core`` section
+of ``vars/main.yml``:
 
 .. code-block::
 
@@ -142,8 +143,8 @@ As shown above, one additional UPF is enabled (beyond ``upf-0`` that
 already came up as part of SD-Core), with the spec for yet another UPF
 commented out.  In this example configuration, each UPF is assigned a
 subnet on the ``access`` and ``core`` bridges, along with the IP
-address pool for UEs that the UPF serves.  Once done with the edits,
-launch the new UPF(s) by typing:
+address pool for UEs that the UPF serves. To launch this second UPF,
+type:
 
 .. code-block::
 
@@ -183,6 +184,15 @@ the emulation, type:
 .. code-block::
 
    $ make gnbsim-simulator-run
+
+To verify that both UPFs were functional, you will need to look at the
+``summary.log`` file from both instances of gNBsim:
+
+.. code-block::
+
+   $ docker exec -it gnbsim-1 cat summary.log
+   $ docker exec -it gnbsim-2 cat summary.log
+
 
 SD-RAN
 ~~~~~~~~~~~~~~~~~~~~~~
