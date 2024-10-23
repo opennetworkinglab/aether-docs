@@ -27,6 +27,14 @@
 
 .. toctree::
    :maxdepth: 3
+   :caption: Aether Blueprints
+   :hidden:
+   :glob:
+
+   onramp/ref
+
+.. toctree::
+   :maxdepth: 3
    :caption: Develop for Aether
    :hidden:
    :glob:
