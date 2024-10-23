@@ -2,9 +2,10 @@ Quick Reference
 -----------------
 
 This guide provides a quick reference for all the blueprints OnRamp
-defines for Aether. It assumes familiarity with
-:doc:`OnRamp</onramp/overview>`, and its use of blueprints to
-configure and deploy Aether.
+defines for Aether. It assumes a general familiarity with
+:doc:`OnRamp</onramp/overview>`, and a specific understanding of how
+OnRamp uses :doc:`blueprints</onramp/blueprints>` to configure target
+deployments of Aether.
 
 Blueprint Specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -46,7 +47,7 @@ repo. The groovy files can be found in the `aether-jenkins
      - `main-upf.yml`
      - `upf.groovy`
      - Instantiate multiple UPFs and bind them to distinct Slices.
-   * - `SD-RAN <https://docs.aetherproject.org/master/onramp/blueprints.html#sd-ran>`__
+   * - `SD-RAN (RIC) <https://docs.aetherproject.org/master/onramp/blueprints.html#sd-ran>`__
      - `main-sdran.yml`
      - `sdran.groovy`
      - SD-RAN (with RANSIM traffic) connected to 5G Core.

@@ -192,13 +192,13 @@ To verify that both UPFs were functional, you will need to look at the
    $ docker exec -it gnbsim-2 cat summary.log
 
 
-SD-RAN
+SD-RAN (RIC)
 ~~~~~~~~~~~~~~~~~~~~~~
 
-This blueprint runs SD-Core and SD-RAN in tandem, with RANSIM
-emulating various RAN elements. (The OnRamp roadmap includes plans to
-couple SD-RAN with other virtual and physical RAN elements, but RANSIM
-is currently the only option.)
+This blueprint runs SD-Core and SD-RAN's near real-time RIC in tandem,
+with RANSIM emulating various RAN elements. (The OnRamp roadmap
+includes plans to couple SD-RAN with other virtual and physical RAN
+elements, but RANSIM is currently the only option.)
 
 The SD-RAN blueprint includes the following:
 
