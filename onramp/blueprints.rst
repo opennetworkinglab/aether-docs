@@ -29,8 +29,10 @@ Ansible components:
 * (Optional) Any additional hardware (beyond the Ansible-managed
   Aether servers) required to support the blueprint.
 
-* A Jenkins job, added to the set of OnRamp integration tests,
-  verifies that the blueprint successfully deploys Aether.
+* A Jenkins pipeline, added to the set of OnRamp integration tests,
+  verifies that the blueprint successfully deploys Aether. These
+  pipelines are defined by Groovy scripts, and can be found in the
+  ``aether-jenkins`` repo.
 
 The goal of establishing a well-defined procedure for adding new
 blueprints to OnRamp is to encourage the community to contribute (and
@@ -85,12 +87,8 @@ The Multi-UPF blueprint includes the following:
   this blueprint is demonstrated using gNBsim, the assumed base models
   are given by ``roc-5g-models.json``.)
 
-* Two nightly integration tests that validate the Multi-UPF blueprint
-  can be viewed on Jenkins (assuming you are a registered user):
-  `single-server test
-  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_QuickStart_Multi-UPF/>`__,
-  `two-server test
-  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_2servers_Multi-UPF/>`__.
+* The Jenkins pipeline ``upf.groovy`` validates the Multi-UPF
+  blueprint.
 
 To use Multi-UPF, first copy the vars file to ``main.yml``:
 
@@ -211,18 +209,16 @@ The SD-RAN blueprint includes the following:
   Start deployment, with both SD-RAN and SD-Core co-located on a
   single server.
 
-* New make targets, ``aether-sdran-install`` and
-  ``aether-sdran-uninstall``, to be executed after the standard
+* New make targets, ``sdran-install`` and
+  ``sdran-uninstall``, to be executed after the standard
   SD-Core installation.
 
 * A new submodule ``deps/sdran`` (corresponding to repo
   ``aether-sdran``) defines the Ansible Roles and Playbooks required
   to deploy SD-RAN.
 
-* A nightly integration test that validates the SD-RAN blueprint can
-  be viewed on `Jenkins
-  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_QuickStart_SDRAN/>`__
-  (assuming you are a registered user).
+* The Jenkins pipeline ``sdran.groovy`` validates the SD-RAN
+  blueprint.
 
 To use SD-RAN, first copy the vars file to ``main.yml``:
 
@@ -237,9 +233,9 @@ followed by SD-RAN:
 
 .. code-block::
 
-   $ make aether-k8s-install
-   $ make aether-5gc-install
-   $ make aether-sdran-install
+   $ make k8s-install
+   $ make 5gc-install
+   $ make sdran-install
 
 Use ``kubectl`` to validate that the SD-RAN workload is running, which
 should result in output similar to the following:
@@ -323,11 +319,8 @@ The UERANSIM blueprint includes the following:
   required to deploy UERANSIM. It also contains configuration files
   for the emulator.
 
-* A nightly integration test that validate the UERANSIM blueprint
-  can be viewed on Jenkins (assuming you are a registered user):
-  `two-server test
-  <https://jenkins.aetherproject.org/view/Aether%20OnRamp/job/AetherOnRamp_2servers_20.04_default-charts_UERANSIM/>`__.
-
+* The Jenkins pipeline ``ueransim.groovy`` validates the UERANSIM
+  blueprint.
 
 To use UERANSIM, first copy the vars file to ``main.yml``:
 
@@ -442,7 +435,7 @@ following:
   ``deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml``.
 
 * Integration tests require SR-IOV capable servers, and so have not
-  yet been added to Jenkins.
+  been automated in Jenkins.
 
 To use SR-IOV and DPDK, first copy the vars file to ``main.yml``:
 
@@ -535,9 +528,9 @@ The blueprint includes the following:
   defines the Ansible Roles and Playbooks required to deploy the OAI
   gNB.
 
-* An Integration test running in simulation mode is still pending. The
-  blueprint has been validated with USRP X310, but other models should
-  also work.
+* The Jenkins pipeline ``oai.groovy`` validates the OAI 5G
+  blueprint. The pipeline runs OAI in simulation mode, but the blueprint
+  has also been validated with USRP X310.
 
 To use an OAI gNB, first copy the vars file to ``main.yml``:
 
