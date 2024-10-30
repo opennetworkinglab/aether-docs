@@ -124,12 +124,18 @@ self-contained if you are interested in deploying just that subsystem,
 but this guide approaches the deployment challenge from an
 integrated, end-to-end perspective.
 
-Because OnRamp uses Ansible as its primary deployment tool, a general
-understanding of Ansible is helpful (see the suggested reference).
-However, this guide walks you, step-by-step, through the process of
-deploying and operating Aether, so previous experience with Ansible is
-not a requirement. Note that Ansible has evolved to be both a
-"Community Toolset" anyone can use to manage a software deployment,
+There are two other Aether-related repos of note; they are **not**
+managed as submodules of ``aether-onramp``:
+
+ | Aether Documentation: https://github.com/opennetworkinglab/aether-docs
+ | Jenkins Pipelines: https://github.com/opennetworkinglab/aether-jenkins
+
+Finally, because OnRamp uses Ansible as its primary deployment tool, a
+general understanding of Ansible is helpful (see the suggested
+reference).  However, this guide walks you, step-by-step, through the
+process of deploying and operating Aether, so previous experience with
+Ansible is not a requirement. Note that Ansible has evolved to be both
+a "Community Toolset" anyone can use to manage a software deployment,
 and an "Automation Platform" offered as a service by RedHat. OnRamp
 uses the toolset, but not the platform/service.
 

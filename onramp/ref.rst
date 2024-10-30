@@ -47,7 +47,7 @@ repo. The groovy files can be found in the `aether-jenkins
      - `main-upf.yml`
      - `upf.groovy`
      - Instantiate multiple UPFs and bind them to distinct Slices.
-   * - `SD-RAN (RIC) <https://docs.aetherproject.org/master/onramp/blueprints.html#sd-ran>`__
+   * - `SD-RAN (RIC) <https://docs.aetherproject.org/master/onramp/blueprints.html#sd-ran-ric>`__
      - `main-sdran.yml`
      - `sdran.groovy`
      - SD-RAN (with RANSIM traffic) connected to 5G Core.

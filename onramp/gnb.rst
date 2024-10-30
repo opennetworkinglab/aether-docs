@@ -71,18 +71,26 @@ using.
 
 .. code-block::
 
-   core:
-       standalone: true
-       data_iface: ens18
-       values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
-       ran_subnet: ""
-       helm:
-           chart_ref: aether/sd-core
-           chart_version: 0.12.6
-       upf:
-           ip_prefix: "192.168.252.0/24"
-       amf:
-           ip: "10.76.28.113"
+    core:
+        standalone: true				# set to false to place under control of ROC
+        data_iface: ens18
+        values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+        ran_subnet: ""					# set to empty string to get subnet from 'data_iface'
+        helm:
+            local_charts: false			# set chart_ref to local path name if true
+            chart_ref: aether/sd-core
+            chart_version: 1.1.0
+        upf:
+            ip_prefix: "192.168.252.0/24"
+            iface: "access"
+            mode: af_packet				# Options: af_packet or dpdk
+            default_upf:
+                ip:
+                    access: "192.168.252.3/24"
+                    core:   "192.168.250.3/24"
+                ue_ip_pool: "172.250.0.0/16"
+        amf:
+            ip: "10.76.28.113"
 
 
 Prepare UEs

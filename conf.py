@@ -281,8 +281,8 @@ linkcheck_retries = 2
 intersphinx_mapping = {
     'ansible': ('https://docs.ansible.com/ansible/latest', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None),
-    'sdcore': ('https://docs.sd-core.opennetworking.org/main', None),
-    'sdran': ('https://docs.sd-ran.org/master', None),
+    'sdcore': ('https://docs.sd-core.aetherproject.org/main', None),
+    'sdran': ('https://docs.sd-ran.aetherproject.org/master', None),
     'sysapproach5g': ('https://5g.systemsapproach.org/', None),
     'sysapproachnet': ('https://book.systemsapproach.org/', None),
     'sysapproachsdn': ('https://sdn.systemsapproach.org/', None),

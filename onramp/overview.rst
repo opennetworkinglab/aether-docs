@@ -54,7 +54,9 @@ and Kubernetes (rather than depending entirely on OnRamp's playbooks).
 
 That final :doc:`Other Blueprints </onramp/blueprints>` section then
 gives a synopsis of several additional OnRamp blueprints. Each
-blueprint enables a particular combination of Ansible features,
-demonstrating how those features are enabled, configured, and
-deployed. This section presumes familiarity with all of OnRamp's
-capabilities introduced in the earlier sections.
+blueprint enables a particular combination of Aether features,
+demonstrating how those features are configured, and deployed. This
+section presumes familiarity with all of OnRamp's capabilities
+introduced in the earlier sections. For a summary review of all
+available blueprints, see the :doc:`Quick Reference </onramp/ref>`
+guide.

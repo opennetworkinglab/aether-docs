@@ -307,11 +307,14 @@ The UERANSIM blueprint includes the following:
    [master_nodes]
    node1
 
+   [worker_nodes]
+   #node2
+
    [ueransim_nodes]
    node2
 
-* New make targets, ``aether-ueransim-install``,
-  ``aether-ueransim-run``, and ``aether-ueransim-uninstall``, to be
+* New make targets, ``ueransim-install``,
+  ``ueransim-run``, and ``ueransim-uninstall``, to be
   executed after the standard SD-Core installation.
 
 * A new submodule ``deps/ueransim`` (corresponding to repo
@@ -320,7 +323,8 @@ The UERANSIM blueprint includes the following:
   for the emulator.
 
 * The Jenkins pipeline ``ueransim.groovy`` validates the UERANSIM
-  blueprint.
+  blueprint. It also illustrates how to run Linux commands that
+  exercise the user plane from the emulated UE.
 
 To use UERANSIM, first copy the vars file to ``main.yml``:
 
@@ -335,15 +339,15 @@ followed by UERANSIM:
 
 .. code-block::
 
-   $ make aether-k8s-install
-   $ make aether-5gc-install
-   $ make aether-ueransim-install
-   $ make aether-ueransim-run
+   $ make k8s-install
+   $ make 5gc-install
+   $ make ueransim-install
+   $ make ueransim-run
 
 The last step actually starts UERANSIM, configured according to the
 specification given in files ``custom-gnb.yaml`` and
 ``custom-ue.yaml`` located in ``deps/ueransim/config``. Make target
-``aether-ueransim-run`` can be run multiple times, where doing so
+``ueransim-run`` can be run multiple times, where doing so
 reflects any recent edits to the config files. More information about
 UERANSIM can be found on `GitHub
 <https://github.com/aligungr/UERANSIM>`__, including how to set up the
