@@ -4,10 +4,11 @@ Quick Start
 This section describes a low-overhead way to get started with OnRamp.
 It brings up a one-node Kubernetes cluster, deploys a 5G version of
 SD-Core on that cluster, and runs an emulated 5G workload against the
-5G Core. It assumes a low-end server that meets the following
+5G Core. It assumes a modest server that meets the following
 requirements:
 
-* Haswell CPU (or newer), with at least 4 CPU cores and 16GB RAM.
+* Haswell CPU (or newer), with at least 4 CPU cores (ideally 8) and
+  16GB RAM (ideally 32GB).
 * Clean install of Ubuntu 20.04 or 22.04, with 5.15 (or later) kernel.
 
 For example, something like an Intel NUC is likely more than enough to get
@@ -18,7 +19,7 @@ in a VirtualBox VM), because the goal is to eventually scale a
 deployment and/or run Aether 24/7, OnRamp has been developed and
 tested on physical servers and server-based VMs. The latter includes
 Proxmox (see the example configuration shown in :numref:`Figure %s
-<fig-proxmox>`); AWS (specify a ``t2.xlarge`` instance); and CloudLab
+<fig-proxmox>`); AWS (specify an ``M7iFlex2xlarge`` instance); and CloudLab
 (specify either a ``small-lan`` or ``single-pc-ubuntu`` instance).
 
 .. _fig-proxmox:
