@@ -270,9 +270,10 @@ Network Subnets
 
 OnRamp configures a set of subnets in support of a given Aether
 deployment. The following subnets are defined in ``vars/main.yml``;
-they do not typically need to be modified to deploy a blueprint.
-Not shown below, subnet ``10.76.28.0/24`` is used as an exemplar
-for the local network throughout the OnRamp documentation.
+they do not typically need to be modified to deploy a blueprint, but
+can be if local circumstances dictate.  Not shown below, subnet
+``10.76.28.0/24`` is used as an exemplar for the local network
+throughout the OnRamp documentation.
 
 .. list-table::
    :widths: 20 25 50
@@ -282,21 +283,27 @@ for the local network throughout the OnRamp documentation.
      - Ansible Variable
      - Description
    * - `172.20.0.0/16`
-     - ``aether.ran_subnet``
+     - ``core.ran_subnet``
      - Assigned to container-based gNBs connecting to the Core. Other
        gNB implementations connect to the Core over the subnet
        assigned to the server's physical interface (as denoted by
        ``core.data_iface``).
-   * - `192.168.250.0/24`
-     - ``core.default_upf.ip.core``
-     - Assigned to `core` bridge that connects UPF(s) to the Internet.
-   * - `192.168.252.0/24`
-     - ``core.default_upf.ip.access``
-     - Assigned to `access` bridge that connects UPF(s) to the RAN.
+   * - `192.168.250.1/24`
+     - ``core.upf.core_subnet``
+     - Assigned to `core` bridge that connects UPF(s) to the
+       Internet.  Doubles as the address of the gateway on that
+       bridge that forwards between the UPF pod and the "outside" world.
+   * - `192.168.252.1/24`
+     - ``core.upf.access_subnet``
+     - Assigned to `access` bridge that connects UPF(s) to the
+       RAN. Doubles as the address of the gateway on that bridge that
+       forwards between the UPF pod and the "outside" world.
    * - `172.250.0.0/16`
-     - ``core.default_upf.ue_ip_pool``
+     - ``core.upf.default_upf.ue_ip_pool``
      - Assigned (by the Core) to UEs connecting to Aether.
 
 Note that when multiple UPFs are deployed—in addition to
-``core.default_upf``\ —each is assigned its own ``ip.core``,
-``ip.access``, and ``ue_ip_pool`` subnets.
+``core.upf.default_upf``\ —each is assigned its own ``ip.core`` and
+``ip.access`` addresses; they must be on the ``core.upf.core_subnet``
+and ``core.upf.access_subnet``, respectively. Each additional UFP
+is also assigned its own ``ue_ip_pool`` subnet.
