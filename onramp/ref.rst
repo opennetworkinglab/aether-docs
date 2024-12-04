@@ -68,6 +68,10 @@ repo. The groovy files can be found in the `aether-jenkins
      - `main-oai.yml`
      - `oai.groovy`
      - OAI software radio connected to 5G Core.
+   * - `srsRAN 5G <https://docs.aetherproject.org/master/onramp/blueprints.html#srsran-5g>`__
+     - `main-srsran.yml`
+     - `srsran.groovy`
+     - srsRAN software radio connected to 5G Core.
 
 
 Ansible Variables
@@ -106,6 +110,9 @@ the list is not comprehensive.
    * - `oai.simulation`
      - `true`
      - Run UE in simulation mode; set to `false` to connect real UEs.
+   * - `srsran.simulation`
+     - `true`
+     - Run UE in simulation mode; set to `false` to connect real UEs.
    * - `*.helm.local_charts`
      - `false`
      - Loads Helm Charts from public repo; set to `true` to utilize
@@ -141,6 +148,10 @@ substitute custom config files.
      - `deps/oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf`
    * - `oai.ue.conf_file`
      - `deps/oai/roles/uEsimulator/templates/ue.conf`
+   * - `srsran.gnb.conf_file`
+     - `deps/srsran/roles/gNb/templates/gnb_zmq.conf`
+   * - `srsran.ue.conf_file`
+     - `deps/srsran/roles/uEsimulator/templates/ue_zmq.conf`
    * - `ueransim.servers`
      - `deps/ueransim/config/custom-gnb.yaml`
    * -
@@ -170,6 +181,8 @@ Ansible inventory file (``hosts.ini``). The following identifies the
      - Servers hosting UERANSIM process.
    * - `[oai_nodes]`
      - Servers hosting OAI gNB (and optionally UE) container(s).
+   * - `[srsran_nodes]`
+     - Servers hosting srsRAN gNB (and optionally UE) container(s).
 
 The `[worker_nodes]` group can be empty, but must be present.  The
 other groups are blueprint-specific, and with the exception of
@@ -258,6 +271,16 @@ other blueprints.)
      - Start container running OAI simulated UE.
    * - `oai-uesim-stop`
      - Stop container running OAI simulated UE.
+   * - **srsRAN 5G Blueprint**
+     -
+   * - `srsran-gnb-install`
+     - Install container running srsRAN 5G radio; assumes Core already deployed.
+   * - `srsran-gnb-uninstall`
+     - Uninstall srsRAN 5G radio container.
+   * - `srsran-uesim-start`
+     - Start container running srsRAN simulated UE.
+   * - `srsran-uesim-stop`
+     - Stop container running srsRAN simulated UE.
    * - **Multi-UPF Blueprint**
      -
    * - `5gc-upf-install`
