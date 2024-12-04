@@ -665,13 +665,13 @@ srsRAN 5G
 ~~~~~~~~~~~~~~~~~~~~
 
 Aether can be configured to work with the open source gNB from srsRAN.
-The blueprint runs in simulation mode (currently work in progress to
-support USRP radio)
+The blueprint runs in simulation mode. (Support for USRP radio is
+currently work-in-progress.)
 
 The following assumes familiarity with the srsRAN 5G stack, but it is
-**not** necessary to separately install the srsRAN stack. OnRamp installs
-both the Aether Core and the srsRAN, plus the networking needed to
-interconnect the two.
+**not** necessary to separately install the srsRAN stack. OnRamp
+installs both the Aether Core and srsRAN, plus the networking needed
+to interconnect the two.
 
 .. _reading_srsran:
 .. admonition:: Further Reading
@@ -686,10 +686,10 @@ The blueprint includes the following:
 
 * Inventory file ``hosts.ini`` uses label ``[srsran_nodes]`` to denote
   the server(s) that host the gNB and (when configured in simulation
-  mode) the UE. srsRAN deployment installs the gNB and UE on one server,
-  with the 5G Core running on a separate server. (Although not necessary
-  in principle, the current playbooks require the gNB and simulated UE be
-  located on the same server.)
+  mode) the UE. The srsRAN blueprint installs the gNB and UE on one
+  server, with the 5G Core running on a separate server. (Although not
+  necessary in principle, the current playbooks require the gNB and
+  simulated UE be located on the same server.)
 
 * New make targets, ``srsran-gnb-install`` and ``srsran-gnb-uninstall``, to
   be executed along with the standard SD-Core installation (see  below).
