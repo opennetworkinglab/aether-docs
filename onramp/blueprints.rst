@@ -661,6 +661,126 @@ The :doc:`Physical RAN </onramp/gnb>` section of this Guide can be
 helpful in debugging the end-to-end setup, even though the gNB details
 are different.
 
+srsRAN 5G
+~~~~~~~~~~~~~~~~~~~~
+
+Aether can be configured to work with the open source gNB from srsRAN.
+The blueprint runs in simulation mode (currently work in progress to
+support USRP radio)
+
+The following assumes familiarity with the srsRAN 5G stack, but it is
+**not** necessary to separately install the srsRAN stack. OnRamp installs
+both the Aether Core and the srsRAN, plus the networking needed to
+interconnect the two.
+
+.. _reading_srsran:
+.. admonition:: Further Reading
+
+   `srsRAN
+   <https://docs.srsran.com/projects/project/en/latest/#>`__.
+
+The blueprint includes the following:
+
+* Global vars file ``vars/main-srsran.yml`` gives the overall blueprint
+  specification.
+
+* Inventory file ``hosts.ini`` uses label ``[srsran_nodes]`` to denote
+  the server(s) that host the gNB and (when configured in simulation
+  mode) the UE. srsRAN deployment installs the gNB and UE on one server,
+  with the 5G Core running on a separate server. (Although not necessary
+  in principle, the current playbooks require the gNB and simulated UE be
+  located on the same server.)
+
+* New make targets, ``srsran-gnb-install`` and ``srsran-gnb-uninstall``, to
+  be executed along with the standard SD-Core installation (see  below).
+  When running a simulated UE, targets ``srsran-uesim-start`` and
+  ``srsran-uesim-stop`` are also available.
+
+* A new submodule ``deps/srsran`` (corresponding to repo ``aether-srsran``)
+  defines the Ansible Roles and Playbooks required to deploy the srsRAN
+  gNB.
+
+* The Jenkins pipeline ``srsran.groovy`` validates the srsRAN 5G
+  blueprint. The pipeline runs srsRAN in simulation mode.
+
+To use an srsRAN gNB, first copy the vars file to ``main.yml``:
+
+.. code-block::
+
+   $ cd vars
+   $ cp main-srsran.yml main.yml
+
+You will see the main difference is the addition of the ``srsran``
+section:
+
+.. code-block::
+
+   srsran:
+     docker:
+       container:
+         gnb_image: aetherproject/srsran-gnb:rel-0.0.1
+         ue_image: aetherproject/srsran-ue:rel-0.0.1
+       network:
+         data_iface: ens18
+         name: host
+         subnet: "172.20.0.0/16"
+         bridge:
+           name: rfsim5g-public
+     simulation: true
+     gnb:
+       conf_file: deps/srsran/roles/gNB/templates/gnb_zmq.conf
+       ip: "172.20.0.2"
+     ue:
+       conf_file: deps/srsran/roles/uEsimulator/templates/ue_zmq.conf
+
+Variable ``simulation`` is set to ``true`` by default, causing OnRamp
+to deploy the simulated UE.  When set to ``false``, the simulated UE
+is not deployed.
+
+Note that instead of downloading and compiling the latest srsRAN
+software, this blueprint pulls in the published images for both the
+gNB and UE, corresponding to variables
+``docker.container.gnb_image`` and ``docker.container.ue_image``,
+respectively. If you plan to modify the srsRAN software, you will need to
+change these values accordingly. See the :doc:`Development Support
+</onramp/devel>` section for guidance.
+
+The ``network`` block of the ``srsran`` section configures the necessary
+tunnels so the gNB can connect to the Core's user and control planes.
+
+The path names associated with variables ``gnb.conf_file`` and
+``ue.conf_file`` are srsRAN-specific configuration files. The two
+given by default are for simulation mode.
+
+The ``core`` section of ``vars/main.yml`` is similar to that used in
+other blueprints, with two variable settings of note. First,
+set ``ran_subnet`` to proper ran subnet as per your setup.
+As a general rule, ``core.ran_subnet`` is set to the empty(``""``)
+string whenever a physical gNB is on the same L2 network as the Core.
+
+Second, variable ``values_file`` is set to
+``"deps/5gc/roles/core/templates/sdcore-5g-values.yaml"`` by default,
+meaning simulated UEs uses the same PLMN and IMSI range as gNBsim.
+When deploying with physical UEs, it is necessary to replace that
+values file with one that matches the SIM cards you plan to use. One
+option is to reuse the values file also used by the :doc:`Physical RAN
+</onramp/gnb>` blueprint, meaning you would set the variable as:
+
+.. code-block::
+
+   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+
+That file should be edited, as necessary, to match your configuration.
+
+To deploy the srsRAN blueprint in simulation mode, run the following:
+
+.. code-block::
+
+   $ make k8s-install
+   $ make 5gc-install
+   $ make srsran-gnb-install
+   $ make srsran-uesim-start
+
 Guidelines for Blueprints
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
