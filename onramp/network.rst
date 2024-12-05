@@ -75,7 +75,7 @@ the container image that implements the UPF, and ``access`` and
 
 .. code-block::
 
-   $ kubectl -n omec exec -ti upf-0 bessd -- ip addr
+   $ kubectl -n aether-5gc exec -ti upf-0 bessd -- ip addr
    1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
        link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
        inet 127.0.0.1/8 scope host lo
@@ -121,7 +121,7 @@ the UPF's ``bessd`` container will look something like this:
 
 .. code-block::
 
-   $ kubectl -n omec exec -ti upf-0 -c bessd -- ip route
+   $ kubectl -n aether-5gc exec -ti upf-0 -c bessd -- ip route
    default via 169.254.1.1 dev eth0
    default via 192.168.250.1 dev core metric 110
    10.76.28.0/24 via 192.168.252.1 dev access

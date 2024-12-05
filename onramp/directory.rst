@@ -24,7 +24,7 @@ Source Repos
 Source code for Aether and all of its subsystems can be found in
 the following repositories:
 
-* GitHub repository for the OMEC Project
+* GitHub repository for the Aether Core
   (https://github.com/omec-project): Microservices for SD-Core, plus
   the emulator (gNBsim) that subjects SD-Core to RAN workloads.
 
@@ -32,12 +32,13 @@ the following repositories:
   (https://github.com/onosproject): Microservices for SD-RAN and ROC,
   plus the YANG models used to generate the Aether API.
 
-* GitHub repository for the ONF
+* GitHub repository for the Aether Project
   (https://github.com/opennetworkinglab): OnRamp documentation and
   playbooks for deploying Aether.
 
-Anyone wanting to participate in Aether's ongoing development will
-want to learn how to contribute new features to these source repos.
+Note that ``omec-project`` and ``opennetworkinglab`` are historical
+artifacts related to Aether's origin at the Open Networking Foundation
+(ONF).
 
 Artifact Repos
 ~~~~~~~~~~~~~~~~
@@ -57,6 +58,7 @@ Helm Charts
 Docker Images
 
  | https://registry.aetherproject.org
+ | https://hub.docker.com
 
 Note that as of version 1.20.8, Kubernetes uses the `Containerd
 <https://containerd.io/>`__ runtime system instead of Docker. This is
