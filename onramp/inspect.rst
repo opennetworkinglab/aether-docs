@@ -139,17 +139,17 @@ containers running as part of the ``upf-0`` pod:
 
 .. code-block::
 
-   $ kubectl logs -n omec -p upf-0 bessd
+   $ kubectl logs -n aether-5gc -p upf-0 bessd
 
 While ``kubectl`` works just fine for tasks like this, you may also
 want to install `k9s <https://k9scli.io/>`__\ , a terminal-based UI
 that provides a convenient alternative for interacting with Kubernetes.
-Once installed, the following command brings up the UI for the OMEC
+Once installed, the following command brings up the UI for the
 namespace that implements SD-Core.
 
 .. code-block::
 
-   $ k9s -n omec
+   $ k9s -n aether-5gc
 
 :numref:`Figure %s <fig-k9s>` shows an example k9s display, where you
 can scroll up and down, and then invoke one of the listed
@@ -161,7 +161,7 @@ the selected pod.
     :width: 700px
     :align: center
 
-    Screenshot of k9s's UI for the OMEC namespace, with the AMF pod
+    Screenshot of k9s's UI for the ``aether-5gc`` namespace, with the AMF pod
     currently selected.
 
 
@@ -200,7 +200,7 @@ you learned from ``kubectl`` in place of ``amf-5887bbf6c5-pc9g2``.
 
 .. code-block::
 
-   $ kubectl sniff -n omec amf-5887bbf6c5-pc9g2 -o - | tshark -r -
+   $ kubectl sniff -n aether-5gc amf-5887bbf6c5-pc9g2 -o - | tshark -r -
 
 Of course, you'll also need to restart the RAN emulator to generate
 workload for this tool to capture.
