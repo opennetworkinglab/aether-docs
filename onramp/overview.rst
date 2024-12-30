@@ -30,8 +30,8 @@ all the degrees-of-freedom Aether supports.
 
 Aether OnRamp is still a work in progress, but anyone
 interested in participating in that effort is encouraged to join the
-discussion on Slack in the `ONF Community Workspace
-<https://onf-community.slack.com/>`__. A roadmap for the work that
+discussion on Slack in the `Aether Community Workspace
+<https://aether5g-project.slack.com/>`__. A roadmap for the work that
 needs to be done can be found in the `Aether OnRamp Wiki
 <https://wiki.aetherproject.org/display/HOME/Aether+OnRamp>`__.
 

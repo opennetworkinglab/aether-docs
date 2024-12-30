@@ -16,10 +16,11 @@ for one of the :doc:`Aether Blueprints </onramp/blueprints>`.
 
 The pipelines are executed daily, with each pipeline parameterized to
 run in multiple jobs. The ``${AgentLabel}`` parameter selects the
-Ubuntu release being tested (currently ``20.04`` and ``22.04``),
-with all jobs running in AWS VMs (currently resourced as ``M7iFlex2xlarge``).
-Pipelines that exercise two-server tests (e.g., ``ueransim.groovy``, ``upf.groovy``,
-and ``gnbsim.groovy`` run in VMs that have the
-`AWS CLI <https://aws.amazon.com/cli/>`__ installed; the CLI is is used to create
-the second VM. All VMs have Ansible installed, as documented in the
-:doc:`OnRamp Guide </onramp/start>`.
+Ubuntu release being tested (currently ``20.04`` and ``22.04``), with
+all jobs running in AWS VMs (currently resourced as
+``M7iFlex2xlarge``).  Pipelines that exercise two-server tests (e.g.,
+``ueransim.groovy``, ``upf.groovy``, ``srsran.groovy``, and
+``gnbsim.groovy``) run in VMs that have the `AWS CLI
+<https://aws.amazon.com/cli/>`__ installed; the CLI is used to
+create the second VM. All VMs have Ansible installed, as documented in
+the :doc:`OnRamp Guide </onramp/start>`.

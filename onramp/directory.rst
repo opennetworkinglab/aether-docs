@@ -13,7 +13,7 @@ up to speed on the rest of the system.
 .. admonition:: Troubleshooting Hint
 
   Users are encouraged to join the ``#aether-onramp`` channel of the
-  `ONF Workspace <https://onf-community.slack.com/>`__ on Slack, where
+  `Aether Workspace <https://aether5g-project.slack.com/>`__ on Slack, where
   questions about using OnRamp to bring up Aether are asked and
   answered. The ``Troubleshooting`` bookmark for that channel includes
   summaries of known issues.
@@ -94,16 +94,9 @@ strategy of the original mechanism.
 OnRamp Repos
 ~~~~~~~~~~~~~~~~~~~
 
-The process to deploy the artifacts listed above manages the
-*Continuous Deployment (CD)* half of the CI/CD pipeline. OnRamp uses a
-different mechanism than the one the ONF ops team originally used to
-manage its multi-site deployment of Aether.  The latter approach has a
-large startup cost, which has proven difficult to replicate. (It also
-locks you into deployment toolchain that may or may not be appropriate
-for your situation.)
-
-In its place, OnRamp adopts minimal Ansible tooling. This makes it
-easier to take ownership of the configuration parameters that define
+OnRamp adopts minimal Ansible tooling for the *Continuous Deployment
+(CD)* half of the CI/CD pipeline. The approach is designed to make it
+easy to take ownership of the configuration parameters that define
 your specific deployment scenario.  The rest of this guide walks you
 through a step-by-step process of deploying and operating Aether on
 your own hardware.  For now, we simply point you at the collection of

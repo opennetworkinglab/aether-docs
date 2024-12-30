@@ -120,22 +120,27 @@ of ``vars/main.yml``:
 .. code-block::
 
    upf:
-      ip_prefix: "192.168.252.0/24"
-      iface: "access"
+      access_subnet: "192.168.252.1/24"	# access subnet & gateway
+      core_subnet: "192.168.250.1/24"	# core subnet & gateway
       helm:
           chart_ref: aether/bess-upf
      values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
+     default_upf:
+        ip:
+          access: "192.168.252.3"
+          core:   "192.168.250.3"
+        ue_ip_pool: "172.250.0.0/16"
      additional_upfs:
-         "1":
-            ip:
-               access: "192.168.252.6/24"
-               core:   "192.168.250.6/24"
-            ue_ip_pool: "172.248.0.0/16"
-         # "2":
-         #   ip:
-         #      access: "192.168.252.7/24"
-         #      core:   "192.168.250.7/24"
-         #   ue_ip_pool: "172.247.0.0/16"
+        "1":
+           ip:
+             access: "192.168.252.6"
+             core:   "192.168.250.6"
+           ue_ip_pool: "172.248.0.0/16"
+        # "2":
+        #   ip:
+        #     access: "192.168.252.7"
+        #     core:   "192.168.250.7"
+        #   ue_ip_pool: "172.247.0.0/16"
 
 As shown above, one additional UPF is enabled (beyond ``upf-0`` that
 already came up as part of SD-Core), with the spec for yet another UPF
@@ -454,8 +459,8 @@ section:
 .. code-block::
 
     upf:
-      ip_prefix: "192.168.252.0/24"
-      iface: "access"
+      access_subnet: "192.168.252.1/24"	# access subnet & gateway
+      core_subnet: "192.168.250.1/24"	# core subnet & gateway
       mode: dpdk			# Options: af_packet or dpdk
       # If mode set to 'dpdk':
       #    - make sure at least two VF devices are created out of 'data_iface'
