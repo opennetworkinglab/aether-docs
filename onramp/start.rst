@@ -452,7 +452,7 @@ block defines a set of parameters for ``pdusessest`` (also known as
     execInParallel: false
     startImsi: 208930100007487
     ueCount: 5
-    defaultAs: "192.168.250.1"
+    defaultAs: "{{ ping_target }}"
     perUserTimeout: 100
     plmnId:
        mcc: 208
@@ -466,7 +466,7 @@ You can edit ``ueCount`` to change the number of UEs included in the
 emulation (currently limited to 100) and you can set
 ``execInParallel`` to ``true`` to emulate those UEs connecting to the
 Core in parallel (rather than serially). You can also change variable
-``defaultAs: "192.168.250.1"`` to specify the target of ICMP Echo
+``defaultAs: "{{ ping_target }}"`` to specify the target of ICMP Echo
 Request packets sent by the emulated UEs. Selecting the IP address of
 a real-world server (e.g., ``8.8.8.8``) is a good test of end-to-end
 connectivity. Finally, you can change the amount of information gNBsim

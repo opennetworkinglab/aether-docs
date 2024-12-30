@@ -10,7 +10,7 @@ deployments of Aether.
 Blueprint Specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The specification for every Aether blueprint is rooted in an Ansible
+The specification for every Aether blueprint is anchored in an Ansible
 variable file (e.g., ``vars/main-blueprint.yml``).  Most blueprints
 also include a Jenkins pipeline (e.g., ``blueprint.groovy``) that
 illustrates how the blueprint is deployed and validated.
@@ -176,13 +176,13 @@ Ansible inventory file (``hosts.ini``). The following identifies the
    * - `[worker_nodes]`
      - Worker servers in Kubernetes Cluster.
    * - `[gnbsim_nodes]`
-     - Servers hosting gNBsim container(s).
+     - Servers hosting gNBsim containers.
    * - `[ueransim_nodes]`
      - Servers hosting UERANSIM process.
    * - `[oai_nodes]`
-     - Servers hosting OAI gNB (and optionally UE) container(s).
+     - Servers hosting OAI gNB (and optionally UE) containers.
    * - `[srsran_nodes]`
-     - Servers hosting srsRAN gNB (and optionally UE) container(s).
+     - Servers hosting srsRAN gNB (and optionally UE) containers.
 
 The `[worker_nodes]` group can be empty, but must be present.  The
 other groups are blueprint-specific, and with the exception of
@@ -292,10 +292,9 @@ Network Subnets
 ~~~~~~~~~~~~~~~~~~~~~~
 
 OnRamp configures a set of subnets in support of a given Aether
-deployment. The following subnets are defined in ``vars/main.yml``;
-they do not typically need to be modified to deploy a blueprint.
-Not shown below, subnet ``10.76.28.0/24`` is used as an exemplar
-for the local network throughout the OnRamp documentation.
+deployment. The following subnets are defined in ``vars/main.yml``.
+With the exception of ``core.ran_subnet``, these variables typically
+do not need to be modified for an initial deployment of a blueprint.
 
 .. list-table::
    :widths: 20 25 50
@@ -308,18 +307,22 @@ for the local network throughout the OnRamp documentation.
      - ``aether.ran_subnet``
      - Assigned to container-based gNBs connecting to the Core. Other
        gNB implementations connect to the Core over the subnet
-       assigned to the server's physical interface (as denoted by
+       assigned to the server's physical interface (as defined by
        ``core.data_iface``).
    * - `192.168.250.0/24`
-     - ``core.default_upf.ip.core``
+     - ``core.upf.core_subnet``
      - Assigned to `core` bridge that connects UPF(s) to the Internet.
    * - `192.168.252.0/24`
-     - ``core.default_upf.ip.access``
+     - ``core.upf.access_subnet``
      - Assigned to `access` bridge that connects UPF(s) to the RAN.
    * - `172.250.0.0/16`
      - ``core.default_upf.ue_ip_pool``
-     - Assigned (by the Core) to UEs connecting to Aether.
-
-Note that when multiple UPFs are deployed—in addition to
-``core.default_upf``\ —each is assigned its own ``ip.core``,
-``ip.access``, and ``ue_ip_pool`` subnets.
+     - Assigned (by the Core) to UEs connecting to Aether. When
+       multiple UPFs are deployed—in addition to
+       ``core.default_upf``\ —each is assigned its own ``ue_ip_pool``
+       subnet.
+   * - `10.76.28.0/24`
+     - N/A
+     - Used throughout OnRamp documentation as an exemplar for the
+       local subnet on which Aether severs and radios are deployed.
+       Corresponds to the network interface defined by variable ``core.data_iface``.
