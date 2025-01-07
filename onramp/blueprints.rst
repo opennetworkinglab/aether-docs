@@ -34,11 +34,12 @@ Ansible components:
   pipelines are defined by Groovy scripts, and can be found in the
   ``aether-jenkins`` repo.
 
-The goal of establishing a well-defined procedure for adding new
-blueprints to OnRamp is to encourage the community to contribute (and
+The above list also establishes the requirements for adding new
+blueprints to OnRamp. The community is to encourage to contribute (and
 maintain) new Aether configurations and deployment scenarios.\ [#]_
 The rest of this section documents community-contributed blueprints
-to-date.
+to-date; the concluding subsection gives a set of guidelines for
+creating new blueprints.
 
 .. [#] Not all possible configurations of Aether require a
        blueprint. There are other ways to add variability, for
@@ -72,7 +73,7 @@ The Multi-UPF blueprint includes the following:
   :doc:`Emulated RAN </onramp/gnbsim>` section.  Minimally,
   SD-Core runs on one server and gNBsim runs on a second server.
   (The Quick Start deployment, with both SD-Core and gNBsim running
-  in the same server, also works.)
+  in the same server, may also work, but is not actively maintained.)
 
 * New make targets, ``5gc-upf-install`` and ``5gc-upf-uninstall``, to
   be executed after the standard SD-Core installation. The blueprint
@@ -186,7 +187,7 @@ the emulation, type:
 
 .. code-block::
 
-   $ make gnbsim-simulator-run
+   $ make gnbsim-run
 
 To verify that both UPFs were functional, you will need to look at the
 ``summary.log`` file from both instances of gNBsim:

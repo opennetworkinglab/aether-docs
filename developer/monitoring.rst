@@ -76,12 +76,13 @@ or Slack channel).
    capability to Aether OnRamp (so it is available to anyone that
    wants to operate Aether) is pending.
 
-To add an alert for a component, create a
-`PrometheusRule <https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/alerting.md>`_
-custom resource, for example in the Helm chart that deploys the component.  This resource describes one or
-more `rules <https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/>`_ using Prometheus expressions;
-if the expression is true for the time indicated, then the alert is raised. Once the PrometheusRule
-resource is instantiated, the cluster's Prometheus will pick up the rule and start evaluating it.
+To add an alert for a component, create a *PrometheusRule* custom
+resource, for example in the Helm chart that deploys the component.
+This resource describes one or more rules using Prometheus
+expressions; if the expression is true for the time indicated, then
+the alert is raised. Once the PrometheusRule resource is instantiated,
+the cluster's Prometheus will pick up the rule and start evaluating
+it.
 
 The Alertmanager is configured to send alerts with *critical* or *warning* severity to e-mail and Slack channels
 monitored by Aether OPs staff.  If it is desirable to route a specific alert to a different receiver

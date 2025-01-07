@@ -91,7 +91,7 @@ the list is not comprehensive.
      - Description
    * - `core.ran_subnet`
      - `172.20.0.0/16`
-     - Subnet connecting Core to RAN when gNBs run in a container; set to empty string ("") when gNBs are directly connected via `core.data_iface`.
+     - Overlay subnet connecting Core to RAN when gNBs run in a container; set to empty string ("") when gNBs are directly connected via `core.data_iface`.
    * - `core.standalone`
      - `true`
      - Core to run standalone, initialized from values file; set to `false` when Core is to be initialized by ROC.
@@ -305,10 +305,10 @@ do not need to be modified for an initial deployment of a blueprint.
      - Description
    * - `172.20.0.0/16`
      - ``aether.ran_subnet``
-     - Assigned to container-based gNBs connecting to the Core. Other
-       gNB implementations connect to the Core over the subnet
-       assigned to the server's physical interface (as defined by
-       ``core.data_iface``).
+     - Assigned to container-based gNBs connecting to the Core via an
+       overlay subnet. Other gNB implementations connect to the Core
+       over the subnet assigned to the server's physical interface (as
+       defined by ``core.data_iface``).
    * - `192.168.250.0/24`
      - ``core.upf.core_subnet``
      - Assigned to `core` bridge that connects UPF(s) to the Internet.
