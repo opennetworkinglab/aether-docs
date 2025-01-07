@@ -77,9 +77,8 @@ or Slack channel).
    wants to operate Aether) is pending.
 
 To add an alert for a component, create a
-`PrometheusRule <https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/alerting.md>`_
-custom resource, for example in the Helm chart that deploys the component.  This resource describes one or
-more `rules <https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/>`_ using Prometheus expressions;
+*PrometheusRule* custom resource, for example in the Helm chart that deploys the component.  This resource describes one or
+more rules using Prometheus expressions;
 if the expression is true for the time indicated, then the alert is raised. Once the PrometheusRule
 resource is instantiated, the cluster's Prometheus will pick up the rule and start evaluating it.
 
