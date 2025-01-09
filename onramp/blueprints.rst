@@ -422,9 +422,66 @@ UPF is used in both cases.
 
 Enable SR-IOV and DPDK
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
+UPF performance can be improved by enabling SR-IOV and DPDK.
 
-UPF performance can be improved by enabling SR-IOV and DPDK. This
-blueprint supports both optimizations, where the former depends on the
+Pre-requisite:
+* make sure virtualization and VT-d parameters are enabled in BIOS.
+
+* make sure enough hugepage memory allocated, iommu enabled. These changes
+  can be made by updating
+  GRUB_CMDLINE_LINUX="intel_iommu=on iommu=pt default_hugepagesz=1G hugepagesz=1G hugepages=32 transparent_hugepage=never"
+  in /etc/default/grub
+
+  Note: Number of hugepages = 2 X No of UPF Instances
+
+  Once it is updated apply the changes by running below command,
+
+  .. code-block::
+
+    $sudo update-grub
+    $sudo reboot
+
+  You can verify the allocated hugepages using below command,
+
+  .. code-block::
+
+    $cat /proc/meminfo | grep HugePages
+    AnonHugePages:         0 kB
+    ShmemHugePages:        0 kB
+    FileHugePages:         0 kB
+    HugePages_Total:      32
+    HugePages_Free:       32
+    HugePages_Rsvd:        0
+    HugePages_Surp:        0
+
+* Create required VF devices(minimum 2 required per UPF) as follows,
+  (In this example the PF interface used is "ens801f0")
+
+  .. code-block::
+
+    echo 2 > /sys/class/net/ens801f0/device/sriov_numvfs
+
+  Now retrieve the PCI address for the newly created VF devices using below command,
+
+  .. code-block::
+
+    ls -l /sys/class/net/ens801f0/device/virtfn*
+
+* Clone the DPDK repo to use the binding tools,
+
+  .. code-block::
+
+    git clone https://github.com/DPDK/dpdk.git
+    cd dpdk
+
+* Bind the VF devices to the vfio-pci driver as follows,
+
+  .. code-block::
+
+    ./usertools/dpdk-devbind.py -b vfio-pci 0000:b1:01.0
+    ./usertools/dpdk-devbind.py -b vfio-pci 0000:b1:01.1
+
+This blueprint supports both optimizations, where the former depends on the
 server NIC(s) being SR-IOV capable. The blueprint includes the
 following:
 

@@ -166,6 +166,10 @@ hostname
 hss
 hssdb
 https
+hugepage
+hugepages
+hugepagesz
+iommu
 iOS
 iPXE
 iPhones
@@ -234,6 +238,7 @@ patchsets
 pcap
 pcaps
 pcf
+pci
 pcrf
 pcrfdb
 pfcp
@@ -317,6 +322,7 @@ upf
 uplink
 uptime
 url
+vfio
 virtualenv
 vpn
 webhooks
