@@ -169,7 +169,6 @@ https
 hugepage
 hugepages
 hugepagesz
-iommu
 iOS
 iPXE
 iPhones
@@ -178,6 +177,7 @@ imei
 incrementing
 inotify
 instantiation
+iommu
 ip
 isn't
 iteratively
