@@ -166,6 +166,9 @@ hostname
 hss
 hssdb
 https
+hugepage
+hugepages
+hugepagesz
 iOS
 iPXE
 iPhones
@@ -174,6 +177,7 @@ imei
 incrementing
 inotify
 instantiation
+iommu
 ip
 isn't
 iteratively
@@ -234,6 +238,7 @@ patchsets
 pcap
 pcaps
 pcf
+pci
 pcrf
 pcrfdb
 pfcp
@@ -317,6 +322,7 @@ upf
 uplink
 uptime
 url
+vfio
 virtualenv
 vpn
 webhooks
