@@ -24,6 +24,7 @@
    onramp/roc
    onramp/devel
    onramp/blueprints
+   onramp/deployments
 
 .. toctree::
    :maxdepth: 3
