@@ -852,11 +852,11 @@ To deploy the srsRAN blueprint in simulation mode, run the following:
 Multihop gNB's
 ~~~~~~~~~~~~~~~~~~~~~~
 
-By default onramp uses isolated networks for the N3(ex: 192.168.252.x) and
+By default OnRamp uses isolated networks for the N3(ex: 192.168.252.x) and
 N6(ex: 192.168.250.x) interfaces. This prevents gNB(which is on different
 subnet and located multiple hops away) connecting to the UPF on N3 interface.
 
-In order to support such deployment onramp provides an option to configure
+In order to support such deployment OnRamp provides an option to configure
 N3 IP from the same subnet as DATA_IFACE. It can be enabled by setting
 ``core.upf.multihop_gnb: true``
 
