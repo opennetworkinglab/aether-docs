@@ -47,6 +47,7 @@ Mbps
 Microservices
 Mininet
 Moto
+Multihop
 Multipass
 NAV
 Netbox
@@ -322,6 +323,7 @@ upf
 uplink
 uptime
 url
+usecase
 vfio
 virtualenv
 vpn
