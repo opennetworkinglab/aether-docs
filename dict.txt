@@ -25,7 +25,6 @@ GiB
 GigE
 GitOps
 Github
-GNB
 Grafana
 Haswell
 IPMI
