@@ -194,7 +194,7 @@ Make Targets
 
 OnRamp executes blueprints through a set of Make Targets.  The
 following table identifies the Aether-wide targets used by the
-QuickStart Blueprint.
+Quick Start Blueprint.
 
 .. list-table::
    :widths: 25 50
