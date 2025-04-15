@@ -104,6 +104,9 @@ the list is not comprehensive.
    * - `core.upf.mode`
      - `af_packet`
      - Socket mode for `core.data_iface`; set to `dpdk` to enable DPDK and SR-IOV optimizations.
+   * - `core.upf.multihop_gnb`
+     - `false`
+     - Routing from `core.data_iface`; set to `true` when external gNB is multiple hops away.
    * - `gnbsim.data_iface`
      - `ens18`
      - Network interface used by gNBsim; same as `core.data_iface` when co-located on a single server.
@@ -315,7 +318,7 @@ do not need to be modified for an initial deployment of a blueprint.
    * - `192.168.252.0/24`
      - ``core.upf.access_subnet``
      - Assigned to `access` bridge that connects UPF(s) to the RAN.
-   * - `172.250.0.0/16`
+   * - `192.168.100.0/24`
      - ``core.default_upf.ue_ip_pool``
      - Assigned (by the Core) to UEs connecting to Aether. When
        multiple UPFs are deployed—in addition to
