@@ -130,7 +130,7 @@ of ``vars/main.yml``:
         ip:
           access: "192.168.252.3"
           core:   "192.168.250.3"
-        ue_ip_pool: "172.250.0.0/16"
+        ue_ip_pool: "192.168.100.0/24"
      additional_upfs:
         "1":
            ip:
@@ -877,7 +877,7 @@ parameters as follows:
         ip:
           access: "10.21.61.12"		#  same subnet as data_iface when multihop_gnb is true
           core:   "192.168.250.3"
-        ue_ip_pool: "172.250.0.0/16"
+        ue_ip_pool: "192.168.100.0/24"
 
 To connect multiple gNBs on different subnets, you must modify
 ``deps/5gc/roles/core/templates/sdcore-5g-values.yaml`` (if

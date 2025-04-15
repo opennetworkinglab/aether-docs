@@ -134,7 +134,7 @@ The default route via ``192.168.250.1`` directs upstream packets to
 the Internet via the ``core`` interface, with a next hop of the
 ``core`` interface outside the UPF.  These packets then undergo source
 NAT in the kernel and are sent to the IP destination in the packet.
-This means that the ``172.250.0.0/16`` addresses assigned to UEs are
+This means that the ``192.168.100.0/24`` addresses assigned to UEs are
 not visible beyond the Aether server. The return (downstream) packets
 undergo reverse NAT and now have a destination IP address of the UE.
 They are forwarded by the kernel to the ``core`` interface by these
@@ -144,11 +144,11 @@ rules on the server:
 
    $ route -n | grep "Iface\|core"
    Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   172.250.0.0     192.168.250.3   255.255.0.0     UG    0      0        0 core
+   192.168.100.0     192.168.250.3   255.255.0.0     UG    0      0        0 core
    192.168.250.0   0.0.0.0         255.255.255.0   U     0      0        0 core
 
 The first rule above matches packets to the UEs on the
-``172.250.0.0/16`` subnet.  The next hop for these packets is the
+``192.168.100.0/24`` subnet.  The next hop for these packets is the
 ``core`` IP address inside the UPF.  The second rule says that next
 hop address is reachable on the ``core`` interface outside the UPF.
 As a result, the downstream packets arrive in the UPF where they are
@@ -232,7 +232,7 @@ sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
                 ip:
                     access: "192.168.252.3/24"
                     core:   "192.168.250.3/24"
-                ue_ip_pool: "172.250.0.0/16"
+                ue_ip_pool: "192.168.100.0/24"
         amf:
             ip: "10.76.28.113"
 
@@ -263,8 +263,8 @@ example ``ens18`` interface for illustrative purposes:
    $ sudo tcpdump -i any sctp -w sctp-test.pcap
    $ sudo tcpdump -i ens18 port 2152 -w n3-outside.pcap
    $ sudo tcpdump -i access port 2152 -w n3-inside.pcap
-   $ sudo tcpdump -i core net 172.250.0.0/16 -w n6-inside.pcap
-   $ sudo tcpdump -i ens18 net 172.250.0.0/16 -w n6-outside.pcap
+   $ sudo tcpdump -i core net 192.168.100.0/24 -w n6-inside.pcap
+   $ sudo tcpdump -i ens18 net 192.168.100.0/24 -w n6-outside.pcap
 
 The first trace, saved in file ``sctp.pcap``, captures SCTP packets
 sent to establish the control path between the base station and the
@@ -284,7 +284,7 @@ the interface to ``access`` corresponds to "inside" the UPF.  Running
 Similarly, the fourth and fifth traces, saved in files
 ``n6-inside.pcap`` and ``n6-outside.pcap``, respectively, capture IP
 packets on the Internet side of the UPF (over the **N6** interface).
-In these two tests, ``net 172.250.0.0/16`` corresponds to the IP
+In these two tests, ``net 192.168.100.0/24`` corresponds to the IP
 addresses assigned to UEs by the SMF. Running ``ping`` from a physical
 UE will generate the relevant user plane traffic; gNBsim automatically
 triggers this activity.
