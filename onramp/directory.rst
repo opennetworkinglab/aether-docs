@@ -108,6 +108,7 @@ OnRamp repos:
  | Deploy Management Plane: https://github.com/opennetworkinglab/aether-amp
  | Deploy SD-RAN: https://github.com/opennetworkinglab/aether-sdran
  | Deploy OAI Software Radio: https://github.com/opennetworkinglab/aether-oai
+ | Deploy srsRAN Software Radio: https://github.com/opennetworkinglab/aether-srsran
  | Deploy gNB Simulator: https://github.com/opennetworkinglab/aether-gnbsim
  | Deploy UE+gNB Simulator: https://github.com/opennetworkinglab/aether-ueransim
  | Deploy Kubernetes: https://github.com/opennetworkinglab/aether-k8s
@@ -124,6 +125,18 @@ managed as submodules of ``aether-onramp``:
 
  | Aether Documentation: https://github.com/opennetworkinglab/aether-docs
  | Jenkins Pipelines: https://github.com/opennetworkinglab/aether-jenkins
+
+.. admonition:: Troubleshooting Hint
+
+  The ``master`` branch of the OnRamp repo corresponds to the latest
+  *minimally-validated* configuration of Aether, which is known to
+  work for a subset of the available blueprints (always including
+  *Quick Start*), but may not run consistently for *all* blueprints.
+  Once all integration tests (Jenkins Pipelines) consistently succeed
+  for a period of time (~2 weeks) a tagged version of OnRamp is
+  created. If you are having trouble with ``master`` working for a
+  particular blueprint, you should try the latest tagged version:
+  https://github.com/opennetworkinglab/aether-onramp/tags.
 
 Finally, because OnRamp uses Ansible as its primary deployment tool, a
 general understanding of Ansible is helpful (see the suggested
