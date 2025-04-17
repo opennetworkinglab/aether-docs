@@ -106,7 +106,7 @@ the list is not comprehensive.
      - Socket mode for `core.data_iface`; set to `dpdk` to enable DPDK and SR-IOV optimizations.
    * - `core.upf.multihop_gnb`
      - `false`
-     - Routing from `core.data_iface`; set to `true` when external gNB is multiple hops away.
+     - Override default N3 interface; set to `true` when external gNB is multiple hops away.
    * - `gnbsim.data_iface`
      - `ens18`
      - Network interface used by gNBsim; same as `core.data_iface` when co-located on a single server.
