@@ -849,42 +849,41 @@ To deploy the srsRAN blueprint in simulation mode, run the following:
    $ make srsran-gnb-install
    $ make srsran-uesim-start
 
-Multihop gNBs
-~~~~~~~~~~~~~~~~~~~~~~
+Override Default N3 Subnet
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default OnRamp uses isolated networks for the N3 (e.g.,
-192.168.252.x) and N6 (e.g., 192.168.250.x) interfaces. This prevents
-gNBs on different subnets or located multiple hops away from
-connecting to the UPF on the N3 interface.
+By default, OnRamp manages an isolated subnet (``192.168.252.0/24``)
+for the N3 interface. This prevents attaching gNBs on multiple subnets
+and/or on subnets that are multiple hops away. This section describes
+how to override this setting. It is not technically a self-contained
+blueprint, but rather, a configuration option that can be applied to
+any of the blueprints defined in this section.
 
-In order to support such deployments, OnRamp provides an option to
-configure N3 from the same subnet as ``core.data_iface``. It can be
-enabled by setting setting ``core.upf.multihop_gnb`` to ``true``.
-
-For example, suppose ``core.data_iface`` corresponds to subnet
-10.21.61.0/24 and the gNB is on subnet 10.202.1.0/24. Configure the
-parameters as follows:
+The override requires setting variable ``core.upf.multihop_gnb`` to
+``true``. This causes OnRamp to configure the UPF's N3 interface from
+the same subnet as ``core.data_iface``. For example, suppose
+``core.data_iface`` corresponds to subnet 10.21.61.0/24 and the gNB is
+on subnet 10.202.1.0/24. Configure the parameters as follows:
 
 .. code-block::
 
    data_iface: ens18
    ran_subnet: "10.202.1.0/24"
    upf:
-      access_subnet: "10.21.61.1/24"	# access subnet & gateway
-      core_subnet: "192.168.250.1/24"	# core subnet & gateway
-      multihop_gnb: true
+      access_subnet: "10.21.61.1/24"		# access subnet & gateway
+      core_subnet: "192.168.250.1/24"		# core subnet & gateway
+      multihop_gnb: true			# N3 directly reachable via data_iface
       default_upf:
         ip:
-          access: "10.21.61.12"		#  same subnet as data_iface when multihop_gnb is true
+          access: "10.21.61.12"			# same subnet as data_iface when multihop_gnb=true
           core:   "192.168.250.3"
         ue_ip_pool: "192.168.100.0/24"
 
-To connect multiple gNBs on different subnets, you must modify
-``deps/5gc/roles/core/templates/sdcore-5g-values.yaml`` (if
-``core.upf.mode: af_packet``) or
-``deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml`` (if
-``core.upf.mode: dpdk``) to add the necessary routes. For example, if
-a second gNB is on 10.203.1.0/24, then add the route as follows:
+To connect multiple gNBs on different subnets, you must also modify
+the specified values file (e.g.,
+``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``) to add the
+necessary routes. For example, if a second gNB is on 10.203.1.0/24,
+then add the route as follows:
 
 .. code-block::
 
