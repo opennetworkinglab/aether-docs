@@ -153,7 +153,7 @@ as an example. Consider the following two blocks from the playbook
     kubernetes.core.helm:
       update_repo_cache: true
       name: sd-core
-      release_namespace: aether-5gc
+      release_namespace: omec
       create_namespace: true
       chart_ref: "{{ core.helm.chart_ref }}"
       chart_version: "{{ core.helm.chart_version }}"
@@ -174,7 +174,7 @@ These two tasks correspond to the following three ``helm`` commands:
                             --install \
                             --version $CHART_VERSION \
                             --wait \
-                            --namespace aether-5gc \
+                            --namespace omec \
                             --values $VALUES_FILE \
                             sd-core
 

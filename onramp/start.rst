@@ -306,12 +306,12 @@ that, type:
 
    $ make aether-5gc-install
 
-``kubectl`` will now show the ``aether-5gc`` namespace running (in addition
+``kubectl`` will now show the ``omec`` namespace running (in addition
 to ``kube-system``), with output similar to the following:
 
 .. code-block::
 
-   $ kubectl get pods -n aether-5gc
+   $ kubectl get pods -n omec
    NAME                         READY   STATUS             RESTARTS      AGE
    amf-5887bbf6c5-pc9g2         1/1     Running            0             6m13s
    ausf-6dbb7655c7-42z7m        1/1     Running            0             6m13s
