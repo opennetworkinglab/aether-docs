@@ -34,9 +34,6 @@ Other Aether guides available on this site include:
 * :doc:`Runtime Operations </operations/gui>`: Learn how
   to operate Aether's 5G connectivity service.
 
-* :doc:`Test Automation </testing/about_system_tests>`: Learn how Aether
-  components are tested.
-
 Note that Aether was originally deployed as a centrally-managed cloud
 service with a dedicated ops team. The expectation was that
 organizations would participate in Aether by connecting their edge

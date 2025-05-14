@@ -24,6 +24,7 @@
    onramp/roc
    onramp/devel
    onramp/blueprints
+   onramp/testing
 
 .. toctree::
    :maxdepth: 3
@@ -55,17 +56,6 @@
    operations/slice
    operations/metering
    operations/monitor
-
-.. toctree::
-   :maxdepth: 3
-   :caption: Test Automation
-   :hidden:
-   :glob:
-
-   testing/about_system_tests
-   testing/integration_tests
-   testing/aether-roc-tests
-
 
 .. toctree::
    :maxdepth: 2
