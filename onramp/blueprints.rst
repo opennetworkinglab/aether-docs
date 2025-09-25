@@ -849,6 +849,103 @@ To deploy the srsRAN blueprint in simulation mode, run the following:
    $ make srsran-gnb-install
    $ make srsran-uesim-start
 
+Non-3GPP Interworking Function (N3IWF)
+~~~~~~~~~~~~~~~~~~~~
+
+Aether can be configured to work with the open source gNB from srsRAN.
+The blueprint runs in simulation mode. (Support for USRP radio is
+currently work-in-progress.)
+
+The following assumes familiarity with the N3IWF stack, but it is
+**not** necessary to separately install the N3IWF NF. OnRamp
+installs both the Aether Core and N3IWF, plus the networking needed
+to interconnect the two.
+
+The blueprint includes the following:
+
+* Global vars file ``vars/main-n3iwf.yml`` gives the overall blueprint
+  specification.
+
+* Inventory file ``hosts.ini`` uses label ``[n3iwf_nodes]`` to denote
+  the server(s) that host the N3IWF. The n3iwf blueprint installs the
+  N3IWF on one server, with the 5G Core running on a separate server.
+
+* New make targets, ``n3iwf-install`` and ``n3iwf-uninstall``, to
+  be executed along with the standard SD-Core installation (see  below).
+
+* A new submodule ``deps/n3iwf`` (corresponding to repo ``aether-n3iwf``)
+  defines the Ansible Roles and Playbooks required to deploy the N3IWF.
+
+To use/deploy a N3IWF instance, first copy the vars file to ``main.yml``:
+
+.. code-block::
+
+   $ cd vars
+   $ cp main-n3iwf.yml main.yml
+
+You will see the main difference is the addition of the ``n3iwf``
+section:
+
+.. code-block::
+
+   n3iwf:
+     docker:
+       image: omecproject/5gc-n3iwf:rel-1.0.0
+       network:
+         name: host
+     servers:
+       0:
+         conf_file: deps/n3iwf/roles/n3iwf/templates/n3iwf-default.yaml
+         n3iwf_ip: "172.20.0.2"
+         n2_ip: "172.20.0.2"
+         n3_ip: "172.20.0.2"
+         nwu_ip: "192.168.200.1/24"
+
+
+Note that instead of downloading and compiling the latest N3IWF
+software, this blueprint pulls in the published image corresponding
+to variable ``docker.container.image``. If you plan to modify the N3IWF
+software, you will need to change these values accordingly. See the
+:doc:`Development Support </onramp/devel>` section for guidance.
+
+The ``network`` block of the ``n3iwf`` section is meant to use the host's
+network so the N3IWF can connect to the SD Core's user and control planes.
+
+Note that the blueprint suports the deployment of multiple containarized
+N3IWF instances and each instance is indicated as an index in the ``servers``
+section.
+
+The path names associated with variables ``conf_file``is n3iwf-specific
+configuration file that includes parameters such as PLMN, TAC, etc.
+
+The ``core`` section of ``vars/main.yml`` is similar to that used in
+other blueprints, with two variable settings of note. First,
+set ``ran_subnet`` to proper ran subnet as per your setup.
+
+Second, variable ``values_file`` is set to
+``"deps/5gc/roles/core/templates/sdcore-5g-values.yaml"`` by default,
+meaning simulated (N3IW)UEs use the same PLMN and IMSI range as gNBsim.
+When deploying with physical UEs, it is necessary to replace that
+values file with one that matches the SIM cards you plan to use. One
+option is to reuse the values file also used by the :doc:`Physical RAN
+</onramp/gnb>` blueprint, meaning you would set the variable as:
+
+.. code-block::
+
+   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+
+That file should be edited, as necessary, to match your configuration.
+
+To deploy the N3IWF blueprint, run the following:
+
+.. code-block::
+
+   $ make k8s-install
+   $ make 5gc-install
+   $ make n3iwf-install
+
+Note that you need a UE that supports non-3GPP interworking.
+
 Override Default N3 Subnet
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
