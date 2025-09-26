@@ -31,6 +31,7 @@ IPMI
 IPv
 IaC
 IaaC
+Interworking
 IoT
 Istio
 Jenkins
@@ -178,10 +179,12 @@ imei
 incrementing
 inotify
 instantiation
+interworking
 iommu
 ip
 isn't
 iteratively
+iwf
 jitter
 jjb
 json
@@ -210,6 +213,7 @@ misconfiguration
 mixedGroup
 mme
 mongodb
+n3iwf
 nRT
 nVME
 nameserver

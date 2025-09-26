@@ -733,8 +733,8 @@ srsRAN 5G
 ~~~~~~~~~~~~~~~~~~~~
 
 Aether can be configured to work with the open source gNB from srsRAN.
-The blueprint runs in simulation mode. (Support for USRP radio is
-currently work-in-progress.)
+The blueprint supports the deployment of srsRAN in simulation mode, along
+with USRP radios or in 7.2 split (DPDK mode) to connect to radio units (RUs).
 
 The following assumes familiarity with the srsRAN 5G stack, but it is
 **not** necessary to separately install the srsRAN stack. OnRamp
@@ -849,12 +849,12 @@ To deploy the srsRAN blueprint in simulation mode, run the following:
    $ make srsran-gnb-install
    $ make srsran-uesim-start
 
-Non-3GPP Interworking Function (N3IWF)
-~~~~~~~~~~~~~~~~~~~~
+Non-3GPP Interworking Function
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Aether can be configured to work with the open source gNB from srsRAN.
-The blueprint runs in simulation mode. (Support for USRP radio is
-currently work-in-progress.)
+Aether can be configured to work with the open source Non-3GPP Interworking
+Function (n3IWF) to allow internet connectivity to non-3GPP devices through
+the 5G core network.
 
 The following assumes familiarity with the N3IWF stack, but it is
 **not** necessary to separately install the N3IWF NF. OnRamp
@@ -911,11 +911,11 @@ software, you will need to change these values accordingly. See the
 The ``network`` block of the ``n3iwf`` section is meant to use the host's
 network so the N3IWF can connect to the SD Core's user and control planes.
 
-Note that the blueprint suports the deployment of multiple containarized
+Note that the blueprint supports the deployment of multiple containerized
 N3IWF instances and each instance is indicated as an index in the ``servers``
 section.
 
-The path names associated with variables ``conf_file``is n3iwf-specific
+The path names associated with variables ``conf_file`` is n3iwf-specific
 configuration file that includes parameters such as PLMN, TAC, etc.
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
