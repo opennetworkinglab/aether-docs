@@ -109,9 +109,8 @@ successful:
 
 .. code-block::
 
-   $ route -n | grep "Iface\|access"
-   Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   192.168.252.0   0.0.0.0         255.255.255.0   U     0      0        0 access
+   $ ip ro|grep "dev access"
+   192.168.252.0/24 dev access proto kernel scope link src 192.168.252.1
 
 Within the UPF, the correct behavior is to forward packets between the
 ``access`` and ``core`` interfaces.  Upstream packets arriving on the
@@ -142,10 +141,9 @@ rules on the server:
 
 .. code-block::
 
-   $ route -n | grep "Iface\|core"
-   Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
-   192.168.100.0     192.168.250.3   255.255.0.0     UG    0      0        0 core
-   192.168.250.0   0.0.0.0         255.255.255.0   U     0      0        0 core
+   $ ip ro |grep "dev core"
+   192.168.100.0/24 via 192.168.250.3 dev core proto static
+   192.168.250.0/24 dev core proto kernel scope link src 192.168.250.1
 
 The first rule above matches packets to the UEs on the
 ``192.168.100.0/24`` subnet.  The next hop for these packets is the
