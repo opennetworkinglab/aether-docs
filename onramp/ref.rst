@@ -217,7 +217,7 @@ Quick Start Blueprint.
      - Install 5G Core workload; includes bridges for networking.
    * - `aether-5gc-uninstall`
      - Uninstall 5G Core workload; includes bridges for networking.
-   * - `aether-resetcore`
+   * - `aether-5gc-reset`
      - Delete and reinstall 5G Core workload; leaves network bridges untouched.
    * - `aether-gnbsim-install`
      - Install gNBsim containers.
