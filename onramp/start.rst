@@ -336,7 +336,7 @@ state, a reset usually corrects the problem. Type:
 
 .. code-block::
 
-   make aether-resetcore
+   make aether-5gc-reset
 
 Once running, you will recognize pods that correspond to many of the
 microservices discussed is `Chapter 5
@@ -427,7 +427,7 @@ of which has been saved in a timestamped file:
 
   If ``summary.log`` reports ``UEs Passed: 0 , UEs Failed: 5`` then it
   may be the case that SD-Core did not come up cleanly. Type
-  ``make aether-resetcore``, and after verifying all pods are running
+  ``make aether-5gc-reset``, and after verifying all pods are running
   with ``kubectl``, run gNBsim again.
 
   Another possibility is that you have multiple SD-Cores running in
