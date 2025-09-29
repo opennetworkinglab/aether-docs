@@ -72,6 +72,10 @@ repo. The groovy files can be found in the `aether-jenkins
      - `main-srsran.yml`
      - `srsran.groovy`
      - srsRAN software radio connected to 5G Core.
+   * - `N3IWF <https://docs.aetherproject.org/master/onramp/blueprints.html#non-3gpp-interworking-function>`__
+     - `main-n3iwf.yml`
+     - N/A
+     - N3IWF connected to 5G Core to provide internet access to non-3GPP devices.
 
 
 Ansible Variables
