@@ -628,11 +628,11 @@ section:
          bridge:
            name: rfsim5g-public
      simulation: true
-     gnb:
-       conf_file: deps/oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf
-       ip: "172.20.0.2"
-     ue:
-       conf_file: deps/oai/roles/uEsimulator/templates/ue.conf
+     servers:
+       0:
+         gnb_conf: deps/oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf
+         gnb_ip: "172.20.0.2"
+         ue_conf: deps/oai/roles/uEsimulator/templates/ue.conf
 
 Variable ``simulation`` is set to ``true`` by default, causing OnRamp
 to deploy the simulated UE.  When set to ``false``, the simulated UE
@@ -653,11 +653,14 @@ Variable ``network.data_iface`` needs to be modified in the same way
 as in the ``core`` and ``gnbsim`` sections of ``vars/main.yml``, as
 described throughout this Guide.
 
-The path names associated with variables ``gnb.conf_file`` and
-``ue.conf_file`` are OAI-specific configuration files. The two
+Note: we can deploy multiple OAI gNB's simultaneously by adding as
+many servers under ``oai.servers`` section.
+
+The path names associated with variables ``gnb_conf`` and
+``ue_conf`` are OAI-specific configuration files. The two
 given by default are for simulation mode. The template directory for
 the ``gNb`` role also includes a configuration file for when the USRP
-X310 hardware is to be deployed; edit variable ``gnb.conf_file``
+X310 hardware is to be deployed; edit variable ``gnb_conf``
 to point to that file instead. If you plan to use some other OAI
 configuration file, note that the following two variables in the ``AMF
 parameters`` section need to be modified to work with the Aether Core:
@@ -786,20 +789,18 @@ section:
    srsran:
      docker:
        container:
-         gnb_image: aetherproject/srsran-gnb:rel-0.0.1
-         ue_image: aetherproject/srsran-ue:rel-0.0.1
+         gnb_image: aetherproject/srsran-gnb:rel-0.4.0
+         ue_image: aetherproject/srsran-ue:rel-0.4.0
        network:
-         data_iface: ens18
          name: host
-         subnet: "172.20.0.0/16"
          bridge:
            name: rfsim5g-public
      simulation: true
-     gnb:
-       conf_file: deps/srsran/roles/gNB/templates/gnb_zmq.conf
-       ip: "172.20.0.2"
-     ue:
-       conf_file: deps/srsran/roles/uEsimulator/templates/ue_zmq.conf
+     servers:
+       0: 
+         gnb_conf: deps/srsran/roles/gNB/templates/gnb_zmq.conf
+         gnb_ip: "172.20.0.2"
+         ue_conf: deps/srsran/roles/uEsimulator/templates/ue_zmq.conf
 
 Variable ``simulation`` is set to ``true`` by default, causing OnRamp
 to deploy the simulated UE.  When set to ``false``, the simulated UE
@@ -816,9 +817,12 @@ change these values accordingly. See the :doc:`Development Support
 The ``network`` block of the ``srsran`` section configures the necessary
 tunnels so the gNB can connect to the Core's user and control planes.
 
-The path names associated with variables ``gnb.conf_file`` and
-``ue.conf_file`` are srsRAN-specific configuration files. The two
+The path names associated with variables ``gnb_conf`` and
+``ue_conf`` are srsRAN-specific configuration files. The two
 given by default are for simulation mode.
+
+Note: we can deploy multiple srsRAN gNB's simultaneously by adding
+as many servers under ``srsran.servers`` section.
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
 other blueprints, with two variable settings of note. First,
