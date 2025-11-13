@@ -51,7 +51,7 @@ Helm Charts
 
  | https://charts.aetherproject.org
  | https://charts.onosproject.org
- | https://charts.atomix.io
+ | https://atomix.github.io/charts.atomix.io
  | https://sdrancharts.onosproject.org
  | https://charts.rancher.io/
 
