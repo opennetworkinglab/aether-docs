@@ -271,6 +271,7 @@ linkcheck_ignore = [
     r'https://wiki.opennetworking.org/.*',
     r'https://wiki.aetherproject.org/.*',
     r'https://docs.sd-core.opennetworking.org/.*',
+    r'https://opennetworking.org/.*',
 ]
 
 linkcheck_timeout = 3
