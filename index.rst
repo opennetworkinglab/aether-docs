@@ -56,13 +56,3 @@
    operations/slice
    operations/metering
    operations/monitor
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Releases
-   :hidden:
-   :glob:
-
-   release/2.0.rst
-   release/2.1.rst
-   release/process.rst

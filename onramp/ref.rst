@@ -43,36 +43,36 @@ repo. The groovy files can be found in the `aether-jenkins
      - N/A
      - Physical 5G small cell radio connected to 5G Core; demonstrated with
        MOSO CANOPY 5G indoor small cell.
-   * - `Multiple UPFs <https://docs.aetherproject.org/master/onramp/blueprints.html#multiple-upfs>`__
+   * - `Multiple UPFs <https://docs.aetherproject.org/onramp/blueprints.html#multiple-upfs>`__
      - `main-upf.yml`
      - `upf.groovy`
      - Instantiate multiple UPFs and bind them to distinct Slices.
-   * - `SD-RAN (RIC) <https://docs.aetherproject.org/master/onramp/blueprints.html#sd-ran-ric>`__
+   * - `SD-RAN (RIC) <https://docs.aetherproject.org/onramp/blueprints.html#sd-ran-ric>`__
      - `main-sdran.yml`
      - `sdran.groovy`
      - SD-RAN (with RANSIM traffic) connected to 5G Core.
-   * - `UERANSIM <https://docs.aetherproject.org/master/onramp/blueprints.html#ueransim>`__
+   * - `UERANSIM <https://docs.aetherproject.org/onramp/blueprints.html#ueransim>`__
      - `main-ueransim.yml`
      - `ueransim.groovy`
      - UERANSIM (with ``iperf`` traffic) connected to 5G Core.
-   * - `Physical eNB <https://docs.aetherproject.org/master/onramp/blueprints.html#physical-enbs>`__
+   * - `Physical eNB <https://docs.aetherproject.org/onramp/blueprints.html#physical-enbs>`__
      - `main-eNB.yml`
      - N/A
      - Physical 4G small cell radio connected to 4G Core; demonstrated with
        Sercomm indoor small cell.
-   * - `SR-IOV/DPDK <https://docs.aetherproject.org/master/onramp/blueprints.html#enable-sr-iov-and-dpdk>`__
+   * - `SR-IOV/DPDK <https://docs.aetherproject.org/onramp/blueprints.html#enable-sr-iov-and-dpdk>`__
      - `main-sriov.yml`
      - N/A
      - 5G Core with SR-IOV and DPDK optimizations enabled for User Plane.
-   * - `OAI 5G RAN <https://docs.aetherproject.org/master/onramp/blueprints.html#oai-5g-ran>`__
+   * - `OAI 5G RAN <https://docs.aetherproject.org/onramp/blueprints.html#oai-5g-ran>`__
      - `main-oai.yml`
      - `oai.groovy`
      - OAI software radio connected to 5G Core.
-   * - `srsRAN 5G <https://docs.aetherproject.org/master/onramp/blueprints.html#srsran-5g>`__
+   * - `srsRAN 5G <https://docs.aetherproject.org/onramp/blueprints.html#srsran-5g>`__
      - `main-srsran.yml`
      - `srsran.groovy`
      - srsRAN software radio connected to 5G Core.
-   * - `N3IWF <https://docs.aetherproject.org/master/onramp/blueprints.html#non-3gpp-interworking-function>`__
+   * - `N3IWF <https://docs.aetherproject.org/onramp/blueprints.html#non-3gpp-interworking-function>`__
      - `main-n3iwf.yml`
      - N/A
      - N3IWF connected to 5G Core to provide internet access to non-3GPP devices.

@@ -32,7 +32,7 @@ Operations team. This subscriber-related detail is configured via the
 SIM Management application, ``simapp``.
 
 As described in the `OnRamp Guide
-<https://docs.aetherproject.org/master/onramp/gnb.html#prepare-ues>`__,
+<https://docs.aetherproject.org/onramp/gnb.html#prepare-ues>`__,
 the ``subscribers`` section of the values file needs to be edited to
 include the new Device IMSIs:
 

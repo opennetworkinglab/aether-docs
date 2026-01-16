@@ -129,4 +129,4 @@ secure login feature.
 .. admonition:: Further Reading
 
     `Aether Operations
-    <https://docs.aetherproject.org/master/operations/gui.html>`__.
+    <https://docs.aetherproject.org/operations/gui.html>`__.
