@@ -1,6 +1,0 @@
-Aether 2.0 Release
-==================
-
-.. note:: Aether 2.0 is no longer supported. Its Guide is archived
-  `here <https://docs.aetherproject.org/aether-2.0/index.html>`__.
-
