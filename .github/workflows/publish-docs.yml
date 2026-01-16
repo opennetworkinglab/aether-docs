@@ -5,33 +5,43 @@ on:
     branches:
       - master
 
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the
+# run in-progress and latest queued. However, do NOT cancel in-progress
+# runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
-  Publish_Docs:
+  # Single deploy job since we're just deploying
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repo
+      - name: Checkout
         uses: actions/checkout@v4
-      - name: Validate reST source
-        run: make test
-      - name: Build docs
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+      - name: Build html
         run: make html
-      - name: Hack to deal with multiversion
-        run: |
-          mkdir ${{ github.workspace }}/_build/multiversion/
-          mkdir ${{ github.workspace }}/_build/multiversion/master
-          cp -R ${{ github.workspace }}/_build/html/* ${{ github.workspace }}/_build/multiversion/master
-          ls ${{ github.workspace }}/_build/multiversion/master
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload build repository
+          path: './_build/html'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
-      - name: Prep private key
-        run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" >> ${{ github.workspace }}/id_rsa
-          chmod 600 ${{ github.workspace }}/id_rsa
-      - name: Run rsync script
-        run: |
-          chmod +x ./.github/scripts/rsync.sh
-          ./.github/scripts/rsync.sh ${{ secrets.SSH_LOGIN_USERNAME }} ${{ secrets.REMOTE_SERVER_IP }} ${{ secrets.SSH_PORT }} ${{ github.workspace }}/_build/multiversion/master /srv/sites/docs.aetherproject.org ${{ github.workspace }}/id_rsa
+
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
