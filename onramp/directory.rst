@@ -49,15 +49,16 @@ source code. These artifacts are stored in the following registries:
 
 Helm Charts
 
- | https://charts.aetherproject.org
+ | https://github.com/omec-project/sdcore-helm-charts/pkgs/container/sd-core
  | https://charts.onosproject.org
  | https://atomix.github.io/charts.atomix.io
- | https://sdrancharts.onosproject.org
+ | https://github.com/onosproject/sdran-helm-charts/pkgs/container/charts%2Fsd-ran
  | https://charts.rancher.io/
 
 Docker Images
 
- | https://registry.aetherproject.org
+ | https://github.com/orgs/omec-project/packages (SD-Core)
+ | https://github.com/orgs/onosproject/packages (SD-Ran & ROC)
  | https://hub.docker.com
 
 Note that as of version 1.20.8, Kubernetes uses the `Containerd

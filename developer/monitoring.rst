@@ -100,7 +100,7 @@ To update the configuration:
 
    $ kubeseal --cert "${PUBLICKEY}" --scope cluster-wide --format yaml < alertmanager-config-secret.yaml > alertmanager-config-sealed-secret.yaml
 
-* Commit the changes and submit patchset to gerrit
+* Commit the changes and open a pull request on GitHub
 
-Once the patchset is merged, verify that the SealedSecret was successfully unsealed and converted to a Secret
+Once the pull request is merged, verify that the SealedSecret was successfully unsealed and converted to a Secret
 by looking at the logs of the *sealed-secrets-controller* pod running on the cluster in the *kube-system* namespace.

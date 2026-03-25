@@ -6,7 +6,7 @@
    :hidden:
    :glob:
 
-   intro
+   Introduction <intro>
 
 .. toctree::
    :maxdepth: 3

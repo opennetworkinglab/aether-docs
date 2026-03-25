@@ -1,0 +1,25 @@
+/*
+ * Copyright (c) 2026 Intel Corporation
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+main {
+  width: 100%;
+}
+
+.content {
+  max-width: min(110rem, calc(100vw - var(--sidebar-width) - 4rem));
+}
+
+.content__inner {
+  max-width: none;
+}
+
+.sidebar-brand-text {
+  font-weight: 600;
+}
+
+.table-wrapper table td,
+.table-wrapper table th {
+  white-space: normal;
+}

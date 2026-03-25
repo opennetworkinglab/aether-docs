@@ -1,5 +1,6 @@
-venv-docs
+__pycache__
 _build
-.vscode
-.env
+venv-docs
 .DS_Store
+.env
+.vscode
