@@ -263,6 +263,7 @@ todo_include_todos = True
 linkcheck_ignore = [
     r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*',
     r'https://jenkins.aetherproject.org/.*',
+    r'https://kubernetes\.io/docs/tasks/run-application/horizontal-pod-autoscale/.*',
     r'https://sas.goog/.*',
     r'https://www.fs.com/.*',
     r'https://velero.io/.*',
