@@ -1,3 +1,5 @@
+# Copyright: 2021 Open Networking Foundation
+# License: Apache-2.0
 Alertmanager
 Bavier
 CLI
