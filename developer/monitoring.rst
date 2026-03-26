@@ -6,7 +6,7 @@ Monitoring Development
 ================================
 
 Aether leverages `Prometheus <https://prometheus.io/docs/introduction/overview/>`_ to collect
-and store platform and service metrics, `Grafana <https://grafana.com/docs/grafana/latest/getting-started/>`_
+and store platform and service metrics, `Grafana <https://grafana.com/docs/grafana/latest/fundamentals/getting-started/>`_
 to visualize metrics over time, and `Alertmanager <https://prometheus.io/docs/alerting/latest/alertmanager/>`_ to
 notify Aether operators of events requiring attention.  This monitoring stack is running on each Aether cluster.
 This section describes how an Aether component can "opt in" to the Aether monitoring stack so that its metrics can be
@@ -26,7 +26,7 @@ into Prometheus format and export them.
 
 A component that exposes a Prometheus exporter HTTP endpoint via a Service can tell Prometheus to scrape
 this endpoint by defining a
-`ServiceMonitor <https://github.com/prometheus-operator/prometheus-operator/blob/master/Documentation/user-guides/running-exporters.md>`_
+`ServiceMonitor <https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/user-guides/running-exporters.md>`_
 custom resource.  The ServiceMonitor is typically created by the Helm chart that installs the component.
 
 

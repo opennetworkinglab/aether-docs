@@ -30,8 +30,8 @@ options are likely to be different in other countries.
 
   In addition to :doc:`Other Blueprints </onramp/blueprints>`, we are
   tracking community experience with different hardware in the
-  ``#aether-onramp`` channel of the `ONF Workspace
-  <https://onf-community.slack.com/>`__, with summaries of different
+  ``#aether-onramp`` channel of the `Aether Workspace
+  <https://aether5g-project.slack.com/>`__, with summaries of different
   combinations people have tried reported in the OnRamp `Troubleshooting
   Wiki Page
   <https://wiki.aetherproject.org/display/HOME/Troubleshooting>`__.

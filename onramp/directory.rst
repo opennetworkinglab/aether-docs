@@ -151,5 +151,4 @@ uses the toolset, but not the platform/service.
 .. _reading_ansible:
 .. admonition:: Further Reading
 
-   `Overview: How Ansible Works <https://www.ansible.com/overview/how-ansible-works>`__.
-
+   `Overview: How Ansible Works <https://www.redhat.com/en/ansible-collaborative/how-ansible-works>`__.
