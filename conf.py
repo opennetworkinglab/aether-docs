@@ -261,18 +261,10 @@ todo_include_todos = True
 # -- Options for linkcheck ---------------------------------------------------
 # The link checker strips off .md from links and then complains
 linkcheck_ignore = [
-    r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*',
     r'https://jenkins.aetherproject.org/.*',
     r'https://kubernetes\.io/docs/tasks/run-application/horizontal-pod-autoscale/.*',
-    r'https://sas.goog/.*',
-    r'https://www.fs.com/.*',
-    r'https://velero.io/.*',
     r'https://cloud.google.com/.*',
-    r'https://ark.intel.com/.*',
-    r'https://wiki.onosproject.org/.*',
-    r'https://wiki.opennetworking.org/.*',
     r'https://wiki.aetherproject.org/.*',
-    r'https://docs.sd-core.opennetworking.org/.*',
     r'https://opennetworking.org/.*',
 ]
 
