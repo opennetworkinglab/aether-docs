@@ -47,7 +47,7 @@ dict-check: sort-dict
 	echo "dict.txt is unsorted or needs to be added to git index" ; exit 1
 
 sort-dict:
-	@sort -u < dict.txt > dict_sorted.txt
+	@LC_ALL=C sort -u < dict.txt > dict_sorted.txt
 	@mv dict_sorted.txt dict.txt
 
 license: $(VENV_NAME) ## Check license with the reuse tool
