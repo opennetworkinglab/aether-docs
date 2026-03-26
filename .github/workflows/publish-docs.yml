@@ -25,6 +25,7 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    if: github.repository_owner == 'opennetworkinglab'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -41,7 +42,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v5
-
-
-
       - run: echo "🍏 This job's status is ${{ job.status }}."
