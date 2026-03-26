@@ -38,7 +38,7 @@ checks. This is what happens to validate a patchset.
 * ``make spelling``: Checks spelling on all documentation. If there are
   additional words that are correctly spelled but not in the dictionary
   (acronyms, nouns, etc.) please add them to the ``dict.txt`` file, which
-  should be alphabetized using ``sort``
+  should be alphabetized using ``LC_ALL=C sort``
 
 * ``make linkcheck``: Verifies that links in the document are working and
   accessible, using Sphinx's built in linkcheck tool. If there are links that
