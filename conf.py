@@ -254,22 +254,6 @@ epub_exclude_files = ['search.html']
 
 # -- Extension configuration -------------------------------------------------
 
-# blockdiag/etc. config
-
-rackdiag_antialias = True
-rackdiag_html_image_format = "SVG"
-rackdiag_fontpath = [
-    "_static/fonts/Inconsolata-Regular.ttf",
-    "_static/fonts/Inconsolata-Bold.ttf",
-]
-
-nwdiag_antialias = True
-nwdiag_html_image_format = "SVG"
-nwdiag_fontpath = [
-    "_static/fonts/Inconsolata-Regular.ttf",
-    "_static/fonts/Inconsolata-Bold.ttf",
-]
-
 # -- Options for todo extension ----------------------------------------------
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
