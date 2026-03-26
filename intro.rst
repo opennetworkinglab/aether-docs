@@ -1,11 +1,15 @@
-Introduction
-==============
+.. meta::
+  :description: Learn how Aether provides open source, cloud-native 5GC and 5GS capabilities with NR support for private 5G deployments.
+  :keywords: Aether, open source, cloud-native, 5GC, 5GS, NR, private 5G
 
-Aether is an open source 5G edge cloud platform that supports
-enterprise deployments of Private 5G. Information about Aether (a
-Linux Foundation project) can be found on the project website. An
-introduction to the Aether architecture can be found in a companion
-book:
+Aether: Open Source Cloud-Native 5G System
+==========================================
+
+Aether is an open source, cloud-native 5G edge cloud platform that supports
+enterprise deployments of Private 5G, including 5GC, 5GS, and NR-based
+workflows. Information about Aether (a Linux Foundation project) can be found on
+the project website. An introduction to the Aether architecture can be found in
+a companion book:
 
 .. _reading_private5g:
 .. admonition:: Further Reading

@@ -7,10 +7,9 @@ Aether Project. There are just a few guidelines you need to follow.
 Contributor License Agreement
 -----------------------------
 
-Contributors sign a `Developer Certificate of Origin (DCO)
-<https://wiki.linuxfoundation.org/dco>`__ on each commit, stating that
-you agree to the terms published at
-https://developercertificate.org/. Aether no longer requires a CLA.
+Contributors sign the `Developer Certificate of Origin (DCO)
+<https://developercertificate.org/>`__ on each commit. Aether no
+longer requires a CLA.
 
 Guides, Rules and Best Practices
 --------------------------------

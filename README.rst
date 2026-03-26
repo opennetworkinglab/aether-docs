@@ -52,10 +52,4 @@ To change the version shown on the build site, change the contents of the
 ``VERSION`` file to be released SemVer version. This will create a tag on the
 repo.
 
-The ``make multiversion`` target can then be used to build all
-versions tagged or branched on the remote to ``_build/multiversion``. This
-uses a fork of `sphinx-multiversion
-<https://github.com/Holzhaus/sphinx-multiversion>`_ to build multiple versions
-and a menu on the site.
-
-There are variables in ``conf.py`` to determine which tags/branches to build.
+Published documentation is built from the current branch with ``make html``.

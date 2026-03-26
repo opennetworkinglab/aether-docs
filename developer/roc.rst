@@ -241,7 +241,7 @@ Run Local Keycloak Server
     for development as there was at `keycloak-dev.onlab.us`, so you
     must run your own own Keycloak server inside of Kubernetes.
 
-See `Keycloak README.md <https://gerrit.opencord.org/plugins/gitiles/roc-helm-charts/+/refs/heads/master/keycloak/>`_ for details.
+See `Keycloak README.md <https://github.com/onosproject/roc-helm-charts/blob/master/keycloak/README.md>`_ for details.
 
 When running it should be available at
 *http://localhost:8080/realms/master/.well-known/openid-configuration*.

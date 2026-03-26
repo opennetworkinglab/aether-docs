@@ -21,6 +21,19 @@
 # sys.path.insert(0, os.path.abspath('.'))
 
 import os
+import sys
+
+
+def is_spelling_build():
+    if os.environ.get("SPHINX_ENABLE_SPELLING") == "1":
+        return True
+
+    argv = sys.argv[1:]
+    for index, arg in enumerate(argv):
+        if arg in ("-b", "-M") and index + 1 < len(argv) and argv[index + 1] == "spelling":
+            return True
+
+    return False
 
 def get_version():
     with open("VERSION") as f:
@@ -58,29 +71,17 @@ extensions = [
     'sphinx.ext.intersphinx',
     'sphinx.ext.mathjax',
     'sphinx.ext.todo',
-    'sphinxcontrib.spelling',
-    "sphinx_multiversion",
+    'sphinx_sitemap',
 ]
+
+if is_spelling_build():
+    extensions.append('sphinxcontrib.spelling')
 
 # require document prefix on section labels
 autosectionlabel_prefix_document = True
 
 # Text files with lists of words that shouldn't fail the spellchecker:
 spelling_word_list_filename=['dict.txt', ]
-
-# sphinx-multiversion prep, run in each versioned source directory
-prep_commands = [
-]
-
-# inlcude only the branches matching master and aether-*
-smv_branch_whitelist = r'^(master|aether-.*)$'
-
-# Don't include any tags - smv docs say you can put None here, but that is broken
-# https://github.com/Holzhaus/sphinx-multiversion/issues/47
-smv_tag_whitelist = r'notags'
-
-# include all remote branches
-smv_remote_whitelist = r'^.*$'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -130,7 +131,15 @@ pygments_style = None
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = 'furo'
+
+html_title = 'Aether'
+
+html_short_title = 'Aether'
+
+html_baseurl = 'https://docs.aetherproject.org/'
+
+sitemap_url_scheme = '{link}'
 
 html_logo = '_static/aether.svg'
 
@@ -141,7 +150,16 @@ html_favicon = '_static/aether-favicon-128.png'
 # documentation.
 #
 html_theme_options = {
-    'logo_only': True
+    "light_css_variables": {
+        "color-brand-primary": "#0082c9",
+        "color-brand-content": "#0082c9",
+    },
+    "dark_css_variables": {
+        "color-brand-primary": "#4db8ff",
+        "color-brand-content": "#4db8ff",
+    },
+    "sidebar_hide_name": True,
+    "navigation_with_keys": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -261,7 +279,6 @@ todo_include_todos = True
 linkcheck_ignore = [
     r'https://jenkins\.opencord\.org/job/aether-member-only-jobs/.*',
     r'https://jenkins.aetherproject.org/.*',
-    r'https://gerrit.opencord.org/.*',
     r'https://sas.goog/.*',
     r'https://www.fs.com/.*',
     r'https://velero.io/.*',
@@ -280,10 +297,10 @@ linkcheck_retries = 2
 # -- options for Intersphinx extension ---------------------------------------
 
 intersphinx_mapping = {
-    'ansible': ('https://docs.ansible.com/ansible/latest', None),
+    'ansible': ('https://docs.ansible.com/projects/ansible/latest', None),
     'sphinx': ('https://www.sphinx-doc.org/en/master', None),
-    'sdcore': ('https://docs.sd-core.aetherproject.org/main', None),
-    'sdran': ('https://docs.sd-ran.aetherproject.org/master', None),
+    'sdcore': ('https://docs.sd-core.aetherproject.org', None),
+    'sdran': ('https://docs.sd-ran.aetherproject.org', None),
     'sysapproach5g': ('https://5g.systemsapproach.org/', None),
     'sysapproachnet': ('https://book.systemsapproach.org/', None),
     'sysapproachsdn': ('https://sdn.systemsapproach.org/', None),
@@ -291,4 +308,4 @@ intersphinx_mapping = {
 
 def setup(app):
 
-    app.add_css_file('css/rtd_theme_mods.css')
+    app.add_css_file('css/furo_theme_mods.css')

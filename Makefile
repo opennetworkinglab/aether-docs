@@ -20,7 +20,7 @@ help: $(VENV_NAME)
 	source ./$(VENV_NAME)/bin/activate ; set -u ;\
 	$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
-.PHONY: help Makefile test doc8 dict-check sort-dict license clean clean-all
+.PHONY: help Makefile test doc8 dict-check sort-dict spelling license clean clean-all
 
 $(VENV_NAME):
 	python3 -m venv $@ ;\
@@ -35,6 +35,10 @@ test: doc8 dict-check spelling linkcheck
 doc8: $(VENV_NAME)
 	source ./$</bin/activate ; set -u;\
 	doc8 --ignore-path $< --ignore-path _build --ignore-path LICENSES --max-line-length 119
+
+spelling: $(VENV_NAME)
+	source ./$</bin/activate ; set -u;\
+	SPHINX_ENABLE_SPELLING=1 $(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 
 # Words in dict.txt must be in the correct alphabetical order and must not duplicated.
 dict-check: sort-dict
@@ -55,15 +59,10 @@ license: $(VENV_NAME) ## Check license with the reuse tool
 clean:
 	rm -rf "$(BUILDDIR)"
 
-# clean-all - delete the virtualenv too
+# clean-all - delete the virtualenv and Python cache directories too
 clean-all: clean
 	rm -rf "$(VENV_NAME)"
-
-# build multiple versions
-multiversion: $(VENV_NAME) Makefile
-	source $</bin/activate ; set -u ;\
-  sphinx-multiversion "$(SOURCEDIR)" "$(BUILDDIR)/multiversion" $(SPHINXOPTS)
-	cp "$(SOURCEDIR)/_templates/meta_refresh.html" "$(BUILDDIR)/multiversion/index.html"
+	find . -name __pycache__ -type d -prune -exec rm -rf {} +
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).
