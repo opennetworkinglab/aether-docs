@@ -80,7 +80,7 @@ files for all the Helm Charts:
 
 The CI pipeline for each subsystem is implemented as GitHub Actions in
 the respective repos. The approach is based on an earlier version
-implemented by set of Jenkins jobs, as described in the Lifecycle
+implemented by an earlier automation system, as described in the Lifecycle
 Management chapter of a companion Edge Cloud Operations book. Of
 particular note, the current pipeline adopts the version control
 strategy of the original mechanism.
@@ -125,7 +125,6 @@ There are two other Aether-related repos of note; they are **not**
 managed as submodules of ``aether-onramp``:
 
  | Aether Documentation: https://github.com/opennetworkinglab/aether-docs
- | Jenkins Pipelines: https://github.com/opennetworkinglab/aether-jenkins
 
 .. admonition:: Troubleshooting Hint
 
@@ -133,7 +132,7 @@ managed as submodules of ``aether-onramp``:
   *minimally-validated* configuration of Aether, which is known to
   work for a subset of the available blueprints (always including
   *Quick Start*), but may not run consistently for *all* blueprints.
-  Once all integration tests (Jenkins Pipelines) consistently succeed
+  Once all integration tests consistently succeed
   for a period of time (~2 weeks) a tagged version of OnRamp is
   created. If you are having trouble with ``master`` working for a
   particular blueprint, you should try the latest tagged version:

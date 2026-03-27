@@ -29,10 +29,8 @@ Ansible components:
 * (Optional) Any additional hardware (beyond the Ansible-managed
   Aether servers) required to support the blueprint.
 
-* A Jenkins pipeline, added to the set of OnRamp integration tests,
-  verifies that the blueprint successfully deploys Aether. These
-  pipelines are defined by Groovy scripts, and can be found in the
-  ``aether-jenkins`` repo.
+* (Optional) Automated integration-test coverage verifies that the
+  blueprint successfully deploys Aether.
 
 The above list also establishes the requirements for adding new
 blueprints to OnRamp. The community is to encourage to contribute (and
@@ -88,7 +86,7 @@ The Multi-UPF blueprint includes the following:
   this blueprint is demonstrated using gNBsim, the assumed base models
   are given by ``roc-5g-models.json``.)
 
-* The Jenkins pipeline ``upf.groovy`` validates the Multi-UPF
+* The OnRamp integration test suite validates the Multi-UPF
   blueprint.
 
 To use Multi-UPF, first copy the vars file to ``main.yml``:
@@ -223,7 +221,7 @@ The SD-RAN blueprint includes the following:
   ``aether-sdran``) defines the Ansible Roles and Playbooks required
   to deploy SD-RAN.
 
-* The Jenkins pipeline ``sdran.groovy`` validates the SD-RAN
+* The OnRamp integration test suite validates the SD-RAN
   blueprint.
 
 To use SD-RAN, first copy the vars file to ``main.yml``:
@@ -328,9 +326,8 @@ The UERANSIM blueprint includes the following:
   required to deploy UERANSIM. It also contains configuration files
   for the emulator.
 
-* The Jenkins pipeline ``ueransim.groovy`` validates the UERANSIM
-  blueprint. It also illustrates how to run Linux commands that
-  exercise the user plane from the emulated UE.
+* The OnRamp integration test suite validates the UERANSIM
+  blueprint. It also exercises the user plane from the emulated UE.
 
 To use UERANSIM, first copy the vars file to ``main.yml``:
 
@@ -507,7 +504,7 @@ Returning to the OnRamp blueprint, it includes the following:
   ``deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml``.
 
 * Integration tests require SR-IOV capable servers, and so have not
-  been automated in Jenkins.
+  been automated as part of the integration test suite.
 
 To use SR-IOV and DPDK, first copy the vars file to ``main.yml``:
 
@@ -600,8 +597,8 @@ The blueprint includes the following:
   defines the Ansible Roles and Playbooks required to deploy the OAI
   gNB.
 
-* The Jenkins pipeline ``oai.groovy`` validates the OAI 5G
-  blueprint. The pipeline runs OAI in simulation mode, but the blueprint
+* The OnRamp integration test suite validates the OAI 5G
+  blueprint in simulation mode, but the blueprint
   has also been validated with USRP X310.
 
 To use an OAI gNB, first copy the vars file to ``main.yml``:
@@ -771,8 +768,8 @@ The blueprint includes the following:
   defines the Ansible Roles and Playbooks required to deploy the srsRAN
   gNB.
 
-* The Jenkins pipeline ``srsran.groovy`` validates the srsRAN 5G
-  blueprint. The pipeline runs srsRAN in simulation mode.
+* The OnRamp integration test suite validates the srsRAN 5G
+  blueprint in simulation mode.
 
 To use an srsRAN gNB, first copy the vars file to ``main.yml``:
 

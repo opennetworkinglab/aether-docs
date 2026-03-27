@@ -11,70 +11,55 @@ Blueprint Specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The specification for every Aether blueprint is anchored in an Ansible
-variable file (e.g., ``vars/main-blueprint.yml``).  Most blueprints
-also include a Jenkins pipeline (e.g., ``blueprint.groovy``) that
-illustrates how the blueprint is deployed and validated.
+variable file (e.g., ``vars/main-blueprint.yml``).
 
 The blueprint names in the first column of the following table link
 the relevant OnRamp documentation. The vars files can be found in the
 `aether-onramp <https://github.com/opennetworkinglab/aether-onramp>`__
-repo. The groovy files can be found in the `aether-jenkins
-<https://github.com/opennetworkinglab/aether-onramp>`__ repo.
+repo.
 
 
 .. list-table::
-   :widths: 20 20 20 40
+   :widths: 25 25 50
    :header-rows: 1
 
    * - Name
      - Vars File
-     - Jenkins Pipeline
      - Description
    * - :doc:`Quick Start </onramp/start>`
      - `main-quickstart.yml`
-     - `quickstart.groovy`
      - Minimal configuration running in a single server or VM.
    * - :doc:`Emulated RAN </onramp/gnbsim>`
      - `main-gnbsim.yml`
-     - `gnbsim.groovy`
      - Scalable 5G Control Plane workload from gNBsim directed at 5G Core.
    * - :doc:`Physical gNB </onramp/gnb>`
      - `main-gNB.yml`
-     - N/A
      - Physical 5G small cell radio connected to 5G Core; demonstrated with
        MOSO CANOPY 5G indoor small cell.
    * - `Multiple UPFs <https://docs.aetherproject.org/onramp/blueprints.html#multiple-upfs>`__
      - `main-upf.yml`
-     - `upf.groovy`
      - Instantiate multiple UPFs and bind them to distinct Slices.
    * - `SD-RAN (RIC) <https://docs.aetherproject.org/onramp/blueprints.html#sd-ran-ric>`__
      - `main-sdran.yml`
-     - `sdran.groovy`
      - SD-RAN (with RANSIM traffic) connected to 5G Core.
    * - `UERANSIM <https://docs.aetherproject.org/onramp/blueprints.html#ueransim>`__
      - `main-ueransim.yml`
-     - `ueransim.groovy`
      - UERANSIM (with ``iperf`` traffic) connected to 5G Core.
    * - `Physical eNB <https://docs.aetherproject.org/onramp/blueprints.html#physical-enbs>`__
      - `main-eNB.yml`
-     - N/A
      - Physical 4G small cell radio connected to 4G Core; demonstrated with
        Sercomm indoor small cell.
    * - `SR-IOV/DPDK <https://docs.aetherproject.org/onramp/blueprints.html#enable-sr-iov-and-dpdk>`__
      - `main-sriov.yml`
-     - N/A
      - 5G Core with SR-IOV and DPDK optimizations enabled for User Plane.
    * - `OAI 5G RAN <https://docs.aetherproject.org/onramp/blueprints.html#oai-5g-ran>`__
      - `main-oai.yml`
-     - `oai.groovy`
      - OAI software radio connected to 5G Core.
    * - `srsRAN 5G <https://docs.aetherproject.org/onramp/blueprints.html#srsran-5g>`__
      - `main-srsran.yml`
-     - `srsran.groovy`
      - srsRAN software radio connected to 5G Core.
    * - `N3IWF <https://docs.aetherproject.org/onramp/blueprints.html#non-3gpp-interworking-function>`__
      - `main-n3iwf.yml`
-     - N/A
      - N3IWF connected to 5G Core to provide internet access to non-3GPP devices.
 
 
