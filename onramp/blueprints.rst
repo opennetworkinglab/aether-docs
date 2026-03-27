@@ -933,18 +933,18 @@ hardware-backed gNB configurations for UHD-connected USRPs, including
 deployments, set ``gnb_conf`` to an RU-capable OCUDU configuration
 file that matches your environment.
 
-Note: we can deploy multiple OCUDU gNB's simultaneously by adding as
+Note: we can deploy multiple OCUDU gNBs simultaneously by adding as
 many servers under ``ocudu.servers`` section.
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
 other blueprints, with two variable settings of note. First,
-set ``ran_subnet`` to proper ran subnet as per your setup.
-As a general rule, ``core.ran_subnet`` is set to the empty(``""``)
+set ``ran_subnet`` to the correct RAN subnet for your deployment.
+As a general rule, ``core.ran_subnet`` is set to the empty (``""``)
 string whenever a physical gNB is on the same L2 network as the Core.
 
 Second, variable ``values_file`` is set to
 ``"deps/5gc/roles/core/templates/sdcore-5g-values.yaml"`` by default,
-meaning simulated UEs uses the same PLMN and IMSI range as gNBsim.
+meaning simulated UEs use the same PLMN and IMSI range as gNBsim.
 When deploying with physical UEs, it is necessary to replace that
 values file with one that matches the SIM cards you plan to use. One
 option is to reuse the values file also used by the :doc:`Physical RAN
@@ -983,9 +983,9 @@ Then run the following Make targets:
 
 .. code-block::
 
-  $ make k8s-install
-  $ make 5gc-install
-  $ make ocudu-gnb-install
+   $ make k8s-install
+   $ make 5gc-install
+   $ make ocudu-gnb-install
 
 To deploy the OCUDU blueprint with radio units (RUs), also set
 ``ocudu.simulation`` to ``false`` and point ``ocudu.servers[0].gnb_conf``
@@ -995,9 +995,9 @@ the same Make targets:
 
 .. code-block::
 
-  $ make k8s-install
-  $ make 5gc-install
-  $ make ocudu-gnb-install
+   $ make k8s-install
+   $ make 5gc-install
+   $ make ocudu-gnb-install
 
 In both hardware-backed cases, do not run ``ocudu-uesim-start``.
 The UE simulator is only supported when ``ocudu.simulation`` is set

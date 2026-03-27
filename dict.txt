@@ -37,6 +37,7 @@ Sercomm
 Sunay
 Toolset
 UE
+UHD
 Uplink
 Wireshark
 aether
@@ -68,6 +69,7 @@ enb
 etcd
 ethernet
 femto
+fronthaul
 func
 gNB
 gNBs
