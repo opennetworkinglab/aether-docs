@@ -853,6 +853,158 @@ To deploy the srsRAN blueprint in simulation mode, run the following:
    $ make srsran-gnb-install
    $ make srsran-uesim-start
 
+OCUDU
+~~~~~~~~~~~~~~~~~~~~
+
+Aether can be configured to work with the open source OCUDU gNB.
+The blueprint supports the deployment of OCUDU in simulation mode,
+using the OCUDU gNB together with the srsRAN UE simulator.
+
+The following assumes familiarity with the OCUDU stack, but it is
+**not** necessary to separately install OCUDU. OnRamp installs both
+the Aether Core and OCUDU, plus the networking needed to interconnect
+the two.
+
+The blueprint includes the following:
+
+* Global vars file ``vars/main-ocudu.yml`` gives the overall blueprint
+  specification.
+
+* Inventory file ``hosts.ini`` uses label ``[ocudu_nodes]`` to denote
+  the server(s) that host the gNB and (when configured in simulation
+  mode) the UE. The OCUDU blueprint typically installs the gNB and UE
+  on one server, with the 5G Core running on a separate server.
+
+* New make targets, ``ocudu-gnb-install`` and ``ocudu-gnb-uninstall``,
+  to be executed along with the standard SD-Core installation (see
+  below). When running a simulated UE, targets ``ocudu-uesim-start``
+  and ``ocudu-uesim-stop`` are also available.
+
+* A new submodule ``deps/ocudu`` (corresponding to repo
+  ``aether-ocudu``) defines the Ansible Roles and Playbooks required
+  to deploy the OCUDU gNB.
+
+To use an OCUDU gNB, first copy the vars file to ``main.yml``:
+
+.. code-block::
+
+   $ cd vars
+   $ cp main-ocudu.yml main.yml
+
+You will see the main difference is the addition of the ``ocudu``
+section:
+
+.. code-block::
+
+   ocudu:
+     docker:
+       container:
+         gnb_image: aetherproject/ocudu:rel-0.5.0
+         ue_image: aetherproject/srsran-ue:rel-0.5.0
+       network:
+         name: host
+     simulation: true
+     servers:
+       0:
+         gnb_ip: "10.76.28.115"
+         gnb_conf: gnb_zmq.yaml
+         ue_conf: ue_zmq.conf
+
+Variable ``simulation`` is set to ``true`` by default, causing OnRamp
+to deploy the simulated UE. When set to ``false``, the simulated UE
+is not deployed.
+
+Note that instead of downloading and compiling the latest OCUDU
+software, this blueprint pulls in the published images for both the
+gNB and UE, corresponding to variables
+``docker.container.gnb_image`` and ``docker.container.ue_image``,
+respectively. If you plan to modify the OCUDU software, you will need
+to change these values accordingly. See the :doc:`Development Support
+</onramp/devel>` section for guidance.
+
+The ``network`` block of the ``ocudu`` section configures the gNB to
+run using the host network.
+
+The path names associated with variables ``gnb_conf`` and
+``ue_conf`` are OCUDU-specific configuration files. The defaults shown
+above are for simulation mode. The template directory also includes
+hardware-backed gNB configurations for UHD-connected USRPs, including
+``gnb_uhd_b210.yaml`` and ``gnb_uhd_x310.yaml``. For RU-based
+deployments, set ``gnb_conf`` to an RU-capable OCUDU configuration
+file that matches your environment.
+
+Note: we can deploy multiple OCUDU gNB's simultaneously by adding as
+many servers under ``ocudu.servers`` section.
+
+The ``core`` section of ``vars/main.yml`` is similar to that used in
+other blueprints, with two variable settings of note. First,
+set ``ran_subnet`` to proper ran subnet as per your setup.
+As a general rule, ``core.ran_subnet`` is set to the empty(``""``)
+string whenever a physical gNB is on the same L2 network as the Core.
+
+Second, variable ``values_file`` is set to
+``"deps/5gc/roles/core/templates/sdcore-5g-values.yaml"`` by default,
+meaning simulated UEs uses the same PLMN and IMSI range as gNBsim.
+When deploying with physical UEs, it is necessary to replace that
+values file with one that matches the SIM cards you plan to use. One
+option is to reuse the values file also used by the :doc:`Physical RAN
+</onramp/gnb>` blueprint, meaning you would set the variable as:
+
+.. code-block::
+
+   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+
+That file should be edited, as necessary, to match your configuration.
+
+To deploy the OCUDU blueprint in simulation mode, run the following:
+
+.. code-block::
+
+   $ make k8s-install
+   $ make 5gc-install
+   $ make ocudu-gnb-install
+   $ make ocudu-uesim-start
+
+When ``ocudu.simulation`` is set to ``true``, target
+``ocudu-uesim-start`` starts the simulated srsRAN UE, installs its
+rendered ``ue_conf`` file, configures a default route inside the UE
+network namespace based on ``core.upf.default_upf.ue_ip_pool``, and
+then runs a ping test toward the Core subnet derived from
+``core.upf.core_subnet``. In other words, this step does more than
+launch the UE; it also performs a basic end-to-end connectivity check.
+
+To deploy the OCUDU blueprint with a USRP and physical UE, set
+``ocudu.simulation`` to ``false``, update ``ocudu.servers[0].gnb_conf``
+to point to the appropriate hardware-backed template (for example,
+``gnb_uhd_b210.yaml`` or ``gnb_uhd_x310.yaml``), and make sure the
+PLMN-related values in ``core.values_file``, the selected
+``gnb_conf`` file, and the SIM cards you plan to use are consistent.
+Then run the following Make targets:
+
+.. code-block::
+
+  $ make k8s-install
+  $ make 5gc-install
+  $ make ocudu-gnb-install
+
+To deploy the OCUDU blueprint with radio units (RUs), also set
+``ocudu.simulation`` to ``false`` and point ``ocudu.servers[0].gnb_conf``
+to an RU-capable OCUDU configuration file that matches your RU,
+fronthaul, and DPDK settings. Once that configuration is ready, use
+the same Make targets:
+
+.. code-block::
+
+  $ make k8s-install
+  $ make 5gc-install
+  $ make ocudu-gnb-install
+
+In both hardware-backed cases, do not run ``ocudu-uesim-start``.
+The UE simulator is only supported when ``ocudu.simulation`` is set
+to ``true``; if you run ``ocudu-uesim-start`` with
+``ocudu.simulation`` set to ``false``, the playbook aborts
+immediately with a ``Simulation is not enabled`` error message.
+
 Non-3GPP Interworking Function
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
