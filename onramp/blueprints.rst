@@ -6,7 +6,7 @@ corresponding to three variants of ``var/main.yml``. This section
 documents additional blueprints, each defined by a combination of
 Ansible components:
 
-* A ``vars/main-blueprint.yml`` file, checked into the
+* A ``vars/main-<blueprint>.yml`` file, checked into the
   ``aether-onramp`` repo, is the "root" of the blueprint
   specification.
 
@@ -17,7 +17,7 @@ Ansible components:
   OnRamp's global Makefile, provides commands to install and uninstall
   the blueprint.
 
-* (Optional) A new ``aether-blueprint`` repo defines the Ansible Roles
+* (Optional) A new ``aether-<blueprint>`` repo defines the Ansible Roles
   and Playbooks required to deploy a new component.
 
 * (Optional) New Roles, Playbooks, and Templates, checked to existing
@@ -1169,17 +1169,17 @@ recommend the following guidelines.
   possible.
 
 * Avoid embedding configuration parameters in Ansible playbooks.
-  Such parameters should be collected in either ``vars/main-blueprint.yml``
+  Such parameters should be collected in either ``vars/main-<blueprint>.yml``
   or a component-specific configuration file, depending on their
   purpose (see next item).
 
 * Avoid exposing too many variables in
-  ``vars/main-blueprint.yml``. Their main purpose is direct how
+  ``vars/main-<blueprint>.yml``. Their main purpose is to direct how
   Ansible deploys Aether, and not to configure the individual
   subsystems of a given deployment. The latter details are best
   defined in component-specific configuration files (e.g., values
   override files), which can then be referenced by
-  ``vars/main-blueprint.yml``. The exception is variables that
+  ``vars/main-<blueprint>.yml``. The exception is variables that
   enable/disable a particular feature. Two good examples are
   ``core.standalone`` and ``oai.simulation``.
 
@@ -1187,11 +1187,7 @@ recommend the following guidelines.
   code) how a particular feature is enabled and configured. Introduce
   new roles to keep playbooks narrow.  Introduce new values override
   files (and other config files) to keep each configuration narrow.
-  Introduce new ``vars/main-blueprint.yml`` files to document how a
+  Introduce new ``vars/main-<blueprint>.yml`` files to document how a
   single feature is deployed. The exception is "combo" blueprints that
   combine multiple existing features (already enabled by
   single-feature blueprints) to deploy a comprehensive solution.
-
-
-
-

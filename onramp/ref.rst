@@ -11,7 +11,7 @@ Blueprint Specification
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The specification for every Aether blueprint is anchored in an Ansible
-variable file (e.g., ``vars/main-blueprint.yml``).
+variable file (e.g., ``vars/main-<blueprint>.yml``).
 
 The blueprint names in the first column of the following table link
 the relevant OnRamp documentation. The vars files can be found in the
@@ -58,6 +58,9 @@ repo.
    * - `srsRAN 5G <https://docs.aetherproject.org/onramp/blueprints.html#srsran-5g>`__
      - `main-srsran.yml`
      - srsRAN software radio connected to 5G Core.
+   * - `OCUDU <https://docs.aetherproject.org/onramp/blueprints.html#ocudu>`__
+     - `main-ocudu.yml`
+     - OCUDU software radio connected to 5G Core.
    * - `N3IWF <https://docs.aetherproject.org/onramp/blueprints.html#non-3gpp-interworking-function>`__
      - `main-n3iwf.yml`
      - N3IWF connected to 5G Core to provide internet access to non-3GPP devices.
@@ -66,7 +69,7 @@ repo.
 Ansible Variables
 ~~~~~~~~~~~~~~~~~~~~
 
-The Ansible ``vars/main-blueprint.yml`` file associated with each
+The Ansible ``vars/main-<blueprint>.yml`` file associated with each
 blueprint defines the high-level parameters used to configure Aether.
 The following identifies the key variables users are likely to modify;
 the list is not comprehensive.
@@ -105,6 +108,9 @@ the list is not comprehensive.
    * - `srsran.simulation`
      - `true`
      - Run UE in simulation mode; set to `false` to connect real UEs.
+   * - `ocudu.simulation`
+     - `true`
+     - Run UE in simulation mode; set to `false` to deploy OCUDU without the simulated UE.
    * - `*.helm.local_charts`
      - `false`
      - Loads Helm Charts from public repo; set to `true` to utilize
@@ -144,6 +150,12 @@ substitute custom config files.
      - `deps/srsran/roles/gNb/templates/gnb_zmq.conf`
    * - `srsran.ue.conf_file`
      - `deps/srsran/roles/uEsimulator/templates/ue_zmq.conf`
+   * - `ocudu.servers[0].gnb_conf`
+     - `gnb_zmq.yaml`
+   * - `ocudu.servers[0].ue_conf`
+     - `ue_zmq.conf`
+   * - `n3iwf.servers[0].conf_file`
+     - `deps/n3iwf/roles/n3iwf/templates/n3iwf-default.yaml`
    * - `ueransim.servers`
      - `deps/ueransim/config/custom-gnb.yaml`
    * -
@@ -175,6 +187,10 @@ Ansible inventory file (``hosts.ini``). The following identifies the
      - Servers hosting OAI gNB (and optionally UE) containers.
    * - `[srsran_nodes]`
      - Servers hosting srsRAN gNB (and optionally UE) containers.
+   * - `[ocudu_nodes]`
+     - Servers hosting OCUDU gNB (and optionally UE) containers.
+   * - `[n3iwf_nodes]`
+     - Servers hosting N3IWF containers.
 
 The `[worker_nodes]` group can be empty, but must be present.  The
 other groups are blueprint-specific, and with the exception of
@@ -219,14 +235,11 @@ Other blueprints define component-specific targets, as listed in the
 following table. (The Aether-wide targets can also be used for all
 other blueprints.)
 
+**All Blueprints**
+
 .. list-table::
    :widths: 25 50
-   :header-rows: 1
 
-   * - Target
-     - Description
-   * - **All Blueprints**
-     -
    * - `roc-install`
      - Install ROC workload.
    * - `roc-load`
@@ -239,22 +252,34 @@ other blueprints.)
      - Load dashboard panels into Monitor; assumes Monitor already deployed.
    * - `monitor-uninstall`
      - Uninstall Monitor workload.
-   * - **SD-RAN Blueprint**
-     -
+
+**SD-RAN Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
    * - `sdran-install`
      - Install SD-RAN workload; assumes Core already deployed.
    * - `sdran-uninstall`
      - Uninstall SD-RAN workload.
-   * - **UERANSIM Blueprint**
-     -
+
+**UERANSIM Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
    * - `ueransim-install`
      - Install UERANSIM emulated RAN; assumes Core already deployed.
    * - `ueransim-uninstall`
      - Uninstall UERANSIM emulated RAN.
    * - `ueransim-run`
      - Run UERANSIM UE to generate User Plane traffic for the Core.
-   * - **OAI 5G RAN Blueprint**
-     -
+
+**OAI 5G RAN Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
    * - `oai-gnb-install`
      - Install container running OAI 5G RAN radio; assumes Core already deployed.
    * - `oai-gnb-uninstall`
@@ -263,8 +288,12 @@ other blueprints.)
      - Start container running OAI simulated UE.
    * - `oai-uesim-stop`
      - Stop container running OAI simulated UE.
-   * - **srsRAN 5G Blueprint**
-     -
+
+**srsRAN 5G Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
    * - `srsran-gnb-install`
      - Install container running srsRAN 5G radio; assumes Core already deployed.
    * - `srsran-gnb-uninstall`
@@ -273,8 +302,36 @@ other blueprints.)
      - Start container running srsRAN simulated UE.
    * - `srsran-uesim-stop`
      - Stop container running srsRAN simulated UE.
-   * - **Multi-UPF Blueprint**
-     -
+
+**OCUDU Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
+   * - `ocudu-gnb-install`
+     - Install container running OCUDU gNB; assumes Core already deployed.
+   * - `ocudu-gnb-uninstall`
+     - Uninstall OCUDU gNB container.
+   * - `ocudu-uesim-start`
+     - Start container running the simulated srsRAN UE for OCUDU.
+   * - `ocudu-uesim-stop`
+     - Stop container running the simulated srsRAN UE for OCUDU.
+
+**N3IWF Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
+   * - `n3iwf-install`
+     - Install N3IWF; assumes Core already deployed.
+   * - `n3iwf-uninstall`
+     - Uninstall N3IWF.
+
+**Multi-UPF Blueprint**
+
+.. list-table::
+   :widths: 25 50
+
    * - `5gc-upf-install`
      - Install additional UPF pods; assumes Core already deployed.
    * - `5gc-upf-uninstall`
