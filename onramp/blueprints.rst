@@ -471,19 +471,19 @@ itself, we note the following hardware-related prerequisites.
 
     $ ls -l /sys/class/net/ens801f0/device/virtfn*
 
-* Clone the DPDK repo to use the binding tools:
+* Download ``dpdk-devbind.py`` to use the binding tool:
 
   .. code-block::
 
-    $ git clone https://github.com/DPDK/dpdk.git
-    $ cd dpdk
+    $ wget https://raw.githubusercontent.com/DPDK/dpdk/main/usertools/dpdk-devbind.py -O dpdk-devbind.py
+    $ chmod +x dpdk-devbind.py
 
 * Bind the VF devices to the ``vfio-pci`` driver as follows:
 
   .. code-block::
 
-    $ ./usertools/dpdk-devbind.py -b vfio-pci 0000:b1:01.0
-    $ ./usertools/dpdk-devbind.py -b vfio-pci 0000:b1:01.1
+    $ ./dpdk-devbind.py -b vfio-pci 0000:b1:01.0
+    $ ./dpdk-devbind.py -b vfio-pci 0000:b1:01.1
 
 Returning to the OnRamp blueprint, it includes the following:
 
