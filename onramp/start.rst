@@ -92,7 +92,7 @@ server:
 
 .. code-block::
 
-   $ git clone --recursive https://github.com/opennetworkinglab/aether-onramp.git
+   $ git clone https://github.com/opennetworkinglab/aether-onramp.git
    $ cd aether-onramp
 
 Taking a quick look at your ``aether-onramp`` directory, there are
@@ -101,9 +101,11 @@ four things to note:
 1. The ``deps`` directory contains the Ansible deployment
    specifications for all the Aether subsystems. Each of these
    subdirectories (e.g., ``deps/5gc``) is self-contained, meaning you
-   can execute the Make targets in each individual directory. Doing so
-   causes Ansible to run the corresponding playbook. For example, the
-   installation playbook for the 5G Core can be found in
+   can execute the Make targets in each individual directory. These
+   component directories are included directly in the ``aether-onramp``
+   repository checkout. Doing so causes Ansible to run the
+   corresponding playbook. For example, the installation playbook for
+   the 5G Core can be found in
    ``deps/5gc/roles/core/tasks/install.yml``.
 
 2. The Makefile in the main OnRamp directory imports (``#include``)

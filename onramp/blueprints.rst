@@ -13,18 +13,18 @@ Ansible components:
 * A ``hosts.ini`` file, documented by example, specifies the target
   servers required by the blueprint.
 
-* A set of Make targets, defined in a submodule and imported into
-  OnRamp's global Makefile, provides commands to install and uninstall
-  the blueprint.
+* A set of Make targets, defined in a component directory under
+  ``deps`` and imported into OnRamp's global Makefile, provides
+  commands to install and uninstall the blueprint.
 
 * (Optional) A new ``aether-<blueprint>`` repo defines the Ansible Roles
   and Playbooks required to deploy a new component.
 
 * (Optional) New Roles, Playbooks, and Templates, checked to existing
-  repos/submodules, customize existing components for integration with
-  the new blueprint. To support blueprint independence, these elements
-  are intentionally kept "narrow", rather than glommed onto an
-  existing element.
+  component directories under ``deps``, customize existing components
+  for integration with the new blueprint. To support blueprint
+  independence, these elements are intentionally kept "narrow",
+  rather than glommed onto an existing element.
 
 * (Optional) Any additional hardware (beyond the Ansible-managed
   Aether servers) required to support the blueprint.
@@ -77,14 +77,14 @@ The Multi-UPF blueprint includes the following:
   be executed after the standard SD-Core installation. The blueprint
   also reuses the ``roc-load`` target to activate new slices in ROC.
 
-* New Ansible role (``upf``) added to the ``5gc`` submodule, including
-  a new UPF-specific template (``upf-5g-values.yaml``).
+* New Ansible role (``upf``) added to ``deps/5gc``, including a new
+  UPF-specific template (``upf-5g-values.yaml``).
 
 * New models file (``roc-5g-models-upf2.json``) added to the
-  ``roc-load`` role in the ``amp`` submodule. This models file is
-  applied as a patch *on top of* the base set of ROC models. (Since
-  this blueprint is demonstrated using gNBsim, the assumed base models
-  are given by ``roc-5g-models.json``.)
+  ``roc-load`` role in ``deps/amp``. This models file is applied as a
+  patch *on top of* the base set of ROC models. (Since this blueprint
+  is demonstrated using gNBsim, the assumed base models are given by
+  ``roc-5g-models.json``.)
 
 * The OnRamp integration test suite validates the Multi-UPF
   blueprint.
@@ -217,9 +217,8 @@ The SD-RAN blueprint includes the following:
   ``sdran-uninstall``, to be executed after the standard
   SD-Core installation.
 
-* A new submodule ``deps/sdran`` (corresponding to repo
-  ``aether-sdran``) defines the Ansible Roles and Playbooks required
-  to deploy SD-RAN.
+* The ``deps/sdran`` directory defines the Ansible Roles and
+  Playbooks required to deploy SD-RAN.
 
 * The OnRamp integration test suite validates the SD-RAN
   blueprint.
@@ -321,10 +320,9 @@ The UERANSIM blueprint includes the following:
   ``ueransim-run``, and ``ueransim-uninstall``, to be
   executed after the standard SD-Core installation.
 
-* A new submodule ``deps/ueransim`` (corresponding to repo
-  ``aether-ueransim``) defines the Ansible Roles and Playbooks
-  required to deploy UERANSIM. It also contains configuration files
-  for the emulator.
+* The ``deps/ueransim`` directory defines the Ansible Roles and
+  Playbooks required to deploy UERANSIM. It also contains
+  configuration files for the emulator.
 
 * The OnRamp integration test suite validates the UERANSIM
   blueprint. It also exercises the user plane from the emulated UE.
@@ -496,8 +494,7 @@ Returning to the OnRamp blueprint, it includes the following:
 * New make targets, ``5gc-sriov-install`` and ``5gc-sriov-uninstall``, to
   be executed along with the standard SD-Core installation (see below).
 
-* New Ansible role (``sriov``) added to the ``5gc``
-  submodule.
+* New Ansible role (``sriov``) added to ``deps/5gc``.
 
 * SRIOV-specific override variables required to configure the core are
   included in a new template:
@@ -593,9 +590,8 @@ The blueprint includes the following:
   When running a simulated UE, targets ``oai-uesim-start`` and
   ``oai-uesim-stop`` are also available.
 
-* A new submodule ``deps/oai`` (corresponding to repo ``aether-oai``)
-  defines the Ansible Roles and Playbooks required to deploy the OAI
-  gNB.
+* The ``deps/oai`` directory defines the Ansible Roles and Playbooks
+  required to deploy the OAI gNB.
 
 * The OnRamp integration test suite validates the OAI 5G
   blueprint in simulation mode, but the blueprint
@@ -764,9 +760,8 @@ The blueprint includes the following:
   When running a simulated UE, targets ``srsran-uesim-start`` and
   ``srsran-uesim-stop`` are also available.
 
-* A new submodule ``deps/srsran`` (corresponding to repo ``aether-srsran``)
-  defines the Ansible Roles and Playbooks required to deploy the srsRAN
-  gNB.
+* The ``deps/srsran`` directory defines the Ansible Roles and
+  Playbooks required to deploy the srsRAN gNB.
 
 * The OnRamp integration test suite validates the srsRAN 5G
   blueprint in simulation mode.
@@ -877,9 +872,8 @@ The blueprint includes the following:
   below). When running a simulated UE, targets ``ocudu-uesim-start``
   and ``ocudu-uesim-stop`` are also available.
 
-* A new submodule ``deps/ocudu`` (corresponding to repo
-  ``aether-ocudu``) defines the Ansible Roles and Playbooks required
-  to deploy the OCUDU gNB.
+* The ``deps/ocudu`` directory defines the Ansible Roles and
+  Playbooks required to deploy the OCUDU gNB.
 
 To use an OCUDU gNB, first copy the vars file to ``main.yml``:
 
@@ -1026,8 +1020,8 @@ The blueprint includes the following:
 * New make targets, ``n3iwf-install`` and ``n3iwf-uninstall``, to
   be executed along with the standard SD-Core installation (see  below).
 
-* A new submodule ``deps/n3iwf`` (corresponding to repo ``aether-n3iwf``)
-  defines the Ansible Roles and Playbooks required to deploy the N3IWF.
+* The ``deps/n3iwf`` directory defines the Ansible Roles and
+  Playbooks required to deploy the N3IWF.
 
 To use/deploy a N3IWF instance, first copy the vars file to ``main.yml``:
 

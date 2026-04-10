@@ -115,26 +115,26 @@ OnRamp repos:
  | Deploy Kubernetes: https://github.com/opennetworkinglab/aether-k8s
 
 It is the first repo that defines a way to integrate all of the Aether
-artifacts into an operational system. That repo, in turn, includes the
-other repos as submodules. Note that each of the submodules is
-self-contained if you are interested in deploying just that subsystem,
-but this guide approaches the deployment challenge from an
-integrated, end-to-end perspective.
+artifacts into an operational system. That repo, in turn, now includes
+the deployment content for the other OnRamp repos directly under
+``deps/*``. Each such component directory is self-contained if you are
+interested in deploying just that subsystem, but this guide approaches
+the deployment challenge from an integrated, end-to-end perspective.
 
 There are two other Aether-related repos of note; they are **not**
-managed as submodules of ``aether-onramp``:
+included in ``aether-onramp``:
 
  | Aether Documentation: https://github.com/opennetworkinglab/aether-docs
 
 .. admonition:: Troubleshooting Hint
 
-  The ``master`` branch of the OnRamp repo corresponds to the latest
+  The ``main`` branch of the OnRamp repo corresponds to the latest
   *minimally-validated* configuration of Aether, which is known to
   work for a subset of the available blueprints (always including
   *Quick Start*), but may not run consistently for *all* blueprints.
   Once all integration tests consistently succeed
   for a period of time (~2 weeks) a tagged version of OnRamp is
-  created. If you are having trouble with ``master`` working for a
+  created. If you are having trouble with ``main`` working for a
   particular blueprint, you should try the latest tagged version:
   https://github.com/opennetworkinglab/aether-onramp/tags.
 
