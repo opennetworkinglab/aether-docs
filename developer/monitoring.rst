@@ -58,9 +58,10 @@ Clicking on the floppy disk icon at top will save the dashboard
 deleted as soon as Grafana is restarted).  To save the dashboard
 *permanently*, click the **Share Dashboard** icon next to the title
 and save its JSON to a file.  Then add the file to the
-AMP submodule of OnRamp so that it will be deployed by Ansible:
+AMP deployment content bundled with OnRamp so that it will be
+deployed by Ansible:
 
-* Change to directory ``aeher-onramp/deps/amp/roles/monitor-load/templates/``
+* Change to directory ``aether-onramp/deps/amp/roles/monitor-load/templates/``
 * Copy the dashboard JSON file to the ``dashboards/`` sub-directory
 * Edit ``kustomization.yaml`` and add the new dashboard JSON under ``configmapGenerator``
 
