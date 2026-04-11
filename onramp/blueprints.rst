@@ -491,14 +491,16 @@ Returning to the OnRamp blueprint, it includes the following:
 * Inventory file ``hosts.ini`` is identical to that used throughout
   this Guide. There are no additional node groups.
 
-* New make targets, ``5gc-sriov-install`` and ``5gc-sriov-uninstall``, to
-  be executed along with the standard SD-Core installation (see below).
+* Standard SD-Core values templates now render the built-in UPF for
+  either ``af_packet`` or ``dpdk`` mode based on ``core.upf.mode``.
 
-* New Ansible role (``sriov``) added to ``deps/5gc``.
+* The default ``5gc-install`` target already includes the router and
+  core steps needed for the DPDK blueprint.
 
-* SRIOV-specific override variables required to configure the core are
-  included in a new template:
-  ``deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml``.
+* When ``core.upf.mode`` is set to ``dpdk``, the 5GC core and
+  additional UPF install roles validate that the selected
+  ``core.data_iface`` has at least two VFs configured before deploying
+  the UPF workload.
 
 * Integration tests require SR-IOV capable servers, and so have not
   been automated as part of the integration test suite.
@@ -522,32 +524,30 @@ section:
       # If mode set to 'dpdk':
       #    - make sure at least two VF devices are created out of 'data_iface'
       #      and these devices are attached to vfio-pci driver;
-      #    - use 'sdcore-5g-sriov-values.yaml' file for 'values_file' (above).
+      #    - use 'sdcore-5g-values.yaml' for the default profile or
+      #      'radio-5g-values.yaml' for the radio profile.
 
-Note the VF device requirement in ``upf`` block comments, and be sure
-that the ``core`` block points to the alternative override file:
-
-.. code-block::
-
-    values_file: "deps/5gc/roles/core/templates/sdcore-5g-sriov-values.yaml"
-
-Deploying this blueprint involves the invoking the following sequence
-of Make targets:
+Note the VF device requirement in the ``upf`` block comments. The
+``core`` block continues to point at the standard SD-Core values file,
+which now renders either the ``af_packet`` or DPDK/SR-IOV UPF settings
+based on ``core.upf.mode``:
 
 .. code-block::
 
-   $ make k8s-install
-   $ make 5gc-router-install
-   $ make 5gc-sriov-install
-   $ make 5gc-core-install
+    values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
 
-The ``5gc-sriov-install`` step happens after the Kubernetes cluster is
-installed, but before the Core workload is instantiated on that
-cluster.  The corresponding playbook augments Kubernetes with the
-required extensions. It has been written to do nothing unless variable
-``core.upf.mode`` is set to ``dpdk``, where OnRamp now includes the
-``5gc-sriov-install`` target as part of its default ``5gc-install``
-target.
+Deploying this blueprint involves invoking the following sequence of
+Make targets:
+
+.. code-block::
+
+    $ make k8s-install
+    $ make 5gc-install
+
+The ``5gc-install`` target runs the router step before deploying the
+core. When ``core.upf.mode`` is set to ``dpdk``, OnRamp renders the UPF
+for SR-IOV/DPDK and checks that ``core.data_iface`` has at least two
+configured VFs before deploying the workload.
 
 
 OAI 5G RAN
@@ -790,7 +790,7 @@ section:
      simulation: true
      servers:
        0:
-         gnb_conf: deps/srsran/roles/gNB/templates/gnb_zmq.conf
+         gnb_conf: deps/srsran/roles/gNB/templates/gnb_zmq.yaml
          gnb_ip: "172.20.0.2"
          ue_conf: deps/srsran/roles/uEsimulator/templates/ue_zmq.conf
 

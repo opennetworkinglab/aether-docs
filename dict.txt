@@ -55,6 +55,7 @@ config
 configmap
 configs
 containerd
+datapath
 defaultent
 deregister
 dev
