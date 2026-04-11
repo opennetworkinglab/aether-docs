@@ -790,7 +790,7 @@ section:
      simulation: true
      servers:
        0:
-         gnb_conf: deps/srsran/roles/gNB/templates/gnb_zmq.conf
+         gnb_conf: deps/srsran/roles/gNB/templates/gnb_zmq.yaml
          gnb_ip: "172.20.0.2"
          ue_conf: deps/srsran/roles/uEsimulator/templates/ue_zmq.conf
 

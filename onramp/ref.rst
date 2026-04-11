@@ -136,8 +136,8 @@ substitute custom config files.
      - `deps/amp/roles/roc-load/templates/roc-5g-models.json`
    * - `core.values_file`
      - `deps/5gc/roles/core/templates/sdcore-5g-values.yaml`
-   * - `gnbsim.servers[0]`
-     - `deps/gnbsim/config/gnbsim-default.yaml`
+   * - `gnbsim.servers`
+     - `deps/gnbsim/config/gnbsim-default.yaml` and similar per-container config files
    * - `k8s.rke2.config.params_file.master`
      - `deps/k8s/roles/rke2/templates/master-config.yaml`
    * - `k8s.rke2.config.params_file.worker`
@@ -358,12 +358,12 @@ do not need to be modified for an initial deployment of a blueprint.
        overlay subnet. Other gNB implementations connect to the Core
        over the subnet assigned to the server's physical interface (as
        defined by ``core.data_iface``).
-   * - `192.168.250.0/24`
+   * - `192.168.250.1/24`
      - ``core.upf.core_subnet``
-     - Assigned to `core` bridge that connects UPF(s) to the Internet.
-   * - `192.168.252.0/24`
+     - Gateway/interface CIDR assigned to the `core` bridge that connects UPF(s) to the Internet.
+   * - `192.168.252.1/24`
      - ``core.upf.access_subnet``
-     - Assigned to `access` bridge that connects UPF(s) to the RAN.
+     - Gateway/interface CIDR assigned to the `access` bridge that connects UPF(s) to the RAN.
    * - `192.168.100.0/24`
      - ``core.default_upf.ue_ip_pool``
      - Assigned (by the Core) to UEs connecting to Aether. When
