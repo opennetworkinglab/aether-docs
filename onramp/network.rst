@@ -220,16 +220,16 @@ sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
         ran_subnet: "172.20.0.0/16"		# set to empty string to get subnet from 'data_iface'
         helm:
             local_charts: false			# set chart_ref to local path name if true
-            chart_ref: aether/sd-core
-            chart_version: 1.1.0
+            chart_ref: oci://ghcr.io/omec-project/sd-core
+            chart_version: 3.2.3
         upf:
-            ip_prefix: "192.168.252.0/24"
-            iface: "access"
+            access_subnet: "192.168.252.1/24"	# access subnet & gateway
+            core_subnet: "192.168.250.1/24"	# core subnet & gateway
             mode: af_packet				# Options: af_packet or dpdk
             default_upf:
                 ip:
-                    access: "192.168.252.3/24"
-                    core:   "192.168.250.3/24"
+                    access: "192.168.252.3"
+                    core:   "192.168.250.3"
                 ue_ip_pool: "192.168.100.0/24"
         amf:
             ip: "10.76.28.113"

@@ -51,7 +51,7 @@ repo.
        Sercomm indoor small cell.
    * - `SR-IOV/DPDK <https://docs.aetherproject.org/onramp/blueprints.html#enable-sr-iov-and-dpdk>`__
      - `main-sriov.yml`
-     - 5G Core with SR-IOV and DPDK optimizations enabled for User Plane.
+     - 5G Core with `core.upf.mode` set to `dpdk`, enabling SR-IOV and DPDK optimizations for the user plane.
    * - `OAI 5G RAN <https://docs.aetherproject.org/onramp/blueprints.html#oai-5g-ran>`__
      - `main-oai.yml`
      - OAI software radio connected to 5G Core.
@@ -95,7 +95,7 @@ the list is not comprehensive.
      - IP address of AMF; edit to match IP address assigned to `core.data_iface`.
    * - `core.upf.mode`
      - `af_packet`
-     - Socket mode for `core.data_iface`; set to `dpdk` to enable DPDK and SR-IOV optimizations.
+     - UPF datapath mode; set to `dpdk` to enable the integrated SR-IOV/DPDK rendering in the core and additional-UPF templates.
    * - `core.upf.multihop_gnb`
      - `false`
      - Override default N3 interface; set to `true` when external gNB is multiple hops away.
@@ -136,19 +136,19 @@ substitute custom config files.
      - `deps/amp/roles/roc-load/templates/roc-5g-models.json`
    * - `core.values_file`
      - `deps/5gc/roles/core/templates/sdcore-5g-values.yaml`
-   * - `gnbsim.server`
-     - `deps/gnbsim/config/gnbsim-default.yaml/`
+   * - `gnbsim.servers[0]`
+     - `deps/gnbsim/config/gnbsim-default.yaml`
    * - `k8s.rke2.config.params_file.master`
-     - `deps/k8s/roles/rke2/templates/master_config.yaml`
+     - `deps/k8s/roles/rke2/templates/master-config.yaml`
    * - `k8s.rke2.config.params_file.worker`
-     - `deps/k8s/roles/rke2/templates/worker_config.yaml`
-   * - `oai.gnb.conf_file`
+     - `deps/k8s/roles/rke2/templates/worker-config.yaml`
+   * - `oai.servers[0].gnb_conf`
      - `deps/oai/roles/gNb/templates/gnb.sa.band78.fr1.106PRB.usrpb210.conf`
-   * - `oai.ue.conf_file`
+   * - `oai.servers[0].ue_conf`
      - `deps/oai/roles/uEsimulator/templates/ue.conf`
-   * - `srsran.gnb.conf_file`
-     - `deps/srsran/roles/gNb/templates/gnb_zmq.conf`
-   * - `srsran.ue.conf_file`
+   * - `srsran.servers[0].gnb_conf`
+     - `deps/srsran/roles/gNB/templates/gnb_zmq.yaml`
+   * - `srsran.servers[0].ue_conf`
      - `deps/srsran/roles/uEsimulator/templates/ue_zmq.conf`
    * - `ocudu.servers[0].gnb_conf`
      - `gnb_zmq.yaml`
