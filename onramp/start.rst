@@ -135,7 +135,15 @@ four things to note:
    various installation playbooks. The default version of ``hosts.ini``
    included with OnRamp is simplified to run everything on a single
    server (the one you've cloned the repo onto), with additional lines
-   you may eventually need for a multi-node cluster commented out.
+   you may eventually need for a multi-node cluster commented out. In
+   the shipped single-node example, Ansible refers to that server as
+   ``node1``; the checked-in default inventory currently maps ``node1``
+   to ``127.0.0.1`` as a placeholder for local single-node execution.
+   For an actual deployment, replace the loopback address and
+   credentials with the values for your target server. The GitHub CI
+   workflows generate their own ``hosts.ini`` and, for single-node
+   tests, use ``localhost ansible_connection=local`` instead of this
+   checked-in ``node1`` example.
 
 Set Target Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -147,7 +155,10 @@ deployment.
 The first set is in file ``hosts.ini``, where you will need to give the IP
 address and login credentials for the server you are working on. At
 this stage, we assume the server you downloaded OnRamp onto is the
-same server you will be installing Aether on.
+same server you will be installing Aether on. If your checkout still
+shows ``node1 ansible_host=127.0.0.1 ...``, that is only the local
+placeholder; change it to the server's reachable management address
+before running the playbooks remotely.
 
 .. code-block::
 
