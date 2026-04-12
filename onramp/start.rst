@@ -159,15 +159,20 @@ this stage, we assume the server you downloaded OnRamp onto is the
 same server you will be installing Aether on. If your checkout still
 shows ``node1 ansible_host=127.0.0.1 ...``, that is only the local
 placeholder; change it to the server's reachable management address
-before running the playbooks remotely.
+before running the playbooks remotely. The checked-in example keeps the
+active inventory entry minimal and shows password-based access only as
+an optional commented example.
 
 .. code-block::
 
-   node1  ansible_host=10.76.28.113 ansible_user=aether ansible_password=aether ansible_sudo_pass=aether
+   # Optional for password-based access:
+   # node1  ansible_host=10.76.28.113 ansible_user=<username> ansible_password=<password> ansible_sudo_pass=<sudo-password>
+   node1  ansible_host=10.76.28.113 ansible_user=aether
 
-In this example, address ``10.76.28.113`` and the three occurrences
-of the string ``aether`` need to be replaced with the appropriate
-values.
+In this example, address ``10.76.28.113`` and the username ``aether``
+need to be replaced with the appropriate values. If you use password
+authentication instead of SSH keys, uncomment the optional example and
+replace the placeholder values there as well.
 
 Note that if you set up your server to use SSH keys instead
 of passwords, update the ``hosts.ini`` with your private key (accordingly
