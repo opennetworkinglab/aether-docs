@@ -16,8 +16,8 @@ access back into the runner itself.
 The current integration-test inventory patterns are as follows:
 
 * Quick Start, Quick Start AMP, SD-RAN, OAI, and srsRAN run as
-	single-node tests, with both ``[master_nodes]`` and the
-	blueprint-specific host group pointing at ``localhost``.
+  single-node tests, with both ``[master_nodes]`` and the
+  blueprint-specific host group pointing at ``localhost``.
 
 This means the checked-in inventory examples and the CI-generated
 inventories are similar in structure, but they do not use identical
