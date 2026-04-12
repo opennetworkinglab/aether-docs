@@ -34,9 +34,10 @@ host aliases.
 Finally, note that the current GitHub Actions integration tests run a
 variety of simulated 5G workloads, including gNBsim, OAI 5G RAN (in
 simulation mode), and srsRAN (in simulation mode). The UERANSIM
-blueprint remains part of OnRamp, but it is not currently exercised by
-the GitHub Actions workflow set. Of the workloads that are tested in
-CI, gNBsim provides the most rigorous testing of the Core's control
-plane, and serves as Aether's primary validation of that
-functionality. More information about gNBsim can be found in the
-:doc:`Emulated RAN </onramp/gnbsim>` section of this Guide.
+blueprint remains part of OnRamp and is validated by the broader
+integration test suite, but it is not currently exercised by the
+GitHub Actions workflow set. Of the workloads that are tested in CI,
+gNBsim provides the most rigorous testing of the Core's control plane,
+and serves as Aether's primary validation of that functionality. More
+information about gNBsim can be found in the :doc:`Emulated RAN
+</onramp/gnbsim>` section of this Guide.
