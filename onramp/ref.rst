@@ -173,8 +173,8 @@ In the default single-node inventory, the controller host is labeled
 ``node1`` even when it resolves to ``127.0.0.1`` for local execution.
 The GitHub Actions workflows in the ``aether-onramp`` repository under
 ``.github/workflows`` do not use that exact aliasing scheme: the
-single-node workflows generate ``hosts.ini`` with ``localhost`` and
-``ansible_connection=local``.
+single-node workflows generate ``hosts.ini`` through shared helper
+scripts, using ``localhost`` and ``ansible_connection=local``.
 
 .. list-table::
    :widths: 25 50
