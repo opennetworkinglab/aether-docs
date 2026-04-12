@@ -6,9 +6,9 @@ Blueprints </onramp/blueprints>`. These tests exercise representative
 deployment scenarios and simulated 5G workloads used throughout this
 guide.
 
-The GitHub Actions workflows in ``aether-onramp/.github/workflows``
-build ``hosts.ini`` dynamically before running the playbooks. The
-single-node workflows use ``localhost`` with
+The GitHub Actions workflows in the ``aether-onramp`` repository under
+``.github/workflows`` build ``hosts.ini`` dynamically before running
+the playbooks. The single-node workflows use ``localhost`` with
 ``ansible_connection=local`` and do not set ``ansible_host``. This
 lets the workflows exercise the same playbooks without requiring SSH
 access back into the runner itself.

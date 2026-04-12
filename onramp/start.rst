@@ -140,10 +140,11 @@ four things to note:
    ``node1``; the checked-in default inventory currently maps ``node1``
    to ``127.0.0.1`` as a placeholder for local single-node execution.
    For an actual deployment, replace the loopback address and
-   credentials with the values for your target server. The GitHub CI
-   workflows generate their own ``hosts.ini`` and, for single-node
-   tests, use ``localhost ansible_connection=local`` instead of this
-   checked-in ``node1`` example.
+   credentials with the values for your target server. The GitHub
+   Actions workflows in the ``aether-onramp`` repository under
+   ``.github/workflows`` generate their own ``hosts.ini`` and, for
+   single-node tests, use ``localhost ansible_connection=local``
+   instead of this checked-in ``node1`` example.
 
 Set Target Parameters
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
