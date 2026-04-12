@@ -324,8 +324,9 @@ The UERANSIM blueprint includes the following:
   Playbooks required to deploy UERANSIM. It also contains
   configuration files for the emulator.
 
-* The OnRamp integration test suite validates the UERANSIM
-  blueprint. It also exercises the user plane from the emulated UE.
+* The UERANSIM blueprint remains part of OnRamp and can be deployed
+  manually to exercise the user plane from the emulated UE, but it is
+  not currently covered by the GitHub Actions workflow set.
 
 To use UERANSIM, first copy the vars file to ``main.yml``:
 
