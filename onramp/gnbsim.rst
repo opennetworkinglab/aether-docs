@@ -110,12 +110,21 @@ where you type:
 
 .. code-block::
 
-   $ make gnbsim-docker-install
    $ make aether-gnbsim-install
 
-Note that the first step may not be necessary, depending on whether
-Docker is already installed on the server(s) you've designated to host
-gNBsim.
+The ``aether-gnbsim-install`` target already runs the Docker
+provisioning step before configuring the router and starting the
+containers, so a separate ``make gnbsim-docker-install`` is only needed
+if you want to provision Docker on the target host(s) as a standalone
+step.
+
+When Docker needs to be installed, OnRamp configures Docker's official
+APT repository, installs the Docker CE packages, removes conflicting
+packages such as ``docker.io`` and ``podman-docker``, validates the
+runtime with a ``hello-world`` container, and adds the Ansible user to
+the ``docker`` group. If you have just provisioned Docker, log out and
+back in again (or run ``newgrp docker``) before using ``docker``
+commands from an interactive shell.
 
 When you are finished, the following uninstalls everything:
 
@@ -141,6 +150,10 @@ to run gNBsim, and then type
 .. code-block::
 
    $ docker exec -it gnbsim-1 cat summary.log
+
+If this command returns a permissions error immediately after Docker was
+provisioned, refresh your group membership by logging out and back in
+again, or by running ``newgrp docker``.
 
 Note that container name ``gnbsim-1`` is constructed from the
 ``gnbsim.docker.prefix`` variable defined in ``vars/main.yml``, with
