@@ -401,6 +401,11 @@ Docker container running the test. You can access that file by typing:
 
    $ docker exec -it gnbsim-1 cat summary.log
 
+If ``aether-gnbsim-install`` had to provision Docker on the host, your
+current shell may not yet see the new ``docker`` group membership. Log
+out and back in again, or run ``newgrp docker``, before retrying the
+command.
+
 If successful, the output should look like the following:
 
 .. code-block::
