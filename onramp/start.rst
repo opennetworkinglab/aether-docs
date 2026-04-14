@@ -247,6 +247,31 @@ The output should show that Ansible is able to securely connect to all
 the nodes in your deployment, which is currently just the one that
 Ansible knows as ``node1``.
 
+Configure Proxy (Optional)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If your server accesses the Internet through an HTTP proxy, enable
+proxy support by editing the ``proxy`` section at the top of
+``vars/main.yml``:
+
+.. code-block:: yaml
+
+   proxy:
+     enabled: true
+     http_proxy: "http://proxy.example.com:3128"
+     https_proxy: "http://proxy.example.com:3128"
+     no_proxy: "localhost,127.0.0.1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,10.42.0.0/16,10.43.0.0/16,.svc,.svc.cluster.local,.cluster.local"
+
+When ``proxy.enabled`` is ``true``, OnRamp automatically propagates
+proxy settings to all deployment steps. This includes Ansible tasks
+that download software (e.g., ``apt``, ``pip``, ``helm``), the Docker
+daemon on nodes running Docker-based components, and RKE2's embedded
+containerd runtime on Kubernetes nodes. Adjust ``no_proxy`` to include
+any additional internal hosts or domains that should bypass the proxy.
+
+When ``proxy.enabled`` is ``false`` (the default), the proxy section
+has no effect and can be left as-is.
+
 Install Kubernetes
 ~~~~~~~~~~~~~~~~~~~
 
