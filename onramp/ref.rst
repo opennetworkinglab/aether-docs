@@ -115,6 +115,21 @@ the list is not comprehensive.
      - `false`
      - Loads Helm Charts from public repo; set to `true` to utilize
        local charts, with `*.helm.charts_ref` set to local path name.
+   * - `proxy.enabled`
+     - `false`
+     - Enable HTTP proxy support for all deployment steps; set to `true`
+       when deploying behind a corporate or institutional proxy.
+   * - `proxy.http_proxy`
+     - `""`
+     - HTTP proxy URL (e.g., ``http://proxy.example.com:3128``).
+   * - `proxy.https_proxy`
+     - `""`
+     - HTTPS proxy URL (e.g., ``http://proxy.example.com:3128``).
+   * - `proxy.no_proxy`
+     - See ``vars/main.yml``
+     - Comma-separated list of hosts and CIDRs that bypass the proxy;
+       the default includes localhost, private subnets, and Kubernetes
+       internal domains as defined in ``vars/main.yml``.
 
 In addition to the variables listed in the preceding table, the vars
 file also references other configuration files required by each
