@@ -251,7 +251,7 @@ Configure Proxy (Optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If your server accesses the Internet through an HTTP proxy, enable
-proxy support by editing the ``proxy`` section at the top of
+proxy support by editing the ``proxy`` section in
 ``vars/main.yml``:
 
 .. code-block:: yaml

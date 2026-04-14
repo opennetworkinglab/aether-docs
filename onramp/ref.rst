@@ -126,10 +126,10 @@ the list is not comprehensive.
      - `""`
      - HTTPS proxy URL (e.g., ``http://proxy.example.com:3128``).
    * - `proxy.no_proxy`
-     - ``localhost,127.0.0.1,...``
-     - Comma-separated list of hosts and CIDRs that bypass the proxy.
-       Default includes localhost, private subnets, and Kubernetes
-       internal domains.
+     - See ``vars/main.yml``
+     - Comma-separated list of hosts and CIDRs that bypass the proxy;
+       the default includes localhost, private subnets, and Kubernetes
+       internal domains as defined in ``vars/main.yml``.
 
 In addition to the variables listed in the preceding table, the vars
 file also references other configuration files required by each
