@@ -35,7 +35,7 @@ jobs:
       - name: Build html
         run: make html
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           # Upload build repository
           path: './_build/html'
