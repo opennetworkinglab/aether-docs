@@ -100,26 +100,33 @@ OnRamp adopts minimal Ansible tooling for the *Continuous Deployment
 easy to take ownership of the configuration parameters that define
 your specific deployment scenario.  The rest of this guide walks you
 through a step-by-step process of deploying and operating Aether on
-your own hardware.  For now, we simply point you at the collection of
-OnRamp repos:
+your own hardware. The active deployment entry point is the main
+OnRamp repo:
 
  | Deploy Aether: https://github.com/opennetworkinglab/aether-onramp
- | Deploy 5G Core: https://github.com/opennetworkinglab/aether-5gc
- | Deploy 4G Core: https://github.com/opennetworkinglab/aether-4gc
- | Deploy Management Plane: https://github.com/opennetworkinglab/aether-amp
- | Deploy SD-RAN: https://github.com/opennetworkinglab/aether-sdran
- | Deploy OAI Software Radio: https://github.com/opennetworkinglab/aether-oai
- | Deploy srsRAN Software Radio: https://github.com/opennetworkinglab/aether-srsran
- | Deploy gNB Simulator: https://github.com/opennetworkinglab/aether-gnbsim
- | Deploy UE+gNB Simulator: https://github.com/opennetworkinglab/aether-ueransim
- | Deploy Kubernetes: https://github.com/opennetworkinglab/aether-k8s
 
-It is the first repo that defines a way to integrate all of the Aether
-artifacts into an operational system. That repo, in turn, now includes
-the deployment content for the other OnRamp repos directly under
-``deps/*``. Each such component directory is self-contained if you are
-interested in deploying just that subsystem, but this guide approaches
-the deployment challenge from an integrated, end-to-end perspective.
+That repo defines a way to integrate all of the Aether artifacts into
+an operational system. It now includes the deployment content for the
+other OnRamp components directly under ``deps/*``. Each such component
+directory is self-contained if you are interested in deploying just
+that subsystem, but this guide approaches the deployment challenge
+from an integrated, end-to-end perspective.
+
+The former per-component OnRamp repos listed below are archived and
+retained only for historical reference:
+
+ | 5G Core: https://github.com/opennetworkinglab/aether-5gc
+ | 4G Core: https://github.com/opennetworkinglab/aether-4gc
+ | Management Plane: https://github.com/opennetworkinglab/aether-amp
+ | SD-RAN: https://github.com/opennetworkinglab/aether-sdran
+ | OAI Software Radio: https://github.com/opennetworkinglab/aether-oai
+ | srsRAN Software Radio: https://github.com/opennetworkinglab/aether-srsran
+ | OCUDU Software Radio: https://github.com/opennetworkinglab/aether-ocudu
+ | gNB Simulator: https://github.com/opennetworkinglab/aether-gnbsim
+ | UE+gNB Simulator: https://github.com/opennetworkinglab/aether-ueransim
+ | N3IWF: https://github.com/opennetworkinglab/aether-n3iwf
+ | OSCRIC: https://github.com/opennetworkinglab/aether-oscric
+ | Kubernetes: https://github.com/opennetworkinglab/aether-k8s
 
 There are two other Aether-related repos of note; they are **not**
 included in ``aether-onramp``:
