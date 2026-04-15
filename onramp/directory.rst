@@ -98,7 +98,7 @@ OnRamp Repos
 OnRamp adopts minimal Ansible tooling for the *Continuous Deployment
 (CD)* half of the CI/CD pipeline. The approach is designed to make it
 easy to take ownership of the configuration parameters that define
-your specific deployment scenario.  The rest of this guide walks you
+your specific deployment scenario. The rest of this guide walks you
 through a step-by-step process of deploying and operating Aether on
 your own hardware. The active deployment entry point is the main
 OnRamp repo:
