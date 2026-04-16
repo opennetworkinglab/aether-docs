@@ -104,19 +104,19 @@ ROC:
 
 .. code-block::
 
-   $ make roc-install
-   $ make roc-load
+   $ make amp-roc-install
+   $ make amp-roc-load
    $  ...
-   $ make roc-uninstall
+   $ make amp-roc-uninstall
 
 and for Monitoring:
 
 .. code-block::
 
-   $ make monitor-install
-   $ make monitor-load
+   $ make amp-monitor-install
+   $ make amp-monitor-load
    $  ...
-   $ make monitor-uninstall
+   $ make amp-monitor-uninstall
 
 In both cases, installing the component is a two-step process: first
 the microservices that implement the component are instantiated on

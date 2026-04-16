@@ -75,7 +75,7 @@ The Multi-UPF blueprint includes the following:
 
 * New make targets, ``5gc-upf-install`` and ``5gc-upf-uninstall``, to
   be executed after the standard SD-Core installation. The blueprint
-  also reuses the ``roc-load`` target to activate new slices in ROC.
+  also reuses the ``amp-roc-load`` target to activate new slices in ROC.
 
 * New Ansible role (``upf``) added to ``deps/5gc``, including a new
   UPF-specific template (``upf-5g-values.yaml``).
@@ -103,8 +103,8 @@ You can also optionally install the monitoring subsystem.
 .. code-block::
 
    $ make k8s-install
-   $ make roc-install
-   $ make roc-load
+   $ make amp-roc-install
+   $ make amp-roc-load
    $ make 5gc-install
    $ make gnbsim-install
 
@@ -122,19 +122,19 @@ of ``vars/main.yml``:
       access_subnet: "192.168.252.1/24"	# access subnet & gateway
       core_subnet: "192.168.250.1/24"	# core subnet & gateway
       helm:
-          chart_ref: aether/bess-upf
-     values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
-     default_upf:
+        chart_ref: aether/bess-upf
+      values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
+      default_upf:
         ip:
           access: "192.168.252.3"
           core:   "192.168.250.3"
         ue_ip_pool: "192.168.100.0/24"
-     additional_upfs:
+      additional_upfs:
         "1":
-           ip:
-             access: "192.168.252.6"
-             core:   "192.168.250.6"
-           ue_ip_pool: "172.248.0.0/16"
+          ip:
+            access: "192.168.252.6"
+            core:   "192.168.250.6"
+          ue_ip_pool: "172.248.0.0/16"
         # "2":
         #   ip:
         #     access: "192.168.252.7"
@@ -171,7 +171,7 @@ Then run the following to load the patch:
 
 .. code-block::
 
-   $ make roc-load
+   $ make amp-roc-load
 
 At this point you can bring up the Aether GUI and see that a second
 slice and a second device group have been mapped onto the second UPF.
