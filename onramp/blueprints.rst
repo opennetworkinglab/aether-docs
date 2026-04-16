@@ -1038,7 +1038,7 @@ section:
 
    n3iwf:
      docker:
-       image: omecproject/5gc-n3iwf:rel-1.0.0
+       image: ghcr.io/omec-project/5gc-n3iwf:rel-1.1.1
        network:
          name: host
      servers:
