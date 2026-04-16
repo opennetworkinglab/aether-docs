@@ -93,8 +93,8 @@ define the Models into that service.
 
 .. code-block::
 
-   $ make roc-install
-   $ make roc-load
+   $ make amp-roc-install
+   $ make amp-roc-load
 
 To see these initial configuration values using the GUI, open the
 dashboard available at ``http://<server-ip>:31194``. If you select

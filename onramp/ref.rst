@@ -262,17 +262,17 @@ other blueprints.)
 .. list-table::
    :widths: 25 50
 
-   * - `roc-install`
+   * - `amp-roc-install`
      - Install ROC workload.
-   * - `roc-load`
+   * - `amp-roc-load`
      - Load model values into ROC; assumes ROC already deployed.
-   * - `roc-uninstall`
+   * - `amp-roc-uninstall`
      - Uninstall ROC workload.
-   * - `monitor-install`
+   * - `amp-monitor-install`
      - Install Monitor workload.
-   * - `monitor-load`
+   * - `amp-monitor-load`
      - Load dashboard panels into Monitor; assumes Monitor already deployed.
-   * - `monitor-uninstall`
+   * - `amp-monitor-uninstall`
      - Uninstall Monitor workload.
 
 **SD-RAN Blueprint**
