@@ -9,7 +9,7 @@ requirements:
 
 * Haswell CPU (or newer), with at least 4 CPU cores (ideally 8) and
   16GB RAM (ideally 32GB).
-* Clean install of Ubuntu 20.04 or 22.04, with 5.15 (or later) kernel.
+* Clean install of Ubuntu 22.04 or 24.04, with 5.15 (or later) kernel.
 
 For example, something like an Intel NUC is likely more than enough to get
 started.
@@ -56,31 +56,31 @@ the main implication being that it uses *systemd-networkd* rather than
 around this requirement, but be aware that doing so may impact the
 Ansible playbook for installing SD-Core.
 
-OnRamp depends on Ansible, which you can install on your server as
-follows:
+OnRamp depends on Ansible and a few other host-side tools. Install the
+required packages on your server as follows:
 
 .. code-block::
 
-   $ sudo apt install sshpass python3-venv pipx make git
-   $ pipx install --include-deps ansible
-   $ pipx ensurepath
-   $ source ~/.bashrc
+   $ sudo apt update
+   $ sudo apt install sshpass ansible make git
 
 Once installed, displaying the Ansible version number should result in
-output similar to the following on Ubuntu 20.04. (Ubuntu 22.04 will
-show ``ansible [core 2.16.4]``.)
+output similar to the following on Ubuntu 24.04. The exact patch
+version and Python build details may vary by package update. (Ubuntu
+22.04 ships an older Ansible package, but the same command should
+work.)
 
 .. code-block::
 
    $ ansible --version
-   ansible [core 2.13.13]
+   ansible [core 2.16.x]
      config file = None
-     configured module search path = ['/home/ubuntu/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
-     ansible python module location = /home/ubuntu/.local/pipx/venvs/ansible/lib/python3.8/site-packages/ansible
-     ansible collection location = /home/ubuntu/.ansible/collections:/usr/share/ansible/collections
-     executable location = /home/ubuntu/.local/bin/ansible
-     python version = 3.8.10 (default, Nov 22 2023, 10:22:35) [GCC 9.4.0]
-     jinja version = 3.1.3
+     configured module search path = ['~/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+     ansible python module location = /usr/lib/python3/dist-packages/ansible
+     ansible collection location = ~/.ansible/collections:/usr/share/ansible/collections
+     executable location = /usr/bin/ansible
+     python version = 3.12.x [GCC 13.x]
+     jinja version = 3.1.2
      libyaml = True
 
 
