@@ -56,8 +56,8 @@ the main implication being that it uses *systemd-networkd* rather than
 around this requirement, but be aware that doing so may impact the
 Ansible playbook for installing SD-Core.
 
-OnRamp depends on Ansible, which you can install on your server as
-follows:
+OnRamp depends on Ansible and a few other host-side tools. Install the
+required packages on your server as follows:
 
 .. code-block::
 
@@ -65,19 +65,21 @@ follows:
    $ sudo apt install sshpass ansible make git
 
 Once installed, displaying the Ansible version number should result in
-output similar to the following on Ubuntu 24.04. (Ubuntu 22.04 ships
-an older Ansible package, but the same command should work.)
+output similar to the following on Ubuntu 24.04. The exact patch
+version and Python build details may vary by package update. (Ubuntu
+22.04 ships an older Ansible package, but the same command should
+work.)
 
 .. code-block::
 
    $ ansible --version
-   ansible [core 2.16.3]
+   ansible [core 2.16.x]
      config file = None
-     configured module search path = ['/home/ubuntu/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+     configured module search path = ['~/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
      ansible python module location = /usr/lib/python3/dist-packages/ansible
-     ansible collection location = /home/ubuntu/.ansible/collections:/usr/share/ansible/collections
+     ansible collection location = ~/.ansible/collections:/usr/share/ansible/collections
      executable location = /usr/bin/ansible
-     python version = 3.12.3 (main, Mar 30 2026, 00:00:00) [GCC 13.3.0]
+     python version = 3.12.x [GCC 13.x]
      jinja version = 3.1.2
      libyaml = True
 
