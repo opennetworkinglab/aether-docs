@@ -851,7 +851,9 @@ OCUDU
 
 Aether can be configured to work with the open source OCUDU gNB.
 The blueprint supports the deployment of OCUDU in simulation mode,
-using the OCUDU gNB together with the srsRAN UE simulator.
+using the OCUDU gNB together with the srsRAN UE simulator, and it
+also supports hardware-backed deployments using either UHD-connected
+USRPs or split 7.2 RU-based fronthaul.
 
 The following assumes familiarity with the OCUDU stack, but it is
 **not** necessary to separately install OCUDU. OnRamp installs both
@@ -870,11 +872,13 @@ The blueprint includes the following:
 
 * New make targets, ``ocudu-gnb-install`` and ``ocudu-gnb-uninstall``,
   to be executed along with the standard SD-Core installation (see
-  below). When running a simulated UE, targets ``ocudu-uesim-start``
-  and ``ocudu-uesim-stop`` are also available. DPDK-enabled OCUDU
-  nodes also expose ``ocudu-dpdk-install``, ``ocudu-dpdk-status``,
-  and ``ocudu-dpdk-verify`` to prepare and validate RU-facing host
-  state before starting the gNB.
+  below). Operators that need a manual bring-up path can also use
+  ``ocudu-gnb-start`` and ``ocudu-gnb-stop`` directly. When running a
+  simulated UE, targets ``ocudu-uesim-start`` and
+  ``ocudu-uesim-stop`` are also available. DPDK-enabled OCUDU nodes
+  also expose ``ocudu-dpdk-install``, ``ocudu-dpdk-status``, and
+  ``ocudu-dpdk-verify`` to prepare and validate RU-facing host state
+  before starting the gNB.
 
 * The ``deps/ocudu`` directory defines the Ansible Roles and
   Playbooks required to deploy the OCUDU gNB.
@@ -907,7 +911,6 @@ section:
          dpdk:
            enabled: false
            hugepages: 2
-           driver: vfio-pci
            pf_iface: "enp81s0f3np3"
            du_mac_addr: "00:33:22:33:00:11"
            ru_mac_addr: "70:b3:d5:e1:5e:7e"
@@ -926,6 +929,13 @@ respectively. If you plan to modify the OCUDU software, you will need
 to change these values accordingly. See the :doc:`Development Support
 </onramp/devel>` section for guidance.
 
+The ``preflight`` block under ``ocudu.docker`` controls a Docker CPU
+availability check that runs before the gNB starts. These settings are
+available as optional overrides, with defaults inherited from the
+OCUDU gNB role. Change them only when you need to disable the check or
+point it at an image that is already mirrored into an airgapped
+environment.
+
 The ``network`` block of the ``ocudu`` section configures the gNB to
 run using the host network.
 
@@ -942,13 +952,12 @@ deployments.
 The ``dpdk`` block under each entry in ``ocudu.servers`` configures
 host preparation for RU-facing DPDK deployments. In particular,
 ``enabled`` turns on the prerequisite playbook for that OCUDU node,
-``hugepages`` reserves 1 GB hugepages, ``driver`` selects the VF
-binding driver, ``pf_iface`` identifies the fronthaul PF used to
-create VF 0, ``ru_mac_addr`` identifies the RU fronthaul port,
-``du_mac_addr`` optionally overrides the VF MAC rendered into the gNB
-config, ``vf_bdf`` optionally overrides the auto-discovered VF PCI
-address, and ``isolated_cpus`` defines the CPU range reserved for the
-DPDK gNB process.
+``hugepages`` reserves 1 GB hugepages, ``pf_iface`` identifies the
+fronthaul PF used to create VF 0, ``ru_mac_addr`` identifies the RU
+fronthaul port, ``du_mac_addr`` optionally overrides the VF MAC
+rendered into the gNB config, ``vf_bdf`` optionally overrides the
+auto-discovered VF PCI address, and ``isolated_cpus`` defines the CPU
+range reserved for the DPDK gNB process.
 
 Note: we can deploy multiple OCUDU gNBs simultaneously by adding as
 many servers under ``ocudu.servers`` section.
@@ -1007,10 +1016,12 @@ Then run the following Make targets:
 To deploy the OCUDU blueprint with radio units (RUs), also set
 ``ocudu.simulation`` to ``false`` and point ``ocudu.servers[0].gnb_conf``
 to an RU-capable OCUDU configuration file that matches your RU,
-fronthaul, and DPDK settings. For DPDK-enabled nodes, also enable the
-per-node ``dpdk`` block and set at least ``pf_iface``,
-``ru_mac_addr``, and ``isolated_cpus`` to match your host. Once that
-configuration is ready, prepare the host before starting the gNB:
+fronthaul, and DPDK settings. This is the path used for split 7.2
+Open Fronthaul deployments, including the Benetel RU examples bundled
+with this branch. For DPDK-enabled nodes, also enable the per-node
+``dpdk`` block and set at least ``pf_iface``, ``ru_mac_addr``, and
+``isolated_cpus`` to match your host. Once that configuration is
+ready, prepare the host before starting the gNB:
 
 .. code-block::
 
@@ -1038,6 +1049,10 @@ runtime checks from ``ocudu-dpdk-verify``. For DPDK-enabled RU nodes,
 Run ``ocudu-dpdk-status`` when you want to check readiness without
 starting the gNB, and run ``ocudu-dpdk-verify`` when you want the
 stronger runtime validation of services, hugepages, and VF binding.
+The same DPDK preparation also installs a persistent
+``vf-bootstrap.service`` so VF 0 is recreated and rebound to
+``vfio-pci`` across host reboots before later verify or gNB start
+steps.
 
 In both hardware-backed cases, do not run ``ocudu-uesim-start``.
 The UE simulator is only supported when ``ocudu.simulation`` is set
