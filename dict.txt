@@ -2,6 +2,7 @@
 # License: Apache-2.0
 Alertmanager
 Bavier
+Benetel
 CLI
 Davie
 Downlink
@@ -40,6 +41,7 @@ UHD
 Uplink
 Wireshark
 aether
+airgapped
 alicea
 amf
 ansible
@@ -133,6 +135,7 @@ preconfigured
 prereqs
 programmatically
 rc
+realtime
 reenabling
 repo
 repos
@@ -153,6 +156,7 @@ submodules
 subnet
 subnets
 sudo
+sysfs
 systemd
 tcp
 tcpdump
