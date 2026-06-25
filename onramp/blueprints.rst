@@ -871,7 +871,10 @@ The blueprint includes the following:
 * New make targets, ``ocudu-gnb-install`` and ``ocudu-gnb-uninstall``,
   to be executed along with the standard SD-Core installation (see
   below). When running a simulated UE, targets ``ocudu-uesim-start``
-  and ``ocudu-uesim-stop`` are also available.
+  and ``ocudu-uesim-stop`` are also available. DPDK-enabled OCUDU
+  nodes also expose ``ocudu-dpdk-install``, ``ocudu-dpdk-status``,
+  and ``ocudu-dpdk-verify`` to prepare and validate RU-facing host
+  state before starting the gNB.
 
 * The ``deps/ocudu`` directory defines the Ansible Roles and
   Playbooks required to deploy the OCUDU gNB.
@@ -891,8 +894,8 @@ section:
    ocudu:
      docker:
        container:
-         gnb_image: aetherproject/ocudu:rel-0.5.0
-         ue_image: aetherproject/srsran-ue:rel-0.5.0
+         gnb_image: aetherproject/ocudu:rel-0.8.2
+         ue_image: aetherproject/srsran-ue:rel-0.8.2
        network:
          name: host
      simulation: true
@@ -901,6 +904,15 @@ section:
          gnb_ip: "10.76.28.115"
          gnb_conf: gnb_zmq.yaml
          ue_conf: ue_zmq.conf
+         dpdk:
+           enabled: false
+           hugepages: 2
+           driver: vfio-pci
+           pf_iface: "enp81s0f3np3"
+           du_mac_addr: "00:33:22:33:00:11"
+           ru_mac_addr: "70:b3:d5:e1:5e:7e"
+           vf_bdf: ""
+           isolated_cpus: "3-23"
 
 Variable ``simulation`` is set to ``true`` by default, causing OnRamp
 to deploy the simulated UE. When set to ``false``, the simulated UE
@@ -923,7 +935,20 @@ above are for simulation mode. The template directory also includes
 hardware-backed gNB configurations for UHD-connected USRPs, including
 ``gnb_uhd_b210.yaml`` and ``gnb_uhd_x310.yaml``. For RU-based
 deployments, set ``gnb_conf`` to an RU-capable OCUDU configuration
-file that matches your environment.
+file that matches your environment, such as
+``gnb_dpdk_benetel.yaml`` for Benetel-based Open Fronthaul
+deployments.
+
+The ``dpdk`` block under each entry in ``ocudu.servers`` configures
+host preparation for RU-facing DPDK deployments. In particular,
+``enabled`` turns on the prerequisite playbook for that OCUDU node,
+``hugepages`` reserves 1 GB hugepages, ``driver`` selects the VF
+binding driver, ``pf_iface`` identifies the fronthaul PF used to
+create VF 0, ``ru_mac_addr`` identifies the RU fronthaul port,
+``du_mac_addr`` optionally overrides the VF MAC rendered into the gNB
+config, ``vf_bdf`` optionally overrides the auto-discovered VF PCI
+address, and ``isolated_cpus`` defines the CPU range reserved for the
+DPDK gNB process.
 
 Note: we can deploy multiple OCUDU gNBs simultaneously by adding as
 many servers under ``ocudu.servers`` section.
@@ -982,14 +1007,37 @@ Then run the following Make targets:
 To deploy the OCUDU blueprint with radio units (RUs), also set
 ``ocudu.simulation`` to ``false`` and point ``ocudu.servers[0].gnb_conf``
 to an RU-capable OCUDU configuration file that matches your RU,
-fronthaul, and DPDK settings. Once that configuration is ready, use
-the same Make targets:
+fronthaul, and DPDK settings. For DPDK-enabled nodes, also enable the
+per-node ``dpdk`` block and set at least ``pf_iface``,
+``ru_mac_addr``, and ``isolated_cpus`` to match your host. Once that
+configuration is ready, prepare the host before starting the gNB:
 
 .. code-block::
 
    $ make k8s-install
    $ make 5gc-install
+   $ make ocudu-dpdk-install
    $ make ocudu-gnb-install
+
+.. note::
+
+  ``make ocudu-dpdk-install`` may reboot the OCUDU host to activate
+  the realtime kernel and CPU isolation settings. Plan for that
+  interruption before running the command, and rerun the follow-up
+  status or verify step after the host comes back.
+
+The DPDK install step is intentionally separate because
+``ocudu-gnb-install`` only reaches the gNB through ``ocudu-gnb-start``,
+and that start path performs the same readiness-marker gate as
+``ocudu-dpdk-status``. In other words, ``ocudu-gnb-install`` will
+fail early when DPDK is enabled but not yet prepared; it does not
+replace ``ocudu-dpdk-install`` and it does not run the stronger
+runtime checks from ``ocudu-dpdk-verify``. For DPDK-enabled RU nodes,
+``ocudu-gnb-install`` is therefore not a complete one-step bring-up.
+
+Run ``ocudu-dpdk-status`` when you want to check readiness without
+starting the gNB, and run ``ocudu-dpdk-verify`` when you want the
+stronger runtime validation of services, hugepages, and VF binding.
 
 In both hardware-backed cases, do not run ``ocudu-uesim-start``.
 The UE simulator is only supported when ``ocudu.simulation`` is set

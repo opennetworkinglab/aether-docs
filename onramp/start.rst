@@ -64,6 +64,14 @@ required packages on your server as follows:
    $ sudo apt update
    $ sudo apt install sshpass ansible make git
 
+If you are deploying in an offline environment or from a local mirror
+that should not refresh upstream package indexes, set
+``airgapped.enabled: true`` in ``vars/main.yml`` before running the
+install targets. This tells OnRamp to skip the gated ``apt`` cache
+refreshes that would otherwise fail on disconnected hosts. In that
+mode, you are responsible for ensuring the required packages are
+already present or available from your local mirror.
+
 Once installed, displaying the Ansible version number should result in
 output similar to the following on Ubuntu 24.04. The exact patch
 version and Python build details may vary by package update. (Ubuntu
