@@ -323,23 +323,28 @@ the following:
 
    $ kubectl get pods --all-namespaces
    NAMESPACE     NAME                                                    READY   STATUS      RESTARTS   AGE
-   kube-system   cloud-controller-manager-node1                          1/1     Running     0          2m4s
-   kube-system   etcd-node1                                              1/1     Running     0          104s
-   kube-system   helm-install-rke2-canal-8s67r                           0/1     Completed   0          113s
-   kube-system   helm-install-rke2-coredns-bk5rh                         0/1     Completed   0          113s
-   kube-system   helm-install-rke2-ingress-nginx-lsjz2                   0/1     Completed   0          113s
-   kube-system   helm-install-rke2-metrics-server-t8kxf                  0/1     Completed   0          113s
-   kube-system   helm-install-rke2-multus-tbbhc                          0/1     Completed   0          113s
-   kube-system   kube-apiserver-node1                                    1/1     Running     0          97s
-   kube-system   kube-controller-manager-node1                           1/1     Running     0          2m7s
-   kube-system   kube-multus-ds-96cnl                                    1/1     Running     0          95s
-   kube-system   kube-proxy-node1                                        1/1     Running     0          2m1s
-   kube-system   kube-scheduler-node1                                    1/1     Running     0          2m7s
-   kube-system   rke2-canal-h79qq                                        2/2     Running     0          95s
-   kube-system   rke2-coredns-rke2-coredns-869b5d56d4-tffjh              1/1     Running     0          95s
-   kube-system   rke2-coredns-rke2-coredns-autoscaler-5b947fbb77-pj5vk   1/1     Running     0          95s
-   kube-system   rke2-ingress-nginx-controller-s68rx                     1/1     Running     0          48s
-   kube-system   rke2-metrics-server-6564db4569-snnv4                    1/1     Running     0          56s
+   kube-system   cloud-controller-manager-node1                          1/1     Running     0          74m
+   kube-system   etcd-node1                                              1/1     Running     0          75m
+   kube-system   helm-install-rke2-canal-kg4x2                           0/1     Completed   0          74m
+   kube-system   helm-install-rke2-coredns-rcdwb                         0/1     Completed   0          74m
+   kube-system   helm-install-rke2-metrics-server-n2cxf                  0/1     Completed   0          74m
+   kube-system   helm-install-rke2-multus-zfdhg                          0/1     Completed   0          74m
+   kube-system   helm-install-rke2-runtimeclasses-nbcnc                  0/1     Completed   0          74m
+   kube-system   helm-install-rke2-snapshot-controller-crd-jts65         0/1     Completed   0          74m
+   kube-system   helm-install-rke2-snapshot-controller-mcfm8             0/1     Completed   0          74m
+   kube-system   helm-install-rke2-traefik-crd-vlbkm                     0/1     Completed   0          74m
+   kube-system   helm-install-rke2-traefik-hqzkl                         0/1     Completed   0          74m
+   kube-system   kube-apiserver-node1                                    1/1     Running     0          75m
+   kube-system   kube-controller-manager-node1                           1/1     Running     0          75m
+   kube-system   kube-proxy-node1                                        1/1     Running     0          74m
+   kube-system   kube-scheduler-node1                                    1/1     Running     0          75m
+   kube-system   rke2-canal-rdk8p                                        2/2     Running     0          74m
+   kube-system   rke2-coredns-rke2-coredns-6b85489767-5294x              1/1     Running     0          74m
+   kube-system   rke2-coredns-rke2-coredns-autoscaler-8fcd75dfd-7p44m    1/1     Running     0          74m
+   kube-system   rke2-metrics-server-9d9d8b8f-jtjnd                      1/1     Running     0          72m
+   kube-system   rke2-multus-cbk7n                                       1/1     Running     0          72m
+   kube-system   rke2-snapshot-controller-5d85999559-cb682               1/1     Running     0          72m
+   kube-system   rke2-traefik-jpkrj                                      1/1     Running     0          72m
 
 If you are interested in seeing the details about how Kubernetes is
 customized for Aether, look at

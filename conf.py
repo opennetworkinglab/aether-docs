@@ -265,6 +265,7 @@ linkcheck_ignore = [
     r'https://cloud.google.com/.*',
     r'https://wiki.aetherproject.org/.*',
     r'https://opennetworking.org/.*',
+    r'https://aether5g-project\.slack\.com/.*',
 ]
 
 linkcheck_timeout = 3
