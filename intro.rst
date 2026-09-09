@@ -32,11 +32,12 @@ radios.
 
 Other Aether guides available on this site include:
 
-* :doc:`Developing for Aether </developer/roc>`: Learn how to
+* :doc:`Developing for Aether </developer/contributing>`: Learn how to
   contribute back to Aether.
 
-* :doc:`Runtime Operations </operations/gui>`: Learn how
-  to operate Aether's 5G connectivity service.
+* :doc:`Runtime Operations </operations/gui>`: Historical documentation
+  of the now-archived ROC GUI for operating Aether's 5G connectivity
+  service.
 
 Note that Aether was originally deployed as a centrally-managed cloud
 service with a dedicated ops team. The expectation was that
@@ -62,9 +63,10 @@ available at:
 * :doc:`SD-Core Documentation <sdcore:index>`
 * :doc:`SD-RAN Documentation <sdran:index>`
 
-A third component, *ROC (Runtime Operational Control)*, is part of the
-Aether Management Plane. This Guide documents how operators use ROC to
-control Aether (see the NAV bar). ROC builds on µONOS (specifically
+A third component, *ROC (Runtime Operational Control)*, was part of the
+Aether Management Plane, historically used to control Aether's runtime
+connectivity configuration (see the NAV bar). ROC is being archived and
+is no longer installed by OnRamp; ROC built on µONOS (specifically
 the ``onos-config`` microservice), with additional documentation for
 developers available at:
 

@@ -1,6 +1,11 @@
 Runtime Control
 -----------------------------------
 
+.. warning:: The ROC (Runtime Operational Control) subsystem described in
+    this section is being archived and is no longer installed, loaded, or
+    supported by OnRamp (``amp-roc-install``/``amp-roc-load`` targets have
+    been removed). This page is retained for historical reference only.
+
 Aether defines an API (and associated GUI) for managing connectivity
 at runtime. This stage brings up that API/GUI, as implemented by the
 *Runtime Operational Control (ROC)* subsystem, building on the

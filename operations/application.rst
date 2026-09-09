@@ -7,6 +7,11 @@
 Application Management
 ======================
 
+.. warning:: This section documents application management via the ROC
+    web GUI. ROC is being archived and is no longer installed or
+    supported by OnRamp. This page is retained for historical reference
+    only.
+
 Aether allows configuration of the application endpoints that a device
 is allowed to connect to. You can configure not only whether or not an
 application endpoint is reachable, but also what maximum bitrate and

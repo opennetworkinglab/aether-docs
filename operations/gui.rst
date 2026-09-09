@@ -5,6 +5,10 @@
 Aether GUI Basics
 =====================
 
+.. warning:: This section documents the ROC web GUI. ROC is being
+    archived and is no longer installed or supported by OnRamp. This
+    page is retained for historical reference only.
+
 This section documents common aspects and features of the GUI.
 
 .. _committing:

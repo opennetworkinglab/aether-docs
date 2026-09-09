@@ -214,7 +214,7 @@ sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
 .. code-block::
 
     core:
-        standalone: true				# set to false to place under control of ROC
+        standalone: true				# set to false to manage subscribers/slices manually via the SD-Core webconsole
         data_iface: ens18
         values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
         ran_subnet: "172.20.0.0/16"		# set to empty string to get subnet from 'data_iface'
