@@ -411,7 +411,7 @@ microservices discussed is `Chapter 5
 
 If you are interested in seeing the details about how SD-Core is
 configured, look at
-``deps/5gc/roles/core/templates/radio-5g-values.yaml``.  This is an
+``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``.  This is an
 example of a *values override* file that Helm passes along to
 Kubernetes when launching the service. Most of the default settings
 will remain unchanged, with the main exception being the
@@ -512,13 +512,13 @@ block defines a set of parameters for ``pdusessest`` (also known as
     enable: true
     gnbName: gnb1
     execInParallel: false
-    startImsi: 208930100007487
+    startImsi: 001010100007487
     ueCount: 5
     defaultAs: "{{ ping_target }}"
     perUserTimeout: 100
     plmnId:
-       mcc: 208
-       mnc: 93
+       mcc: 001
+       mnc: 01
     dataPktCount: 5
     opc: "981d464c7c52eb6e5036234984ad0bcf"
     key: "5122250214c33e723a5dd523fc145fc0"
