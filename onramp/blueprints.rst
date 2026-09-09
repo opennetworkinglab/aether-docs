@@ -59,8 +59,8 @@ The base version of SD-Core includes a single UPF, running in the same
 Kubernetes namespace as the Core's control plane. This blueprint adds
 the ability to bring up multiple UPFs (each in a different namespace),
 requiring the *UPF-to-Slice-to-Device* bindings to be established
-manually via the SD-Core webconsole to activate end-to-end user
-traffic. The resulting deployment is then verified using gNBsim.
+manually via the SD-Core webui to activate end-to-end user traffic.
+The resulting deployment is then verified using gNBsim.
 
 The Multi-UPF blueprint includes the following:
 
@@ -101,8 +101,7 @@ You can also optionally install the monitoring subsystem.
 
 Note that because ``main.yml`` sets ``core.standalone: "false"``, the
 Device Groups and Slices bound to SD-Core must be entered manually via
-the SD-Core webconsole rather than being provisioned automatically by
-simapp.
+the SD-Core webui rather than being provisioned automatically by simapp.
 
 At this point you are ready to bring up additional UPFs and bind them
 to specific slices and devices. An example configuration that brings
@@ -149,11 +148,11 @@ At this point the new UPF(s) will be running in their own namespaces
 (you can verify this using ``kubectl get pods --all-namespaces``), but
 no traffic will be directed to them until UEs are assigned to their IP
 address pool. Doing so requires manually configuring a second Device
-Group, Slice, and UPF binding via the SD-Core webconsole so that the
-new IP address pool is associated with the second UPF.
+Group, Slice, and UPF binding via the SD-Core webui so that the new IP
+address pool is associated with the second UPF.
 
-At this point you can bring up the SD-Core webconsole and see that a
-second slice and a second device group have been mapped onto the second UPF.
+At this point you can bring up the SD-Core webui and see that a second
+slice and a second device group have been mapped onto the second UPF.
 
 Now you are ready to run traffic through both UPFs, which because the
 configuration files identified in the ``servers`` block of the

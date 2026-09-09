@@ -72,7 +72,7 @@ using.
 .. code-block::
 
     core:
-      standalone: true                # set to false to manage subscribers/slices manually via the SD-Core webconsole
+      standalone: true                # set to false to manage subscribers/slices manually via the SD-Core webui
       data_iface: ens18
       values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
       ran_subnet: ""                  # set to empty string to get subnet from 'data_iface'
@@ -198,8 +198,8 @@ entered here is purposely minimal; it's just enough to bring up and
 debug the installation. Over the lifetime of a running system,
 information about *Device Groups* and *Slices* (and the other
 abstractions they build upon) can instead be entered via the SD-Core
-webconsole. When you get to that point, Ansible variable ``standalone``
-in ``vars/main.yml`` (which corresponds to the override value assigned to
+webui. When you get to that point, Ansible variable ``standalone`` in
+``vars/main.yml`` (which corresponds to the override value assigned to
 ``provision-network-slice`` in ``sdcore-5g-values.yaml``) should be set
 to ``false``. Doing so causes the ``device-groups`` and
 ``network-slices`` blocks of ``sdcore-5g-values.yaml`` to be
