@@ -70,7 +70,7 @@ this guide (see https://github.com/omec-project/gnbsim for details),
 but at a high-level, gNBsim defines a set of *profiles*, each of which
 exercises a common usage scenario that the Core has to deal with. Each
 of these sequences is represented by a ``profileType`` in the config
-file. gNBsim supports seven profiles, which we list here:
+file. gNBsim supports eight profiles, which we list here:
 
 .. code-block::
 
@@ -81,12 +81,13 @@ file. gNBsim supports seven profiles, which we list here:
    - profileType: deregister           # UE Initiated De-registration
    - profileType: nwtriggeruedereg     # Network Initiated De-registration
    - profileType: uereqpdusessrelease  # UE Initiated Session Release
+   - profileType: nwreqpdusessrelease  # Network Initiated Session Release
 
-The second profile (``pdusettest``) is selected by default. It causes
+The second profile (``pdusessest``) is selected by default. It causes
 the specified number of UEs to register with the Core, initiate a user
 plane session, and then send a minimal data packet over that session.
 Note that the rest of the per-profile parameters are highly redundant.
-For example, they specify the IMSI- and PLMD-related information UEs
+For example, they specify the IMSI- and PLMN-related information UEs
 need to connect to the Core.
 
 Finally, it is necessary to edit the ``core`` section of
