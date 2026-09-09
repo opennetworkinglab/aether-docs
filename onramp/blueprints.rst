@@ -111,8 +111,8 @@ of ``vars/main.yml``:
 .. code-block::
 
    upf:
-      access_subnet: "192.168.252.1/24"	# access subnet & gateway
-      core_subnet: "192.168.250.1/24"	# core subnet & gateway
+      access_subnet: "192.168.252.1/24"  # access subnet & gateway
+      core_subnet: "192.168.250.1/24"    # core subnet & gateway
       helm:
         chart_ref: aether/bess-upf
       values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
@@ -490,9 +490,9 @@ section:
 .. code-block::
 
     upf:
-      access_subnet: "192.168.252.1/24"	# access subnet & gateway
-      core_subnet: "192.168.250.1/24"	# core subnet & gateway
-      mode: dpdk			# Options: af_packet or dpdk
+      access_subnet: "192.168.252.1/24"  # access subnet & gateway
+      core_subnet: "192.168.250.1/24"    # core subnet & gateway
+      mode: dpdk                         # Options: af_packet or dpdk
       # If mode set to 'dpdk':
       #    - make sure at least two VF devices are created out of 'data_iface'
       #      and these devices are attached to vfio-pci driver.
@@ -1147,12 +1147,12 @@ on subnet 10.202.1.0/24. Configure the parameters as follows:
    data_iface: ens18
    ran_subnet: "10.202.1.0/24"
    upf:
-      access_subnet: "10.21.61.1/24"		# access subnet & gateway
-      core_subnet: "192.168.250.1/24"		# core subnet & gateway
-      multihop_gnb: true			# N3 directly reachable via data_iface
+      access_subnet: "10.21.61.1/24"   # access subnet & gateway
+      core_subnet: "192.168.250.1/24"  # core subnet & gateway
+      multihop_gnb: true               # N3 directly reachable via data_iface
       default_upf:
         ip:
-          access: "10.21.61.12"			# same subnet as data_iface when multihop_gnb=true
+          access: "10.21.61.12"  # same subnet as data_iface when multihop_gnb=true
           core:   "192.168.250.3"
         ue_ip_pool: "192.168.100.0/24"
 

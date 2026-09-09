@@ -508,21 +508,25 @@ block defines a set of parameters for ``pdusessest`` (also known as
 .. code-block::
 
     - profileType: pdusessest         # UE Initiated Session
-    profileName: profile2
-    enable: true
-    gnbName: gnb1
-    execInParallel: false
-    startImsi: "001010100007510"
-    ueCount: 5
-    defaultAs: "{{ ping_target }}"
-    perUserTimeout: 100
-    plmnId:
-       mcc: "001"
-       mnc: "01"
-    dataPktCount: 5
-    opc: "981d464c7c52eb6e5036234984ad0bcf"
-    key: "5122250214c33e723a5dd523fc145fc0"
-    sequenceNumber: "16f3b3f70fc2"
+      profileName: profile2
+      enable: true
+      gnbName: gnb1
+      execInParallel: false
+      startImsi: "001010100007510"
+      ueCount: 5
+      defaultAs: "{{ ping_target }}"
+      perUserTimeout: 100
+      plmnId:
+        mcc: "001"
+        mnc: "01"
+      dnn: "internet"
+      sNssai:
+        sst: 1
+        sd: "010203"
+      dataPktCount: 5
+      opc: "981d464c7c52eb6e5036234984ad0bcf"
+      key: "5122250214c33e723a5dd523fc145fc0"
+      sequenceNumber: "16f3b3f70fc2"
 
 You can edit ``ueCount`` to change the number of UEs included in the
 emulation (currently limited to 100) and you can set

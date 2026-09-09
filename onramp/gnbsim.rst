@@ -74,13 +74,13 @@ file. gNBsim supports seven profiles, which we list here:
 
 .. code-block::
 
-   - profileType: register		# UE Registration
-   - profileType: pdusessest		# UE Initiated Session
-   - profileType: anrelease		# Access Network (AN) Release
-   - profileType: uetriggservicereq	# UE Initiated Service Request
-   - profileType: deregister		# UE Initiated De-registration
-   - profileType: nwtriggeruedereg	# Network Initiated De-registration
-   - profileType: uereqpdusessrelease	# UE Initiated Session Release
+   - profileType: register             # UE Registration
+   - profileType: pdusessest           # UE Initiated Session
+   - profileType: anrelease            # Access Network (AN) Release
+   - profileType: uetriggservicereq    # UE Initiated Service Request
+   - profileType: deregister           # UE Initiated De-registration
+   - profileType: nwtriggeruedereg     # Network Initiated De-registration
+   - profileType: uereqpdusessrelease  # UE Initiated Session Release
 
 The second profile (``pdusettest``) is selected by default. It causes
 the specified number of UEs to register with the Core, initiate a user
