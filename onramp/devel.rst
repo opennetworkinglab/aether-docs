@@ -15,7 +15,8 @@ are referred to documentation for the respective subsystems:
 
 * To develop SD-RAN, see the :doc:`SD-RAN Guide <sdran:index>`.
 
-* ROC is being archived; see :doc:`ROC Development </developer/roc>` for historical background on the runtime control API.
+* ROC is being archived; see :doc:`ROC Development </developer/roc>`
+  for historical background on the runtime control API.
 
 * To develop Monitoring Dashboards, see :doc:`Monitoring Development </developer/monitoring>`.
 
