@@ -524,9 +524,7 @@ section:
       mode: dpdk			# Options: af_packet or dpdk
       # If mode set to 'dpdk':
       #    - make sure at least two VF devices are created out of 'data_iface'
-      #      and these devices are attached to vfio-pci driver;
-      #    - use 'sdcore-5g-values.yaml' for the default profile or
-      #      'radio-5g-values.yaml' for the radio profile.
+      #      and these devices are attached to vfio-pci driver.
 
 Note the VF device requirement in the ``upf`` block comments. The
 ``core`` block continues to point at the standard SD-Core values file,
@@ -685,7 +683,7 @@ option is to reuse the values file also used by the :doc:`Physical RAN
 
 .. code-block::
 
-   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+   values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
 
 That file should be edited, as necessary, to match your configuration.
 
@@ -833,7 +831,7 @@ option is to reuse the values file also used by the :doc:`Physical RAN
 
 .. code-block::
 
-   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+   values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
 
 That file should be edited, as necessary, to match your configuration.
 
@@ -978,7 +976,7 @@ option is to reuse the values file also used by the :doc:`Physical RAN
 
 .. code-block::
 
-   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+   values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
 
 That file should be edited, as necessary, to match your configuration.
 
@@ -1143,7 +1141,7 @@ option is to reuse the values file also used by the :doc:`Physical RAN
 
 .. code-block::
 
-   values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+   values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
 
 That file should be edited, as necessary, to match your configuration.
 

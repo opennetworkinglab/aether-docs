@@ -18,7 +18,7 @@ values to load the ROC database, saving us from a laborious GUI
 session.
 
 Somewhat confusingly, the *Device-Group* and *Slice* information is
-duplicated between ``deps/5gc/roles/core/templates/radio-5g-values.yaml``
+duplicated between ``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``
 and this ``radio-5g-models.json`` file. This makes it possible to bring
 up the SD-Core without the ROC, which simplifies the process of
 debugging an initial installation, but having two sources for this
@@ -28,7 +28,7 @@ avoided.
 To this end, Aether treats the ROC as the "single source of truth" for
 *Slices*, *Device Groups*, and all the other abstract objects it
 defines, so we recommend using the GUI or API to make changes over
-time, and avoiding the override values in ``radio-5gc-values.yaml``
+time, and avoiding the override values in ``sdcore-5g-values.yaml``
 once you've established basic connectivity. And if you want to save
 this bootstrap state in a text file for a possible restart, we
 recommend doing so in ``radio-5g-models.json`` (although this is not a
@@ -41,11 +41,11 @@ setting it to ``false``. This variable indicates whether we want
 SD-Core to run in *Stand Alone* mode, which has been the default
 setting up to this point. Disabling ``standalone`` causes the SD-Core
 to ignore the ``device-groups`` and ``network-slices`` blocks of the
-``omec-sub-provision`` section in ``radio-5gc-values.yaml``, and to instead
+``omec-sub-provision`` section in ``sdcore-5g-values.yaml``, and to instead
 retrieve this information from the ROC.
 
 The next step is to edit ``radio-5g-models.json`` to record the same
-IMSI information you added to ``radio-5gc-values.yaml`` in the
+IMSI information you added to ``sdcore-5g-values.yaml`` in the
 previous section.  This includes modifying, adding and removing
 ``sim-card`` entries as necessary. Note that only the IMSIs need to
 match the earlier data; the ``sim-id`` and ``display-name`` values are

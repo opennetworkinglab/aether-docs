@@ -74,7 +74,7 @@ using.
     core:
       standalone: true                # set to false to place under control of ROC
       data_iface: ens18
-      values_file: "deps/5gc/roles/core/templates/radio-5g-values.yaml"
+      values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
       ran_subnet: ""                  # set to empty string to get subnet from 'data_iface'
       helm:
          local_charts: false         # set chart_ref to local path name if true
@@ -138,7 +138,7 @@ and the MCC/MNC pair is set automatically based on the newly inserted
 SIM card. The important value is the APN, which is set to
 ``internet``. This value corresponds to variable ``dnn`` (*Data
 Network Name*) defined in
-``deps/5gc/roles/core/templates/radio-5g-values.yaml``. Loosely
+``deps/5gc/roles/core/templates/sdcore-5g-values.yaml``. Loosely
 speaking, the role the APN plays in the mobile network is similar to
 the role an SSID plays in a WiFi network.
 
@@ -151,7 +151,7 @@ the role an SSID plays in a WiFi network.
 
 Finally, modify the ``subscribers`` block of the
 ``omec-sub-provision`` section in file
-``deps/5gc/roles/core/templates/radio-5g-values.yaml`` to record the IMSI,
+``deps/5gc/roles/core/templates/sdcore-5g-values.yaml`` to record the IMSI,
 OPc, and Key values configured onto your SIM cards. The block also
 defines a sequence number that is intended to thwart replay
 attacks. For example, the following code block adds IMSIs between
@@ -201,9 +201,9 @@ abstractions they build upon) should be entered via the ROC, as
 described in the :doc:`Runtime Control </onramp/roc>` section. When
 you get to that point, Ansible variable ``standalone`` in
 ``vars/main.yml`` (which corresponds to the override value assigned to
-``provision-network-slice`` in ``radio-5g-values.yaml``) should be set
+``provision-network-slice`` in ``sdcore-5g-values.yaml``) should be set
 to ``false``. Doing so causes the ``device-groups`` and
-``network-slices`` blocks of ``radio-5g-values.yaml`` to be
+``network-slices`` blocks of ``sdcore-5g-values.yaml`` to be
 ignored. The ``subscribers`` block is always required to configure
 SD-Core.
 
