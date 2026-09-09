@@ -72,7 +72,7 @@ using.
 .. code-block::
 
     core:
-      standalone: true                # set to false to manage subscribers/slices manually via the SD-Core webui
+      standalone: true                # set to false to manage device groups/slices manually via the SD-Core webui
       data_iface: ens18
       values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
       ran_subnet: ""                  # set to empty string to get subnet from 'data_iface'

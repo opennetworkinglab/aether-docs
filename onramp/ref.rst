@@ -87,7 +87,8 @@ the list is not comprehensive.
      - Overlay subnet connecting Core to RAN when gNBs run in a container; set to empty string ("") when gNBs are directly connected via `core.data_iface`.
    * - `core.standalone`
      - `true`
-     - Core to run standalone with simapp-managed subscribers/slices; set to `false` to manage them manually via the SD-Core webui instead.
+     - Core to run standalone with simapp-managed subscribers; set to
+       `false` to manage device groups/slices via SD-Core webui.
    * - `core.data_iface`
      - `ens18`
      - Network interface used by UPF; same as `gnbsim.data_iface` when co-located on a single server.
