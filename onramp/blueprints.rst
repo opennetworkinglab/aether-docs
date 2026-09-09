@@ -58,9 +58,9 @@ Multiple UPFs
 The base version of SD-Core includes a single UPF, running in the same
 Kubernetes namespace as the Core's control plane. This blueprint adds
 the ability to bring up multiple UPFs (each in a different namespace),
-and uses ROC to establish the *UPF-to-Slice-to-Device* bindings
-required to activate end-to-end user traffic. The resulting deployment
-is then verified using gNBsim.
+requiring the *UPF-to-Slice-to-Device* bindings to be established
+manually via the SD-Core webui to activate end-to-end user traffic.
+The resulting deployment is then verified using gNBsim.
 
 The Multi-UPF blueprint includes the following:
 
@@ -74,17 +74,10 @@ The Multi-UPF blueprint includes the following:
   in the same server, may also work, but is not actively maintained.)
 
 * New make targets, ``5gc-upf-install`` and ``5gc-upf-uninstall``, to
-  be executed after the standard SD-Core installation. The blueprint
-  also reuses the ``amp-roc-load`` target to activate new slices in ROC.
+  be executed after the standard SD-Core installation.
 
 * New Ansible role (``upf``) added to ``deps/5gc``, including a new
   UPF-specific template (``upf-5g-values.yaml``).
-
-* New models file (``roc-5g-models-upf2.json``) added to the
-  ``roc-load`` role in ``deps/amp``. This models file is applied as a
-  patch *on top of* the base set of ROC models. (Since this blueprint
-  is demonstrated using gNBsim, the assumed base models are given by
-  ``roc-5g-models.json``.)
 
 * The OnRamp integration test suite validates the Multi-UPF
   blueprint.
@@ -103,13 +96,12 @@ You can also optionally install the monitoring subsystem.
 .. code-block::
 
    $ make k8s-install
-   $ make amp-roc-install
-   $ make amp-roc-load
    $ make 5gc-install
    $ make gnbsim-install
 
-Note that because ``main.yml`` sets ``core.standalone: "false"``, any
-models loaded into ROC are automatically applied to SD-Core.
+Note that because ``main.yml`` sets ``core.standalone: "false"``, the
+Device Groups and Slices bound to SD-Core must be entered manually via
+the SD-Core webui rather than being provisioned automatically by simapp.
 
 At this point you are ready to bring up additional UPFs and bind them
 to specific slices and devices. An example configuration that brings
@@ -155,25 +147,11 @@ type:
 At this point the new UPF(s) will be running in their own namespaces
 (you can verify this using ``kubectl get pods --all-namespaces``), but
 no traffic will be directed to them until UEs are assigned to their IP
-address pool. Doing so requires loading the appropriate bindings into
-ROC, which you can do by editing the ``roc_models`` line in ``amp``
-section of ``vars/main.yml``. Comment out the original models file
-already loaded into ROC, and uncomment the new patch that is to be
-applied:
+address pool. Doing so requires manually configuring a second Device
+Group, Slice, and UPF binding via the SD-Core webui so that the new IP
+address pool is associated with the second UPF.
 
-.. code-block::
-
-   amp:
-      # roc_models: "deps/amp/roles/roc-load/templates/roc-5g-models.json"
-      roc_models: "deps/amp/roles/roc-load/templates/roc-5g-models-upf2.json"
-
-Then run the following to load the patch:
-
-.. code-block::
-
-   $ make amp-roc-load
-
-At this point you can bring up the Aether GUI and see that a second
+At this point you can bring up the SD-Core webui and see that a second
 slice and a second device group have been mapped onto the second UPF.
 
 Now you are ready to run traffic through both UPFs, which because the
@@ -388,21 +366,14 @@ differences from the 5G case:
   ``values_file: "deps/4gc/roles/core/templates/radio-4g-values.yaml"``
 
 * The ``amp`` section of ``vars/main.yml`` specifies that 4G-specific
-  models and dashboards get loaded into the ROC and Monitoring
-  services, respectively:
-
-  ``roc_models: "deps/amp/roles/roc-load/templates/roc-4g-models.json"``
+  dashboards get loaded into the Monitoring service:
 
   ``monitor_dashboard:  "deps/amp/roles/monitor-load/templates/4g-monitor"``
 
-* You need to edit two files with details for the 4G SIM cards you
-  use. One is the 4G-specific values file used to configure SD-Core:
+* You need to edit the 4G-specific values file used to configure
+  SD-Core with details for the 4G SIM cards you use:
 
   ``deps/4gc/roles/core/templates/radio-4g-values.yaml``
-
-  The other is the 4G-specific Models file used to bootstrap ROC:
-
-  ``deps/amp/roles/roc-load/templates/radio-4g-models.json``
 
 * There are 4G-specific Make targets for SD-Core (e.g., ``make
   aether-4gc-install`` and ``make aether-4gc-uninstall``), but the

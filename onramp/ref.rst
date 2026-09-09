@@ -87,7 +87,8 @@ the list is not comprehensive.
      - Overlay subnet connecting Core to RAN when gNBs run in a container; set to empty string ("") when gNBs are directly connected via `core.data_iface`.
    * - `core.standalone`
      - `true`
-     - Core to run standalone, initialized from values file; set to `false` when Core is to be initialized by ROC.
+     - Core to run standalone with simapp-managed subscribers; set to
+       `false` to manage device groups/slices via SD-Core webui.
    * - `core.data_iface`
      - `ens18`
      - Network interface used by UPF; same as `gnbsim.data_iface` when co-located on a single server.
@@ -184,8 +185,6 @@ substitute custom config files.
      - Default Path Name
    * - `amp.monitor_dashboard`
      - `deps/amp/roles/monitor-load/templates/5g-monitoring/`
-   * - `amp.roc_models`
-     - `deps/amp/roles/roc-load/templates/roc-5g-models.json`
    * - `core.values_file`
      - `deps/5gc/roles/core/templates/sdcore-5g-values.yaml`
    * - `gnbsim.servers`
@@ -288,9 +287,9 @@ Quick Start Blueprint.
    * - `aether-gnbsim-run`
      - Run gNBsim containers; may rerun multiple times without reinstalling.
    * - `aether-amp-install`
-     - Installs and initializes both ROC and Monitoring workloads.
+     - Installs and initializes the Monitoring workload.
    * - `aether-amp-uninstall`
-     - Uninstalls both ROC and Monitoring workloads.
+     - Uninstalls the Monitoring workload.
 
 Other blueprints define component-specific targets, as listed in the
 following table. (The Aether-wide targets can also be used for all
@@ -301,12 +300,6 @@ other blueprints.)
 .. list-table::
    :widths: 25 50
 
-   * - `amp-roc-install`
-     - Install ROC workload.
-   * - `amp-roc-load`
-     - Load model values into ROC; assumes ROC already deployed.
-   * - `amp-roc-uninstall`
-     - Uninstall ROC workload.
    * - `amp-monitor-install`
      - Install Monitor workload.
    * - `amp-monitor-load`

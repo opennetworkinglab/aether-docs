@@ -15,7 +15,8 @@ are referred to documentation for the respective subsystems:
 
 * To develop SD-RAN, see the :doc:`SD-RAN Guide <sdran:index>`.
 
-* To develop the ROC-based API, see :doc:`ROC Development </developer/roc>`.
+* ROC is being archived; see :doc:`ROC Development </developer/roc>`
+  for historical background on the runtime control API.
 
 * To develop Monitoring Dashboards, see :doc:`Monitoring Development </developer/monitoring>`.
 
@@ -200,18 +201,12 @@ primarily take care of bookkeeping; automating bookkeeping tasks
 
 Finally, keep in mind that in using SD-Core to illustrate how to build
 a customized modify-and-test loop, this section doesn't address some
-of the peculiarities of the other components. As one example, ROC has
-prerequisites that have to be installed before the ROC itself. These
-prereqs are identified in the ROC installation playbook, and include
-``onos-operator``, which in turn depends on ``atomix``.
-
-As another example, the ROC and monitoring services allow you to
-program new features by loading alternative "specifications" into the
-running pods (in addition to installing new container images).  This
-approach is described in the :doc:`ROC Development </developer/roc>`
-and :doc:`Monitoring Development </developer/monitoring>` sections,
-respectively, and implemented by the ``roc-load`` and ``monitor-load``
-roles found in ``deps/amp/roles``.
+of the peculiarities of the other components. For example, the
+monitoring service allows you to program new features by loading
+alternative "specifications" into the running pods (in addition to
+installing new container images). This approach is described in the
+:doc:`Monitoring Development </developer/monitoring>` section, and
+implemented by the ``monitor-load`` role found in ``deps/amp/roles``.
 
 
 

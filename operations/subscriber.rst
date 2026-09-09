@@ -7,6 +7,11 @@
 Subscriber and Device Management
 ================================
 
+.. warning:: This section documents subscriber and device management via
+    the ROC web GUI. ROC is being archived and is no longer installed or
+    supported by OnRamp. This page is retained for historical reference
+    only.
+
 Subscriber management includes workflows associated with provisioning new subscribers, removing
 existing subscribers, and associating subscribers with slices.
 

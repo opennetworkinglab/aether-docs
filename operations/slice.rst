@@ -5,6 +5,10 @@
 Slice Management
 ================
 
+.. warning:: This section documents slice management via the ROC web
+    GUI. ROC is being archived and is no longer installed or supported
+    by OnRamp. This page is retained for historical reference only.
+
 A **Slice** is a unit of network access for a set of UEs with a defined set of
 QOS parameters. The following properties are important to the definition of a slice:
 

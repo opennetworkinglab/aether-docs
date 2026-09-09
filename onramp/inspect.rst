@@ -13,66 +13,23 @@ tool to trace the flow of packets into and out of SD-Core.
 Install AMP
 ~~~~~~~~~~~~~~~
 
-The Aether Management Platform (AMP) is implemented by two Kubernetes
-applications: *Runtime Operational Control (ROC)* and a *Monitoring
-Service*.\ [#]_ AMP can be deployed on the same cluster as SD-Core by
-executing the following Make target:
+The Aether Management Platform (AMP) provides a *Monitoring
+Service* with Dashboards showing different aspects of Aether's
+runtime behavior. AMP can be deployed on the same cluster as SD-Core
+by executing the following Make target:
 
 .. code-block::
 
    $ make aether-amp-install
 
-Once complete, ``kubectl`` will show the ``aether-roc`` and
-``cattle-monitoring-system`` namespaces running in support of these
-two services, respectively, plus new ``atomix`` pods in the
-``kube-system`` namespace.  Atomix is the scalable key-value store
-that keeps the ROC data model persistent.
+Once complete, ``kubectl`` will show the ``cattle-monitoring-system``
+namespace running in support of this service.
 
-.. [#] Note that what the implementation calls ROC, `Chapter 6
-        <https://5g.systemsapproach.org/cloud.html>`__ refers to
-        generically as *Service Orchestration*.
-
-You can access the dashboards for the two subsystems,
-respectively, at
+You can access the Monitoring dashboard at
 
 .. code-block::
 
-   http://<server_ip>:31194
    http://<server_ip>:30950
-
-The programmatic API underlying the Control Dashboard, which was
-introduced in `Section 6.4
-<https://5g.systemsapproach.org/cloud.html#connectivity-api>`__, can
-be accessed at ``http://10.76.28.113:31194/aether-roc-api/`` in our
-example deployment (where Aether runs on host ``10.76.28.113``). Note
-that if you visit that URL from a browser, OpenAPI will show you
-example GET, DELETE, and POST requests. Those examples assume the
-prefix ``http://10.76.28.113:31194/aether-roc-api/`` (not just
-``http://10.76.28.113:31194``), so for example, to GET the resource
-corresponding to ``site-1``, you would need to use the following URL:
-
-.. code-block::
-
-   http://10.76.28.113:31194/aether-roc-api/aether/v2.1.x/the-enterprise/site/site-1
-
-There is much more to say about the ROC and the Aether API, which we
-return to in the :doc:`Runtime Control </onramp/roc>` section. For
-now, we suggest you simply peruse the Control Dashboard by starting
-with the dropdown menu in the upper right corner. For example,
-selecting `Devices` will show the set of UEs registered with Aether,
-similar to the screenshot in :numref:`Figure %s <fig-roc>`. In an
-operational setting, these values would be entered into the ROC
-through either the GUI or the underlying API. For the Quick Start
-scenario we're limiting ourselves to in this section, these values are
-loaded from ``deps/amp/5g-roc/templates/roc-5g-models.json``.
-
-.. _fig-roc:
-.. figure:: figures/ROC-Dashboard.png
-    :width: 700px
-    :align: center
-
-    Screenshot of the ROC dashboard, showing known *Devices*. The
-    dropdown menu on the right lists other available pages.
 
 Turning to the Monitoring Dashboard, you will initially see
 Kubernetes-related performance stats. Select the *5G Dashboard* option
@@ -98,18 +55,8 @@ to tear it down:
    $ make aether-amp-uninstall
 
 Finally, while we have been using a single Make target to install
-(uninstall) AMP as a whole, there are per-component targets for both
-ROC and Monitoring if you are interested in only one or the other. For
-ROC:
-
-.. code-block::
-
-   $ make amp-roc-install
-   $ make amp-roc-load
-   $  ...
-   $ make amp-roc-uninstall
-
-and for Monitoring:
+(uninstall) AMP as a whole, there is also a per-component target if
+you want finer-grained control:
 
 .. code-block::
 
@@ -118,13 +65,11 @@ and for Monitoring:
    $  ...
    $ make amp-monitor-uninstall
 
-In both cases, installing the component is a two-step process: first
-the microservices that implement the component are instantiated on
-Kubernetes and then service-specific data is loaded into the running
-containers. For ROC, that data populates the models that define the
-API. For Monitoring, that data specifies the dashboard panels. In
-general, there are per-component targets for all of the Aether-wide
-(``aether-*``) targets; see the Makefile for details.
+Installing the Monitoring component is a two-step process: first
+the microservices that implement it are instantiated on Kubernetes,
+and then dashboard panel data is loaded into the running
+containers. In general, there are per-component targets for all of
+the Aether-wide (``aether-*``) targets; see the Makefile for details.
 
 View Logs
 ~~~~~~~~~~~~~~~~

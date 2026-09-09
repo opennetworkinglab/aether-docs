@@ -5,6 +5,10 @@
 Built-In Monitoring
 ====================
 
+.. warning:: This section documents monitoring built into the ROC web
+    GUI. ROC is being archived and is no longer installed or supported
+    by OnRamp. This page is retained for historical reference only.
+
 This section documents features built-in to the GUI for monitoring.
 
 .. note:: Although monitoring icons remain visible in the GUI, the

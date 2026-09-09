@@ -5,6 +5,10 @@
 ROC Development
 ===============
 
+.. warning:: ROC is being archived and is no longer part of the OnRamp
+    install/uninstall workflow. This page is retained for historical
+    reference only and no longer reflects a supported configuration.
+
 ROC implements Aether's runtime control API. It is implemented on top
 of `µONOS <https://github.com/onosproject>`_, a microservice-based
 redesign of the ONOS SDN Controller. Of particular note, ROC generates
