@@ -512,13 +512,13 @@ block defines a set of parameters for ``pdusessest`` (also known as
     enable: true
     gnbName: gnb1
     execInParallel: false
-    startImsi: 001010100007487
+    startImsi: "001010100007487"
     ueCount: 5
     defaultAs: "{{ ping_target }}"
     perUserTimeout: 100
     plmnId:
-       mcc: 001
-       mnc: 01
+       mcc: "001"
+       mnc: "01"
     dataPktCount: 5
     opc: "981d464c7c52eb6e5036234984ad0bcf"
     key: "5122250214c33e723a5dd523fc145fc0"

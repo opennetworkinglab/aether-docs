@@ -48,13 +48,13 @@ include the new Device IMSIs:
       subscribers:
       - ueId-start: 123456789123458
          ueId-end: 123456789123458
-         plmnId: 00101
+         plmnId: "00101"
          opc: 8e27b6af0e692e750f32667a3b14605d
          key: 8baf473f2f8fd09487cccbd7097c6862
          sequenceNumber: 16f3b3f70fc2
       - ueId-start: 123456789123460
          ueId-end: 123456789123465
-         plmnId: 00101
+         plmnId: "00101"
          opc: 8e27b6af0e692e750f32667a3b14605d
          key: 8baf473f2f8fd09487cccbd7097c6862
          sequenceNumber: 16f3b3f70fc2
