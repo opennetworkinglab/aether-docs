@@ -214,18 +214,18 @@ sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
 .. code-block::
 
     core:
-        standalone: true				# set to false to manage device groups/slices manually via the SD-Core webui
+        standalone: true  # set to false to manage device groups/slices manually via the SD-Core webui
         data_iface: ens18
         values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
-        ran_subnet: "172.20.0.0/16"		# set to empty string to get subnet from 'data_iface'
+        ran_subnet: "172.20.0.0/16"  # set to empty string to get subnet from 'data_iface'
         helm:
-            local_charts: false			# set chart_ref to local path name if true
+            local_charts: false  # set chart_ref to local path name if true
             chart_ref: oci://ghcr.io/omec-project/sd-core
             chart_version: 3.3.0
         upf:
-            access_subnet: "192.168.252.1/24"	# access subnet & gateway
-            core_subnet: "192.168.250.1/24"	# core subnet & gateway
-            mode: af_packet				# Options: af_packet or dpdk
+            access_subnet: "192.168.252.1/24"  # access subnet & gateway
+            core_subnet: "192.168.250.1/24"    # core subnet & gateway
+            mode: af_packet                    # Options: af_packet or dpdk
             default_upf:
                 ip:
                     access: "192.168.252.3"

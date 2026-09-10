@@ -176,11 +176,11 @@ be part of the device-group:
 .. code-block::
 
    device-groups:
-   - name:  "5g-user-group1"
-      imsis:
-          - "315010999912301"
-          - "315010999912302"
-          - "315010999912303"
+   - name: "5g-user-group1"
+     imsis:
+       - "315010999912301"
+       - "315010999912302"
+       - "315010999912303"
 
 The second block, ``network-slices``, sets various parameters
 associated with the *Slices* that connect device groups to
