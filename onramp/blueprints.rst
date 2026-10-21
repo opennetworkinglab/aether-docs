@@ -751,8 +751,8 @@ section:
    srsran:
      docker:
        container:
-         gnb_image: aetherproject/srsran-gnb:rel-0.4.0
-         ue_image: aetherproject/srsran-ue:rel-0.4.0
+         gnb_image: aetherproject/srsran-gnb:rel-1.0.0
+         ue_image: aetherproject/srsran-ue:rel-1.0.0
        network:
          name: host
          bridge:
@@ -867,8 +867,8 @@ section:
    ocudu:
      docker:
        container:
-         gnb_image: aetherproject/ocudu:rel-0.8.2
-         ue_image: aetherproject/srsran-ue:rel-0.8.2
+         gnb_image: aetherproject/ocudu:rel-1.0.0
+         ue_image: aetherproject/srsran-ue:rel-1.0.0
        network:
          name: host
      simulation: true
@@ -1070,7 +1070,7 @@ section:
 
    n3iwf:
      docker:
-       image: ghcr.io/omec-project/5gc-n3iwf:rel-1.1.1
+       image: ghcr.io/omec-project/5gc-n3iwf:rel-1.3.2
        network:
          name: host
      servers:

@@ -9,7 +9,7 @@ requirements:
 
 * Haswell CPU (or newer), with at least 4 CPU cores (ideally 8) and
   16GB RAM (ideally 32GB).
-* Clean install of Ubuntu 22.04 or 24.04, with 5.15 (or later) kernel.
+* Clean install of Ubuntu 22.04, 24.04 or 26.04, with 5.15 (or later) kernel.
 
 For example, something like an Intel NUC is likely more than enough to get
 started.
