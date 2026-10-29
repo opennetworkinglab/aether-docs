@@ -114,7 +114,9 @@ of ``vars/main.yml``:
       access_subnet: "192.168.252.1/24"  # access subnet & gateway
       core_subnet: "192.168.250.1/24"    # core subnet & gateway
       helm:
-        chart_ref: aether/bess-upf
+        local_charts: false
+        chart_ref: oci://ghcr.io/omec-project/bess-upf
+        chart_version: 5.1.0
       values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
       default_upf:
         ip:
