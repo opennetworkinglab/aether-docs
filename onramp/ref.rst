@@ -153,6 +153,24 @@ the list is not comprehensive.
      - `false`
      - Loads Helm Charts from public repo; set to `true` to utilize
        local charts, with `*.helm.charts_ref` set to local path name.
+   * - `core.mongodb.members`
+     - chart default
+     - Number of MongoDB replica set members; set to `1` to shrink the footprint.
+   * - `core.mongodb.arbiters`
+     - chart default
+     - Number of MongoDB arbiters; set to `0` for a single-member deployment.
+   * - `core.mongodb.resources`
+     - chart default
+     - CPU/memory `requests` and `limits` for the `mongod` and `agent` containers.
+   * - `core.mongodb.operator.helm.chart_version`
+     - `""` (latest)
+     - Version of the MongoDB Controllers for Kubernetes operator chart.
+   * - `core.mongodb.operator.lpp.version`
+     - `v0.0.24`
+     - local-path-provisioner version installed when the cluster has no default StorageClass.
+   * - `core.kafka.operator.helm.chart_version`
+     - `0.49.1`
+     - Version of the Strimzi Kafka operator chart.
    * - `proxy.enabled`
      - `false`
      - Enable HTTP proxy support for all deployment steps; set to `true`
@@ -275,9 +293,9 @@ Quick Start Blueprint.
    * - `aether-k8s-uninstall`
      - Uninstall RKE2 Kubernetes and Helm.
    * - `aether-5gc-install`
-     - Install 5G Core workload; includes bridges for networking.
+     - Install 5G Core workload; includes bridges for networking, the MongoDB and Kafka operators, and (if needed) a default StorageClass.
    * - `aether-5gc-uninstall`
-     - Uninstall 5G Core workload; includes bridges for networking.
+     - Uninstall 5G Core workload; includes bridges for networking, the MongoDB and Kafka operators, and Strimzi CRDs.
    * - `aether-5gc-reset`
      - Delete and reinstall 5G Core workload; leaves network bridges untouched.
    * - `aether-gnbsim-install`

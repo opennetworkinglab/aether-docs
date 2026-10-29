@@ -70,7 +70,10 @@ that should not refresh upstream package indexes, set
 install targets. This tells OnRamp to skip the gated ``apt`` cache
 refreshes that would otherwise fail on disconnected hosts. In that
 mode, you are responsible for ensuring the required packages are
-already present or available from your local mirror.
+already present or available from your local mirror. Note that the
+MongoDB and Strimzi operators are not installed in airgapped mode; the
+SD-Core install will fail unless the operators and their CRDs are
+already present in the cluster.
 
 Once installed, displaying the Ansible version number should result in
 output similar to the following on Ubuntu 24.04. The exact patch
@@ -363,8 +366,20 @@ that, type:
 
    $ make aether-5gc-install
 
+Besides SD-Core itself, this target installs the supporting software
+that SD-Core's MongoDB and Kafka databases depend on. MongoDB and Kafka
+are run by their Kubernetes operators (the MongoDB Controllers for
+Kubernetes operator and the Strimzi Kafka operator), which OnRamp
+installs into the ``aether-5gc`` namespace via ``helm`` before it
+installs the SD-Core chart. Because each MongoDB member needs a
+PersistentVolume, OnRamp also installs Rancher's local-path-provisioner
+and makes it the default StorageClass, unless the cluster already has a
+default StorageClass.
+
 ``kubectl`` will now show the ``aether-5gc`` namespace running (in addition
-to ``kube-system``), with output similar to the following:
+to ``kube-system``), with output similar to the following. The
+operator, MongoDB, and Kafka pods are named differently than the
+Bitnami-based pods shown here, so expect those entries to differ.
 
 .. code-block::
 
@@ -553,6 +568,11 @@ simply execute the following commands:
    $ make aether-gnbsim-uninstall
    $ make aether-5gc-uninstall
    $ make aether-k8s-uninstall
+
+The ``aether-5gc-uninstall`` target also removes the MongoDB and
+Strimzi operators, the Strimzi CRDs, and the local-path-provisioner
+(the latter only if no other PersistentVolumeClaim in the cluster still
+uses the ``local-path`` StorageClass).
 
 Note that while we stepped through the system one component at a time,
 OnRamp includes compound Make targets. For example, you can uninstall
