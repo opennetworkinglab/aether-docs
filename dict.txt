@@ -3,6 +3,7 @@
 Alertmanager
 Bavier
 Benetel
+Bitnami
 CLI
 Davie
 Downlink
@@ -34,6 +35,7 @@ QoS
 RIC
 SDN
 Sercomm
+Strimzi
 Sunay
 Toolset
 Traefik
@@ -114,11 +116,9 @@ n3iwf
 nRT
 namespace
 namespaces
-natively
 nd
 networkd
 ng
-nginx
 nrf
 nssf
 omec
@@ -133,8 +133,9 @@ pcf
 pci
 pre
 preconfigured
-prereqs
+preflight
 programmatically
+provisioner
 rc
 realtime
 reenabling
@@ -152,8 +153,6 @@ smf
 srsRAN
 starbucks
 subdirectories
-submodule
-submodules
 subnet
 subnets
 sudo
