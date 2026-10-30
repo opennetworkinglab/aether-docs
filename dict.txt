@@ -3,7 +3,6 @@
 Alertmanager
 Bavier
 Benetel
-Bitnami
 CLI
 Davie
 Downlink
