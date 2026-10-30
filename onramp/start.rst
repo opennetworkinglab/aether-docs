@@ -377,9 +377,11 @@ and makes it the default StorageClass, unless the cluster already has a
 default StorageClass.
 
 ``kubectl`` will now show the ``aether-5gc`` namespace running (in addition
-to ``kube-system``), with output similar to the following. The
-operator, MongoDB, and Kafka pods are named differently than the
-Bitnami-based pods shown here, so expect those entries to differ.
+to ``kube-system``), with output similar to the following. In addition
+to the SD-Core pods shown here, expect pods for the MongoDB and Strimzi
+operators and for the MongoDB and Kafka instances they manage. The
+output below omits them, and their exact names depend on the operator
+versions installed.
 
 .. code-block::
 
@@ -387,15 +389,10 @@ Bitnami-based pods shown here, so expect those entries to differ.
    NAME                         READY   STATUS             RESTARTS      AGE
    amf-5887bbf6c5-pc9g2         1/1     Running            0             6m13s
    ausf-6dbb7655c7-42z7m        1/1     Running            0             6m13s
-   kafka-0                      1/1     Running            0             6m13s
    metricfunc-b9f8c667b-r2x9g   1/1     Running            0             6m13s
-   mongodb-0                    1/1     Running            0             6m13s
-   mongodb-1                    1/1     Running            0             4m12s
-   mongodb-arbiter-0            1/1     Running            0             6m13s
    nrf-54bf88c78c-kcm7t         1/1     Running            0             6m13s
    nssf-5b85b8978d-d29jm        1/1     Running            0             6m13s
    pcf-758d7cfb48-dwz9x         1/1     Running            0             6m13s
-   sd-core-zookeeper-0          1/1     Running            0             6m13s
    simapp-6cccd6f787-jnxc7      1/1     Running            0             6m13s
    smf-7f89c6d849-wzqvx         1/1     Running            0             6m13s
    udm-768b9987b4-9qz4p         1/1     Running            0             6m13s

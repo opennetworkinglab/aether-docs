@@ -221,7 +221,7 @@ sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
         helm:
             local_charts: false  # set chart_ref to local path name if true
             chart_ref: oci://ghcr.io/omec-project/sd-core
-            chart_version: 5.1.0
+            chart_version: 6.0.0
         upf:
             access_subnet: "192.168.252.1/24"  # access subnet & gateway
             core_subnet: "192.168.250.1/24"    # core subnet & gateway
