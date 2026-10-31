@@ -325,29 +325,29 @@ the following:
 .. code-block::
 
    $ kubectl get pods --all-namespaces
-   NAMESPACE     NAME                                                    READY   STATUS      RESTARTS   AGE
-   kube-system   cloud-controller-manager-node1                          1/1     Running     0          74m
-   kube-system   etcd-node1                                              1/1     Running     0          75m
-   kube-system   helm-install-rke2-canal-kg4x2                           0/1     Completed   0          74m
-   kube-system   helm-install-rke2-coredns-rcdwb                         0/1     Completed   0          74m
-   kube-system   helm-install-rke2-metrics-server-n2cxf                  0/1     Completed   0          74m
-   kube-system   helm-install-rke2-multus-zfdhg                          0/1     Completed   0          74m
-   kube-system   helm-install-rke2-runtimeclasses-nbcnc                  0/1     Completed   0          74m
-   kube-system   helm-install-rke2-snapshot-controller-crd-jts65         0/1     Completed   0          74m
-   kube-system   helm-install-rke2-snapshot-controller-mcfm8             0/1     Completed   0          74m
-   kube-system   helm-install-rke2-traefik-crd-vlbkm                     0/1     Completed   0          74m
-   kube-system   helm-install-rke2-traefik-hqzkl                         0/1     Completed   0          74m
-   kube-system   kube-apiserver-node1                                    1/1     Running     0          75m
-   kube-system   kube-controller-manager-node1                           1/1     Running     0          75m
-   kube-system   kube-proxy-node1                                        1/1     Running     0          74m
-   kube-system   kube-scheduler-node1                                    1/1     Running     0          75m
-   kube-system   rke2-canal-rdk8p                                        2/2     Running     0          74m
-   kube-system   rke2-coredns-rke2-coredns-6b85489767-5294x              1/1     Running     0          74m
-   kube-system   rke2-coredns-rke2-coredns-autoscaler-8fcd75dfd-7p44m    1/1     Running     0          74m
-   kube-system   rke2-metrics-server-9d9d8b8f-jtjnd                      1/1     Running     0          72m
-   kube-system   rke2-multus-cbk7n                                       1/1     Running     0          72m
-   kube-system   rke2-snapshot-controller-5d85999559-cb682               1/1     Running     0          72m
-   kube-system   rke2-traefik-jpkrj                                      1/1     Running     0          72m
+   NAMESPACE            NAME                                                   READY   STATUS      RESTARTS       AGE
+   kube-system          cloud-controller-manager-node1                         1/1     Running     0              4d6h
+   kube-system          etcd-node1                                             1/1     Running     0              4d6h
+   kube-system          helm-install-rke2-canal-tswmm                          0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-coredns-qksdc                        0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-metrics-server-vlvth                 0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-multus-htszr                         0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-runtimeclasses-mqg2c                 0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-snapshot-controller-crd-9xftw        0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-snapshot-controller-dxn6s            0/1     Completed   1 (4d6h ago)   4d6h
+   kube-system          helm-install-rke2-traefik-crd-4nljp                    0/1     Completed   0              4d6h
+   kube-system          helm-install-rke2-traefik-t6q65                        0/1     Completed   2 (4d6h ago)   4d6h
+   kube-system          kube-apiserver-node1                                   1/1     Running     0              4d6h
+   kube-system          kube-controller-manager-node1                          1/1     Running     0              4d6h
+   kube-system          kube-proxy-node1                                       1/1     Running     0              4d6h
+   kube-system          kube-scheduler-node1                                   1/1     Running     0              4d6h
+   kube-system          rke2-canal-nkcv7                                       2/2     Running     0              4d6h
+   kube-system          rke2-coredns-rke2-coredns-6b85489767-v8jfs             1/1     Running     0              4d6h
+   kube-system          rke2-coredns-rke2-coredns-autoscaler-8fcd75dfd-tzltc   1/1     Running     0              4d6h
+   kube-system          rke2-metrics-server-9d9d8b8f-vg7lw                     1/1     Running     0              4d6h
+   kube-system          rke2-multus-x6xk4                                      1/1     Running     0              4d6h
+   kube-system          rke2-snapshot-controller-5d85999559-kc4ld              1/1     Running     0              4d6h
+   kube-system          rke2-traefik-4td4d                                     1/1     Running     0              4d6h
 
 If you are interested in seeing the details about how Kubernetes is
 customized for Aether, look at
@@ -386,19 +386,27 @@ versions installed.
 .. code-block::
 
    $ kubectl get pods -n aether-5gc
-   NAME                         READY   STATUS             RESTARTS      AGE
-   amf-5887bbf6c5-pc9g2         1/1     Running            0             6m13s
-   ausf-6dbb7655c7-42z7m        1/1     Running            0             6m13s
-   metricfunc-b9f8c667b-r2x9g   1/1     Running            0             6m13s
-   nrf-54bf88c78c-kcm7t         1/1     Running            0             6m13s
-   nssf-5b85b8978d-d29jm        1/1     Running            0             6m13s
-   pcf-758d7cfb48-dwz9x         1/1     Running            0             6m13s
-   simapp-6cccd6f787-jnxc7      1/1     Running            0             6m13s
-   smf-7f89c6d849-wzqvx         1/1     Running            0             6m13s
-   udm-768b9987b4-9qz4p         1/1     Running            0             6m13s
-   udr-8566897d45-kv6zd         1/1     Running            0             6m13s
-   upf-0                        5/5     Running            0             6m13s
-   webui-5894ffd49d-gg2jh       1/1     Running            0             6m13s
+   NAME                                           READY   STATUS    RESTARTS   AGE
+   af-794f6bc999-8z9td                            1/1     Running   0          7h43m
+   amf-5d84ccb587-x8b2r                           1/1     Running   0          7h43m
+   ausf-57c665bd98-r9t9x                          1/1     Running   0          7h43m
+   kafka-dual-0                                   1/1     Running   0          7h43m
+   kafka-entity-operator-76764c7dfc-mptj8         2/2     Running   0          7h43m
+   metricfunc-6bdb886f6d-jmn8s                    1/1     Running   0          7h43m
+   mongodb-0                                      2/2     Running   0          7h43m
+   mongodb-1                                      2/2     Running   0          7h43m
+   mongodb-arb-0                                  2/2     Running   0          7h43m
+   mongodb-kubernetes-operator-7989c65684-bvlxw   1/1     Running   0          7h44m
+   nrf-5b76f8cbdc-fb8ws                           1/1     Running   0          7h43m
+   nssf-749598c758-lwkzm                          1/1     Running   0          7h43m
+   pcf-6c77f966d5-j86p9                           1/1     Running   0          7h43m
+   simapp-6549f79d79-rh6dq                        1/1     Running   0          7h43m
+   smf-5f7bcc456b-95567                           1/1     Running   0          7h43m
+   strimzi-cluster-operator-7c667c9ccb-7xtcn      1/1     Running   0          7h44m
+   udm-5bc879dc6c-4dqhf                           1/1     Running   0          7h43m
+   udr-59f87695b4-sbs4s                           1/1     Running   0          7h43m
+   upf-0                                          5/5     Running   0          7h43m
+   webui-76c549747b-6xv2r                         1/1     Running   0          7h43m
 
 If you see problematic pods that are not getting into the ``Running``
 state, a reset usually corrects the problem. Type:
