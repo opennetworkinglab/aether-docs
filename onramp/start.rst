@@ -194,15 +194,17 @@ adjust the location and filename of your private key)
    node1  ansible_host=10.76.28.113 ansible_user=aether ansible_ssh_private_key_file=~/.ssh/id_rsa
 
 
-The second set of parameters is in ``vars/main.yml``, where the **two** lines
-currently reading
+The second set of parameters is in ``vars/main.yml``, where the line
+(in the ``gnbsim`` section) currently reading
 
 .. code-block::
 
    data_iface: ens18
 
-need to be edited to replace ``ens18`` with the device interface for
-your server, and the line specifying the IP address of the Core's AMF
+needs to be edited to replace ``ens18`` with the device interface for
+your server. (The Core finds its own interface from the server's
+default route, so there is no corresponding line in the ``core``
+section.) The line specifying the IP address of the Core's AMF
 needs to be edited to reflect your server's IP address:
 
 .. code-block::
