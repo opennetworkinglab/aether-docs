@@ -82,28 +82,34 @@ the list is not comprehensive.
    * - Variable
      - Default
      - Description
-   * - `core.ran_subnet`
+   * - `core.networks.access.ran_subnet`
      - `172.20.0.0/16`
-     - Overlay subnet connecting Core to RAN when gNBs run in a container; set to empty string ("") when gNBs are directly connected via `core.data_iface`.
+     - Overlay subnet connecting Core to RAN when gNBs run in a container; set to empty string ("") to derive it from the access interface when gNBs are directly connected to the server's physical network.
+   * - `core.networks.<name>`
+     - `access`, `core` (optional)
+     - Networks the UPF attaches to; fields are `iface`, `vlan`, `subnet`, `gateway`, `attach`, `resource_name` and `ran_subnet`. All have defaults, so omitting this key gives the single-interface deployment on the default-route interface. See :doc:`Network Details </onramp/network>`.
+   * - `core.networks.<name>.resource_name`
+     - `intel.com/intel_sriov_vfio_access` (`access`), `intel.com/intel_sriov_vfio_core` (`core`)
+     - SR-IOV resource pool name in `dpdk` mode.
+   * - `core.upf.instances.<name>`
+     - `default` (optional)
+     - UPFs, each with `access` and `core` (`{network, ip}`), `ue_ip_pool` and `mode`. `default` is the built-in UPF; every other instance is deployed by `5gc-upf-install`.
    * - `core.standalone`
      - `true`
      - Core to run standalone with simapp-managed subscribers; set to
        `false` to manage device groups/slices via SD-Core webui.
-   * - `core.data_iface`
-     - `ens18`
-     - Network interface used by UPF; same as `gnbsim.data_iface` when co-located on a single server.
    * - `core.amf.ip`
      - `"10.76.28.113"`
-     - IP address of AMF; edit to match IP address assigned to `core.data_iface`.
+     - IP address of AMF; edit to match IP address assigned to the server's network interface.
+   * - `core.amf.external_traffic_policy`
+     - unset
+     - Optional `externalTrafficPolicy` of the AMF N2 Service; `Cluster` or `Local`.
    * - `core.upf.mode`
      - `af_packet`
-     - UPF datapath mode; set to `dpdk` to enable the integrated SR-IOV/DPDK rendering in the core and additional-UPF templates.
-   * - `core.upf.multihop_gnb`
-     - `false`
-     - Override default N3 interface; set to `true` when external gNB is multiple hops away.
-   * - `gnbsim.data_iface`
+     - UPF datapath mode for instances that do not set their own; set to `dpdk` to enable the integrated SR-IOV/DPDK rendering in the core and additional-UPF templates.
+   * - `gnbsim.router.data_iface`
      - `ens18`
-     - Network interface used by gNBsim; same as `core.data_iface` when co-located on a single server.
+     - Network interface used by gNBsim; set to the server's interface (the Core derives its own interface from the default route).
    * - `oai.simulation`
      - `true`
      - Run UE in simulation mode; set to `false` to connect real UEs.
@@ -424,7 +430,7 @@ Network Subnets
 
 OnRamp configures a set of subnets in support of a given Aether
 deployment. The following subnets are defined in ``vars/main.yml``.
-With the exception of ``core.ran_subnet``, these variables typically
+With the exception of ``core.networks.access.ran_subnet``, these variables typically
 do not need to be modified for an initial deployment of a blueprint.
 
 .. list-table::
@@ -435,25 +441,30 @@ do not need to be modified for an initial deployment of a blueprint.
      - Ansible Variable
      - Description
    * - `172.20.0.0/16`
-     - ``aether.ran_subnet``
+     - ``core.networks.access.ran_subnet``
      - Assigned to container-based gNBs connecting to the Core via an
        overlay subnet. Other gNB implementations connect to the Core
-       over the subnet assigned to the server's physical interface (as
-       defined by ``core.data_iface``).
-   * - `192.168.250.1/24`
-     - ``core.upf.core_subnet``
-     - Gateway/interface CIDR assigned to the `core` bridge that connects UPF(s) to the Internet.
-   * - `192.168.252.1/24`
-     - ``core.upf.access_subnet``
-     - Gateway/interface CIDR assigned to the `access` bridge that connects UPF(s) to the RAN.
+       over the subnet assigned to the server's physical interface
+       (the interface carrying the default route, unless overridden by
+       ``core.networks.access.iface``).
+   * - `192.168.250.0/24`
+     - ``core.networks.core.subnet``
+     - Subnet of the `core` network that connects UPF(s) to the
+       Internet. By default the server is the gateway, at the first
+       address (`192.168.250.1`).
+   * - `192.168.252.0/24`
+     - ``core.networks.access.subnet``
+     - Subnet of the `access` network that connects UPF(s) to the RAN.
+       By default the server is the gateway, at the first address
+       (`192.168.252.1`).
    * - `192.168.100.0/24`
-     - ``core.default_upf.ue_ip_pool``
+     - ``core.upf.instances.default.ue_ip_pool``
      - Assigned (by the Core) to UEs connecting to Aether. When
-       multiple UPFs are deployed—in addition to
-       ``core.default_upf``\ —each is assigned its own ``ue_ip_pool``
-       subnet.
+       multiple UPFs are deployed—in addition to the ``default``
+       instance—each is assigned its own ``ue_ip_pool`` subnet.
    * - `10.76.28.0/24`
      - N/A
      - Used throughout OnRamp documentation as an exemplar for the
        local subnet on which Aether severs and radios are deployed.
-       Corresponds to the network interface defined by variable ``core.data_iface``.
+       Corresponds to the server's network interface (the one carrying
+       the default route).

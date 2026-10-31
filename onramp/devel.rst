@@ -41,7 +41,7 @@ block of the ``core`` section of ``vars/main.yml`` to replace:
   helm:
     local_charts: false
     chart_ref: oci://ghcr.io/omec-project/sd-core
-    chart_version: 6.0.0
+    chart_version: 6.1.0
 
 with
 
@@ -50,10 +50,10 @@ with
   helm:
     local_charts: true
     chart_ref: "/home/ubuntu/aether/sdcore-helm-charts/sdcore-helm-charts"
-    chart_version: 6.0.0
+    chart_version: 6.1.0
 
 Note that variable ``core.helm.local_charts`` is a boolean, and in
-this example, the configured chart version stays ``6.0.0``. When
+this example, the configured chart version stays ``6.1.0``. When
 ``local_charts`` is set to ``true``, ``chart_version`` is ignored by
 the playbook and the local chart contents are used directly.
 

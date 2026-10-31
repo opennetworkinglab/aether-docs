@@ -62,33 +62,32 @@ Modify Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~~
 
 Modify the ``core`` section of ``vars/main.yml`` to match the
-following, substituting your local details for ``ens18`` and
-``10.76.28.113``. Of particular note, setting ``ran_subnet`` to the
-empty string indicates that the gNB is connected to the same physical
-L2 network as your Aether cluster, and the new ``values_file`` is
-tailored for a physical RAN rather than the emulated RAN we've been
-using.
+following, substituting your server's IP address for
+``10.76.28.113``. Of particular note, setting
+``networks.access.ran_subnet`` to the empty string indicates that the
+gNB is connected to the same physical L2 network as your Aether
+cluster, and the new ``values_file`` is tailored for a physical RAN
+rather than the emulated RAN we've been using. The Core finds its
+network interface from the server's default route, so there is no
+interface name to substitute in the ``core`` section.
 
 .. code-block::
 
     core:
       standalone: true                # set to false to manage device groups/slices manually via the SD-Core webui
-      data_iface: ens18
       values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
-      ran_subnet: ""                  # set to empty string to get subnet from 'data_iface'
+      networks:
+         access:
+            ran_subnet: ""            # set to empty string to get subnet from the access interface
       helm:
          local_charts: false         # set chart_ref to local path name if true
          chart_ref: oci://ghcr.io/omec-project/sd-core
-         chart_version: 6.0.0
+         chart_version: 6.1.0
       upf:
-         access_subnet: "192.168.252.1/24"  # access subnet & gateway
-         core_subnet: "192.168.250.1/24"    # core subnet & gateway
          mode: af_packet                      # Options: af_packet or dpdk
-         default_upf:
-            ip:
-               access: "192.168.252.3"
-               core:   "192.168.250.3"
-            ue_ip_pool: "192.168.100.0/24"
+         instances:
+            default:
+               ue_ip_pool: "192.168.100.0/24"
       amf:
          ip: "10.76.28.113"
 

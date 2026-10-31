@@ -111,40 +111,41 @@ of ``vars/main.yml``:
 .. code-block::
 
    upf:
-      access_subnet: "192.168.252.1/24"  # access subnet & gateway
-      core_subnet: "192.168.250.1/24"    # core subnet & gateway
       helm:
         local_charts: false
         chart_ref: oci://ghcr.io/omec-project/bess-upf
-        chart_version: 6.0.0
+        chart_version: 6.1.0
       values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
-      default_upf:
-        ip:
-          access: "192.168.252.3"
-          core:   "192.168.250.3"
-        ue_ip_pool: "192.168.100.0/24"
-      additional_upfs:
+      instances:
+        default:
+          ue_ip_pool: "192.168.100.0/24"
         "1":
-          ip:
-            access: "192.168.252.6"
-            core:   "192.168.250.6"
+          access: { ip: "192.168.252.6" }
+          core:   { ip: "192.168.250.6" }
           ue_ip_pool: "172.248.0.0/16"
-        # "2":
-        #   ip:
-        #     access: "192.168.252.7"
-        #     core:   "192.168.250.7"
-        #   ue_ip_pool: "172.247.0.0/16"
 
-As shown above, one additional UPF is enabled (beyond ``upf-0`` that
-already came up as part of SD-Core), with the spec for yet another UPF
-commented out.  In this example configuration, each UPF is assigned a
-subnet on the ``access`` and ``core`` bridges, along with the IP
-address pool for UEs that the UPF serves. To launch this second UPF,
+Each entry in ``instances`` is a UPF. The ``default`` instance is the
+built-in UPF that comes up as part of SD-Core, and every other
+instance (``"1"`` above) is deployed by ``5gc-upf-install`` as its own
+release, in namespace ``aether-upf-<name>``. In this example
+configuration, each UPF is assigned an address on the ``access`` and
+``core`` networks (which default to the same subnets used by the
+``default`` UPF), along with the IP address pool for UEs that the UPF
+serves. Additional instances can be added by following the same
+pattern, each with its own addresses and ``ue_ip_pool``; a UPF can
+also be attached to different networks, as described in
+:doc:`Network Details </onramp/network>`. To launch this second UPF,
 type:
 
 .. code-block::
 
    $ make 5gc-upf-install
+
+(Alternatively, ``make aether-add-upfs`` first runs the router step,
+which builds any network the new instance needs, and then installs the
+UPF. Each additional UPF also gets a systemd unit,
+``aether-upf-<name>-routes.service``, carrying its UE pool route and
+NAT.)
 
 At this point the new UPF(s) will be running in their own namespaces
 (you can verify this using ``kubectl get pods --all-namespaces``), but
@@ -472,9 +473,9 @@ Returning to the OnRamp blueprint, it includes the following:
   core steps needed for the DPDK blueprint.
 
 * When ``core.upf.mode`` is set to ``dpdk``, the 5GC core and
-  additional UPF install roles validate that the selected
-  ``core.data_iface`` has at least two VFs configured before deploying
-  the UPF workload.
+  additional UPF install roles validate that the interface the UPF's
+  ``access`` and ``core`` networks sit on has at least two VFs bound to
+  the ``vfio-pci`` driver before deploying the UPF workload.
 
 * Integration tests require SR-IOV capable servers, and so have not
   been automated as part of the integration test suite.
@@ -492,12 +493,13 @@ section:
 .. code-block::
 
     upf:
-      access_subnet: "192.168.252.1/24"  # access subnet & gateway
-      core_subnet: "192.168.250.1/24"    # core subnet & gateway
       mode: dpdk                         # Options: af_packet or dpdk
       # If mode set to 'dpdk':
-      #    - make sure at least two VF devices are created out of 'data_iface'
-      #      and these devices are attached to vfio-pci driver.
+      #    - make sure at least two VF devices are created out of the interface
+      #      the access and core networks sit on, bound to the vfio-pci driver.
+      #    - the SR-IOV pools default to intel.com/intel_sriov_vfio_access and
+      #      intel.com/intel_sriov_vfio_core; override them with
+      #      core.networks.access.resource_name / core.networks.core.resource_name.
 
 Note the VF device requirement in the ``upf`` block comments. The
 ``core`` block continues to point at the standard SD-Core values file,
@@ -518,8 +520,18 @@ Make targets:
 
 The ``5gc-install`` target runs the router step before deploying the
 core. When ``core.upf.mode`` is set to ``dpdk``, OnRamp renders the UPF
-for SR-IOV/DPDK and checks that ``core.data_iface`` has at least two
-configured VFs before deploying the workload.
+for SR-IOV/DPDK and checks that the interface the UPF's networks sit
+on has at least two VFs bound to ``vfio-pci`` before deploying the
+workload.
+
+Two details of the SR-IOV resource pools are worth knowing. If the
+``access`` and ``core`` networks' ``resource_name`` values are
+different (the default), the chart pins the access and core sides to
+``vf 0`` and ``vf 1`` specifically, so those two VFs must be bound to
+``vfio-pci`` and have non-zero MAC addresses. If the two values are the
+same, both sides share one pool exposing every ``vfio-pci``-bound VF on
+the interface, so *all* of those VFs must have non-zero MAC addresses.
+In ``dpdk`` mode both sides of a UPF must be on the same interface.
 
 
 OAI 5G RAN
@@ -638,8 +650,8 @@ parameters`` section need to be modified to work with the Aether Core:
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
 other blueprints, with two variable settings of note. First,
-``ran_subnet`` is set to ``"172.20.0.0/16"`` and not the empty string
-(``""``). As a general rule, ``core.ran_subnet`` is set to the empty
+``networks.access.ran_subnet`` is set to ``"172.20.0.0/16"`` and not the empty string
+(``""``). As a general rule, ``core.networks.access.ran_subnet`` is set to the empty
 string whenever a physical gNB is on the same L2 network as the Core,
 but in the case of an OAI-based gNB, the RAN stack runs in a
 Macvlan-connected Docker container, and so the variable is set to
@@ -790,8 +802,8 @@ as many servers under ``srsran.servers`` section.
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
 other blueprints, with two variable settings of note. First,
-set ``ran_subnet`` to proper ran subnet as per your setup.
-As a general rule, ``core.ran_subnet`` is set to the empty(``""``)
+set ``networks.access.ran_subnet`` to proper ran subnet as per your setup.
+As a general rule, ``core.networks.access.ran_subnet`` is set to the empty(``""``)
 string whenever a physical gNB is on the same L2 network as the Core.
 
 Second, variable ``values_file`` is set to
@@ -935,8 +947,8 @@ many servers under ``ocudu.servers`` section.
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
 other blueprints, with two variable settings of note. First,
-set ``ran_subnet`` to the correct RAN subnet for your deployment.
-As a general rule, ``core.ran_subnet`` is set to the empty (``""``)
+set ``networks.access.ran_subnet`` to the correct RAN subnet for your deployment.
+As a general rule, ``core.networks.access.ran_subnet`` is set to the empty (``""``)
 string whenever a physical gNB is on the same L2 network as the Core.
 
 Second, variable ``values_file`` is set to
@@ -965,9 +977,9 @@ To deploy the OCUDU blueprint in simulation mode, run the following:
 When ``ocudu.simulation`` is set to ``true``, target
 ``ocudu-uesim-start`` starts the simulated srsRAN UE, installs its
 rendered ``ue_conf`` file, configures a default route inside the UE
-network namespace based on ``core.upf.default_upf.ue_ip_pool``, and
-then runs a ping test toward the Core subnet derived from
-``core.upf.core_subnet``. In other words, this step does more than
+network namespace based on
+``core.upf.instances.default.ue_ip_pool``, and then runs a ping test
+toward the Core subnet derived from ``core.networks.core.subnet``. In other words, this step does more than
 launch the UE; it also performs a basic end-to-end connectivity check.
 
 To deploy the OCUDU blueprint with a USRP and physical UE, set
@@ -1102,7 +1114,7 @@ configuration file that includes parameters such as PLMN, TAC, etc.
 
 The ``core`` section of ``vars/main.yml`` is similar to that used in
 other blueprints, with two variable settings of note. First,
-set ``ran_subnet`` to proper ran subnet as per your setup.
+set ``networks.access.ran_subnet`` to proper ran subnet as per your setup.
 
 Second, variable ``values_file`` is set to
 ``"deps/5gc/roles/core/templates/sdcore-5g-values.yaml"`` by default,
@@ -1138,25 +1150,32 @@ how to override this setting. It is not technically a self-contained
 blueprint, but rather, a configuration option that can be applied to
 any of the blueprints defined in this section.
 
-The override requires setting variable ``core.upf.multihop_gnb`` to
-``true``. This causes OnRamp to configure the UPF's N3 interface from
-the same subnet as ``core.data_iface``. For example, suppose
-``core.data_iface`` corresponds to subnet 10.21.61.0/24 and the gNB is
-on subnet 10.202.1.0/24. Configure the parameters as follows:
+The override replaces the ``access`` network with one on the server's
+own subnet whose gateway is an external router, rather than this
+server. This is done by setting ``core.networks.access.gateway`` to
+the router's address (the default, ``host``, makes the server the
+gateway on an isolated subnet). The UPF's N3 interface is then
+configured from the same subnet as the server's interface, which is
+the one carrying the default route unless ``core.networks.access.iface``
+says otherwise. For example, suppose the server's interface
+corresponds to subnet 10.21.61.0/24, whose router is 10.21.61.1, and
+the gNB is on subnet 10.202.1.0/24. Configure the parameters as
+follows:
 
 .. code-block::
 
-   data_iface: ens18
-   ran_subnet: "10.202.1.0/24"
-   upf:
-      access_subnet: "10.21.61.1/24"   # access subnet & gateway
-      core_subnet: "192.168.250.1/24"  # core subnet & gateway
-      multihop_gnb: true               # N3 directly reachable via data_iface
-      default_upf:
-        ip:
-          access: "10.21.61.12"  # same subnet as data_iface when multihop_gnb=true
-          core:   "192.168.250.3"
-        ue_ip_pool: "192.168.100.0/24"
+   core:
+     networks:
+       access:
+         subnet: "10.21.61.0/24"
+         gateway: "10.21.61.1"           # the router's address; OnRamp configures nothing on the host
+         ran_subnet: "10.202.1.0/24"     # the gNB network
+     upf:
+       instances:
+         default:
+           access:
+             ip: "10.21.61.12"           # same subnet as the server's interface
+           ue_ip_pool: "192.168.100.0/24"
 
 To connect multiple gNBs on different subnets, you must also modify
 the specified values file (e.g.,

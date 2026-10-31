@@ -206,31 +206,29 @@ with the container manged by Docker, independent of Kubernetes).
 Finally, all of the configurable parameters used throughout this
 section are defined in the ``core`` and ``gnbsim`` sections of the
 ``vars/main.yml`` file. Note that an empty value for
-``core.ran_subnet`` implies the physical L2 network is used to connect
-RAN elements to the core, as is typically the case when connecting
-physical gNBs. Many of the other variables are explained in subsequent
-sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
+``core.networks.access.ran_subnet`` implies the physical L2 network is
+used to connect RAN elements to the core, as is typically the case
+when connecting physical gNBs. Many of the other variables are
+explained in subsequent sections, but for a summary, see the
+:doc:`Quick Reference </onramp/ref>`.
 
 .. code-block::
 
     core:
         standalone: true  # set to false to manage device groups/slices manually via the SD-Core webui
-        data_iface: ens18
         values_file: "deps/5gc/roles/core/templates/sdcore-5g-values.yaml"
-        ran_subnet: "172.20.0.0/16"  # set to empty string to get subnet from 'data_iface'
+        networks:
+            access:
+                ran_subnet: "172.20.0.0/16"  # gNB network; "" derives it from the access interface
         helm:
             local_charts: false  # set chart_ref to local path name if true
             chart_ref: oci://ghcr.io/omec-project/sd-core
-            chart_version: 6.0.0
+            chart_version: 6.1.0
         upf:
-            access_subnet: "192.168.252.1/24"  # access subnet & gateway
-            core_subnet: "192.168.250.1/24"    # core subnet & gateway
             mode: af_packet                    # Options: af_packet or dpdk
-            default_upf:
-                ip:
-                    access: "192.168.252.3"
-                    core:   "192.168.250.3"
-                ue_ip_pool: "192.168.100.0/24"
+            instances:
+                default:
+                    ue_ip_pool: "192.168.100.0/24"
         amf:
             ip: "10.76.28.113"
 
@@ -241,6 +239,107 @@ sections, but for a summary, see the :doc:`Quick Reference </onramp/ref>`.
             macvlan:
                 iface: gnbaccess
                 subnet_prefix: "172.20"
+
+The ``core`` section no longer names a data interface: the Core uses
+the interface carrying the server's default route. Only
+``gnbsim.router.data_iface`` needs to be set to your server's
+interface. Everything else about the UPF's networking is optional,
+as described next.
+
+UPF Networking
+~~~~~~~~~~~~~~~~~
+
+The UPF has two sides: *access* (N3, towards the gNBs) and *core* (N6,
+towards the data network). Each side attaches to a *network*, which
+is described by ``core.networks``. The list of UPFs, and the network
+each of their sides uses, is described by ``core.upf.instances``.
+Every field has a default, so with neither key set you get the
+deployment OnRamp has always shipped: one UPF, both sides attached as
+Macvlan children of the interface carrying the server's default route,
+and the server acting as the gateway on ``192.168.252.0/24`` (access)
+and ``192.168.250.0/24`` (core). The install prints the resolved UPF
+networking so you can see what the defaults decided before anything is
+deployed.
+
+Each entry in ``core.networks`` (keyed by name) has the following
+fields, all optional:
+
+.. list-table::
+   :widths: 15 30 55
+   :header-rows: 1
+
+   * - Field
+     - Default
+     - Description
+   * - ``iface``
+     - Interface carrying the default route
+     - Host interface the network is reached through.
+   * - ``vlan``
+     - None
+     - 802.1Q tag. The UPF attaches to ``<iface>.<vlan>``, which
+       ``5gc-router-install`` creates on the host.
+   * - ``subnet``
+     - ``192.168.252.0/24`` for ``access``, ``192.168.250.0/24`` for
+       ``core``
+     - The network in CIDR form. Required for any other network.
+   * - ``gateway``
+     - ``host``
+     - ``host`` makes the server the gateway, at the subnet's first
+       address: it creates a Macvlan interface named after the network,
+       forwards between it and ``iface``, routes each UPF's UE pool to
+       that UPF, and masquerades the pools on the way out. An IP
+       address names an external router instead, in which case OnRamp
+       configures nothing on the host for this network.
+   * - ``attach``
+     - ``macvlan``
+     - How the UPF pod attaches in ``af_packet`` mode. ``macvlan``
+       shares the interface; ``host-device`` moves it into the pod,
+       which requires an external gateway and makes the interface
+       absent from the host while the UPF runs.
+   * - ``resource_name``
+     - ``intel.com/intel_sriov_vfio_access`` / ``..._core``
+     - SR-IOV resource pool in ``dpdk`` mode. Required for networks
+       other than ``access`` and ``core``.
+   * - ``ran_subnet``
+     - Derived from ``iface``'s own subnet
+     - On an ``access`` network, the gNB network the UPF routes
+       downstream traffic to. Set it explicitly when the gNBs are not on
+       that interface's L2 network.
+
+Each entry in ``core.upf.instances`` (keyed by name) has ``access`` and
+``core`` (each ``{network, ip}``, defaulting to the network of the same
+name and the third address of its subnet), ``ue_ip_pool`` (required
+except for ``default``, which uses ``192.168.100.0/24``), and ``mode``
+(defaults to ``core.upf.mode``). The instance named ``default`` is the
+built-in UPF deployed with the Core and always exists. Every other
+instance is deployed as its own release by ``5gc-upf-install``; see
+the :doc:`Multiple UPFs </onramp/blueprints>` blueprint.
+
+To put one side of the UPF on a different interface, name only what
+differs. For example, the following moves the core side to a second NIC
+whose router is not this server:
+
+.. code-block::
+
+    core:
+        networks:
+            core:
+                iface: eno2
+                subnet: 10.60.0.0/24
+                gateway: 10.60.0.1
+
+The install refuses configurations that cannot work rather than
+deploying them. Examples include a gateway outside its subnet,
+``host-device`` with the server as gateway, moving the interface that
+carries the server's default route into a pod, a network used by both a
+``dpdk`` and an ``af_packet`` UPF, two UPFs sharing an address,
+overlapping UE pools, and unknown (or removed) keys. In ``dpdk`` mode
+both sides of a UPF must be on the same interface, and ``attach`` does
+not apply.
+
+Uninstalling the router step restores the host to the state it was in
+before the install (forwarding, GRO, and ``sysctl`` settings, plus any
+VLAN interfaces OnRamp created).
 
 Packet Traces
 ~~~~~~~~~~~~~~~~~
