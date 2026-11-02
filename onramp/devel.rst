@@ -53,8 +53,8 @@ with
     chart_version: 6.1.2
 
 Note that variable ``core.helm.local_charts`` is a boolean, and in
-this example, the configured chart version stays ``6.1.0``. When
-``local_charts`` is set to ``true``, ``chart_version`` is ignored by
+this example, the configured chart version stays ``chart_version: 6.1.2``.
+When ``local_charts`` is set to ``true``, ``chart_version`` is ignored by
 the playbook and the local chart contents are used directly.
 
 Finally, while there are situations that require modifying full Helm
