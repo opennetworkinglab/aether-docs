@@ -223,7 +223,7 @@ explained in subsequent sections, but for a summary, see the
         helm:
             local_charts: false  # set chart_ref to local path name if true
             chart_ref: oci://ghcr.io/omec-project/sd-core
-            chart_version: 6.1.0
+            chart_version: 6.1.2
         upf:
             mode: af_packet                    # Options: af_packet or dpdk
             instances:

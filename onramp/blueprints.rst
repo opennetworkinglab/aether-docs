@@ -114,7 +114,7 @@ of ``vars/main.yml``:
       helm:
         local_charts: false
         chart_ref: oci://ghcr.io/omec-project/bess-upf
-        chart_version: 6.1.0
+        chart_version: 6.1.2
       values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
       instances:
         default:
