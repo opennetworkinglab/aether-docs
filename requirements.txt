@@ -3,7 +3,7 @@
 
 Sphinx~=9.2.0
 doc8~=2.0.0
-reuse~=6.2.0
+reuse~=6.3.0
 furo~=2025.12.19
 sphinx-sitemap~=2.9.0
 sphinxcontrib-spelling~=8.0.2
