@@ -114,7 +114,7 @@ of ``vars/main.yml``:
       helm:
         local_charts: false
         chart_ref: oci://ghcr.io/omec-project/bess-upf
-        chart_version: 6.1.2
+        chart_version: 6.1.3
       values_file: "deps/5gc/roles/upf/templates/upf-5g-values.yaml"
       instances:
         default:
@@ -1084,7 +1084,7 @@ section:
 
    n3iwf:
      docker:
-       image: ghcr.io/omec-project/5gc-n3iwf:rel-1.3.2
+       image: ghcr.io/omec-project/5gc-n3iwf:rel-1.3.3
        network:
          name: host
      servers:
