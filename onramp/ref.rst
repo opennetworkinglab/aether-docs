@@ -126,7 +126,7 @@ the list is not comprehensive.
      - `4`
      - Minimum CPU count that the Docker preflight must observe before the OCUDU gNB starts.
    * - `ocudu.docker.preflight.probe_image`
-     - `ghcr.io/omec-project/pod-init:rel-1.2.2`
+     - `ghcr.io/omec-project/pod-init:rel-1.3.2`
      - Helper image used by the OCUDU Docker preflight to probe CPU availability inside Docker.
    * - `ocudu.servers[n].dpdk.enabled`
      - `false`
